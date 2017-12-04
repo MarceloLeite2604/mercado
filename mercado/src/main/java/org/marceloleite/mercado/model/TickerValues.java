@@ -32,7 +32,7 @@ public class TickerValues {
 	private double sell;
 	
 	@JsonProperty("date")
-	private int date;
+	private long date;
 	
 	@JsonIgnore
 	private Map<String, Object> additionalProperties = new HashMap<String, Object>();
@@ -98,12 +98,12 @@ public class TickerValues {
 	}
 
 	@JsonProperty("date")
-	public Integer getDate() {
+	public Long getDate() {
 		return date;
 	}
 
 	@JsonProperty("date")
-	public void setDate(Integer date) {
+	public void setDate(Long date) {
 		this.date = date;
 	}
 
