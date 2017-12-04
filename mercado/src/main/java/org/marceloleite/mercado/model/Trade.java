@@ -11,20 +11,25 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({ "date", "price", "amount", "tid", "type" })
-public class Trades {
+public class Trade {
 
 	@JsonProperty("date")
 	private Integer date;
+	
 	@JsonProperty("price")
 	private Double price;
+	
 	@JsonProperty("amount")
 	private Double amount;
+	
 	@JsonProperty("tid")
 	private Integer tid;
+	
 	@JsonProperty("type")
 	private String type;
+	
 	@JsonIgnore
-	private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+	private Map<String, Object> additionalProperties = new HashMap<>();
 
 	@JsonProperty("date")
 	public Integer getDate() {

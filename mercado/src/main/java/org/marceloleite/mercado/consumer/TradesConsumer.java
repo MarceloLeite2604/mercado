@@ -1,14 +1,16 @@
 package org.marceloleite.mercado.consumer;
 
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 
 import javax.ws.rs.core.MediaType;
 
 import org.marceloleite.mercado.model.Cryptocoin;
-import org.marceloleite.mercado.model.Trades;
+import org.marceloleite.mercado.model.Trade;
 import org.marceloleite.mercado.util.UnixTimeSeconds;
 
-public class TradesConsumer extends AbstractConsumer implements Consumer<Trades[]> {
+public class TradesConsumer extends AbstractConsumer implements Consumer<List<Trade>> {
 
 	public TradesConsumer(Cryptocoin cryptocoin) {
 		super(cryptocoin);
@@ -16,7 +18,7 @@ public class TradesConsumer extends AbstractConsumer implements Consumer<Trades[
 
 	private static final String METHOD = "trades";
 
-	public Trades[] consume(Object... args) {
+	public List<Trade> consume(Object... args) {
 
 		Calendar from = null;
 		if (args[0] instanceof Calendar) {
@@ -28,9 +30,9 @@ public class TradesConsumer extends AbstractConsumer implements Consumer<Trades[
 			to = (Calendar) args[1];
 		}
 
-		return createWebTarget().path(getPathWithParameters(from, to))
+		return Arrays.asList(createWebTarget().path(getPathWithParameters(from, to))
 			.request(MediaType.APPLICATION_JSON)
-			.get(Trades[].class);
+			.get(Trade[].class));
 	}
 
 	@Override
