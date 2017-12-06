@@ -1,6 +1,6 @@
 package org.marceloleite.mercado.util.formatter;
 
-public interface Formatter<T1, T2> {
+public interface Formatter<FROM, TO> {
 
-	T2 format(T1 object);
+	TO format(FROM object);
 }

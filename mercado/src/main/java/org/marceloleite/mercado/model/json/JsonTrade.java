@@ -1,4 +1,4 @@
-package org.marceloleite.mercado.model;
+package org.marceloleite.mercado.model.json;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,33 +11,33 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({ "date", "price", "amount", "tid", "type" })
-public class Trade {
+public class JsonTrade {
 
 	@JsonProperty("date")
-	private Integer date;
-	
+	private Long date;
+
 	@JsonProperty("price")
 	private Double price;
-	
+
 	@JsonProperty("amount")
 	private Double amount;
-	
+
 	@JsonProperty("tid")
 	private Integer tid;
-	
+
 	@JsonProperty("type")
 	private String type;
-	
+
 	@JsonIgnore
 	private Map<String, Object> additionalProperties = new HashMap<>();
 
 	@JsonProperty("date")
-	public Integer getDate() {
+	public Long getDate() {
 		return date;
 	}
 
 	@JsonProperty("date")
-	public void setDate(Integer date) {
+	public void setDate(Long date) {
 		this.date = date;
 	}
 

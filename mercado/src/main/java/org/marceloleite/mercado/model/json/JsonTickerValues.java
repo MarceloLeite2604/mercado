@@ -1,4 +1,4 @@
-package org.marceloleite.mercado.model;
+package org.marceloleite.mercado.model.json;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({ "high", "low", "vol", "last", "buy", "sell", "date" })
-public class TickerValues {
+public class JsonTickerValues {
 
 	@JsonProperty("high")
 	private double high;
