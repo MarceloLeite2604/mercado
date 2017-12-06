@@ -3,9 +3,9 @@ package org.marceloleite.mercado.consumer;
 import javax.ws.rs.core.MediaType;
 
 import org.marceloleite.mercado.model.Cryptocoin;
-import org.marceloleite.mercado.model.Orderbook;
+import org.marceloleite.mercado.model.json.JsonOrderbook;
 
-public class OrderbookConsumer extends AbstractConsumer implements Consumer<Orderbook> {
+public class OrderbookConsumer extends AbstractConsumer implements Consumer<JsonOrderbook> {
 
 	private static final String METHOD = "orderbook";
 
@@ -13,10 +13,10 @@ public class OrderbookConsumer extends AbstractConsumer implements Consumer<Orde
 		super(cryptocoin);
 	}
 
-	public Orderbook consume(Object... args) {
+	public JsonOrderbook consume(Object... args) {
 		return createWebTarget().path(String.format(getPath(), getMethod()))
 			.request(MediaType.APPLICATION_JSON)
-			.get(Orderbook.class);
+			.get(JsonOrderbook.class);
 	}
 
 	@Override
