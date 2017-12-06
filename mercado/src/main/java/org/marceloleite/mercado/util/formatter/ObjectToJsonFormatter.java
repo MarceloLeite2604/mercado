@@ -1,5 +1,7 @@
 package org.marceloleite.mercado.util.formatter;
 
+import java.text.SimpleDateFormat;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -10,7 +12,9 @@ public class ObjectToJsonFormatter implements Formatter<Object, String> {
 
 	public ObjectToJsonFormatter() {
 		super();
-		this.objectWritter = new ObjectMapper().writerWithDefaultPrettyPrinter();
+		ObjectMapper objectMapper = new ObjectMapper();
+		objectMapper.setDateFormat(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"));
+		this.objectWritter = objectMapper.writerWithDefaultPrettyPrinter();
 	}
 
 	@Override
