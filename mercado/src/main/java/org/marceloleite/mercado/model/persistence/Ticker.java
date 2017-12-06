@@ -4,6 +4,8 @@ import java.util.Calendar;
 
 public class Ticker {
 
+	private Calendar date;
+
 	private double high;
 
 	private double low;
@@ -15,8 +17,6 @@ public class Ticker {
 	private double buy;
 
 	private double sell;
-
-	private Calendar date;
 
 	public Ticker() {
 		super();

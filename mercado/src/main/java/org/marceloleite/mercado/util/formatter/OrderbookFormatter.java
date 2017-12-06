@@ -1,7 +1,7 @@
 package org.marceloleite.mercado.util.formatter;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.marceloleite.mercado.model.json.JsonOrderbook;
 import org.marceloleite.mercado.model.persistence.Offer;
@@ -13,15 +13,15 @@ public class OrderbookFormatter implements Formatter<JsonOrderbook, Orderbook> {
 	public Orderbook format(JsonOrderbook jsonOrderbook) {
 		OfferFormatter offerFormatter = new OfferFormatter();
 
-		List<List<Double>> asks = jsonOrderbook.getAsks();
-		List<Offer> askOffers = new ArrayList<>();
-		asks.stream()
-			.forEach(ask -> askOffers.add(offerFormatter.format(ask)));
+		List<Offer> askOffers = jsonOrderbook.getAsks()
+			.stream()
+			.map(ask -> offerFormatter.format(ask))
+			.collect(Collectors.toList());
 
-		List<List<Double>> bids = jsonOrderbook.getBids();
-		List<Offer> bidOffers = new ArrayList<>();
-		bids.stream()
-			.forEach(bid -> bidOffers.add(offerFormatter.format(bid)));
+		List<Offer> bidOffers = jsonOrderbook.getBids()
+			.stream()
+			.map(bid -> offerFormatter.format(bid))
+			.collect(Collectors.toList());
 
 		Orderbook orderbook = new Orderbook();
 		orderbook.setAskOffers(askOffers);

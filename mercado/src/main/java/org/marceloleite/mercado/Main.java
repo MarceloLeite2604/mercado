@@ -1,20 +1,29 @@
 package org.marceloleite.mercado;
 
-import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
+import org.marceloleite.mercado.business.TradesRetriever;
 import org.marceloleite.mercado.business.filter.TradeTypeFilter;
 import org.marceloleite.mercado.consumer.OrderbookConsumer;
 import org.marceloleite.mercado.consumer.TickerConsumer;
-import org.marceloleite.mercado.consumer.TradesConsumer;
 import org.marceloleite.mercado.model.Cryptocoin;
 import org.marceloleite.mercado.model.json.JsonOrderbook;
 import org.marceloleite.mercado.model.json.JsonTicker;
 import org.marceloleite.mercado.model.json.JsonTrade;
-import org.marceloleite.mercado.util.formatter.LongToCalendarFormatter;
+import org.marceloleite.mercado.model.persistence.Orderbook;
+import org.marceloleite.mercado.model.persistence.Ticker;
+import org.marceloleite.mercado.model.persistence.Trade;
+import org.marceloleite.mercado.model.persistence.TradeType;
+import org.marceloleite.mercado.util.formatter.ListTradeFormatter;
+import org.marceloleite.mercado.util.formatter.MapTradeFormatter;
 import org.marceloleite.mercado.util.formatter.ObjectToJsonFormatter;
+import org.marceloleite.mercado.util.formatter.OrderbookFormatter;
+import org.marceloleite.mercado.util.formatter.TickerFormatter;
 
 public class Main {
 
@@ -22,91 +31,61 @@ public class Main {
 
 		ticker();
 		// orderbook();
-		trade();
-		/*
-		 * Orderbook orderbook = new
-		 * OrderbookConsumer(Cryptocoin.BCASH).consume(); Calendar now =
-		 * Calendar.getInstance(); Calendar pastFiveMinutes =
-		 * ((Calendar)now.clone()); pastFiveMinutes.add(Calendar.MINUTE, -1);
-		 * List<Trade> trades = new
-		 * TradesConsumer(Cryptocoin.BCASH).consume(pastFiveMinutes, now);
-		 */
-
-		/*
-		 * List<Trade> buyingTrades = new TradeTypeFilter("buy").filter(trades);
-		 * List<Trade> sellingTrades = new
-		 * TradeTypeFilter("sell").filter(trades);
-		 */
-
-		/*
-		 * System.out.println("Total buying trades: " + buyingTrades.size());
-		 * System.out.println("Total selling trades: " + sellingTrades.size());
-		 * double totalAmountBought =
-		 * buyingTrades.stream().mapToDouble(Trade::getAmount).sum(); double
-		 * totalAmountSold =
-		 * sellingTrades.stream().mapToDouble(Trade::getAmount).sum(); double
-		 * averageBuingValue =
-		 * buyingTrades.stream().mapToDouble(Trade::getPrice).average().
-		 * getAsDouble(); double averageSellingValue =
-		 * sellingTrades.stream().mapToDouble(Trade::getPrice).average().
-		 * getAsDouble(); System.out.println("Total amount bought: " +
-		 * totalAmountBought); System.out.println("Total amount sold: " +
-		 * totalAmountSold); System.out.println("Total average buying value: " +
-		 * averageBuingValue);
-		 * System.out.println("Total average selling value: " +
-		 * averageSellingValue);
-		 * 
-		 * System.out.println("Total asks: " + orderbook.getAsks().size());
-		 * System.out.println("Total bids: " + orderbook.getBids().size());
-		 */
+		trades();
 	}
 
 	private static void ticker() {
-		JsonTicker ticker = new TickerConsumer(Cryptocoin.BITCOIN).consume();
-		Calendar calendar = new LongToCalendarFormatter().format(ticker.getTicker()
-			.getDate());
-
-		System.out.println(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.S").format(calendar));
+		JsonTicker jsonTicker = new TickerConsumer(Cryptocoin.BITCOIN).consume();
+		Ticker ticker = new TickerFormatter().format(jsonTicker);
 		System.out.println(new ObjectToJsonFormatter().format(ticker));
 	}
 
-	private static void trade() {
-		Calendar now = Calendar.getInstance();
-		Calendar pastFiveMinutes = ((Calendar) now.clone());
-		pastFiveMinutes.add(Calendar.HOUR, -24);
-		List<JsonTrade> trades = new TradesConsumer(Cryptocoin.BCASH).consume(pastFiveMinutes, now);
-		List<JsonTrade> buyingTrades = new TradeTypeFilter("buy").filter(trades);
-		List<JsonTrade> sellingTrades = new TradeTypeFilter("sell").filter(trades);
+	private static void orderbook() {
+		JsonOrderbook jsonOrderbook = new OrderbookConsumer(Cryptocoin.BCASH).consume();
+		Orderbook orderbook = new OrderbookFormatter().format(jsonOrderbook);
+		System.out.println(new ObjectToJsonFormatter().format(jsonOrderbook));
+		System.out.println(new ObjectToJsonFormatter().format(orderbook));
+	}
 
-		double maxBuyingValue = buyingTrades.stream()
-			.mapToDouble(JsonTrade::getPrice)
+	private static void trades() {
+
+		LocalDate now = LocalDate.now();
+		LocalDate past24hours = now.minus(Duration.ofHours(24));
+		Duration duration = Duration.between(past24hours, now);
+		List<JsonTrade> jsonTrades = new TradesRetriever().retrieve(48, 30, Calendar.MINUTE);
+		List<Trade> trades = new ListTradeFormatter().format(jsonTrades);
+
+		List<Trade> buyingTrades = new TradeTypeFilter(TradeType.BUY).filter(trades);
+		List<Trade> sellingTrades = new TradeTypeFilter(TradeType.SELL).filter(trades);
+
+		double maxBuyingValue = trades.stream()
+			.mapToDouble(Trade::getPrice)
 			.max()
 			.getAsDouble();
-		;
-		/*
-		 * double totalAmountBought =
-		 * buyingTrades.stream().mapToDouble(Trade::getAmount).sum(); double
-		 * totalAmountSold =
-		 * sellingTrades.stream().mapToDouble(Trade::getAmount).sum(); double
-		 * averageBuyingValue =
-		 * buyingTrades.stream().mapToDouble(Trade::getPrice).average().
-		 * getAsDouble(); double averageSellingValue =
-		 * sellingTrades.stream().mapToDouble(Trade::getPrice).average().
-		 * getAsDouble();
-		 */
+		double minBuyingValue = trades.stream()
+			.mapToDouble(Trade::getPrice)
+			.min()
+			.getAsDouble();
 
-		/*
-		 * System.out.println("Total buying trades: " + buyingTrades.size());
-		 * System.out.println("Total selling trades: " + sellingTrades.size());
-		 * System.out.println("Total amount bought: " + totalAmountBought);
-		 * System.out.println("Total amount sold: " + totalAmountSold);
-		 */
+		double totalNegotiated = trades.stream()
+			.mapToDouble(Trade::getAmount)
+			.sum();
+		
+		int lastTradeId = trades.stream().mapToInt(Trade::getId).max().getAsInt();
+		Map<Integer, Trade> tradesMap = new MapTradeFormatter().format(jsonTrades);
+		Trade lastTrade = tradesMap.get(lastTradeId);
+		
+		int lastSellingTradeId = sellingTrades.stream().mapToInt(Trade::getId).max().getAsInt();
+		int lastBuyingTradeId = buyingTrades.stream().mapToInt(Trade::getId).max().getAsInt();
+		Trade lastSellingTrade = tradesMap.get(lastSellingTradeId);
+		Trade lastBuyingTrade = tradesMap.get(lastBuyingTradeId);
+		
 		System.out.println("Max buying value: " + maxBuyingValue);
-		/*
-		 * System.out.println("Total average buying value: " +
-		 * averageBuyingValue);
-		 * System.out.println("Total average selling value: " +
-		 * averageSellingValue);
-		 */
+		System.out.println("Min buying value: " + minBuyingValue);
+		System.out.println("Total negotiated: " + totalNegotiated);
+		System.out.println("Last unit price: " + lastTrade.getPrice());
+		System.out.println("Last buying unit price: " + lastSellingTrade.getPrice());
+		System.out.println("Last selling unit price: " + lastBuyingTrade.getPrice());
+				
 	}
 }

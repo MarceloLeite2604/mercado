@@ -11,7 +11,7 @@ public class TickerFormatter implements Formatter<JsonTicker, Ticker> {
 
 		JsonTickerValues jsonTickerValues = jsonTicker.getTicker();
 		Ticker ticker = new Ticker();
-		ticker.setBuy(jsonTickerValues.getHigh());
+		ticker.setHigh(jsonTickerValues.getHigh());
 		ticker.setLow(jsonTickerValues.getLow());
 		ticker.setVol(jsonTickerValues.getVol());
 		ticker.setLast(jsonTickerValues.getLast());
