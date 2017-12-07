@@ -13,7 +13,7 @@ public class ObjectToJsonFormatter implements Formatter<Object, String> {
 	public ObjectToJsonFormatter() {
 		super();
 		ObjectMapper objectMapper = new ObjectMapper();
-		objectMapper.setDateFormat(new SimpleDateFormat("dd/MM/yyyy HH:mm:ss"));
+		objectMapper.setDateFormat(new SimpleDateFormat(LocalDateTimeToString.DATE_FORMAT));
 		this.objectWritter = objectMapper.writerWithDefaultPrettyPrinter();
 	}
 

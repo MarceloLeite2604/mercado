@@ -1,11 +1,12 @@
 package org.marceloleite.mercado.business;
 
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Calendar;
+import java.time.LocalDateTime;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -14,43 +15,65 @@ import java.util.concurrent.Future;
 import org.marceloleite.mercado.model.json.JsonTrade;
 
 public class TradesRetriever {
-	
-	private static final Duration DURATION_STEP = Duration.ofMinutes(30); 
 
-	public List<JsonTrade> retrieve(int totalSteps, int timeWindow, int timeUnit) {
-		
-		Calendar to = Calendar.getInstance();
-		Calendar from = ((Calendar) to.clone());
-		from.add(timeUnit, -timeWindow);
-		ExecutorService executorService = Executors.newFixedThreadPool(totalSteps);
-		Set<Future<List<JsonTrade>>> futureSet = new HashSet<>();
+	private static final Duration DEFAULT_DURATION_STEP = Duration.ofMinutes(30);
 
-		
+	private Duration stepDuration;
+
+	public TradesRetriever() {
+		this.stepDuration = DEFAULT_DURATION_STEP;
+	}
+
+	public TradesRetriever(Duration stepDuration) {
+		super();
+		this.stepDuration = stepDuration;
+	}
+
+	public void setStepDuration(Duration stepDuration) {
+		this.stepDuration = stepDuration;
+	}
+
+	public Map<Integer, JsonTrade> retrieve(LocalDateTime initialTime, Duration duration) {
+		Set<Future<Map<Integer, JsonTrade>>> futureSet = new HashSet<>();
+		long totalSteps = (duration.getSeconds() / stepDuration.getSeconds());
+		totalSteps = (totalSteps == 0 ? 1 : totalSteps);
+		ExecutorService executorService = Executors.newFixedThreadPool((int) (totalSteps == 0 ? 1 : totalSteps));
+
+		LocalDateTime from = initialTime;
+		Duration nextStepDuration = calculateStepDuration(from, initialTime, duration);
+		LocalDateTime to = LocalDateTime.from(initialTime).plus(nextStepDuration);
+
 		for (int step = 0; step < totalSteps; step++) {
-			TradesRetrieverCallable tradesRetrieverCallable = new TradesRetrieverCallable(from, to);
+			Callable<Map<Integer, JsonTrade>> tradesRetrieverCallable = new TradesRetrieverCallable(from, to);
 			futureSet.add(executorService.submit(tradesRetrieverCallable));
-			to = ((Calendar) to.clone());
-			from = ((Calendar) from.clone());
-			to.add(timeUnit, -timeWindow);
-			from.add(timeUnit, -timeWindow);
+			from = LocalDateTime.from(from)
+				.plus(nextStepDuration);
+			nextStepDuration = calculateStepDuration(from, initialTime, duration);
+			to = LocalDateTime.from(to)
+				.plus(nextStepDuration);
 		}
-		
-		List<JsonTrade> tradesList = new ArrayList<>();
-		for (Future<List<JsonTrade>> future : futureSet ) {
+
+		Map<Integer, JsonTrade> trades = new ConcurrentHashMap<>();
+		for (Future<Map<Integer, JsonTrade>> future : futureSet) {
 			try {
-				List<JsonTrade> jsonTrades = future.get();
-				tradesList.addAll(jsonTrades);
+				Map<Integer, JsonTrade> jsonTrades = future.get();
+				trades.putAll(jsonTrades);
 			} catch (InterruptedException | ExecutionException e) {
 				e.printStackTrace();
 			}
 		}
-		
-		return tradesList;
+
+		executorService.shutdownNow();
+
+		return trades;
 	}
-	
-	public List<JsonTrade> retrieve(Duration duration) {
-		long steps = (duration.getSeconds()/DURATION_STEP.getSeconds());
-		// TODO: Conclude.
-		return null;
+
+	public Duration calculateStepDuration(LocalDateTime stepStartTime, LocalDateTime initialTime, Duration duration) {
+		Duration remainingDuration = Duration.between(stepStartTime, initialTime.plus(duration));
+		if (stepDuration.compareTo(remainingDuration) > 0) {
+			return remainingDuration;
+		} else {
+			return stepDuration;
+		}
 	}
 }
