@@ -1,7 +1,7 @@
 package org.marceloleite.mercado.consumer;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.List;
 
 import javax.ws.rs.core.MediaType;
@@ -19,15 +19,16 @@ public class TradesConsumer extends AbstractConsumer implements Consumer<List<Js
 	private static final String METHOD = "trades";
 
 	public List<JsonTrade> consume(Object... args) {
-
-		Calendar from = null;
-		if (args[0] instanceof Calendar) {
-			from = (Calendar) args[0];
+		
+		LocalDateTime from = null;
+		if (args[0] instanceof LocalDateTime) {
+			from = (LocalDateTime) args[0];
 		}
 
-		Calendar to = null;
-		if (args[1] instanceof Calendar) {
-			to = (Calendar) args[1];
+		LocalDateTime to = null;
+		if (args[1] instanceof LocalDateTime) {
+			to = (LocalDateTime) args[1];
+		
 		}
 
 		return Arrays.asList(createWebTarget().path(getPathWithParameters(from, to))
@@ -40,7 +41,7 @@ public class TradesConsumer extends AbstractConsumer implements Consumer<List<Js
 		return METHOD;
 	}
 
-	private String getPathWithParameters(Calendar from, Calendar to) {
+	private String getPathWithParameters(LocalDateTime from, LocalDateTime to) {
 		return String.format(getPath() + "%d/%d/", new UnixTimeSeconds(from).get(), new UnixTimeSeconds(to).get());
 	}
 

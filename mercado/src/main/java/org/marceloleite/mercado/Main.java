@@ -1,11 +1,9 @@
 package org.marceloleite.mercado;
 
 import java.time.Duration;
-import java.time.LocalDate;
-import java.time.Period;
-import java.util.Calendar;
-import java.util.List;
+import java.time.LocalDateTime;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.marceloleite.mercado.business.TradesRetriever;
 import org.marceloleite.mercado.business.filter.TradeTypeFilter;
@@ -19,7 +17,6 @@ import org.marceloleite.mercado.model.persistence.Orderbook;
 import org.marceloleite.mercado.model.persistence.Ticker;
 import org.marceloleite.mercado.model.persistence.Trade;
 import org.marceloleite.mercado.model.persistence.TradeType;
-import org.marceloleite.mercado.util.formatter.ListTradeFormatter;
 import org.marceloleite.mercado.util.formatter.MapTradeFormatter;
 import org.marceloleite.mercado.util.formatter.ObjectToJsonFormatter;
 import org.marceloleite.mercado.util.formatter.OrderbookFormatter;
@@ -30,7 +27,7 @@ public class Main {
 	public static void main(String[] args) {
 
 		ticker();
-		// orderbook();
+		orderbook();
 		trades();
 	}
 
@@ -43,49 +40,71 @@ public class Main {
 	private static void orderbook() {
 		JsonOrderbook jsonOrderbook = new OrderbookConsumer(Cryptocoin.BCASH).consume();
 		Orderbook orderbook = new OrderbookFormatter().format(jsonOrderbook);
-		System.out.println(new ObjectToJsonFormatter().format(jsonOrderbook));
 		System.out.println(new ObjectToJsonFormatter().format(orderbook));
 	}
 
 	private static void trades() {
 
-		LocalDate now = LocalDate.now();
-		LocalDate past24hours = now.minus(Duration.ofHours(24));
-		Duration duration = Duration.between(past24hours, now);
-		List<JsonTrade> jsonTrades = new TradesRetriever().retrieve(48, 30, Calendar.MINUTE);
-		List<Trade> trades = new ListTradeFormatter().format(jsonTrades);
+		LocalDateTime endTime = LocalDateTime.now();
+		LocalDateTime startTime = endTime.minus(Duration.ofHours(240));
+		Duration duration = Duration.between(startTime, endTime);
+		TradesRetriever tradesRetriever = new TradesRetriever();
+		tradesRetriever.setStepDuration(Duration.ofMinutes(120));
+		Map<Integer, JsonTrade> jsonTrades = tradesRetriever.retrieve(startTime, duration);
+		Map<Integer, Trade> trades = new MapTradeFormatter().format(jsonTrades);
+		System.out.println("Total retrieved: " + trades.size());
 
-		List<Trade> buyingTrades = new TradeTypeFilter(TradeType.BUY).filter(trades);
-		List<Trade> sellingTrades = new TradeTypeFilter(TradeType.SELL).filter(trades);
+		Map<Integer, Trade> buyingTrades = new TradeTypeFilter(TradeType.BUY).filter(trades);
+		Map<Integer, Trade> sellingTrades = new TradeTypeFilter(TradeType.SELL).filter(trades);
 
-		double maxBuyingValue = trades.stream()
+		double maxBuyingValue = trades.entrySet()
+			.stream()
+			.map(Entry<Integer, Trade>::getValue)
 			.mapToDouble(Trade::getPrice)
 			.max()
 			.getAsDouble();
-		double minBuyingValue = trades.stream()
+		double minBuyingValue = trades.entrySet()
+			.stream()
+			.map(Entry<Integer, Trade>::getValue)
 			.mapToDouble(Trade::getPrice)
 			.min()
 			.getAsDouble();
 
-		double totalNegotiated = trades.stream()
+		double totalNegotiated = trades.entrySet()
+			.stream()
+			.map(Entry<Integer, Trade>::getValue)
 			.mapToDouble(Trade::getAmount)
 			.sum();
-		
-		int lastTradeId = trades.stream().mapToInt(Trade::getId).max().getAsInt();
-		Map<Integer, Trade> tradesMap = new MapTradeFormatter().format(jsonTrades);
-		Trade lastTrade = tradesMap.get(lastTradeId);
-		
-		int lastSellingTradeId = sellingTrades.stream().mapToInt(Trade::getId).max().getAsInt();
-		int lastBuyingTradeId = buyingTrades.stream().mapToInt(Trade::getId).max().getAsInt();
-		Trade lastSellingTrade = tradesMap.get(lastSellingTradeId);
-		Trade lastBuyingTrade = tradesMap.get(lastBuyingTradeId);
-		
+
+		int lastTradeId = trades.entrySet()
+			.stream()
+			.map(Entry<Integer, Trade>::getValue)
+			.mapToInt(Trade::getId)
+			.max()
+			.getAsInt();
+		Trade lastTrade = trades.get(lastTradeId);
+
+		int lastSellingTradeId = sellingTrades.entrySet()
+			.stream()
+			.map(Entry<Integer, Trade>::getValue)
+			.mapToInt(Trade::getId)
+			.max()
+			.getAsInt();
+		int lastBuyingTradeId = buyingTrades.entrySet()
+			.stream()
+			.map(Entry<Integer, Trade>::getValue)
+			.mapToInt(Trade::getId)
+			.max()
+			.getAsInt();
+		Trade lastSellingTrade = trades.get(lastSellingTradeId);
+		Trade lastBuyingTrade = trades.get(lastBuyingTradeId);
+
 		System.out.println("Max buying value: " + maxBuyingValue);
 		System.out.println("Min buying value: " + minBuyingValue);
 		System.out.println("Total negotiated: " + totalNegotiated);
 		System.out.println("Last unit price: " + lastTrade.getPrice());
 		System.out.println("Last buying unit price: " + lastSellingTrade.getPrice());
 		System.out.println("Last selling unit price: " + lastBuyingTrade.getPrice());
-				
+
 	}
 }

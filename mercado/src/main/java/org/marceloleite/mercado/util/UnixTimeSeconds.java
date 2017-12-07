@@ -1,17 +1,20 @@
 package org.marceloleite.mercado.util;
 
-import java.util.Calendar;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 public class UnixTimeSeconds {
 	
-	private Calendar calendar;
+	private LocalDateTime time;
 
-	public UnixTimeSeconds(Calendar calendar) {
+	public UnixTimeSeconds(LocalDateTime time) {
 		super();
-		this.calendar = calendar;
+		this.time = time;
 	}
 
 	public long get() {
-		return (calendar.getTime().getTime()/1000);
+		ZoneId zoneId = ZoneId.systemDefault();
+		long epoch = time.atZone(zoneId).toEpochSecond();
+		return epoch;
 	}
 }
