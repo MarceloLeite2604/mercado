@@ -1,7 +1,7 @@
 package org.marceloleite.mercado.modeler.util.formatter;
 
 import org.marceloleite.mercado.commons.interfaces.Formatter;
-import org.marceloleite.mercado.commons.util.LongToCalendarFormatter;
+import org.marceloleite.mercado.commons.util.LongToLocalDateTimeFormatter;
 import org.marceloleite.mercado.consumer.model.JsonTicker;
 import org.marceloleite.mercado.consumer.model.JsonTickerValues;
 import org.marceloleite.mercado.modeler.persistence.Ticker;
@@ -19,7 +19,7 @@ public class TickerFormatter implements Formatter<JsonTicker, Ticker> {
 		ticker.setLast(jsonTickerValues.getLast());
 		ticker.setBuy(jsonTickerValues.getBuy());
 		ticker.setSell(jsonTickerValues.getSell());
-		ticker.setDate(new LongToCalendarFormatter().format(jsonTickerValues.getDate()));
+		ticker.setDate(new LongToLocalDateTimeFormatter().format(jsonTickerValues.getDate()));
 
 		return ticker;
 	}

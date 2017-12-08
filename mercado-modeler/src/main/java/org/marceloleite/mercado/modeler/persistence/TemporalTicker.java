@@ -2,9 +2,11 @@ package org.marceloleite.mercado.modeler.persistence;
 
 import java.time.LocalDateTime;
 
-public class Ticker {
+public class TemporalTicker {
 
-	private LocalDateTime date;
+	private LocalDateTime from;
+
+	private LocalDateTime to;
 
 	private double high;
 
@@ -18,19 +20,24 @@ public class Ticker {
 
 	private double sell;
 
-	public Ticker() {
+	public TemporalTicker() {
 		super();
 	}
 
-	public Ticker(double high, double low, double vol, double last, double buy, double sell, LocalDateTime date) {
-		super();
-		this.high = high;
-		this.low = low;
-		this.vol = vol;
-		this.last = last;
-		this.buy = buy;
-		this.sell = sell;
-		this.date = date;
+	public LocalDateTime getFrom() {
+		return from;
+	}
+
+	public void setFrom(LocalDateTime from) {
+		this.from = from;
+	}
+
+	public LocalDateTime getTo() {
+		return to;
+	}
+
+	public void setTo(LocalDateTime to) {
+		this.to = to;
 	}
 
 	public double getHigh() {
@@ -79,14 +86,6 @@ public class Ticker {
 
 	public void setSell(double sell) {
 		this.sell = sell;
-	}
-
-	public LocalDateTime getDate() {
-		return date;
-	}
-
-	public void setDate(LocalDateTime date) {
-		this.date = date;
 	}
 
 }

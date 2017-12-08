@@ -46,10 +46,10 @@ public class Main {
 	private static void trades() {
 
 		LocalDateTime endTime = LocalDateTime.now();
-		LocalDateTime startTime = endTime.minus(Duration.ofHours(240));
+		LocalDateTime startTime = endTime.minus(Duration.ofHours(24));
 		Duration duration = Duration.between(startTime, endTime);
 		TradesRetriever tradesRetriever = new TradesRetriever();
-		tradesRetriever.setStepDuration(Duration.ofMinutes(120));
+		tradesRetriever.setStepDuration(Duration.ofMinutes(10));
 		Map<Integer, JsonTrade> jsonTrades = tradesRetriever.retrieve(startTime, duration);
 		Map<Integer, Trade> trades = new MapTradeFormatter().format(jsonTrades);
 		System.out.println("Total retrieved: " + trades.size());
@@ -57,13 +57,13 @@ public class Main {
 		Map<Integer, Trade> buyingTrades = new TradeTypeFilter(TradeType.BUY).filter(trades);
 		Map<Integer, Trade> sellingTrades = new TradeTypeFilter(TradeType.SELL).filter(trades);
 
-		double maxBuyingValue = trades.entrySet()
+		double maxValue = trades.entrySet()
 			.stream()
 			.map(Entry<Integer, Trade>::getValue)
 			.mapToDouble(Trade::getPrice)
 			.max()
 			.getAsDouble();
-		double minBuyingValue = trades.entrySet()
+		double minValue = trades.entrySet()
 			.stream()
 			.map(Entry<Integer, Trade>::getValue)
 			.mapToDouble(Trade::getPrice)
@@ -99,8 +99,8 @@ public class Main {
 		Trade lastSellingTrade = trades.get(lastSellingTradeId);
 		Trade lastBuyingTrade = trades.get(lastBuyingTradeId);
 
-		System.out.println("Max buying value: " + maxBuyingValue);
-		System.out.println("Min buying value: " + minBuyingValue);
+		System.out.println("Max buying value: " + maxValue);
+		System.out.println("Min buying value: " + minValue);
 		System.out.println("Total negotiated: " + totalNegotiated);
 		System.out.println("Last unit price: " + lastTrade.getPrice());
 		System.out.println("Last buying unit price: " + lastSellingTrade.getPrice());

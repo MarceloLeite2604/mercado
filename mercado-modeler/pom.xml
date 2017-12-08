@@ -25,11 +25,6 @@
 		</dependency>
 		<dependency>
 			<groupId>org.marceloleite</groupId>
-			<artifactId>mercado-commons</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.marceloleite</groupId>
 			<artifactId>mercado-consumer</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>

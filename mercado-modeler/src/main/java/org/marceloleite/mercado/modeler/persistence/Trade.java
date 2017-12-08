@@ -1,6 +1,6 @@
 package org.marceloleite.mercado.modeler.persistence;
 
-import java.util.Calendar;
+import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -8,7 +8,7 @@ public class Trade {
 
 	private int id;
 
-	private Calendar date;
+	private LocalDateTime date;
 
 	private double price;
 
@@ -28,11 +28,11 @@ public class Trade {
 		this.id = id;
 	}
 
-	public Calendar getDate() {
+	public LocalDateTime getDate() {
 		return date;
 	}
 
-	public void setDate(Calendar date) {
+	public void setDate(LocalDateTime date) {
 		this.date = date;
 	}
 
