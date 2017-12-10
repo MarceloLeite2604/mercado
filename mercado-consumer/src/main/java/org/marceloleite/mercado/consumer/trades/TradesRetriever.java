@@ -12,6 +12,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import org.marceloleite.mercado.consumer.model.Cryptocoin;
 import org.marceloleite.mercado.consumer.model.JsonTrade;
 
 public class TradesRetriever {
@@ -33,7 +34,7 @@ public class TradesRetriever {
 		this.stepDuration = stepDuration;
 	}
 
-	public Map<Integer, JsonTrade> retrieve(LocalDateTime initialTime, Duration duration) {
+	public Map<Integer, JsonTrade> retrieve(Cryptocoin cryptocoin, LocalDateTime initialTime, Duration duration) {
 		Set<Future<Map<Integer, JsonTrade>>> futureSet = new HashSet<>();
 		long totalSteps = (duration.getSeconds() / stepDuration.getSeconds());
 		totalSteps = (totalSteps == 0 ? 1 : totalSteps);
@@ -44,13 +45,12 @@ public class TradesRetriever {
 		LocalDateTime to = LocalDateTime.from(initialTime).plus(nextStepDuration);
 
 		for (int step = 0; step < totalSteps; step++) {
-			Callable<Map<Integer, JsonTrade>> tradesRetrieverCallable = new TradesRetrieverCallable(from, to);
+			Callable<Map<Integer, JsonTrade>> tradesRetrieverCallable = new TradesRetrieverCallable(cryptocoin, from,
+					to);
 			futureSet.add(executorService.submit(tradesRetrieverCallable));
-			from = LocalDateTime.from(from)
-				.plus(nextStepDuration);
+			from = LocalDateTime.from(from).plus(nextStepDuration);
 			nextStepDuration = calculateStepDuration(from, initialTime, duration);
-			to = LocalDateTime.from(to)
-				.plus(nextStepDuration);
+			to = LocalDateTime.from(to).plus(nextStepDuration);
 		}
 
 		Map<Integer, JsonTrade> trades = new ConcurrentHashMap<>();

@@ -10,17 +10,20 @@ import org.marceloleite.mercado.commons.util.LocalDateTimeToString;
 import org.marceloleite.mercado.consumer.model.Cryptocoin;
 import org.marceloleite.mercado.consumer.model.JsonTrade;
 import org.marceloleite.mercado.consumer.util.checker.MaxTradesReachedCheck;
-import org.marceloleite.mercado.consumer.util.formatter.OldMapJsonTradeFormatter;
+import org.marceloleite.mercado.consumer.util.formatter.ListToMapJsonTradeFormatter;
 
 public class TradesRetrieverCallable implements Callable<Map<Integer, JsonTrade>> {
+
+	private Cryptocoin cryptocoin;
 
 	private LocalDateTime from;
 
 	private LocalDateTime to;
 
-	public TradesRetrieverCallable(LocalDateTime from, LocalDateTime to) {
+	public TradesRetrieverCallable(Cryptocoin cryptocoin, LocalDateTime from, LocalDateTime to) {
 		super();
 
+		this.cryptocoin = cryptocoin;
 		this.from = from;
 		this.to = to;
 	}
@@ -28,9 +31,11 @@ public class TradesRetrieverCallable implements Callable<Map<Integer, JsonTrade>
 	@Override
 	public Map<Integer, JsonTrade> call() throws Exception {
 		LocalDateTimeToString localDateTimeToString = new LocalDateTimeToString();
-		/*System.out.println("Retrieving from " + localDateTimeToString.format(from) + " to "
-				+ localDateTimeToString.format(to) + ".");*/
-		List<JsonTrade> jsonTrades = new TradesConsumer(Cryptocoin.BITCOIN).consume(from, to);
+		/*
+		 * System.out.println("Retrieving from " + localDateTimeToString.format(from) +
+		 * " to " + localDateTimeToString.format(to) + ".");
+		 */
+		List<JsonTrade> jsonTrades = new TradesConsumer(cryptocoin).consume(from, to);
 		Map<Integer, JsonTrade> result;
 		if (new MaxTradesReachedCheck().check(jsonTrades)) {
 
@@ -38,7 +43,7 @@ public class TradesRetrieverCallable implements Callable<Map<Integer, JsonTrade>
 					+ localDateTimeToString.format(to) + ". Splitting execution.");
 			result = splitExecution();
 		} else {
-			result = new OldMapJsonTradeFormatter().format(jsonTrades);
+			result = new ListToMapJsonTradeFormatter().format(jsonTrades);
 		}
 		return result;
 	}
@@ -47,7 +52,7 @@ public class TradesRetrieverCallable implements Callable<Map<Integer, JsonTrade>
 		Duration totalDuration = Duration.between(from, to);
 		Duration stepDuration = totalDuration.dividedBy(2);
 		TradesRetriever tradesRetriever = new TradesRetriever(stepDuration);
-		return tradesRetriever.retrieve(from, totalDuration);
+		return tradesRetriever.retrieve(cryptocoin, from, totalDuration);
 	}
 
 }

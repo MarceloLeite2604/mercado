@@ -50,52 +50,29 @@ public class Main {
 		Duration duration = Duration.between(startTime, endTime);
 		TradesRetriever tradesRetriever = new TradesRetriever();
 		tradesRetriever.setStepDuration(Duration.ofMinutes(10));
-		Map<Integer, JsonTrade> jsonTrades = tradesRetriever.retrieve(startTime, duration);
+		Map<Integer, JsonTrade> jsonTrades = tradesRetriever.retrieve(Cryptocoin.BITCOIN, startTime, duration);
 		Map<Integer, Trade> trades = new MapTradeFormatter().format(jsonTrades);
 		System.out.println("Total retrieved: " + trades.size());
 
 		Map<Integer, Trade> buyingTrades = new TradeTypeFilter(TradeType.BUY).filter(trades);
 		Map<Integer, Trade> sellingTrades = new TradeTypeFilter(TradeType.SELL).filter(trades);
 
-		double maxValue = trades.entrySet()
-			.stream()
-			.map(Entry<Integer, Trade>::getValue)
-			.mapToDouble(Trade::getPrice)
-			.max()
-			.getAsDouble();
-		double minValue = trades.entrySet()
-			.stream()
-			.map(Entry<Integer, Trade>::getValue)
-			.mapToDouble(Trade::getPrice)
-			.min()
-			.getAsDouble();
+		double maxValue = trades.entrySet().stream().map(Entry<Integer, Trade>::getValue).mapToDouble(Trade::getPrice)
+				.max().getAsDouble();
+		double minValue = trades.entrySet().stream().map(Entry<Integer, Trade>::getValue).mapToDouble(Trade::getPrice)
+				.min().getAsDouble();
 
-		double totalNegotiated = trades.entrySet()
-			.stream()
-			.map(Entry<Integer, Trade>::getValue)
-			.mapToDouble(Trade::getAmount)
-			.sum();
+		double totalNegotiated = trades.entrySet().stream().map(Entry<Integer, Trade>::getValue)
+				.mapToDouble(Trade::getAmount).sum();
 
-		int lastTradeId = trades.entrySet()
-			.stream()
-			.map(Entry<Integer, Trade>::getValue)
-			.mapToInt(Trade::getId)
-			.max()
-			.getAsInt();
+		int lastTradeId = trades.entrySet().stream().map(Entry<Integer, Trade>::getValue).mapToInt(Trade::getId).max()
+				.getAsInt();
 		Trade lastTrade = trades.get(lastTradeId);
 
-		int lastSellingTradeId = sellingTrades.entrySet()
-			.stream()
-			.map(Entry<Integer, Trade>::getValue)
-			.mapToInt(Trade::getId)
-			.max()
-			.getAsInt();
-		int lastBuyingTradeId = buyingTrades.entrySet()
-			.stream()
-			.map(Entry<Integer, Trade>::getValue)
-			.mapToInt(Trade::getId)
-			.max()
-			.getAsInt();
+		int lastSellingTradeId = sellingTrades.entrySet().stream().map(Entry<Integer, Trade>::getValue)
+				.mapToInt(Trade::getId).max().getAsInt();
+		int lastBuyingTradeId = buyingTrades.entrySet().stream().map(Entry<Integer, Trade>::getValue)
+				.mapToInt(Trade::getId).max().getAsInt();
 		Trade lastSellingTrade = trades.get(lastSellingTradeId);
 		Trade lastBuyingTrade = trades.get(lastBuyingTradeId);
 

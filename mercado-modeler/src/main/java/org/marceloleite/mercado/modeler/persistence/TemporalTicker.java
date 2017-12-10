@@ -7,12 +7,18 @@ public class TemporalTicker {
 	private LocalDateTime from;
 
 	private LocalDateTime to;
+	
+	private long orders;
 
 	private double high;
+	
+	private double average;
 
 	private double low;
 
 	private double vol;
+	
+	private double first;
 
 	private double last;
 
@@ -86,6 +92,30 @@ public class TemporalTicker {
 
 	public void setSell(double sell) {
 		this.sell = sell;
+	}
+
+	public long getOrders() {
+		return orders;
+	}
+
+	public void setOrders(long orders) {
+		this.orders = orders;
+	}
+
+	public double getAverage() {
+		return average;
+	}
+
+	public void setAverage(double average) {
+		this.average = average;
+	}
+
+	public double getFirst() {
+		return first;
+	}
+
+	public void setFirst(double first) {
+		this.first = first;
 	}
 
 }

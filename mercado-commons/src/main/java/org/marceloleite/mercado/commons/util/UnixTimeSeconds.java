@@ -6,15 +6,16 @@ import java.time.ZoneId;
 public class UnixTimeSeconds {
 	
 	private LocalDateTime time;
-
+	
+	private static final ZoneId ZONE_ID = ZoneId.of("UTC");
+	
 	public UnixTimeSeconds(LocalDateTime time) {
 		super();
 		this.time = time;
 	}
 
 	public long get() {
-		ZoneId zoneId = ZoneId.systemDefault();
-		long epoch = time.atZone(zoneId).toEpochSecond();
+		long epoch = time.atZone(ZONE_ID).toEpochSecond();
 		return epoch;
 	}
 }
