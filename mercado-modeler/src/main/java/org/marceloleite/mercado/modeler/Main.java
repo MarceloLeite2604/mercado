@@ -8,7 +8,7 @@ import java.util.Map.Entry;
 import org.marceloleite.mercado.commons.util.ObjectToJsonFormatter;
 import org.marceloleite.mercado.consumer.OrderbookConsumer;
 import org.marceloleite.mercado.consumer.TickerConsumer;
-import org.marceloleite.mercado.consumer.model.Cryptocoin;
+import org.marceloleite.mercado.consumer.model.Currency;
 import org.marceloleite.mercado.consumer.model.JsonOrderbook;
 import org.marceloleite.mercado.consumer.model.JsonTicker;
 import org.marceloleite.mercado.consumer.model.JsonTrade;
@@ -32,13 +32,13 @@ public class Main {
 	}
 
 	private static void ticker() {
-		JsonTicker jsonTicker = new TickerConsumer(Cryptocoin.BITCOIN).consume();
+		JsonTicker jsonTicker = new TickerConsumer(Currency.BITCOIN).consume();
 		Ticker ticker = new TickerFormatter().format(jsonTicker);
 		System.out.println(new ObjectToJsonFormatter().format(ticker));
 	}
 
 	private static void orderbook() {
-		JsonOrderbook jsonOrderbook = new OrderbookConsumer(Cryptocoin.BCASH).consume();
+		JsonOrderbook jsonOrderbook = new OrderbookConsumer(Currency.BCASH).consume();
 		Orderbook orderbook = new OrderbookFormatter().format(jsonOrderbook);
 		System.out.println(new ObjectToJsonFormatter().format(orderbook));
 	}
@@ -50,7 +50,7 @@ public class Main {
 		Duration duration = Duration.between(startTime, endTime);
 		TradesRetriever tradesRetriever = new TradesRetriever();
 		tradesRetriever.setStepDuration(Duration.ofMinutes(10));
-		Map<Integer, JsonTrade> jsonTrades = tradesRetriever.retrieve(Cryptocoin.BITCOIN, startTime, duration);
+		Map<Integer, JsonTrade> jsonTrades = tradesRetriever.retrieve(Currency.BITCOIN, startTime, duration);
 		Map<Integer, Trade> trades = new MapTradeFormatter().format(jsonTrades);
 		System.out.println("Total retrieved: " + trades.size());
 

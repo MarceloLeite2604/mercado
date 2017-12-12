@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.Callable;
 
-import org.marceloleite.mercado.consumer.model.Cryptocoin;
+import org.marceloleite.mercado.consumer.model.Currency;
 import org.marceloleite.mercado.consumer.model.JsonTrade;
 import org.marceloleite.mercado.consumer.trades.TradesRetriever;
 import org.marceloleite.mercado.modeler.business.filter.TradeTypeFilter;
@@ -17,11 +17,11 @@ import org.marceloleite.mercado.modeler.util.formatter.MapTradeFormatter;
 
 public class TemporalTickersCallable implements Callable<TemporalTicker> {
 
-	private Cryptocoin cryptocoin;
+	private Currency cryptocoin;
 	private LocalDateTime initialTime;
 	private Duration duration;
 
-	public TemporalTickersCallable(Cryptocoin cryptocoin, LocalDateTime initialTime, Duration duration) {
+	public TemporalTickersCallable(Currency cryptocoin, LocalDateTime initialTime, Duration duration) {
 		this.cryptocoin = cryptocoin;
 		this.initialTime = initialTime;
 		this.duration = duration;

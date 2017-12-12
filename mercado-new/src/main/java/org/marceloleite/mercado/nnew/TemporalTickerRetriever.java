@@ -13,13 +13,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import org.marceloleite.mercado.consumer.model.Cryptocoin;
+import org.marceloleite.mercado.consumer.model.Currency;
 import org.marceloleite.mercado.modeler.persistence.TemporalTicker;
 
 public class TemporalTickerRetriever {
 	
 
-	public List<TemporalTicker> retrieve(Cryptocoin cryptocoin, LocalDateTime from, LocalDateTime to,
+	public List<TemporalTicker> retrieve(Currency cryptocoin, LocalDateTime from, LocalDateTime to,
 			Duration stepDuration) {
 		Set<Future<TemporalTicker>> futureSet = new HashSet<>();
 		long totalSteps = calculateTimeDuration(from, to, stepDuration);

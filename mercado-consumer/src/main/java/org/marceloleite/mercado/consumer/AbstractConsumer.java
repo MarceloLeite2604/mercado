@@ -3,7 +3,7 @@ package org.marceloleite.mercado.consumer;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 
-import org.marceloleite.mercado.consumer.model.Cryptocoin;
+import org.marceloleite.mercado.consumer.model.Currency;
 
 public abstract class AbstractConsumer {
 
@@ -11,9 +11,9 @@ public abstract class AbstractConsumer {
 
 	private static final String PATH = "api/%s/%s/";
 
-	protected Cryptocoin cryptocoin;
+	protected Currency cryptocoin;
 
-	public AbstractConsumer(Cryptocoin cryptocoin) {
+	public AbstractConsumer(Currency cryptocoin) {
 		super();
 		this.cryptocoin = cryptocoin;
 	}
