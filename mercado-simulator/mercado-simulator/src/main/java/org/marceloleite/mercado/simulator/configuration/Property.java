@@ -1,10 +1,8 @@
-package org.marceloleite.mercado.nnew.configuration;
+package org.marceloleite.mercado.simulator.configuration;
 
 public enum Property {
 
-	BITCOIN_BUYING_DATE("bitcoin.buying_date"),
-	BITCOIN_AMOUNT("bitcoin.amount"),
-	BITCOIN_VALUE("bitcoin.value");
+	BALANCE_REAL_INITIAL_VALUE("balance.real.initialValue");
 
 	private String name;
 
@@ -15,7 +13,7 @@ public enum Property {
 	public String getName() {
 		return name;
 	}
-	
+
 	@Override
 	public String toString() {
 		return name;

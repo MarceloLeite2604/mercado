@@ -7,20 +7,20 @@ import java.util.Map;
 import java.util.concurrent.Callable;
 
 import org.marceloleite.mercado.commons.util.LocalDateTimeToString;
-import org.marceloleite.mercado.consumer.model.Cryptocoin;
+import org.marceloleite.mercado.consumer.model.Currency;
 import org.marceloleite.mercado.consumer.model.JsonTrade;
 import org.marceloleite.mercado.consumer.util.checker.MaxTradesReachedCheck;
 import org.marceloleite.mercado.consumer.util.formatter.ListToMapJsonTradeFormatter;
 
 public class TradesRetrieverCallable implements Callable<Map<Integer, JsonTrade>> {
 
-	private Cryptocoin cryptocoin;
+	private Currency cryptocoin;
 
 	private LocalDateTime from;
 
 	private LocalDateTime to;
 
-	public TradesRetrieverCallable(Cryptocoin cryptocoin, LocalDateTime from, LocalDateTime to) {
+	public TradesRetrieverCallable(Currency cryptocoin, LocalDateTime from, LocalDateTime to) {
 		super();
 
 		this.cryptocoin = cryptocoin;

@@ -12,7 +12,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import org.marceloleite.mercado.consumer.model.Cryptocoin;
+import org.marceloleite.mercado.consumer.model.Currency;
 import org.marceloleite.mercado.consumer.model.JsonTrade;
 
 public class TradesRetriever {
@@ -34,7 +34,7 @@ public class TradesRetriever {
 		this.stepDuration = stepDuration;
 	}
 
-	public Map<Integer, JsonTrade> retrieve(Cryptocoin cryptocoin, LocalDateTime initialTime, Duration duration) {
+	public Map<Integer, JsonTrade> retrieve(Currency cryptocoin, LocalDateTime initialTime, Duration duration) {
 		Set<Future<Map<Integer, JsonTrade>>> futureSet = new HashSet<>();
 		long totalSteps = (duration.getSeconds() / stepDuration.getSeconds());
 		totalSteps = (totalSteps == 0 ? 1 : totalSteps);

@@ -2,14 +2,14 @@ package org.marceloleite.mercado.consumer;
 
 import javax.ws.rs.core.MediaType;
 
-import org.marceloleite.mercado.consumer.model.Cryptocoin;
+import org.marceloleite.mercado.consumer.model.Currency;
 import org.marceloleite.mercado.consumer.model.JsonTicker;
 
 public class TickerConsumer extends AbstractConsumer implements Consumer<JsonTicker> {
 	
 	private static final String METHOD = "ticker";
 	
-	public TickerConsumer(Cryptocoin cryptocoin) {
+	public TickerConsumer(Currency cryptocoin) {
 		super(cryptocoin);
 	}	
 	

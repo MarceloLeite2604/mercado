@@ -6,26 +6,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.marceloleite.mercado.commons.util.LocalDateTimeToString;
-import org.marceloleite.mercado.consumer.model.Cryptocoin;
+import org.marceloleite.mercado.consumer.model.Currency;
 import org.marceloleite.mercado.modeler.persistence.TemporalTicker;
-import org.marceloleite.mercado.nnew.configuration.Configuration;
-import org.marceloleite.mercado.nnew.configuration.Property;
 
 public class Main {
 	public static void main(String[] args) {
-		
-		Configuration configuration = Configuration.getInstance();
-		
-		System.out.println(configuration.getConfiguration(Property.BITCOIN_BUYING_DATE));
-		System.out.println(Double.parseDouble(configuration.getConfiguration(Property.BITCOIN_AMOUNT)));
-		System.out.println(Double.parseDouble(configuration.getConfiguration(Property.BITCOIN_VALUE)));
 		
 		LocalDateTime to = LocalDateTime.of(2017, 12, 11, 13, 58);
 		LocalDateTime from = LocalDateTime.from(to)
 			.minus(Duration.ofMinutes(60));
 		Duration stepDuration = Duration.ofMinutes(1);
 		TemporalTickerRetriever temporalTickerRetriever = new TemporalTickerRetriever();
-		List<TemporalTicker> temporalTickers = temporalTickerRetriever.retrieve(Cryptocoin.BITCOIN, from, to,
+		List<TemporalTicker> temporalTickers = temporalTickerRetriever.retrieve(Currency.BITCOIN, from, to,
 				stepDuration);
 		List<Comparison> changes = compare(temporalTickers);
 
