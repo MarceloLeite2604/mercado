@@ -29,4 +29,9 @@ public class CurrencyAmount {
 	public void setAmount(double amount) {
 		this.amount = amount;
 	}
+	
+	@Override
+	public String toString() {
+		return currency.getAcronimo() + " " + amount;
+	}
 }
