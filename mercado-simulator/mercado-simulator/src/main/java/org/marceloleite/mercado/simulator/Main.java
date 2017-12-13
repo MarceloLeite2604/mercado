@@ -17,10 +17,24 @@ public class Main {
 	public static void main(String[] args) {
 
 		Simulator simulator = new Simulator();
-		simulator.getBalance()
+		
+		StringToLocalDateTimeFormatter stringToLocalDateTimeFormatter = new StringToLocalDateTimeFormatter();
+		
+		Deposit deposit = new Deposit();
+		deposit.setTime(stringToLocalDateTimeFormatter.format("05/09/2017 21:31:00"));
+		deposit.setCurrencyAmount(new CurrencyAmount(Currency.REAL, 550.37));
+		simulator.deposit(deposit);
+		
+		deposit = new Deposit();
+		deposit.setTime(stringToLocalDateTimeFormatter.format("29/11/2017 10:34:00"));
+		deposit.setCurrencyAmount(new CurrencyAmount(Currency.REAL, 1030.0));
+		simulator.deposit(deposit);
+		
+		
+		/*simulator.getBalance()
 			.deposit(new CurrencyAmount(Currency.REAL, 500.0));
 		simulator.getBalance()
-			.deposit(new CurrencyAmount(Currency.REAL, 1000.0));
+			.deposit(new CurrencyAmount(Currency.REAL, 1000.0));*/
 
 		simulator.buyFromOtherCurrencyAmount(Currency.BITCOIN, new CurrencyAmount(Currency.REAL, 250.0),
 				new StringToLocalDateTimeFormatter().format("07/09/2017 21:47:15"));
