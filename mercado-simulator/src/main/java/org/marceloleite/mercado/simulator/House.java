@@ -7,7 +7,7 @@ import java.util.List;
 import org.marceloleite.mercado.consumer.model.Currency;
 import org.marceloleite.mercado.nnew.PriceRetriever;
 
-public class Simulator {
+public class House {
 
 	private static final double DEFAULT_COMISSION_PERCENTAGE = 0.007;
 
@@ -18,8 +18,10 @@ public class Simulator {
 	private Balance comission;
 
 	private double comissionPercentage;
+	
+	private List<Deposit> deposits;
 
-	public Simulator() {
+	public House() {
 		super();
 		balance = new Balance();
 		currencyTrades = new ArrayList<>();
@@ -92,5 +94,9 @@ public class Simulator {
 		balance.deposit(currencyTrade.getTo());
 		balance.withdraw(currencyTrade.getFrom());
 		comission.deposit(currencyTrade.getComission());
+	}
+
+	public void deposit(Deposit deposit) {
+		balance.deposit(deposit.getCurrencyAmount());
 	}
 }

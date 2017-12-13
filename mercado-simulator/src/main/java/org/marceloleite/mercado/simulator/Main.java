@@ -16,7 +16,7 @@ public class Main {
 
 	public static void main(String[] args) {
 
-		Simulator simulator = new Simulator();
+		House simulator = new House();
 		
 		StringToLocalDateTimeFormatter stringToLocalDateTimeFormatter = new StringToLocalDateTimeFormatter();
 		
