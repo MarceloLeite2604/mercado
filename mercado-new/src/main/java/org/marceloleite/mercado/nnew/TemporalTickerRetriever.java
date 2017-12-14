@@ -17,26 +17,26 @@ import org.marceloleite.mercado.consumer.model.Currency;
 import org.marceloleite.mercado.modeler.persistence.TemporalTicker;
 
 public class TemporalTickerRetriever {
-	
 
 	public List<TemporalTicker> retrieve(Currency cryptocoin, LocalDateTime from, LocalDateTime to,
 			Duration stepDuration) {
 		Set<Future<TemporalTicker>> futureSet = new HashSet<>();
-		long totalSteps = calculateTimeDuration(from, to, stepDuration);
+		long totalSteps = calculateSteps(from, to, stepDuration);
 		ExecutorService executorService = Executors.newFixedThreadPool((int) (totalSteps == 0 ? 1 : totalSteps));
 
 		LocalDateTime fromStep = from;
 		Duration nextStepDuration = calculateStepDuration(from, to, stepDuration);
-
 		for (long step = 0; step < totalSteps; step++) {
 			Callable<TemporalTicker> temporalTickersCallable = new TemporalTickersCallable(cryptocoin, fromStep,
 					nextStepDuration);
 			futureSet.add(executorService.submit(temporalTickersCallable));
-			fromStep = LocalDateTime.from(fromStep).plus(nextStepDuration);
+			fromStep = LocalDateTime.from(fromStep)
+				.plus(nextStepDuration);
 			nextStepDuration = calculateStepDuration(fromStep, to, stepDuration);
-			to = LocalDateTime.from(to).plus(nextStepDuration);
+			to = LocalDateTime.from(to)
+				.plus(nextStepDuration);
 		}
-
+		
 		List<TemporalTicker> temporalTickers = new ArrayList<>();
 
 		for (Future<TemporalTicker> future : futureSet) {
@@ -73,7 +73,7 @@ public class TemporalTickerRetriever {
 		}
 	}
 
-	private long calculateTimeDuration(LocalDateTime from, LocalDateTime to, Duration stepDuration) {
+	private long calculateSteps(LocalDateTime from, LocalDateTime to, Duration stepDuration) {
 		Duration timeDuration = Duration.between(from, to);
 		long totalSteps = (long) Math.ceil((double) timeDuration.getSeconds() / (double) stepDuration.getSeconds());
 		totalSteps = (totalSteps == 0 ? 1 : totalSteps);
