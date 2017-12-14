@@ -34,7 +34,7 @@ public class Simulator {
 
 	private Map<Currency, Double> currenciesBasePrice;
 
-	private Map<Currency, Double> currencyMonitoringPercentage;
+	private Map<Currency, CurrencyMonitoring> currenciesMonitoring;
 
 	public Simulator() {
 		this.stepTime = DEFAULT_STEP_TIME;
@@ -42,7 +42,7 @@ public class Simulator {
 		this.depositsTemporalController = new TemporalController<>();
 		this.buyOrdersTemporalController = new TemporalController<>();
 		this.currenciesBasePrice = new EnumMap<>(Currency.class);
-		this.currencyMonitoringPercentage = createDefaultCurrencyMonitoringPercentage();
+		this.currenciesMonitoring = createDefaultCurrencyMonitoringPercentage();
 	}
 
 	public void addDeposit(Deposit deposit, LocalDateTime time) {
@@ -72,21 +72,25 @@ public class Simulator {
 	public LocalDateTime getStopTime() {
 		return stopTime;
 	}
-	
+
 	public void setMonitoringPercentageForCurrency(Currency currency, double monitoringPercentage) {
-		
-		if ( !currency.isDigital() ) {
+
+		if (!currency.isDigital()) {
 			throw new IllegalStateException("Cannot update monitoring percentage for non-digital currency.");
 		}
-		
-		currencyMonitoringPercentage.put(currency, monitoringPercentage);
+
+		currenciesMonitoring.put(currency, monitoringPercentage);
 	}
 
 	public void setStopTime(LocalDateTime endTime) {
 		this.stopTime = endTime;
 	}
+	
+	public void addCurrencyMonitoring(CurrencyMonitoring currencyMonitoring) {
+		currenciesMonitoring.put(currencyMonitoring.getCurrency(), currencyMonitoring);
+	}
 
-	public EnumMap<Currency, Double> createDefaultCurrencyMonitoringPercentage() {
+	/*public EnumMap<Currency, Double> createDefaultCurrencyMonitoringPercentage() {
 		EnumMap<Currency, Double> currencyMonitoringPercentage = new EnumMap<>(Currency.class);
 
 		for (Currency currency : Currency.values()) {
@@ -95,7 +99,7 @@ public class Simulator {
 			}
 		}
 		return currencyMonitoringPercentage;
-	}
+	}*/
 
 	public void runSimulation() {
 		checkSimulationRequirements();
@@ -179,27 +183,32 @@ public class Simulator {
 			if (currency.isDigital()) {
 				TemporalTicker temporalTicker = currenciesTemporalTickers.get(currency);
 				double currentPrice = temporalTicker.getLast();
-				updateBasePrice = !currenciesBasePrice.containsKey(currency);
-				double basePrice = Optional.ofNullable(currenciesBasePrice.get(currency))
-					.orElse(currentPrice);
+				if (currentPrice != 0) {
 
-				double percentage = currentPrice / basePrice;
+					updateBasePrice = !currenciesBasePrice.containsKey(currency);
+					double basePrice = Optional.ofNullable(currenciesBasePrice.get(currency))
+						.orElse(currentPrice);
 
-				double monitoringPercentage = currencyMonitoringPercentage.get(currency);
-				if (percentage >= (1 + monitoringPercentage)) {
-					System.out.println(localDateTimeToString.format(temporalTicker.getTo()) + ": Price for " + currency
-							+ " has increased by " + (monitoringPercentage * 100) + "%.");
-					updateBasePrice = true;
+					double percentage = (currentPrice / basePrice) - 1.0;
 
-				} else if (percentage <= (1 - monitoringPercentage)) {
-					System.out.println(localDateTimeToString.format(temporalTicker.getTo()) + ": Price for " + currency
-							+ " has descreased by " + (monitoringPercentage * 100) + "%.");
-					updateBasePrice = true;
+					double monitoringPercentage = currenciesMonitoring.get(currency);
+					if (percentage >= monitoringPercentage) {
+						System.out.println(localDateTimeToString.format(temporalTicker.getTo()) + ": Price for "
+								+ currency + " has increased by " + Math.abs(percentage * 100) + "%.");
+						updateBasePrice = true;
+
+					} else if (percentage <= -monitoringPercentage) {
+						System.out.println(localDateTimeToString.format(temporalTicker.getTo()) + ": Price for "
+								+ currency + " has descreased by " + Math.abs(percentage * 100) + "%.");
+						updateBasePrice = true;
+					}
+
+					if (updateBasePrice) {
+						currenciesBasePrice.put(currency, currentPrice);
+					}
+
 				}
 
-				if (updateBasePrice) {
-					currenciesBasePrice.put(currency, currentPrice);
-				}
 			}
 		}
 	}

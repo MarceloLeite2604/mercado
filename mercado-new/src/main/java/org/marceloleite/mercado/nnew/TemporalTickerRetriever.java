@@ -13,6 +13,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import org.marceloleite.mercado.commons.util.LocalDateTimeToString;
+import org.marceloleite.mercado.commons.util.LongToLocalDateTimeFormatter;
 import org.marceloleite.mercado.consumer.model.Currency;
 import org.marceloleite.mercado.modeler.persistence.TemporalTicker;
 
@@ -22,7 +24,11 @@ public class TemporalTickerRetriever {
 			Duration stepDuration) {
 		Set<Future<TemporalTicker>> futureSet = new HashSet<>();
 		long totalSteps = calculateSteps(from, to, stepDuration);
-		ExecutorService executorService = Executors.newFixedThreadPool((int) (totalSteps == 0 ? 1 : totalSteps));
+		/*
+		 * ExecutorService executorService = Executors.newFixedThreadPool((int)
+		 * (totalSteps == 0 ? 1 : totalSteps));
+		 */
+		ExecutorService executorService = Executors.newFixedThreadPool(8);
 
 		LocalDateTime fromStep = from;
 		Duration nextStepDuration = calculateStepDuration(from, to, stepDuration);
@@ -36,7 +42,7 @@ public class TemporalTickerRetriever {
 			to = LocalDateTime.from(to)
 				.plus(nextStepDuration);
 		}
-		
+
 		List<TemporalTicker> temporalTickers = new ArrayList<>();
 
 		for (Future<TemporalTicker> future : futureSet) {
