@@ -2,35 +2,54 @@ package org.marceloleite.mercado.simulator;
 
 import java.time.LocalDateTime;
 
+import org.marceloleite.mercado.consumer.model.Currency;
+
 public class BuyOrder {
 
-	private CurrencyAmount currencyAmountToBuy;
-
-	private CurrencyAmount currencyAmountToSpend;
+	private Currency currencyToBuy;
+	
+	private double buyingAmount;
+	
+	private Currency currencyToSpend;
+	
+	private double spendAmount;
 
 	private LocalDateTime time;
 
-	public BuyOrder(CurrencyAmount currencyAmountToBuy, CurrencyAmount currencyAmountToSpend, LocalDateTime time) {
+	public BuyOrder() {
 		super();
-		this.currencyAmountToBuy = currencyAmountToBuy;
-		this.currencyAmountToSpend = currencyAmountToSpend;
-		this.time = time;
 	}
 
-	public CurrencyAmount getCurrencyAmountToBuy() {
-		return currencyAmountToBuy;
+	public Currency getCurrencyToBuy() {
+		return currencyToBuy;
 	}
 
-	public void setCurrencyAmountToBuy(CurrencyAmount currencyAmountToBuy) {
-		this.currencyAmountToBuy = currencyAmountToBuy;
+	public void setCurrencyToBuy(Currency currencyToBuy) {
+		this.currencyToBuy = currencyToBuy;
 	}
 
-	public CurrencyAmount getCurrencyAmountToSpend() {
-		return currencyAmountToSpend;
+	public double getBuyingAmount() {
+		return buyingAmount;
 	}
 
-	public void setCurrencyAmountToSpend(CurrencyAmount currencyAmountToSpend) {
-		this.currencyAmountToSpend = currencyAmountToSpend;
+	public void setBuyingAmount(double buyingAmount) {
+		this.buyingAmount = buyingAmount;
+	}
+
+	public Currency getCurrencyToSpend() {
+		return currencyToSpend;
+	}
+
+	public void setCurrencyToSpend(Currency currencyToSpend) {
+		this.currencyToSpend = currencyToSpend;
+	}
+
+	public double getSpendAmount() {
+		return spendAmount;
+	}
+
+	public void setSpendAmount(double spendAmount) {
+		this.spendAmount = spendAmount;
 	}
 
 	public LocalDateTime getTime() {
@@ -40,9 +59,4 @@ public class BuyOrder {
 	public void setTime(LocalDateTime time) {
 		this.time = time;
 	}
-
-	public boolean isBuyingOrder() {
-		return (currencyAmountToBuy != null);
-	}
-
 }
