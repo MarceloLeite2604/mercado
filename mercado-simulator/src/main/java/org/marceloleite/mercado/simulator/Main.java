@@ -19,9 +19,9 @@ public class Main {
 		
 		Simulator simulator = new Simulator();
 		LocalDateTime startTime = stringToLocalDateTimeFormatter.format("01/09/2017 00:00:00");
-		/*LocalDateTime stopTime = LocalDateTime.now();*/
-		LocalDateTime stopTime = stringToLocalDateTimeFormatter.format("02/09/2017 00:00:00");
-		Duration stepDuration = Duration.ofHours(1);
+		LocalDateTime stopTime = LocalDateTime.now();
+		/*LocalDateTime stopTime = stringToLocalDateTimeFormatter.format("02/09/2017 00:00:00");*/
+		Duration stepDuration = Duration.ofMinutes(10);
 		simulator.setStartTime(startTime);
 		simulator.setStopTime(stopTime);
 		simulator.setStepTime(stepDuration);
