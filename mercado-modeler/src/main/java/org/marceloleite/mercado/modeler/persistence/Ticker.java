@@ -2,8 +2,13 @@ package org.marceloleite.mercado.modeler.persistence;
 
 import java.time.LocalDateTime;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+@Entity(name="Tickers")
 public class Ticker {
 
+	@Id
 	private LocalDateTime date;
 
 	private double high;
