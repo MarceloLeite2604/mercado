@@ -3,12 +3,16 @@ package org.marceloleite.mercado.simulator;
 import org.marceloleite.mercado.consumer.model.Currency;
 
 public class CurrencyMonitoring {
+	
+	private static final double DEFAULT_CURRENCY_MONITORING_PERCENTAGE = 0.03;
 
 	private Currency currency;
 
 	private double increasePercentage;
 
 	private double decreasePercentage;
+	
+	private double basePrice;
 
 	public CurrencyMonitoring() {
 		super();
@@ -38,4 +42,11 @@ public class CurrencyMonitoring {
 		this.decreasePercentage = decreasePercentage;
 	}
 
+	public double getBasePrice() {
+		return basePrice;
+	}
+
+	public void setBasePrice(double basePrice) {
+		this.basePrice = basePrice;
+	}
 }

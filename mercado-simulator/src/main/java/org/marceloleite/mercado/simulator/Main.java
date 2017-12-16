@@ -14,59 +14,58 @@ import org.marceloleite.mercado.nnew.PriceRetriever;
 public class Main {
 
 	public static void main(String[] args) {
-
-		StringToLocalDateTimeFormatter stringToLocalDateTimeFormatter = new StringToLocalDateTimeFormatter();
 		
-		Simulator simulator = new Simulator();
-		LocalDateTime startTime = stringToLocalDateTimeFormatter.format("01/09/2017 00:00:00");
-		LocalDateTime stopTime = LocalDateTime.now();
-		/*LocalDateTime stopTime = stringToLocalDateTimeFormatter.format("02/09/2017 00:00:00");*/
-		Duration stepDuration = Duration.ofMinutes(10);
-		simulator.setStartTime(startTime);
-		simulator.setStopTime(stopTime);
-		simulator.setStepTime(stepDuration);
+		StringToLocalDateTimeFormatter stringToLocalDateTimeFormatter = new StringToLocalDateTimeFormatter();
+
+		Account account = new Account("Marcelo");
+		
+		Simulator simulator = configureSimulator();
 		
 		Deposit deposit = new Deposit();
 		LocalDateTime time = stringToLocalDateTimeFormatter.format("05/09/2017 21:31:00");
 		deposit.setTime(time);
 		deposit.setCurrencyAmount(new CurrencyAmount(Currency.REAL, 550.37));
-		simulator.addDeposit(deposit, time);
+		account.addDeposit(deposit, time);
 		
 		deposit = new Deposit();
 		time = stringToLocalDateTimeFormatter.format("29/11/2017 10:34:00");
 		deposit.setTime(time);
 		deposit.setCurrencyAmount(new CurrencyAmount(Currency.REAL, 1030.0));
-		simulator.addDeposit(deposit, time);
+		account.addDeposit(deposit, time);
 		
 		BuyOrder buyOrder = new BuyOrder();
 		buyOrder.setCurrencyToSpend(Currency.REAL);
 		buyOrder.setSpendAmount(250.0);
 		buyOrder.setCurrencyToBuy(Currency.BITCOIN);
 		buyOrder.setTime(stringToLocalDateTimeFormatter.format("07/09/2017 21:47:15"));
-		simulator.addBuyOrder(buyOrder, time);
+		account.addBuyOrder(buyOrder, time);
 		
 		buyOrder = new BuyOrder();
 		buyOrder.setCurrencyToSpend(Currency.REAL);
 		buyOrder.setSpendAmount(250.0);
 		buyOrder.setCurrencyToBuy(Currency.LITECOIN);
 		buyOrder.setTime(stringToLocalDateTimeFormatter.format("07/09/2017 21:47:15"));
-		simulator.addBuyOrder(buyOrder, time);
+		account.addBuyOrder(buyOrder, time);
 		
 		buyOrder = new BuyOrder();
 		buyOrder.setCurrencyToSpend(Currency.REAL);
 		buyOrder.setSpendAmount(750.0);
 		buyOrder.setCurrencyToBuy(Currency.BITCOIN);
 		buyOrder.setTime(stringToLocalDateTimeFormatter.format("29/11/2017 13:32:05"));
-		simulator.addBuyOrder(buyOrder, time);
+		account.addBuyOrder(buyOrder, time);
 		
 		buyOrder = new BuyOrder();
 		buyOrder.setCurrencyToSpend(Currency.REAL);
 		buyOrder.setSpendAmount(250.0);
 		buyOrder.setCurrencyToBuy(Currency.LITECOIN);
 		buyOrder.setTime(stringToLocalDateTimeFormatter.format("29/11/2017 13:32:05"));
-		simulator.addBuyOrder(buyOrder, time);
+		account.addBuyOrder(buyOrder, time);
 		
-		simulator.setMonitoringPercentageForCurrency(Currency.BITCOIN, 0.01);
+		CurrencyMonitoring currencyMonitoring = new CurrencyMonitoring();
+		currencyMonitoring.setCurrency(Currency.BITCOIN);
+		currencyMonitoring.setIncreasePercentage(0.05);
+		currencyMonitoring.setDecreasePercentage(0.03);
+		account.addCurrencyMonitoring(currencyMonitoring);
 		
 		simulator.runSimulation();
 		
@@ -94,6 +93,19 @@ public class Main {
 				calculateRealValueOf(currencyAmount);
 			}
 		}*/
+	}
+
+	private static Simulator configureSimulator() {
+		StringToLocalDateTimeFormatter stringToLocalDateTimeFormatter = new StringToLocalDateTimeFormatter();
+		Simulator simulator = new Simulator();
+		LocalDateTime startTime = stringToLocalDateTimeFormatter.format("01/09/2017 00:00:00");
+		LocalDateTime stopTime = LocalDateTime.now();
+		/*LocalDateTime stopTime = stringToLocalDateTimeFormatter.format("02/09/2017 00:00:00");*/
+		Duration stepDuration = Duration.ofMinutes(10);
+		simulator.setStartTime(startTime);
+		simulator.setStopTime(stopTime);
+		simulator.setStepTime(stepDuration);
+		return simulator;
 	}
 
 	private static void calculateRealValueOf(CurrencyAmount currencyAmount) {

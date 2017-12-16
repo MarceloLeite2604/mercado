@@ -18,13 +18,9 @@ public class Simulator {
 
 	private static final Duration DEFAULT_STEP_TIME = Duration.ofSeconds(30);
 
-	private static final double DEFAULT_CURRENCY_MONITORING_PERCENTAGE = 0.03;
-
 	private House house;
 
-	private TemporalController<Deposit> depositsTemporalController;
-
-	private TemporalController<BuyOrder> buyOrdersTemporalController;
+	private List<Account> accounts;
 
 	private Duration stepTime;
 
@@ -32,25 +28,9 @@ public class Simulator {
 
 	private LocalDateTime stopTime;
 
-	private Map<Currency, Double> currenciesBasePrice;
-
-	private Map<Currency, CurrencyMonitoring> currenciesMonitoring;
-
 	public Simulator() {
 		this.stepTime = DEFAULT_STEP_TIME;
 		this.house = new House();
-		this.depositsTemporalController = new TemporalController<>();
-		this.buyOrdersTemporalController = new TemporalController<>();
-		this.currenciesBasePrice = new EnumMap<>(Currency.class);
-		this.currenciesMonitoring = createDefaultCurrencyMonitoringPercentage();
-	}
-
-	public void addDeposit(Deposit deposit, LocalDateTime time) {
-		depositsTemporalController.add(time, deposit);
-	}
-
-	public void addBuyOrder(BuyOrder buyOrder, LocalDateTime time) {
-		buyOrdersTemporalController.add(time, buyOrder);
 	}
 
 	public Duration getStepTime() {
@@ -73,33 +53,13 @@ public class Simulator {
 		return stopTime;
 	}
 
-	public void setMonitoringPercentageForCurrency(Currency currency, double monitoringPercentage) {
-
-		if (!currency.isDigital()) {
-			throw new IllegalStateException("Cannot update monitoring percentage for non-digital currency.");
-		}
-
-		currenciesMonitoring.put(currency, monitoringPercentage);
+	public List<Account> getAccounts() {
+		return accounts;
 	}
 
 	public void setStopTime(LocalDateTime endTime) {
 		this.stopTime = endTime;
 	}
-	
-	public void addCurrencyMonitoring(CurrencyMonitoring currencyMonitoring) {
-		currenciesMonitoring.put(currencyMonitoring.getCurrency(), currencyMonitoring);
-	}
-
-	/*public EnumMap<Currency, Double> createDefaultCurrencyMonitoringPercentage() {
-		EnumMap<Currency, Double> currencyMonitoringPercentage = new EnumMap<>(Currency.class);
-
-		for (Currency currency : Currency.values()) {
-			if (currency.isDigital()) {
-				currencyMonitoringPercentage.put(currency, DEFAULT_CURRENCY_MONITORING_PERCENTAGE);
-			}
-		}
-		return currencyMonitoringPercentage;
-	}*/
 
 	public void runSimulation() {
 		checkSimulationRequirements();
@@ -177,38 +137,49 @@ public class Simulator {
 	}
 
 	private void updateBasePrices(Map<Currency, TemporalTicker> currenciesTemporalTickers) {
+		for (Account account : accounts) {
+			updateBasePricesForAccount(currenciesTemporalTickers, account);
+		}
+	}
+
+	private void updateBasePricesForAccount(Map<Currency, TemporalTicker> currenciesTemporalTickers, Account account) {
 		LocalDateTimeToString localDateTimeToString = new LocalDateTimeToString();
 		boolean updateBasePrice = false;
+		Map<Currency, CurrencyMonitoring> currenciesMonitoring = account.getCurrenciesMonitoring();
+		Map<Currency, Double> basePrices = account.getBasePrices();
 		for (Currency currency : Currency.values()) {
 			if (currency.isDigital()) {
-				TemporalTicker temporalTicker = currenciesTemporalTickers.get(currency);
-				double currentPrice = temporalTicker.getLast();
-				if (currentPrice != 0) {
 
-					updateBasePrice = !currenciesBasePrice.containsKey(currency);
-					double basePrice = Optional.ofNullable(currenciesBasePrice.get(currency))
-						.orElse(currentPrice);
+				if (currenciesMonitoring.containsKey(currency)) {
+					TemporalTicker temporalTicker = currenciesTemporalTickers.get(currency);
+					double currentPrice = temporalTicker.getLast();
+					if (currentPrice != 0) {
 
-					double percentage = (currentPrice / basePrice) - 1.0;
+						updateBasePrice = !basePrices.containsKey(currency);
+						double basePrice = Optional.ofNullable(basePrices.get(currency))
+							.orElse(currentPrice);
 
-					double monitoringPercentage = currenciesMonitoring.get(currency);
-					if (percentage >= monitoringPercentage) {
-						System.out.println(localDateTimeToString.format(temporalTicker.getTo()) + ": Price for "
-								+ currency + " has increased by " + Math.abs(percentage * 100) + "%.");
-						updateBasePrice = true;
+						double percentage = (currentPrice / basePrice) - 1.0;
 
-					} else if (percentage <= -monitoringPercentage) {
-						System.out.println(localDateTimeToString.format(temporalTicker.getTo()) + ": Price for "
-								+ currency + " has descreased by " + Math.abs(percentage * 100) + "%.");
-						updateBasePrice = true;
+						CurrencyMonitoring currencyMonitoring = currenciesMonitoring.get(currency);
+						if (percentage >= currencyMonitoring.getIncreasePercentage()) {
+							System.out.println("[" + localDateTimeToString.format(temporalTicker.getTo()) + "] ["
+									+ account.getOwner() + "]: Price for " + currency + " has increased by "
+									+ Math.abs(percentage * 100) + "%.");
+							updateBasePrice = true;
+
+						} else if (percentage <= -currencyMonitoring.getDecreasePercentage()) {
+							System.out.println("[" + localDateTimeToString.format(temporalTicker.getTo()) + "] ["
+									+ account.getOwner() + "]: Price for " + currency + " has descreased by "
+									+ Math.abs(percentage * 100) + "%.");
+							updateBasePrice = true;
+						}
+
+						if (updateBasePrice) {
+							basePrices.put(currency, currentPrice);
+						}
 					}
-
-					if (updateBasePrice) {
-						currenciesBasePrice.put(currency, currentPrice);
-					}
-
 				}
-
 			}
 		}
 	}
