@@ -1,18 +1,18 @@
-package org.marceloleite.mercado.modeler.util.formatter;
+package org.marceloleite.mercado.modeler.util.converter;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.marceloleite.mercado.commons.interfaces.Formatter;
+import org.marceloleite.mercado.commons.interfaces.Converter;
 import org.marceloleite.mercado.consumer.model.JsonOrderbook;
-import org.marceloleite.mercado.modeler.persistence.Offer;
-import org.marceloleite.mercado.modeler.persistence.Orderbook;
+import org.marceloleite.mercado.modeler.persistence.model.Offer;
+import org.marceloleite.mercado.modeler.persistence.model.Orderbook;
 
-public class OrderbookFormatter implements Formatter<JsonOrderbook, Orderbook> {
+public class OrderbookConverter implements Converter<JsonOrderbook, Orderbook> {
 
 	@Override
 	public Orderbook format(JsonOrderbook jsonOrderbook) {
-		OfferFormatter offerFormatter = new OfferFormatter();
+		OfferConverter offerFormatter = new OfferConverter();
 
 		List<Offer> askOffers = jsonOrderbook.getAsks()
 			.stream()

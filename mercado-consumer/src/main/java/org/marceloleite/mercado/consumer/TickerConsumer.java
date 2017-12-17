@@ -9,15 +9,17 @@ public class TickerConsumer extends AbstractConsumer implements Consumer<JsonTic
 	
 	private static final String METHOD = "ticker";
 	
-	public TickerConsumer(Currency cryptocoin) {
-		super(cryptocoin);
+	public TickerConsumer(Currency currency) {
+		super(currency);
 	}	
 	
 	public JsonTicker consume(Object... args) {
-		return createWebTarget()
+		JsonTicker jsonTicker = createWebTarget()
 			.path(String.format(getPath()))
 			.request(MediaType.APPLICATION_JSON)
 			.get(JsonTicker.class);
+		jsonTicker.setCurrency(currency);
+		return jsonTicker;
 	}
 
 	@Override

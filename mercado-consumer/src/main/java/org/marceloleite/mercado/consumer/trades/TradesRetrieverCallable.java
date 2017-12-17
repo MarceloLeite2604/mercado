@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
-import org.marceloleite.mercado.commons.util.LocalDateTimeToString;
+import org.marceloleite.mercado.commons.util.converter.LocalDateTimeToStringConverter;
 import org.marceloleite.mercado.consumer.model.Currency;
 import org.marceloleite.mercado.consumer.model.JsonTrade;
 import org.marceloleite.mercado.consumer.util.checker.MaxTradesReachedCheck;
@@ -30,7 +30,7 @@ public class TradesRetrieverCallable implements Callable<Map<Integer, JsonTrade>
 
 	@Override
 	public Map<Integer, JsonTrade> call() throws Exception {
-		LocalDateTimeToString localDateTimeToString = new LocalDateTimeToString();
+		LocalDateTimeToStringConverter localDateTimeToString = new LocalDateTimeToStringConverter();
 		/*
 		 * System.out.println("Retrieving from " + localDateTimeToString.format(from) +
 		 * " to " + localDateTimeToString.format(to) + ".");

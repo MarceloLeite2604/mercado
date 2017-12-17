@@ -1,21 +1,24 @@
-package org.marceloleite.mercado.modeler.persistence;
+package org.marceloleite.mercado.modeler.persistence.model;
 
 import java.time.LocalDateTime;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+public class TemporalTicker {
 
-@Entity(name="Tickers")
-public class Ticker {
+	private LocalDateTime from;
 
-	@Id
-	private LocalDateTime date;
+	private LocalDateTime to;
+	
+	private long orders;
 
 	private double high;
+	
+	private double average;
 
 	private double low;
 
 	private double vol;
+	
+	private double first;
 
 	private double last;
 
@@ -23,19 +26,24 @@ public class Ticker {
 
 	private double sell;
 
-	public Ticker() {
+	public TemporalTicker() {
 		super();
 	}
 
-	public Ticker(double high, double low, double vol, double last, double buy, double sell, LocalDateTime date) {
-		super();
-		this.high = high;
-		this.low = low;
-		this.vol = vol;
-		this.last = last;
-		this.buy = buy;
-		this.sell = sell;
-		this.date = date;
+	public LocalDateTime getFrom() {
+		return from;
+	}
+
+	public void setFrom(LocalDateTime from) {
+		this.from = from;
+	}
+
+	public LocalDateTime getTo() {
+		return to;
+	}
+
+	public void setTo(LocalDateTime to) {
+		this.to = to;
 	}
 
 	public double getHigh() {
@@ -86,12 +94,28 @@ public class Ticker {
 		this.sell = sell;
 	}
 
-	public LocalDateTime getDate() {
-		return date;
+	public long getOrders() {
+		return orders;
 	}
 
-	public void setDate(LocalDateTime date) {
-		this.date = date;
+	public void setOrders(long orders) {
+		this.orders = orders;
+	}
+
+	public double getAverage() {
+		return average;
+	}
+
+	public void setAverage(double average) {
+		this.average = average;
+	}
+
+	public double getFirst() {
+		return first;
+	}
+
+	public void setFirst(double first) {
+		this.first = first;
 	}
 
 }

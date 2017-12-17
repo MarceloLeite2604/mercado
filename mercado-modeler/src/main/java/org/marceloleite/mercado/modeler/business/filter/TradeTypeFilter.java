@@ -3,8 +3,8 @@ package org.marceloleite.mercado.modeler.business.filter;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.marceloleite.mercado.modeler.persistence.Trade;
-import org.marceloleite.mercado.modeler.persistence.TradeType;
+import org.marceloleite.mercado.modeler.persistence.model.Trade;
+import org.marceloleite.mercado.modeler.persistence.model.TradeType;
 
 public class TradeTypeFilter implements Filter<Map<Integer, Trade>> {
 

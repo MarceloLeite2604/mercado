@@ -16,7 +16,7 @@ public enum Currency {
 	public String getAcronimo() {
 		return acronimo;
 	}
-	
+
 	public boolean isDigital() {
 		return digital;
 	}
@@ -24,5 +24,14 @@ public enum Currency {
 	@Override
 	public String toString() {
 		return getAcronimo();
+	}
+
+	public static Currency getByAcronimo(String acronimo) {
+		for (Currency currency : values()) {
+			if (acronimo.equals(currency.getAcronimo())) {
+				return currency;
+			}
+		}
+		return null;
 	}
 }
