@@ -13,10 +13,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import org.marceloleite.mercado.commons.util.LocalDateTimeToString;
-import org.marceloleite.mercado.commons.util.LongToLocalDateTimeFormatter;
+import org.marceloleite.mercado.commons.util.converter.LocalDateTimeToStringConverter;
+import org.marceloleite.mercado.commons.util.converter.LongToLocalDateTimeConverter;
 import org.marceloleite.mercado.consumer.model.Currency;
-import org.marceloleite.mercado.modeler.persistence.TemporalTicker;
+import org.marceloleite.mercado.modeler.persistence.model.TemporalTicker;
 
 public class TemporalTickerRetriever {
 

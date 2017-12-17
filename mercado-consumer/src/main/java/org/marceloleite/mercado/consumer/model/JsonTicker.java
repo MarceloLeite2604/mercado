@@ -16,8 +16,12 @@ public class JsonTicker {
 
 	@JsonProperty("ticker")
 	private JsonTickerValues ticker;
+
 	@JsonIgnore
 	private Map<String, Object> additionalProperties = new HashMap<String, Object>();
+
+	@JsonIgnore
+	private Currency currency;
 
 	@JsonProperty("ticker")
 	public JsonTickerValues getTicker() {
@@ -39,4 +43,11 @@ public class JsonTicker {
 		this.additionalProperties.put(name, value);
 	}
 
+	public Currency getCurrency() {
+		return currency;
+	}
+
+	public void setCurrency(Currency currency) {
+		this.currency = currency;
+	}
 }

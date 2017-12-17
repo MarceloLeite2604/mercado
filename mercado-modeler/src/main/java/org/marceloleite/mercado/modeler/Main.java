@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.marceloleite.mercado.commons.util.ObjectToJsonFormatter;
+import org.marceloleite.mercado.commons.util.converter.ObjectToJsonConverter;
 import org.marceloleite.mercado.consumer.OrderbookConsumer;
 import org.marceloleite.mercado.consumer.TickerConsumer;
 import org.marceloleite.mercado.consumer.model.Currency;
@@ -14,33 +14,39 @@ import org.marceloleite.mercado.consumer.model.JsonTicker;
 import org.marceloleite.mercado.consumer.model.JsonTrade;
 import org.marceloleite.mercado.consumer.trades.TradesRetriever;
 import org.marceloleite.mercado.modeler.business.filter.TradeTypeFilter;
-import org.marceloleite.mercado.modeler.persistence.Orderbook;
-import org.marceloleite.mercado.modeler.persistence.Ticker;
-import org.marceloleite.mercado.modeler.persistence.Trade;
-import org.marceloleite.mercado.modeler.persistence.TradeType;
-import org.marceloleite.mercado.modeler.util.formatter.MapTradeFormatter;
-import org.marceloleite.mercado.modeler.util.formatter.OrderbookFormatter;
-import org.marceloleite.mercado.modeler.util.formatter.TickerFormatter;
+import org.marceloleite.mercado.modeler.persistence.dao.EntityManagerController;
+import org.marceloleite.mercado.modeler.persistence.dao.TickerDAO;
+import org.marceloleite.mercado.modeler.persistence.model.Orderbook;
+import org.marceloleite.mercado.modeler.persistence.model.Ticker;
+import org.marceloleite.mercado.modeler.persistence.model.Trade;
+import org.marceloleite.mercado.modeler.persistence.model.TradeType;
+import org.marceloleite.mercado.modeler.util.converter.MapTradeConverter;
+import org.marceloleite.mercado.modeler.util.converter.OrderbookConverter;
+import org.marceloleite.mercado.modeler.util.converter.TickerConverter;
 
 public class Main {
 
 	public static void main(String[] args) {
 
 		ticker();
-		orderbook();
-		trades();
+		// orderbook();
+		// trades();
+		EntityManagerController.getInstance().close();
 	}
 
 	private static void ticker() {
 		JsonTicker jsonTicker = new TickerConsumer(Currency.BITCOIN).consume();
-		Ticker ticker = new TickerFormatter().format(jsonTicker);
-		System.out.println(new ObjectToJsonFormatter().format(ticker));
+		Ticker ticker = new TickerConverter().format(jsonTicker);
+		System.out.println(new ObjectToJsonConverter().format(ticker));
+		
+		TickerDAO tickerDAO = new TickerDAO();
+		tickerDAO.merge(ticker);
 	}
 
 	private static void orderbook() {
 		JsonOrderbook jsonOrderbook = new OrderbookConsumer(Currency.BCASH).consume();
-		Orderbook orderbook = new OrderbookFormatter().format(jsonOrderbook);
-		System.out.println(new ObjectToJsonFormatter().format(orderbook));
+		Orderbook orderbook = new OrderbookConverter().format(jsonOrderbook);
+		System.out.println(new ObjectToJsonConverter().format(orderbook));
 	}
 
 	private static void trades() {
@@ -51,7 +57,7 @@ public class Main {
 		TradesRetriever tradesRetriever = new TradesRetriever();
 		tradesRetriever.setStepDuration(Duration.ofMinutes(10));
 		Map<Integer, JsonTrade> jsonTrades = tradesRetriever.retrieve(Currency.BITCOIN, startTime, duration);
-		Map<Integer, Trade> trades = new MapTradeFormatter().format(jsonTrades);
+		Map<Integer, Trade> trades = new MapTradeConverter().format(jsonTrades);
 		System.out.println("Total retrieved: " + trades.size());
 
 		Map<Integer, Trade> buyingTrades = new TradeTypeFilter(TradeType.BUY).filter(trades);

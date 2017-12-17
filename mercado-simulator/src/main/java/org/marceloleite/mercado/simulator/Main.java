@@ -3,7 +3,7 @@ package org.marceloleite.mercado.simulator;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-import org.marceloleite.mercado.commons.util.StringToLocalDateTimeFormatter;
+import org.marceloleite.mercado.commons.util.converter.StringToLocalDateTimeConverter;
 import org.marceloleite.mercado.consumer.model.Currency;
 import org.marceloleite.mercado.nnew.PriceRetriever;
 
@@ -15,7 +15,7 @@ public class Main {
 
 	public static void main(String[] args) {
 		
-		StringToLocalDateTimeFormatter stringToLocalDateTimeFormatter = new StringToLocalDateTimeFormatter();
+		StringToLocalDateTimeConverter stringToLocalDateTimeFormatter = new StringToLocalDateTimeConverter();
 
 		Account account = new Account("Marcelo");
 		
@@ -96,7 +96,7 @@ public class Main {
 	}
 
 	private static Simulator configureSimulator() {
-		StringToLocalDateTimeFormatter stringToLocalDateTimeFormatter = new StringToLocalDateTimeFormatter();
+		StringToLocalDateTimeConverter stringToLocalDateTimeFormatter = new StringToLocalDateTimeConverter();
 		Simulator simulator = new Simulator();
 		LocalDateTime startTime = stringToLocalDateTimeFormatter.format("01/09/2017 00:00:00");
 		LocalDateTime stopTime = LocalDateTime.now();

@@ -1,11 +1,11 @@
-package org.marceloleite.mercado.modeler.util.formatter;
+package org.marceloleite.mercado.modeler.util.converter;
 
 import java.util.List;
 
-import org.marceloleite.mercado.commons.interfaces.Formatter;
-import org.marceloleite.mercado.modeler.persistence.Offer;
+import org.marceloleite.mercado.commons.interfaces.Converter;
+import org.marceloleite.mercado.modeler.persistence.model.Offer;
 
-public class OfferFormatter implements Formatter<List<Double>, Offer> {
+public class OfferConverter implements Converter<List<Double>, Offer> {
 
 	private static final int UNIT_PRICE_POSITION = 0;
 	private static final int QUANTITY_POSITION = 1;

@@ -5,9 +5,9 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.marceloleite.mercado.commons.util.LocalDateTimeToString;
+import org.marceloleite.mercado.commons.util.converter.LocalDateTimeToStringConverter;
 import org.marceloleite.mercado.consumer.model.Currency;
-import org.marceloleite.mercado.modeler.persistence.TemporalTicker;
+import org.marceloleite.mercado.modeler.persistence.model.TemporalTicker;
 
 public class Main {
 	public static void main(String[] args) {
@@ -24,7 +24,7 @@ public class Main {
 		for (int counter = 0; counter < temporalTickers.size(); counter++) {
 			TemporalTicker temporalTicker = temporalTickers.get(counter);
 			StringBuffer stringBuffer = new StringBuffer();
-			stringBuffer.append(new LocalDateTimeToString().format(temporalTicker.getFrom()) + " - First: "
+			stringBuffer.append(new LocalDateTimeToStringConverter().format(temporalTicker.getFrom()) + " - First: "
 					+ temporalTicker.getFirst() + ", last: " + temporalTicker.getLast() + ", highest: "
 					+ temporalTicker.getHigh() + ", lowest: " + temporalTicker.getLow());
 			if (counter > 0) {

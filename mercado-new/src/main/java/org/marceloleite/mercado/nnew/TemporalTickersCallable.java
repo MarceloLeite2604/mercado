@@ -10,10 +10,10 @@ import org.marceloleite.mercado.consumer.model.Currency;
 import org.marceloleite.mercado.consumer.model.JsonTrade;
 import org.marceloleite.mercado.consumer.trades.TradesRetriever;
 import org.marceloleite.mercado.modeler.business.filter.TradeTypeFilter;
-import org.marceloleite.mercado.modeler.persistence.TemporalTicker;
-import org.marceloleite.mercado.modeler.persistence.Trade;
-import org.marceloleite.mercado.modeler.persistence.TradeType;
-import org.marceloleite.mercado.modeler.util.formatter.MapTradeFormatter;
+import org.marceloleite.mercado.modeler.persistence.model.TemporalTicker;
+import org.marceloleite.mercado.modeler.persistence.model.Trade;
+import org.marceloleite.mercado.modeler.persistence.model.TradeType;
+import org.marceloleite.mercado.modeler.util.converter.MapTradeConverter;
 
 public class TemporalTickersCallable implements Callable<TemporalTicker> {
 
@@ -36,7 +36,7 @@ public class TemporalTickersCallable implements Callable<TemporalTicker> {
 	}
 
 	private TemporalTicker generateTemporalTickerFromJsonTrades(Map<Integer, JsonTrade> jsonTrades) {
-		Map<Integer, Trade> trades = new MapTradeFormatter().format(jsonTrades);
+		Map<Integer, Trade> trades = new MapTradeConverter().format(jsonTrades);
 
 		double high = 0.0;
 		double average = 0.0;

@@ -1,4 +1,4 @@
-package org.marceloleite.mercado.modeler.persistence;
+package org.marceloleite.mercado.modeler.persistence.model;
 
 public enum TradeType {
 

@@ -9,9 +9,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import org.marceloleite.mercado.commons.util.LocalDateTimeToString;
+import org.marceloleite.mercado.commons.util.converter.LocalDateTimeToStringConverter;
 import org.marceloleite.mercado.consumer.model.Currency;
-import org.marceloleite.mercado.modeler.persistence.TemporalTicker;
+import org.marceloleite.mercado.modeler.persistence.model.TemporalTicker;
 import org.marceloleite.mercado.nnew.TemporalTickerRetriever;
 
 public class Simulator {
@@ -143,7 +143,7 @@ public class Simulator {
 	}
 
 	private void updateBasePricesForAccount(Map<Currency, TemporalTicker> currenciesTemporalTickers, Account account) {
-		LocalDateTimeToString localDateTimeToString = new LocalDateTimeToString();
+		LocalDateTimeToStringConverter localDateTimeToString = new LocalDateTimeToStringConverter();
 		boolean updateBasePrice = false;
 		Map<Currency, CurrencyMonitoring> currenciesMonitoring = account.getCurrenciesMonitoring();
 		Map<Currency, Double> basePrices = account.getBasePrices();

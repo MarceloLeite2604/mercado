@@ -11,11 +11,11 @@ public abstract class AbstractConsumer {
 
 	private static final String PATH = "api/%s/%s/";
 
-	protected Currency cryptocoin;
+	protected Currency currency;
 
-	public AbstractConsumer(Currency cryptocoin) {
+	public AbstractConsumer(Currency currency) {
 		super();
-		this.cryptocoin = cryptocoin;
+		this.currency = currency;
 	}
 
 	protected WebTarget createWebTarget() {
@@ -24,7 +24,7 @@ public abstract class AbstractConsumer {
 	}
 
 	protected String getPath() {
-		return String.format(PATH, cryptocoin, getMethod());
+		return String.format(PATH, currency, getMethod());
 	}
 	
 	protected abstract String getMethod();

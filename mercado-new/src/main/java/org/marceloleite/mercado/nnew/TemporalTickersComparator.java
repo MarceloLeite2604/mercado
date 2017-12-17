@@ -2,7 +2,7 @@ package org.marceloleite.mercado.nnew;
 
 import java.util.Comparator;
 
-import org.marceloleite.mercado.modeler.persistence.TemporalTicker;
+import org.marceloleite.mercado.modeler.persistence.model.TemporalTicker;
 
 public class TemporalTickersComparator implements Comparator<TemporalTicker> {
 
