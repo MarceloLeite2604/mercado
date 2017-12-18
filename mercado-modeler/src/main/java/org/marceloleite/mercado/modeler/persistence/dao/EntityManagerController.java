@@ -13,7 +13,7 @@ public final class EntityManagerController {
 	private EntityManagerFactory entityManagerFactory;
 	
 	private EntityManagerController() {
-		entityManagerFactory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT);
+		entityManagerFactory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT, new PersistenceConfiguration().getProperties());
 	}
 	
 	public static EntityManagerController getInstance() {

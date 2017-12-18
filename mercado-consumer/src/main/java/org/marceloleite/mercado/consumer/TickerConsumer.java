@@ -2,7 +2,7 @@ package org.marceloleite.mercado.consumer;
 
 import javax.ws.rs.core.MediaType;
 
-import org.marceloleite.mercado.consumer.model.Currency;
+import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.consumer.model.JsonTicker;
 
 public class TickerConsumer extends AbstractConsumer implements Consumer<JsonTicker> {

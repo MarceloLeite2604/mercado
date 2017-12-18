@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 
 import javax.persistence.Embeddable;
 
-import org.marceloleite.mercado.consumer.model.Currency;
+import org.marceloleite.mercado.commons.Currency;
 
 @Embeddable
 public class TickerId implements Serializable {

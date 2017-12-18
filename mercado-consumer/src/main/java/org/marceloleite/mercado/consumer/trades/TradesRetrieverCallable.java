@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
+import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.util.converter.LocalDateTimeToStringConverter;
-import org.marceloleite.mercado.consumer.model.Currency;
 import org.marceloleite.mercado.consumer.model.JsonTrade;
 import org.marceloleite.mercado.consumer.util.checker.MaxTradesReachedCheck;
 import org.marceloleite.mercado.consumer.util.formatter.ListToMapJsonTradeFormatter;

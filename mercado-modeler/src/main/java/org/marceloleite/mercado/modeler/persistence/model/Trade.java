@@ -2,11 +2,20 @@ package org.marceloleite.mercado.modeler.persistence.model;
 
 import java.time.LocalDateTime;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Id;
 
+import org.marceloleite.mercado.commons.Currency;
+
+@Entity(name = "Trades")
 public class Trade {
 
+	@Id
 	private int id;
+
+	private Currency currency;
 
 	private LocalDateTime date;
 
@@ -14,7 +23,7 @@ public class Trade {
 
 	private double amount;
 
-	@JsonProperty("type")
+	@Enumerated(EnumType.STRING)
 	private TradeType tradeType;
 
 	public Trade() {
@@ -58,5 +67,13 @@ public class Trade {
 
 	public void setTradeType(TradeType tradeType) {
 		this.tradeType = tradeType;
+	}
+
+	public Currency getCurrency() {
+		return currency;
+	}
+
+	public void setCurrency(Currency currency) {
+		this.currency = currency;
 	}
 }

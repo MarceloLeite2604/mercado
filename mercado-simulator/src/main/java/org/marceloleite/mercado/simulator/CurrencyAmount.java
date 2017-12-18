@@ -1,6 +1,6 @@
 package org.marceloleite.mercado.simulator;
 
-import org.marceloleite.mercado.consumer.model.Currency;
+import org.marceloleite.mercado.commons.Currency;
 
 public class CurrencyAmount {
 
@@ -32,6 +32,6 @@ public class CurrencyAmount {
 	
 	@Override
 	public String toString() {
-		return currency.getAcronimo() + " " + amount;
+		return currency.getAcronym() + " " + amount;
 	}
 }

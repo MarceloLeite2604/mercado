@@ -9,8 +9,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.util.converter.LocalDateTimeToStringConverter;
-import org.marceloleite.mercado.consumer.model.Currency;
 import org.marceloleite.mercado.modeler.persistence.model.TemporalTicker;
 import org.marceloleite.mercado.nnew.TemporalTickerRetriever;
 
