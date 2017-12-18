@@ -6,10 +6,10 @@ import java.util.List;
 
 import javax.ws.rs.core.MediaType;
 
+import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.util.UnixTimeSeconds;
 import org.marceloleite.mercado.consumer.AbstractConsumer;
 import org.marceloleite.mercado.consumer.Consumer;
-import org.marceloleite.mercado.consumer.model.Currency;
 import org.marceloleite.mercado.consumer.model.JsonTrade;
 
 public class TradesConsumer extends AbstractConsumer implements Consumer<List<JsonTrade>> {

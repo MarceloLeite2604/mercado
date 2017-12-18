@@ -1,20 +1,20 @@
-package org.marceloleite.mercado.consumer.model;
+package org.marceloleite.mercado.commons;
 
 public enum Currency {
 
 	BITCOIN("BTC", true), LITECOIN("LTC", true), BCASH("BCH", true), REAL("BRL", false);
 
-	private String acronimo;
+	private String acronym;
 
 	private boolean digital;
 
-	private Currency(String acronimo, boolean digital) {
-		this.acronimo = acronimo;
+	private Currency(String acronym, boolean digital) {
+		this.acronym = acronym;
 		this.digital = digital;
 	}
 
-	public String getAcronimo() {
-		return acronimo;
+	public String getAcronym() {
+		return acronym;
 	}
 
 	public boolean isDigital() {
@@ -23,12 +23,12 @@ public enum Currency {
 
 	@Override
 	public String toString() {
-		return getAcronimo();
+		return getAcronym();
 	}
 
-	public static Currency getByAcronimo(String acronimo) {
+	public static Currency getByAcronym(String acronym) {
 		for (Currency currency : values()) {
-			if (acronimo.equals(currency.getAcronimo())) {
+			if (acronym.equals(currency.getAcronym())) {
 				return currency;
 			}
 		}

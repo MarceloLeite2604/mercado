@@ -4,7 +4,7 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.Optional;
 
-import org.marceloleite.mercado.consumer.model.Currency;
+import org.marceloleite.mercado.commons.Currency;
 
 public class Balance {
 

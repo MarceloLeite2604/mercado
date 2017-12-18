@@ -4,7 +4,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import org.marceloleite.mercado.consumer.model.Currency;
+import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.modeler.persistence.model.TemporalTicker;
 
 public class PriceRetriever {

@@ -5,16 +5,15 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.util.converter.ObjectToJsonConverter;
 import org.marceloleite.mercado.consumer.OrderbookConsumer;
 import org.marceloleite.mercado.consumer.TickerConsumer;
-import org.marceloleite.mercado.consumer.model.Currency;
 import org.marceloleite.mercado.consumer.model.JsonOrderbook;
 import org.marceloleite.mercado.consumer.model.JsonTicker;
 import org.marceloleite.mercado.consumer.model.JsonTrade;
 import org.marceloleite.mercado.consumer.trades.TradesRetriever;
 import org.marceloleite.mercado.modeler.business.filter.TradeTypeFilter;
-import org.marceloleite.mercado.modeler.persistence.dao.EntityManagerController;
 import org.marceloleite.mercado.modeler.persistence.dao.TickerDAO;
 import org.marceloleite.mercado.modeler.persistence.model.Orderbook;
 import org.marceloleite.mercado.modeler.persistence.model.Ticker;
@@ -27,11 +26,7 @@ import org.marceloleite.mercado.modeler.util.converter.TickerConverter;
 public class Main {
 
 	public static void main(String[] args) {
-
-		ticker();
-		// orderbook();
-		// trades();
-		EntityManagerController.getInstance().close();
+		
 	}
 
 	private static void ticker() {

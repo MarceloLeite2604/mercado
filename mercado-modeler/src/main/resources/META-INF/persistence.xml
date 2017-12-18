@@ -7,6 +7,7 @@
 
 		<class>org.marceloleite.mercado.modeler.persistence.model.Ticker</class>
 		<class>org.marceloleite.mercado.modeler.persistence.model.TickerId</class>
+		<class>org.marceloleite.mercado.modeler.persistence.model.Trade</class>
 		<class>org.marceloleite.mercado.modeler.util.CurrencyAttributeConverter</class>
 		<class>org.marceloleite.mercado.modeler.util.LocalDateTimeAttributeConverter</class>
 

@@ -3,8 +3,8 @@ package org.marceloleite.mercado.simulator;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
+import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.util.converter.StringToLocalDateTimeConverter;
-import org.marceloleite.mercado.consumer.model.Currency;
 import org.marceloleite.mercado.nnew.PriceRetriever;
 
 /**

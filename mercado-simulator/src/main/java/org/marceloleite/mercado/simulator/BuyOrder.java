@@ -2,7 +2,7 @@ package org.marceloleite.mercado.simulator;
 
 import java.time.LocalDateTime;
 
-import org.marceloleite.mercado.consumer.model.Currency;
+import org.marceloleite.mercado.commons.Currency;
 
 public class BuyOrder {
 

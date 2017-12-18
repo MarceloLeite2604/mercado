@@ -1,4 +1,4 @@
-package org.marceloleite.mercado.simulator.configuration;
+package org.marceloleite.mercado.configuration;
 
 import java.io.File;
 import java.io.FileInputStream;

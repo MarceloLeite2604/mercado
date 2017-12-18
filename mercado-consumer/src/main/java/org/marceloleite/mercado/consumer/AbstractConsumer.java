@@ -3,7 +3,7 @@ package org.marceloleite.mercado.consumer;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 
-import org.marceloleite.mercado.consumer.model.Currency;
+import org.marceloleite.mercado.commons.Currency;
 
 public abstract class AbstractConsumer {
 

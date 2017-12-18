@@ -13,14 +13,14 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.util.converter.LocalDateTimeToStringConverter;
 import org.marceloleite.mercado.commons.util.converter.LongToLocalDateTimeConverter;
-import org.marceloleite.mercado.consumer.model.Currency;
 import org.marceloleite.mercado.modeler.persistence.model.TemporalTicker;
 
 public class TemporalTickerRetriever {
 
-	public List<TemporalTicker> retrieve(Currency cryptocoin, LocalDateTime from, LocalDateTime to,
+	public List<TemporalTicker> retrieve(Currency currency, LocalDateTime from, LocalDateTime to,
 			Duration stepDuration) {
 		Set<Future<TemporalTicker>> futureSet = new HashSet<>();
 		long totalSteps = calculateSteps(from, to, stepDuration);
@@ -33,7 +33,7 @@ public class TemporalTickerRetriever {
 		LocalDateTime fromStep = from;
 		Duration nextStepDuration = calculateStepDuration(from, to, stepDuration);
 		for (long step = 0; step < totalSteps; step++) {
-			Callable<TemporalTicker> temporalTickersCallable = new TemporalTickersCallable(cryptocoin, fromStep,
+			Callable<TemporalTicker> temporalTickersCallable = new TemporalTickersCallable(currency, fromStep,
 					nextStepDuration);
 			futureSet.add(executorService.submit(temporalTickersCallable));
 			fromStep = LocalDateTime.from(fromStep)

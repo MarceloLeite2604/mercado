@@ -3,6 +3,8 @@ package org.marceloleite.mercado.consumer.model;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.marceloleite.mercado.commons.Currency;
+
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
