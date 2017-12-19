@@ -12,7 +12,7 @@ import java.util.Set;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.util.converter.LocalDateTimeToStringConverter;
 import org.marceloleite.mercado.modeler.persistence.model.TemporalTicker;
-import org.marceloleite.mercado.nnew.TemporalTickerRetriever;
+import org.marceloleite.mercado.additional.TemporalTickerRetriever;
 
 public class Simulator {
 
@@ -75,7 +75,6 @@ public class Simulator {
 			stopStepTime = startStepTime.plus(stepDuration);
 			Map<LocalDateTime, Map<Currency, TemporalTicker>> temporalTickersCurrencyByTime = retrieveTemporalTickersCurrencyByTime(
 					startStepTime, stopStepTime, stepDuration);
-			startStepTime = stopStepTime;
 
 			Set<LocalDateTime> stepTimes = temporalTickersCurrencyByTime.keySet();
 			for (LocalDateTime stepTime : stepTimes) {
@@ -83,6 +82,7 @@ public class Simulator {
 
 				updateBasePrices(currenciesTemporalTickers);
 			}
+			startStepTime = stopStepTime;
 		}
 
 		System.out.println("Simulation finished.");
@@ -163,13 +163,13 @@ public class Simulator {
 
 						CurrencyMonitoring currencyMonitoring = currenciesMonitoring.get(currency);
 						if (percentage >= currencyMonitoring.getIncreasePercentage()) {
-							System.out.println("[" + localDateTimeToString.format(temporalTicker.getTo()) + "] ["
+							System.out.println("[" + localDateTimeToString.convert(temporalTicker.getTo()) + "] ["
 									+ account.getOwner() + "]: Price for " + currency + " has increased by "
 									+ Math.abs(percentage * 100) + "%.");
 							updateBasePrice = true;
 
 						} else if (percentage <= -currencyMonitoring.getDecreasePercentage()) {
-							System.out.println("[" + localDateTimeToString.format(temporalTicker.getTo()) + "] ["
+							System.out.println("[" + localDateTimeToString.convert(temporalTicker.getTo()) + "] ["
 									+ account.getOwner() + "]: Price for " + currency + " has descreased by "
 									+ Math.abs(percentage * 100) + "%.");
 							updateBasePrice = true;

@@ -1,4 +1,4 @@
-package org.marceloleite.mercado.nnew;
+package org.marceloleite.mercado.additional;
 
 public class Comparison {
 

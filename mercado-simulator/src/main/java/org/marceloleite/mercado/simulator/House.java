@@ -5,25 +5,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.marceloleite.mercado.commons.Currency;
-import org.marceloleite.mercado.nnew.PriceRetriever;
+import org.marceloleite.mercado.additional.PriceRetriever;
 
 public class House {
 
 	private static final double DEFAULT_COMISSION_PERCENTAGE = 0.007;
-
-	private Balance balance;
 
 	private List<CurrencyTrade> currencyTrades;
 
 	private Balance comission;
 
 	private double comissionPercentage;
-	
-	private List<Deposit> deposits;
 
 	public House() {
 		super();
-		balance = new Balance();
 		currencyTrades = new ArrayList<>();
 		comission = new Balance();
 		comissionPercentage = DEFAULT_COMISSION_PERCENTAGE;
@@ -31,10 +26,6 @@ public class House {
 
 	public static double getDefaultComissionPercentage() {
 		return DEFAULT_COMISSION_PERCENTAGE;
-	}
-
-	public Balance getBalance() {
-		return balance;
 	}
 
 	public List<CurrencyTrade> getCurrencyTrades() {
@@ -91,12 +82,12 @@ public class House {
 	private void update(CurrencyTrade currencyTrade) {
 		currencyTrades.add(currencyTrade);
 
-		balance.deposit(currencyTrade.getTo());
-		balance.withdraw(currencyTrade.getFrom());
+		/*balance.deposit(currencyTrade.getTo());
+		balance.withdraw(currencyTrade.getFrom());*/
 		comission.deposit(currencyTrade.getComission());
 	}
 
 	public void deposit(Deposit deposit) {
-		balance.deposit(deposit.getCurrencyAmount());
+		/*balance.deposit(deposit.getCurrencyAmount());*/
 	}
 }

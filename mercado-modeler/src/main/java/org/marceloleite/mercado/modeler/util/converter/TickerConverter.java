@@ -10,13 +10,13 @@ import org.marceloleite.mercado.modeler.persistence.model.TickerId;
 public class TickerConverter implements Converter<JsonTicker, Ticker> {
 
 	@Override
-	public Ticker format(JsonTicker jsonTicker) {
+	public Ticker convert(JsonTicker jsonTicker) {
 
 		JsonTickerValues jsonTickerValues = jsonTicker.getTicker();
 		
 		TickerId tickerId = new TickerId();
 		tickerId.setCurrency(jsonTicker.getCurrency());
-		tickerId.setTime(new LongToLocalDateTimeConverter().format(jsonTickerValues.getDate()));
+		tickerId.setTime(new LongToLocalDateTimeConverter().convert(jsonTickerValues.getDate()));
 		Ticker ticker = new Ticker();
 		ticker.setHigh(jsonTickerValues.getHigh());
 		ticker.setLow(jsonTickerValues.getLow());

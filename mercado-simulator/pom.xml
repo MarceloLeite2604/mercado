@@ -25,7 +25,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.marceloleite</groupId>
-			<artifactId>mercado-new</artifactId>
+			<artifactId>mercado-additional</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>

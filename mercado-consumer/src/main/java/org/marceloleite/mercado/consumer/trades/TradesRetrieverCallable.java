@@ -39,11 +39,11 @@ public class TradesRetrieverCallable implements Callable<Map<Integer, JsonTrade>
 		Map<Integer, JsonTrade> result;
 		if (new MaxTradesReachedCheck().check(jsonTrades)) {
 
-			System.err.println("Warning: Maximum trades exceeded from " + localDateTimeToString.format(from) + " to "
-					+ localDateTimeToString.format(to) + ". Splitting execution.");
+			System.err.println("Warning: Maximum trades exceeded from " + localDateTimeToString.convert(from) + " to "
+					+ localDateTimeToString.convert(to) + ". Splitting execution.");
 			result = splitExecution();
 		} else {
-			result = new ListToMapJsonTradeFormatter().format(jsonTrades);
+			result = new ListToMapJsonTradeFormatter().convert(jsonTrades);
 		}
 		return result;
 	}

@@ -10,11 +10,11 @@ import org.marceloleite.mercado.modeler.persistence.model.Trade;
 public class OldListToMapJsonTradeConverter implements Converter<Map<Integer, JsonTrade>, Map<Integer, Trade>> {
 
 	@Override
-	public Map<Integer, Trade> format(Map<Integer, JsonTrade> jsonTrades) {
+	public Map<Integer, Trade> convert(Map<Integer, JsonTrade> jsonTrades) {
 		TradeConverter tradeFormatter = new TradeConverter();
 		return jsonTrades.entrySet()
 			.stream()
-			.map(entry -> tradeFormatter.format(entry.getValue()))
+			.map(entry -> tradeFormatter.convert(entry.getValue()))
 			.collect(Collectors.toConcurrentMap(Trade::getId, trade -> trade, (oldTrade, newTrade) -> newTrade));
 	}
 

@@ -1,4 +1,4 @@
-package org.marceloleite.mercado.nnew;
+package org.marceloleite.mercado.additional;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -36,7 +36,7 @@ public class TemporalTickersCallable implements Callable<TemporalTicker> {
 	}
 
 	private TemporalTicker generateTemporalTickerFromJsonTrades(Map<Integer, JsonTrade> jsonTrades) {
-		Map<Integer, Trade> trades = new MapTradeConverter().format(jsonTrades);
+		Map<Integer, Trade> trades = new MapTradeConverter().convert(jsonTrades);
 
 		double high = 0.0;
 		double average = 0.0;

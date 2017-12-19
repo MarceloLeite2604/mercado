@@ -10,7 +10,7 @@ public class LocalDateTimeToStringConverter implements Converter<LocalDateTime, 
 	public static final String DATE_FORMAT = "dd/MM/yyyy HH:mm:ss";
 
 	@Override
-	public String format(LocalDateTime time) {
+	public String convert(LocalDateTime time) {
 		return DateTimeFormatter.ofPattern(DATE_FORMAT).format(time);
 	}	
 }

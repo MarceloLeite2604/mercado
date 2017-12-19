@@ -1,4 +1,4 @@
-package org.marceloleite.mercado.nnew;
+package org.marceloleite.mercado.additional;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -24,7 +24,7 @@ public class Main {
 		for (int counter = 0; counter < temporalTickers.size(); counter++) {
 			TemporalTicker temporalTicker = temporalTickers.get(counter);
 			StringBuffer stringBuffer = new StringBuffer();
-			stringBuffer.append(new LocalDateTimeToStringConverter().format(temporalTicker.getFrom()) + " - First: "
+			stringBuffer.append(new LocalDateTimeToStringConverter().convert(temporalTicker.getFrom()) + " - First: "
 					+ temporalTicker.getFirst() + ", last: " + temporalTicker.getLast() + ", highest: "
 					+ temporalTicker.getHigh() + ", lowest: " + temporalTicker.getLow());
 			if (counter > 0) {
