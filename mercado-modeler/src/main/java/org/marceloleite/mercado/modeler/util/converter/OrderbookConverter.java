@@ -11,17 +11,17 @@ import org.marceloleite.mercado.modeler.persistence.model.Orderbook;
 public class OrderbookConverter implements Converter<JsonOrderbook, Orderbook> {
 
 	@Override
-	public Orderbook format(JsonOrderbook jsonOrderbook) {
+	public Orderbook convert(JsonOrderbook jsonOrderbook) {
 		OfferConverter offerFormatter = new OfferConverter();
 
 		List<Offer> askOffers = jsonOrderbook.getAsks()
 			.stream()
-			.map(ask -> offerFormatter.format(ask))
+			.map(ask -> offerFormatter.convert(ask))
 			.collect(Collectors.toList());
 
 		List<Offer> bidOffers = jsonOrderbook.getBids()
 			.stream()
-			.map(bid -> offerFormatter.format(bid))
+			.map(bid -> offerFormatter.convert(bid))
 			.collect(Collectors.toList());
 
 		Orderbook orderbook = new Orderbook();

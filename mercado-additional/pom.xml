@@ -3,11 +3,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.marceloleite</groupId>
-	<artifactId>mercado-new</artifactId>
+	<artifactId>mercado-additional</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>mercado-new</name>
+	<name>mercado-additional</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>

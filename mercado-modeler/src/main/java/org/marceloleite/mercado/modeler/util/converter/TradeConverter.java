@@ -9,10 +9,10 @@ import org.marceloleite.mercado.modeler.persistence.model.TradeType;
 public class TradeConverter implements Converter<JsonTrade, Trade> {
 
 	@Override
-	public Trade format(JsonTrade jsonTrade) {
+	public Trade convert(JsonTrade jsonTrade) {
 		Trade trade = new Trade();
 		trade.setId(jsonTrade.getTid());
-		trade.setDate(new LongToLocalDateTimeConverter().format(jsonTrade.getDate()));
+		trade.setDate(new LongToLocalDateTimeConverter().convert(jsonTrade.getDate()));
 		trade.setPrice(jsonTrade.getPrice());
 		trade.setAmount(jsonTrade.getAmount());
 		trade.setTradeType(TradeType.retrieve(jsonTrade.getType()));

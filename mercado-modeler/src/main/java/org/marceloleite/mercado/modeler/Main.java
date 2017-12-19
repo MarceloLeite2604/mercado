@@ -31,8 +31,8 @@ public class Main {
 
 	private static void ticker() {
 		JsonTicker jsonTicker = new TickerConsumer(Currency.BITCOIN).consume();
-		Ticker ticker = new TickerConverter().format(jsonTicker);
-		System.out.println(new ObjectToJsonConverter().format(ticker));
+		Ticker ticker = new TickerConverter().convert(jsonTicker);
+		System.out.println(new ObjectToJsonConverter().convert(ticker));
 		
 		TickerDAO tickerDAO = new TickerDAO();
 		tickerDAO.merge(ticker);
@@ -40,8 +40,8 @@ public class Main {
 
 	private static void orderbook() {
 		JsonOrderbook jsonOrderbook = new OrderbookConsumer(Currency.BCASH).consume();
-		Orderbook orderbook = new OrderbookConverter().format(jsonOrderbook);
-		System.out.println(new ObjectToJsonConverter().format(orderbook));
+		Orderbook orderbook = new OrderbookConverter().convert(jsonOrderbook);
+		System.out.println(new ObjectToJsonConverter().convert(orderbook));
 	}
 
 	private static void trades() {
@@ -52,7 +52,7 @@ public class Main {
 		TradesRetriever tradesRetriever = new TradesRetriever();
 		tradesRetriever.setStepDuration(Duration.ofMinutes(10));
 		Map<Integer, JsonTrade> jsonTrades = tradesRetriever.retrieve(Currency.BITCOIN, startTime, duration);
-		Map<Integer, Trade> trades = new MapTradeConverter().format(jsonTrades);
+		Map<Integer, Trade> trades = new MapTradeConverter().convert(jsonTrades);
 		System.out.println("Total retrieved: " + trades.size());
 
 		Map<Integer, Trade> buyingTrades = new TradeTypeFilter(TradeType.BUY).filter(trades);
