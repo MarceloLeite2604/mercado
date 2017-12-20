@@ -14,6 +14,7 @@ import org.marceloleite.mercado.consumer.model.JsonTicker;
 import org.marceloleite.mercado.consumer.model.JsonTrade;
 import org.marceloleite.mercado.consumer.trades.TradesRetriever;
 import org.marceloleite.mercado.modeler.business.filter.TradeTypeFilter;
+import org.marceloleite.mercado.modeler.persistence.dao.EntityManagerController;
 import org.marceloleite.mercado.modeler.persistence.dao.TickerDAO;
 import org.marceloleite.mercado.modeler.persistence.model.Orderbook;
 import org.marceloleite.mercado.modeler.persistence.model.Ticker;
@@ -26,7 +27,7 @@ import org.marceloleite.mercado.modeler.util.converter.TickerConverter;
 public class Main {
 
 	public static void main(String[] args) {
-		
+		ticker();
 	}
 
 	private static void ticker() {
@@ -36,6 +37,7 @@ public class Main {
 		
 		TickerDAO tickerDAO = new TickerDAO();
 		tickerDAO.merge(ticker);
+		EntityManagerController.getInstance().close();
 	}
 
 	private static void orderbook() {
