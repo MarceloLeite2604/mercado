@@ -1,4 +1,4 @@
-package org.marceloleite.mercado.simulator;
+package org.marceloleite.mercado.commons;
 
 import java.time.Duration;
 import java.time.LocalDateTime;

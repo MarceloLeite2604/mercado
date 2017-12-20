@@ -34,7 +34,7 @@ public class TradesRetriever {
 		this.stepDuration = stepDuration;
 	}
 
-	public Map<Integer, JsonTrade> retrieve(Currency cryptocoin, LocalDateTime initialTime, Duration duration) {
+	public Map<Integer, JsonTrade> retrieve(Currency currency, LocalDateTime initialTime, Duration duration) {
 		Set<Future<Map<Integer, JsonTrade>>> futureSet = new HashSet<>();
 		long totalSteps = (duration.getSeconds() / stepDuration.getSeconds());
 		totalSteps = (totalSteps == 0 ? 1 : totalSteps);
@@ -45,7 +45,7 @@ public class TradesRetriever {
 		LocalDateTime to = LocalDateTime.from(initialTime).plus(nextStepDuration);
 
 		for (int step = 0; step < totalSteps; step++) {
-			Callable<Map<Integer, JsonTrade>> tradesRetrieverCallable = new TradesRetrieverCallable(cryptocoin, from,
+			Callable<Map<Integer, JsonTrade>> tradesRetrieverCallable = new TradesRetrieverCallable(currency, from,
 					to);
 			futureSet.add(executorService.submit(tradesRetrieverCallable));
 			from = LocalDateTime.from(from).plus(nextStepDuration);

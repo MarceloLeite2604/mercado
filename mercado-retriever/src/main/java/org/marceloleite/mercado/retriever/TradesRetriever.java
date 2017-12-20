@@ -12,55 +12,29 @@ import org.marceloleite.mercado.modeler.persistence.model.Tables;
 import org.marceloleite.mercado.modeler.util.LocalDateTimeAttributeConverter;
 
 public class TradesRetriever {
-	
-	private static final String QUERY_MAXIMUM_DATE_RETRIEVED = "SELECT max(date) FROM " + Tables.TRADE.getName(); 
-			
+
+	private static final String QUERY_MAXIMUM_DATE_RETRIEVED = "SELECT max(date) FROM " + Tables.TRADE.getName();
+
 	private static final String QUERY_MINIMUM_DATE_RETRIEVED = "SELECT min(date) FROM " + Tables.TRADE.getName();
 
-	private EntityManager entityManager;
+	
 
-	public static void main(String[] args) {
-		TradesRetriever tradesRetriever = new TradesRetriever();
-		LocalDateTime maximumTimeRetrieved = tradesRetriever.obtainMaximumTimeRetrieved();
-		LocalDateTime minimumTimeRetrieved = tradesRetriever.obtainMinimumTimeRetrieved();
+	public void retrieve() {
+		LocalDateTime maximumTimeRetrieved = obtainMaximumTimeRetrieved();
+		LocalDateTime minimumTimeRetrieved = obtainMinimumTimeRetrieved();
 		LocalDateTimeToStringConverter localDateTimeToStringConverter = new LocalDateTimeToStringConverter();
-		
-		System.out.println(localDateTimeToStringConverter.convert(minimumTimeRetrieved));
-		System.out.println(localDateTimeToStringConverter.convert(maximumTimeRetrieved));
-		
+		if (minimumTimeRetrieved != null) {
+			System.out.println(localDateTimeToStringConverter.convert(minimumTimeRetrieved));
+		}
+
+		if (maximumTimeRetrieved != null) {
+			System.out.println(localDateTimeToStringConverter.convert(maximumTimeRetrieved));
+		}
 	}
 
 	public TradesRetriever() {
-		entityManager = EntityManagerController.getInstance()
-			.createEntityManager();
+		entityManager = EntityManagerController.getInstance().createEntityManager();
 	}
 
-	private LocalDateTime obtainMaximumTimeRetrieved() {
-		Timestamp result = getQueryResultAsTimestamp(QUERY_MAXIMUM_DATE_RETRIEVED);
-		return new LocalDateTimeAttributeConverter().convertToEntityAttribute(result);
-	}
-
-	private LocalDateTime obtainMinimumTimeRetrieved() {
-		Timestamp result = getQueryResultAsTimestamp(QUERY_MINIMUM_DATE_RETRIEVED);
-		return new LocalDateTimeAttributeConverter().convertToEntityAttribute(result);
-	}
-
-	private Timestamp getQueryResultAsTimestamp(String stringQuery) {
-		Query query = createQuery(stringQuery);
-		Object queryResult = query.getSingleResult();
-		Timestamp result;
-		if (queryResult instanceof Timestamp) {
-			result = (Timestamp) queryResult;
-		} else {
-			throw new RuntimeException("Cannot convert query result to \"" + Timestamp.class.getName()
-					+ "\". Object is of type \"" + queryResult.getClass()
-						.getName()
-					+ "\".");
-		}
-		return result;
-	}
-
-	private Query createQuery(String query) {
-		return entityManager.createQuery(query);
-	}
+	
 }
