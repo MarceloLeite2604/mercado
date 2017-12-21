@@ -3,11 +3,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.marceloleite</groupId>
-	<artifactId>mercado-simulator</artifactId>
+	<artifactId>mercado-database-retriever</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>mercado-simulator</name>
+	<name>mercado-site-retriever</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
@@ -19,7 +19,12 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.marceloleite</groupId>
-			<artifactId>mercado-additional</artifactId>
+			<artifactId>mercado-database-model</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.marceloleite</groupId>
+			<artifactId>mercado-commons</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
@@ -28,6 +33,12 @@
 			<version>3.8.1</version>
 			<scope>test</scope>
 		</dependency>
-		
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>6.0.6</version>
+		</dependency>
 	</dependencies>
+
+	
 </project>
