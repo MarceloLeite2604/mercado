@@ -3,7 +3,6 @@ package org.marceloleite.mercado.commons.util.converter;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 
-import org.marceloleite.mercado.commons.interfaces.Converter;
 import org.marceloleite.mercado.commons.util.LocalDateTimeSerializer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;

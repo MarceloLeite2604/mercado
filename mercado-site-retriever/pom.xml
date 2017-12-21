@@ -3,11 +3,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.marceloleite</groupId>
-	<artifactId>mercado-simulator</artifactId>
+	<artifactId>mercado-site-retriever</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>mercado-simulator</name>
+	<name>mercado</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
@@ -19,15 +19,23 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.marceloleite</groupId>
-			<artifactId>mercado-additional</artifactId>
+			<artifactId>mercado-commons</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>3.8.1</version>
-			<scope>test</scope>
+			<groupId>org.glassfish.jersey.core</groupId>
+			<artifactId>jersey-client</artifactId>
+			<version>2.25.1</version>
 		</dependency>
-		
+		<dependency>
+			<groupId>org.glassfish.jersey.media</groupId>
+			<artifactId>jersey-media-json-jackson</artifactId>
+			<version>2.25.1</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>2.9.2</version>
+		</dependency>
 	</dependencies>
 </project>

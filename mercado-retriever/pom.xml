@@ -26,7 +26,17 @@
 		</dependency>
 		<dependency>
 			<groupId>org.marceloleite</groupId>
-			<artifactId>mercado-modeler</artifactId>
+			<artifactId>mercado-site-retriever</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.marceloleite</groupId>
+			<artifactId>mercado-database-retriever</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.marceloleite</groupId>
+			<artifactId>mercado-converter</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 	</dependencies>

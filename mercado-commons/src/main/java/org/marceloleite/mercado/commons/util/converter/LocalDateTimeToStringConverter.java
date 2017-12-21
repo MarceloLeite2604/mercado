@@ -3,8 +3,6 @@ package org.marceloleite.mercado.commons.util.converter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-import org.marceloleite.mercado.commons.interfaces.Converter;
-
 public class LocalDateTimeToStringConverter implements Converter<LocalDateTime, String> {
 	
 	public static final String DATE_FORMAT = "dd/MM/yyyy HH:mm:ss";

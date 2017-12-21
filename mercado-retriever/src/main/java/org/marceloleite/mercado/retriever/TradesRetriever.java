@@ -1,40 +1,55 @@
 package org.marceloleite.mercado.retriever;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.Query;
-
-import org.marceloleite.mercado.commons.util.converter.LocalDateTimeToStringConverter;
-import org.marceloleite.mercado.modeler.persistence.dao.EntityManagerController;
-import org.marceloleite.mercado.modeler.persistence.model.Tables;
-import org.marceloleite.mercado.modeler.util.LocalDateTimeAttributeConverter;
+import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.commons.TimeInterval;
+import org.marceloleite.mercado.converter.ListJsonTradeToListTradeConverter;
+import org.marceloleite.mercado.databasemodel.Trade;
+import org.marceloleite.mercado.databaseretriever.TradesDatabaseRetriever;
+import org.marceloleite.mercado.databaseretriever.persistence.dao.TradeDAO;
+import org.marceloleite.mercado.retriever.database.TradesDatabaseUtils;
+import org.marceloleite.mercado.siteretriever.model.JsonTrade;
+import org.marceloleite.mercado.siteretriever.trades.TradesSiteRetriever;
 
 public class TradesRetriever {
 
-	private static final String QUERY_MAXIMUM_DATE_RETRIEVED = "SELECT max(date) FROM " + Tables.TRADE.getName();
+	public List<Trade> retrieve(Currency currency, LocalDateTime start, LocalDateTime end) {
+		
+		retrieveUnavailableTradesOnDatabase(currency, start, end);
+		return retrieveTradesFromDatabase(currency, start, end);
+	}
 
-	private static final String QUERY_MINIMUM_DATE_RETRIEVED = "SELECT min(date) FROM " + Tables.TRADE.getName();
+	private List<Trade> retrieveTradesFromDatabase(Currency currency, LocalDateTime start, LocalDateTime end) {
+		return new TradesDatabaseRetriever().retrieve(currency, start, end);
+		
+	}
 
-	
-
-	public void retrieve() {
-		LocalDateTime maximumTimeRetrieved = obtainMaximumTimeRetrieved();
-		LocalDateTime minimumTimeRetrieved = obtainMinimumTimeRetrieved();
-		LocalDateTimeToStringConverter localDateTimeToStringConverter = new LocalDateTimeToStringConverter();
-		if (minimumTimeRetrieved != null) {
-			System.out.println(localDateTimeToStringConverter.convert(minimumTimeRetrieved));
-		}
-
-		if (maximumTimeRetrieved != null) {
-			System.out.println(localDateTimeToStringConverter.convert(maximumTimeRetrieved));
+	private void retrieveUnavailableTradesOnDatabase(Currency currency, LocalDateTime start, LocalDateTime end) {
+		TimeInterval retrieveTimeIntervalAvailable = new TradesDatabaseUtils().retrieveTimeIntervalAvailable();
+		TradeDAO tradeDAO = new TradeDAO();
+		
+		if ( retrieveTimeIntervalAvailable != null ) {
+			if ( start.isBefore(retrieveTimeIntervalAvailable.getStart())) {
+				LocalDateTime endRetrieveTime = LocalDateTime.from(retrieveTimeIntervalAvailable.getStart()).minusSeconds(1);
+				List<Trade> trades = retrieveTradesFromSite(currency, start, endRetrieveTime);
+				tradeDAO.persist(trades);
+			}
+			if ( end.isAfter(retrieveTimeIntervalAvailable.getEnd())) {
+				LocalDateTime startRetrieveTime = LocalDateTime.from(retrieveTimeIntervalAvailable.getEnd()).plusSeconds(1);
+				List<Trade> trades = retrieveTradesFromSite(currency, startRetrieveTime, end);
+				tradeDAO.persist(trades);
+			}
+		} else {
+			List<Trade> trades = retrieveTradesFromSite(currency, start, end);
+			tradeDAO.persist(trades);
 		}
 	}
 
-	public TradesRetriever() {
-		entityManager = EntityManagerController.getInstance().createEntityManager();
+	private List<Trade> retrieveTradesFromSite(Currency currency, LocalDateTime start, LocalDateTime end) {
+		TradesSiteRetriever tradesConsumer = new TradesSiteRetriever(currency);
+		List<JsonTrade> jsonTrades = tradesConsumer.retrieve(start, end);
+		return new ListJsonTradeToListTradeConverter().convert(jsonTrades);
 	}
-
-	
 }
