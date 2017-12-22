@@ -9,8 +9,8 @@ public class TimeIntervalToTemporalTickerIdConverter implements Converter<TimeIn
 	@Override
 	public TemporalTickerId convert(TimeInterval timeInterval) {
 		TemporalTickerId temporalTickerId = new TemporalTickerId();
-		temporalTickerId.setFrom(timeInterval.getStart());
-		temporalTickerId.setTo(timeInterval.getEnd());
+		temporalTickerId.setStart(timeInterval.getStart());
+		temporalTickerId.setEnd(timeInterval.getEnd());
 		return temporalTickerId;
 	}
 

@@ -8,7 +8,7 @@ public class TemporalTickersComparator implements Comparator<TemporalTicker> {
 
 	@Override
 	public int compare(TemporalTicker first, TemporalTicker second) {
-		return first.getTemporalTickerId().getFrom().compareTo(second.getTemporalTickerId().getFrom());
+		return first.getTemporalTickerId().getStart().compareTo(second.getTemporalTickerId().getStart());
 	}
 
 }

@@ -22,8 +22,9 @@ public class TradesRetriever {
 	}
 
 	private List<Trade> retrieveTradesFromDatabase(Currency currency, LocalDateTime start, LocalDateTime end) {
-		return new TradesDatabaseRetriever().retrieve(currency, start, end);
-		
+		List<Trade> trades = new TradesDatabaseRetriever().retrieve(currency, start, end);
+		System.out.println(trades.size());
+		return trades;
 	}
 
 	private void retrieveUnavailableTradesOnDatabase(Currency currency, LocalDateTime start, LocalDateTime end) {

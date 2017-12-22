@@ -1,6 +1,5 @@
-package org.marceloleite.mercado.retriever;
+package org.marceloleite.mercado.databaseretriever;
 
-import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -10,18 +9,18 @@ import org.marceloleite.mercado.databasemodel.Trade;
 import org.marceloleite.mercado.databaseretriever.persistence.EntityManagerController;
 
 public class Main {
-	
+
 	public static void main(String[] args) {
-		tradesRetriever();
+		tradesDatabaseRetriever();
+		EntityManagerController.getInstance().close();
 	}
 
-	private static void tradesRetriever() {
+	private static void tradesDatabaseRetriever() {
+		TradesDatabaseRetriever tradesDatabaseRetriever = new TradesDatabaseRetriever();
 		LocalDateTime end = LocalDateTime.now();
-		LocalDateTime start = end.minus(Duration.ofSeconds(30));
-		TradesRetriever tradesRetriever = new TradesRetriever();
-		List<Trade> trades = tradesRetriever.retrieve(Currency.BITCOIN, start, end);
+		LocalDateTime start = LocalDateTime.from(end).minusSeconds(60);
+		List<Trade> trades = tradesDatabaseRetriever.retrieve(Currency.BITCOIN, start, end);
 		ObjectToJsonConverter objectToJsonConverter = new ObjectToJsonConverter();
-		System.out.println(trades.get(trades.size()-1).getPrice());
-		EntityManagerController.getInstance().close();
+		System.out.println(objectToJsonConverter.convert(trades));
 	}
 }

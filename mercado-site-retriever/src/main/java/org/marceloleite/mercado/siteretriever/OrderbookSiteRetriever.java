@@ -10,8 +10,8 @@ public class OrderbookSiteRetriever extends AbstractSiteRetriever implements Ret
 
 	private static final String METHOD = "orderbook";
 
-	public OrderbookSiteRetriever(Currency cryptocoin) {
-		super(cryptocoin);
+	public OrderbookSiteRetriever(Currency currency) {
+		super(currency);
 	}
 
 	public JsonOrderbook retrieve(Object... args) {

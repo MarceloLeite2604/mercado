@@ -102,10 +102,10 @@ public class Simulator {
 						timeDivisionController);
 				for (TemporalTicker temporalTicker : temporalTickers) {
 					Map<Currency, TemporalTicker> currencyMap = Optional
-							.ofNullable(temporalTickersCurrencyByTime.get(temporalTicker.getTemporalTickerId().getTo()))
+							.ofNullable(temporalTickersCurrencyByTime.get(temporalTicker.getTemporalTickerId().getEnd()))
 							.orElse(new EnumMap<>(Currency.class));
 					currencyMap.put(currency, temporalTicker);
-					temporalTickersCurrencyByTime.put(temporalTicker.getTemporalTickerId().getTo(), currencyMap);
+					temporalTickersCurrencyByTime.put(temporalTicker.getTemporalTickerId().getEnd(), currencyMap);
 				}
 			}
 		}
@@ -166,14 +166,14 @@ public class Simulator {
 						CurrencyMonitoring currencyMonitoring = currenciesMonitoring.get(currency);
 						if (percentage >= currencyMonitoring.getIncreasePercentage()) {
 							System.out.println(
-									"[" + localDateTimeToString.convert(temporalTicker.getTemporalTickerId().getTo())
+									"[" + localDateTimeToString.convert(temporalTicker.getTemporalTickerId().getEnd())
 											+ "] [" + account.getOwner() + "]: Price for " + currency
 											+ " has increased by " + Math.abs(percentage * 100) + "%.");
 							updateBasePrice = true;
 
 						} else if (percentage <= -currencyMonitoring.getDecreasePercentage()) {
 							System.out.println(
-									"[" + localDateTimeToString.convert(temporalTicker.getTemporalTickerId().getTo())
+									"[" + localDateTimeToString.convert(temporalTicker.getTemporalTickerId().getEnd())
 											+ "] [" + account.getOwner() + "]: Price for " + currency
 											+ " has descreased by " + Math.abs(percentage * 100) + "%.");
 							updateBasePrice = true;

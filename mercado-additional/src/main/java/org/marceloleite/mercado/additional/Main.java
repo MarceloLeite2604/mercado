@@ -25,7 +25,7 @@ public class Main {
 		for (int counter = 0; counter < temporalTickers.size(); counter++) {
 			TemporalTicker temporalTicker = temporalTickers.get(counter);
 			StringBuffer stringBuffer = new StringBuffer();
-			stringBuffer.append(new LocalDateTimeToStringConverter().convert(temporalTicker.getTemporalTickerId().getFrom()) + " - First: "
+			stringBuffer.append(new LocalDateTimeToStringConverter().convert(temporalTicker.getTemporalTickerId().getStart()) + " - First: "
 					+ temporalTicker.getFirst() + ", last: " + temporalTicker.getLast() + ", highest: "
 					+ temporalTicker.getHigh() + ", lowest: " + temporalTicker.getLow());
 			if (counter > 0) {

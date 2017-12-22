@@ -10,32 +10,32 @@ public class TemporalTickerId implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 
-	private LocalDateTime from;
+	private LocalDateTime start;
 
-	private LocalDateTime to;
+	private LocalDateTime end;
 
-	public LocalDateTime getFrom() {
-		return from;
+	public LocalDateTime getStart() {
+		return start;
 	}
 
-	public void setFrom(LocalDateTime from) {
-		this.from = from;
+	public void setStart(LocalDateTime start) {
+		this.start = start;
 	}
 
-	public LocalDateTime getTo() {
-		return to;
+	public LocalDateTime getEnd() {
+		return end;
 	}
 
-	public void setTo(LocalDateTime to) {
-		this.to = to;
+	public void setEnd(LocalDateTime end) {
+		this.end = end;
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((from == null) ? 0 : from.hashCode());
-		result = prime * result + ((to == null) ? 0 : to.hashCode());
+		result = prime * result + ((end == null) ? 0 : end.hashCode());
+		result = prime * result + ((start == null) ? 0 : start.hashCode());
 		return result;
 	}
 
@@ -48,15 +48,15 @@ public class TemporalTickerId implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		TemporalTickerId other = (TemporalTickerId) obj;
-		if (from == null) {
-			if (other.from != null)
+		if (end == null) {
+			if (other.end != null)
 				return false;
-		} else if (!from.equals(other.from))
+		} else if (!end.equals(other.end))
 			return false;
-		if (to == null) {
-			if (other.to != null)
+		if (start == null) {
+			if (other.start != null)
 				return false;
-		} else if (!to.equals(other.to))
+		} else if (!start.equals(other.start))
 			return false;
 		return true;
 	}
