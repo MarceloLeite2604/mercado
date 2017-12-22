@@ -1,16 +1,17 @@
-package org.marceloleite.mercado.converter.business.filter;
+package org.marceloleite.mercado.additional.filter;
 
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.marceloleite.mercado.commons.interfaces.Filter;
 import org.marceloleite.mercado.databasemodel.Trade;
 import org.marceloleite.mercado.databasemodel.TradeType;
 
-public class TradeTypeFilter implements Filter<Map<Integer, Trade>> {
+public class OldTradeTypeFilter implements Filter<Map<Integer, Trade>> {
 
 	private TradeType type;
 
-	public TradeTypeFilter(TradeType type) {
+	public OldTradeTypeFilter(TradeType type) {
 		super();
 		this.type = type;
 	}

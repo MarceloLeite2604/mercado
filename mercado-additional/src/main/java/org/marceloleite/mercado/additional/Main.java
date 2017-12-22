@@ -6,8 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.commons.TimeDivisionController;
 import org.marceloleite.mercado.commons.util.converter.LocalDateTimeToStringConverter;
-import org.marceloleite.mercado.modeler.persistence.model.TemporalTicker;
+import org.marceloleite.mercado.databasemodel.TemporalTicker;
 
 public class Main {
 	public static void main(String[] args) {
@@ -16,15 +17,15 @@ public class Main {
 		LocalDateTime from = LocalDateTime.from(to)
 			.minus(Duration.ofMinutes(60));
 		Duration stepDuration = Duration.ofMinutes(1);
-		TemporalTickerRetriever temporalTickerRetriever = new TemporalTickerRetriever();
-		List<TemporalTicker> temporalTickers = temporalTickerRetriever.retrieve(Currency.BITCOIN, from, to,
-				stepDuration);
+		TemporalTickerGenerator temporalTickerGenerator = new TemporalTickerGenerator();
+		TimeDivisionController timeDivisionController = new TimeDivisionController(from, to, stepDuration);
+		List<TemporalTicker> temporalTickers = temporalTickerGenerator.generate(Currency.BITCOIN, timeDivisionController);
 		List<Comparison> changes = compare(temporalTickers);
 
 		for (int counter = 0; counter < temporalTickers.size(); counter++) {
 			TemporalTicker temporalTicker = temporalTickers.get(counter);
 			StringBuffer stringBuffer = new StringBuffer();
-			stringBuffer.append(new LocalDateTimeToStringConverter().convert(temporalTicker.getFrom()) + " - First: "
+			stringBuffer.append(new LocalDateTimeToStringConverter().convert(temporalTicker.getTemporalTickerId().getFrom()) + " - First: "
 					+ temporalTicker.getFirst() + ", last: " + temporalTicker.getLast() + ", highest: "
 					+ temporalTicker.getHigh() + ", lowest: " + temporalTicker.getLow());
 			if (counter > 0) {
