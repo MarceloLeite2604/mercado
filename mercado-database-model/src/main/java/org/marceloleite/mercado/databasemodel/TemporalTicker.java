@@ -1,12 +1,13 @@
 package org.marceloleite.mercado.databasemodel;
 
-import java.time.LocalDateTime;
+import javax.persistence.EmbeddedId;
+import javax.persistence.Entity;
 
+@Entity(name="TemporalTickers")
 public class TemporalTicker {
 
-	private LocalDateTime from;
-
-	private LocalDateTime to;
+	@EmbeddedId
+	private TemporalTickerId temporalTickerId;
 	
 	private long orders;
 
@@ -28,22 +29,6 @@ public class TemporalTicker {
 
 	public TemporalTicker() {
 		super();
-	}
-
-	public LocalDateTime getFrom() {
-		return from;
-	}
-
-	public void setFrom(LocalDateTime from) {
-		this.from = from;
-	}
-
-	public LocalDateTime getTo() {
-		return to;
-	}
-
-	public void setTo(LocalDateTime to) {
-		this.to = to;
 	}
 
 	public double getHigh() {
@@ -117,5 +102,15 @@ public class TemporalTicker {
 	public void setFirst(double first) {
 		this.first = first;
 	}
+
+	public TemporalTickerId getTemporalTickerId() {
+		return temporalTickerId;
+	}
+
+	public void setTemporalTickerId(TemporalTickerId temporalTickerId) {
+		this.temporalTickerId = temporalTickerId;
+	}
+	
+	
 
 }

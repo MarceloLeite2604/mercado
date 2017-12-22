@@ -2,13 +2,13 @@ package org.marceloleite.mercado.additional;
 
 import java.util.Comparator;
 
-import org.marceloleite.mercado.modeler.persistence.model.TemporalTicker;
+import org.marceloleite.mercado.databasemodel.TemporalTicker;
 
 public class TemporalTickersComparator implements Comparator<TemporalTicker> {
 
 	@Override
 	public int compare(TemporalTicker first, TemporalTicker second) {
-		return first.getFrom().compareTo(second.getFrom());
+		return first.getTemporalTickerId().getFrom().compareTo(second.getTemporalTickerId().getFrom());
 	}
 
 }

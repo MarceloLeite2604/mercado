@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 
 import org.marceloleite.mercado.additional.PriceRetriever;
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.commons.TimeDivisionController;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.util.converter.ObjectToJsonConverter;
 import org.marceloleite.mercado.commons.util.converter.StringToLocalDateTimeConverter;

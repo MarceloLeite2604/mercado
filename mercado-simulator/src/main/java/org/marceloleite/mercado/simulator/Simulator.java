@@ -9,10 +9,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import org.marceloleite.mercado.additional.TemporalTickerGenerator;
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.commons.TimeDivisionController;
 import org.marceloleite.mercado.commons.util.converter.LocalDateTimeToStringConverter;
-import org.marceloleite.mercado.modeler.persistence.model.TemporalTicker;
-import org.marceloleite.mercado.additional.TemporalTickerRetriever;
+import org.marceloleite.mercado.databasemodel.TemporalTicker;
 
 public class Simulator {
 
@@ -90,19 +91,21 @@ public class Simulator {
 
 	private Map<LocalDateTime, Map<Currency, TemporalTicker>> retrieveTemporalTickersCurrencyByTime(
 			LocalDateTime startTime, LocalDateTime stopTime, Duration stepTime) {
-		TemporalTickerRetriever temporalTickerRetriever = new TemporalTickerRetriever();
+		TemporalTickerGenerator temporalTickerGenerator = new TemporalTickerGenerator();
 		Map<LocalDateTime, Map<Currency, TemporalTicker>> temporalTickersCurrencyByTime = new HashMap<>();
 
 		for (Currency currency : Currency.values()) {
 			if (currency.isDigital()) {
-				List<TemporalTicker> temporalTickers = temporalTickerRetriever.retrieve(currency, startTime, stopTime,
+				TimeDivisionController timeDivisionController = new TimeDivisionController(startTime, stopTime,
 						stepTime);
+				List<TemporalTicker> temporalTickers = temporalTickerGenerator.generate(currency,
+						timeDivisionController);
 				for (TemporalTicker temporalTicker : temporalTickers) {
 					Map<Currency, TemporalTicker> currencyMap = Optional
-						.ofNullable(temporalTickersCurrencyByTime.get(temporalTicker.getTo()))
-						.orElse(new EnumMap<>(Currency.class));
+							.ofNullable(temporalTickersCurrencyByTime.get(temporalTicker.getTemporalTickerId().getTo()))
+							.orElse(new EnumMap<>(Currency.class));
 					currencyMap.put(currency, temporalTicker);
-					temporalTickersCurrencyByTime.put(temporalTicker.getTo(), currencyMap);
+					temporalTickersCurrencyByTime.put(temporalTicker.getTemporalTickerId().getTo(), currencyMap);
 				}
 			}
 		}
@@ -156,22 +159,23 @@ public class Simulator {
 					if (currentPrice != 0) {
 
 						updateBasePrice = !basePrices.containsKey(currency);
-						double basePrice = Optional.ofNullable(basePrices.get(currency))
-							.orElse(currentPrice);
+						double basePrice = Optional.ofNullable(basePrices.get(currency)).orElse(currentPrice);
 
 						double percentage = (currentPrice / basePrice) - 1.0;
 
 						CurrencyMonitoring currencyMonitoring = currenciesMonitoring.get(currency);
 						if (percentage >= currencyMonitoring.getIncreasePercentage()) {
-							System.out.println("[" + localDateTimeToString.convert(temporalTicker.getTo()) + "] ["
-									+ account.getOwner() + "]: Price for " + currency + " has increased by "
-									+ Math.abs(percentage * 100) + "%.");
+							System.out.println(
+									"[" + localDateTimeToString.convert(temporalTicker.getTemporalTickerId().getTo())
+											+ "] [" + account.getOwner() + "]: Price for " + currency
+											+ " has increased by " + Math.abs(percentage * 100) + "%.");
 							updateBasePrice = true;
 
 						} else if (percentage <= -currencyMonitoring.getDecreasePercentage()) {
-							System.out.println("[" + localDateTimeToString.convert(temporalTicker.getTo()) + "] ["
-									+ account.getOwner() + "]: Price for " + currency + " has descreased by "
-									+ Math.abs(percentage * 100) + "%.");
+							System.out.println(
+									"[" + localDateTimeToString.convert(temporalTicker.getTemporalTickerId().getTo())
+											+ "] [" + account.getOwner() + "]: Price for " + currency
+											+ " has descreased by " + Math.abs(percentage * 100) + "%.");
 							updateBasePrice = true;
 						}
 
