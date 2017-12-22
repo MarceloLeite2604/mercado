@@ -7,6 +7,8 @@
 
 		<class>org.marceloleite.mercado.databasemodel.Ticker</class>
 		<class>org.marceloleite.mercado.databasemodel.TickerId</class>
+		<class>org.marceloleite.mercado.databasemodel.TemporalTicker</class>
+		<class>org.marceloleite.mercado.databasemodel.TemporalTickerId</class>
 		<class>org.marceloleite.mercado.databasemodel.Trade</class>
 		<class>org.marceloleite.mercado.databasemodel.converter.CurrencyAttributeConverter</class>
 		<class>org.marceloleite.mercado.databasemodel.converter.LocalDateTimeAttributeConverter</class>
