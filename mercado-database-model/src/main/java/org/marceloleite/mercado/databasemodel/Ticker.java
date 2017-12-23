@@ -4,7 +4,7 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 
 @Entity(name = "Tickers")
-public class Ticker {
+public class Ticker implements DatabaseEntity<TickerId> {
 
 	@EmbeddedId
 	private TickerId tickerId;
@@ -90,5 +90,15 @@ public class Ticker {
 
 	public void setTickerId(TickerId tickerId) {
 		this.tickerId = tickerId;
+	}
+
+	@Override
+	public Class<?> getEntityClass() {
+		return Ticker.class;
+	}
+
+	@Override
+	public TickerId getId() {
+		return tickerId;
 	}
 }

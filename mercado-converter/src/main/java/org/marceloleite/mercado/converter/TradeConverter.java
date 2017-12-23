@@ -11,7 +11,7 @@ public class TradeConverter implements Converter<JsonTrade, Trade> {
 	@Override
 	public Trade convert(JsonTrade jsonTrade) {
 		Trade trade = new Trade();
-		trade.setId(jsonTrade.getTid());
+		trade.setId(Long.valueOf(jsonTrade.getTid()));
 		trade.setDate(new LongToLocalDateTimeConverter().convert(jsonTrade.getDate()));
 		trade.setPrice(jsonTrade.getPrice());
 		trade.setAmount(jsonTrade.getAmount());

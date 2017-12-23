@@ -1,13 +1,14 @@
 package org.marceloleite.mercado.additional.filter;
 
-import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import org.marceloleite.mercado.commons.interfaces.Filter;
 import org.marceloleite.mercado.databasemodel.Trade;
 import org.marceloleite.mercado.databasemodel.TradeType;
 
-public class TradeTypeFilter implements Filter<List<Trade>> {
+public class TradeTypeFilter implements Filter<Map<Long, Trade>> {
 
 	private TradeType type;
 
@@ -17,11 +18,10 @@ public class TradeTypeFilter implements Filter<List<Trade>> {
 	}
 
 	@Override
-	public List<Trade> filter(List<Trade> trades) {
-		return trades
-			.stream()
-			.filter(trade -> type.equals(trade.getTradeType()))
-			.collect(Collectors.toList());
+	public Map<Long, Trade> filter(Map<Long, Trade> trades) {
+		return trades.entrySet().stream().filter(entry -> type.equals(entry.getValue().getTradeType()))
+				.map(Entry<Long, Trade>::getValue)
+				.collect(Collectors.toConcurrentMap(Trade::getId, trade -> trade, (oldTrade, newTrade) -> newTrade));
 	}
 
 }

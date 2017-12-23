@@ -29,5 +29,9 @@ public class MercadoAbstractConfiguration implements Configuration {
 		this.configurationFileReader = new ConfigurationFileReader(configurationFilePath);
 		this.properties = configurationFileReader.readConfigurationFile();
 	}
+	
+	public void readConfiguration() {
+		readConfiguration(DEFAULT_CONFIGURATION_FILE_PATH);
+	}
 
 }
