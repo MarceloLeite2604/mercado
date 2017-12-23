@@ -10,10 +10,10 @@ import javax.persistence.Id;
 import org.marceloleite.mercado.commons.Currency;
 
 @Entity(name = "Trades")
-public class Trade {
+public class Trade implements DatabaseEntity<Long> {
 
 	@Id
-	private int id;
+	private Long id;
 
 	private Currency currency;
 
@@ -29,11 +29,12 @@ public class Trade {
 	public Trade() {
 	}
 
-	public int getId() {
+	@Override
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -75,5 +76,10 @@ public class Trade {
 
 	public void setCurrency(Currency currency) {
 		this.currency = currency;
+	}
+
+	@Override
+	public Class<?> getEntityClass() {
+		return Trade.class;
 	}
 }

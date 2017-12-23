@@ -10,7 +10,7 @@ import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.util.converter.LocalDateTimeToStringConverter;
 import org.marceloleite.mercado.siteretriever.model.JsonTrade;
 import org.marceloleite.mercado.siteretriever.util.checker.MaxTradesReachedCheck;
-import org.marceloleite.mercado.siteretriever.util.formatter.ListToMapJsonTradeConverter;
+import org.marceloleite.mercado.siteretriever.util.converter.ListToMapJsonTradeConverter;
 
 public class TradesSiteRetrieverCallable implements Callable<Map<Integer, JsonTrade>> {
 

@@ -1,79 +1,130 @@
 package org.marceloleite.mercado.databaseretriever.persistence.dao;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 
-import org.hibernate.cfg.NotYetImplementedException;
+import org.marceloleite.mercado.databasemodel.DatabaseEntity;
 import org.marceloleite.mercado.databaseretriever.persistence.EntityManagerController;
 import org.marceloleite.mercado.databaseretriever.util.JpaOperation;
 
-public class MercadoAbstractDAO<E, I> implements MercadoDAOInterface<E, I> {
+public class MercadoAbstractDAO implements MercadoDAOInterface {
 
-	@Override
-	public void merge(E entity) {
-		createEntityManagerForOperation(JpaOperation.MERGE, Arrays.asList(entity));
-	}
+	private EntityManager entityManager;
 	
+	private EntityTransaction transaction;
+
 	@Override
-	public void merge(List<E> entities) {
-		createEntityManagerForOperation(JpaOperation.MERGE, entities);
-		
+	public void merge(DatabaseEntity<?> databaseEntity) {
+		executeOperation(JpaOperation.MERGE, Arrays.asList(databaseEntity));
 	}
 
 	@Override
-	public void persist(E entity) {
-		createEntityManagerForOperation(JpaOperation.PERSIST, Arrays.asList(entity));
-	}
-	
-	@Override
-	public void persist(List<E> entities) {
-		createEntityManagerForOperation(JpaOperation.MERGE, entities);
+	public void merge(List<? extends DatabaseEntity<?>> databaseEntities) {
+		executeOperation(JpaOperation.MERGE, databaseEntities);
 	}
 
 	@Override
-	public void remove(E entity) {
-		createEntityManagerForOperation(JpaOperation.REMOVE, Arrays.asList(entity));
-	}
-	
-	@Override
-	public void remove(List<E> entities) {
-		createEntityManagerForOperation(JpaOperation.REMOVE, entities);
+	public void persist(DatabaseEntity<?> databaseEntity) {
+		executeOperation(JpaOperation.PERSIST, Arrays.asList(databaseEntity));
 	}
 
 	@Override
-	public void findById(I id) {
-		throw new NotYetImplementedException();
+	public void persist(List<? extends DatabaseEntity<?>> databaseEntities) {
+		executeOperation(JpaOperation.PERSIST, databaseEntities);
 	}
 
-	private void createEntityManagerForOperation(JpaOperation jpaOperation, List<E> entities) {
-		EntityManager entityManager = EntityManagerController.getInstance().createEntityManager();
-		openTransactionForOperation(entityManager, jpaOperation, entities);
-		entityManager.close();
+	@Override
+	public void remove(DatabaseEntity<?> entity) {
+		executeOperation(JpaOperation.REMOVE, Arrays.asList(entity));
 	}
 
-	private void openTransactionForOperation(EntityManager entityManager, JpaOperation jpaOperation, List<E> entities) {
-		EntityTransaction transaction = entityManager.getTransaction();
-		transaction.begin();
-		executeOperation(entityManager, jpaOperation, entities);
-		transaction.commit();
+	@Override
+	public void remove(List<? extends DatabaseEntity<?>> entities) {
+		executeOperation(JpaOperation.REMOVE, entities);
 	}
 
-	private void executeOperation(EntityManager entityManager, JpaOperation jpaOperation, List<E> entities) {
-		for (E entity : entities) {
+	@Override
+	public DatabaseEntity<?> findById(DatabaseEntity<?> entity) {
+		return null;
+	}
+
+	@Override
+	public List<DatabaseEntity<?>> findById(List<DatabaseEntity<?>> entities) {
+		return null;
+	}
+
+	public void executeOperation(JpaOperation jpaOperation, List<? extends DatabaseEntity<?>> databaseEntities) {
+		createEntityManager();
+		createTransaction();
+
+		for (DatabaseEntity<?> databaseEntity : databaseEntities) {
 			switch (jpaOperation) {
 			case MERGE:
-				entityManager.merge(entity);
+				entityManager.merge(databaseEntity);
 				break;
 			case PERSIST:
-				entityManager.persist(entity);
+				entityManager.persist(databaseEntity);
 				break;
 			case REMOVE:
-				entityManager.remove(entity);
+				entityManager.remove(databaseEntity);
 				break;
+			case FIND_BY_ID:
+				entityManager.find(databaseEntity.getClass(), databaseEntity.getId());
+				break;
+			default:
+				throw new IllegalStateException("Invalid void operation " + jpaOperation + ".");
 			}
 		}
+
+		commitTransaction();
+		closeEntityManager();
 	}
+
+	public List<DatabaseEntity<?>> executeOperationWithResult(JpaOperation jpaOperation,
+			List<DatabaseEntity<?>> databaseEntities) {
+		createEntityManager();
+		createTransaction();
+
+		List<DatabaseEntity<?>> retrievedDatabaseEntities = new ArrayList<>();
+		for (DatabaseEntity<?> databaseEntity : databaseEntities) {
+			switch (jpaOperation) {
+			case FIND_BY_ID:
+				DatabaseEntity<?> retrievedDatabaseEntity = entityManager.find(databaseEntity.getClass(),
+						databaseEntity.getId());
+				retrievedDatabaseEntities.add(retrievedDatabaseEntity);
+				break;
+			default:
+				throw new IllegalStateException("Invalid returning operation " + jpaOperation + ".");
+			}
+		}
+
+		commitTransaction();
+		closeEntityManager();
+
+		return retrievedDatabaseEntities;
+	}
+
+	private void createEntityManager() {
+		entityManager = EntityManagerController.getInstance().createEntityManager();
+	}
+
+	private void closeEntityManager() {
+		entityManager.close();
+		entityManager = null;
+	}
+
+	private void createTransaction() {
+		transaction = entityManager.getTransaction();
+		transaction.begin();
+	}
+
+	private void commitTransaction() {
+		transaction.commit();
+		transaction = null;
+	}
+
 }

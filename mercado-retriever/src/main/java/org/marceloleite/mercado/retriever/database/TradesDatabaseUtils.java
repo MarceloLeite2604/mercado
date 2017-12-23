@@ -6,14 +6,14 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 import org.marceloleite.mercado.commons.TimeInterval;
-import org.marceloleite.mercado.databasemodel.Tables;
+import org.marceloleite.mercado.databasemodel.Entity;
 import org.marceloleite.mercado.databaseretriever.persistence.EntityManagerController;
 
 public class TradesDatabaseUtils {
 
-	private static final String QUERY_MAXIMUM_DATE_RETRIEVED = "SELECT max(date) FROM " + Tables.TRADE.getName();
+	private static final String QUERY_MAXIMUM_DATE_RETRIEVED = "SELECT max(date) FROM " + Entity.TRADE.getName();
 
-	private static final String QUERY_MINIMUM_DATE_RETRIEVED = "SELECT min(date) FROM " + Tables.TRADE.getName();
+	private static final String QUERY_MINIMUM_DATE_RETRIEVED = "SELECT min(date) FROM " + Entity.TRADE.getName();
 
 	private EntityManager entityManager;
 	

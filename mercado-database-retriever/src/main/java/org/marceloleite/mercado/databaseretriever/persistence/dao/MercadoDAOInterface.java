@@ -2,20 +2,24 @@ package org.marceloleite.mercado.databaseretriever.persistence.dao;
 
 import java.util.List;
 
-public interface MercadoDAOInterface<E, I> {
+import org.marceloleite.mercado.databasemodel.DatabaseEntity;
 
-	void merge(E entity);
+public interface MercadoDAOInterface {
+
+	void merge(DatabaseEntity<?> entity);
 	
-	void merge(List<E> entities);
+	void merge(List<? extends DatabaseEntity<?>> entities);
 	
-	void persist(E entity);
+	void persist(DatabaseEntity<?> entity);
 	
-	void persist(List<E> entities);
+	void persist(List<? extends DatabaseEntity<?>> entities);
 	
-	void remove(E entity);
+	void remove(DatabaseEntity<?> entity);
 	
-	void remove(List<E> entities);
+	void remove(List<? extends DatabaseEntity<?>> entities);
 	
-	void findById(I id);
+	DatabaseEntity<?> findById(DatabaseEntity<?> entity);
+	
+	List<DatabaseEntity<?>> findById(List<DatabaseEntity<?>> entities);
 	
 }

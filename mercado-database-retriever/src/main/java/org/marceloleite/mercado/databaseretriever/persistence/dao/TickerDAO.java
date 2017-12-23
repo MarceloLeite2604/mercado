@@ -1,8 +1,6 @@
 package org.marceloleite.mercado.databaseretriever.persistence.dao;
 
-import org.marceloleite.mercado.databasemodel.Ticker;
-import org.marceloleite.mercado.databasemodel.TickerId;
+import org.marceloleite.mercado.databasemodel.DatabaseEntity;
 
-public class TickerDAO extends MercadoAbstractDAO<Ticker, TickerId> {
-
+public class TickerDAO extends MercadoAbstractDAO {
 }

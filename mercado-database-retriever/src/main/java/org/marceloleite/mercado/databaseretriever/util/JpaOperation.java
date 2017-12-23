@@ -4,5 +4,6 @@ public enum JpaOperation {
 
 	MERGE,
 	PERSIST,
-	REMOVE;
+	REMOVE,
+	FIND_BY_ID;
 }

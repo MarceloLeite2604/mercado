@@ -1,8 +1,11 @@
 package org.marceloleite.mercado.additional;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.Callable;
 
+import org.marceloleite.mercado.additional.converter.ListToMapTradeConverter;
 import org.marceloleite.mercado.additional.converter.TimeIntervalToTemporalTickerIdConverter;
 import org.marceloleite.mercado.additional.filter.TradeTypeFilter;
 import org.marceloleite.mercado.commons.Currency;
@@ -27,10 +30,11 @@ public class TemporalTickersCallable implements Callable<TemporalTicker> {
 	public TemporalTicker call() throws Exception {
 		TradesRetriever tradesRetriever = new TradesRetriever();
 		List<Trade> trades = tradesRetriever.retrieve(currency, timeInterval.getStart(), timeInterval.getEnd());
-		return generateTemporalTickerFromTrades(trades);
+		Map<Long, Trade> tradesMap = new ListToMapTradeConverter().convert(trades);
+		return generateTemporalTickerFromTrades(tradesMap);
 	}
 
-	private TemporalTicker generateTemporalTickerFromTrades(List<Trade> trades) {
+	private TemporalTicker generateTemporalTickerFromTrades(Map<Long, Trade> trades) {
 
 		double high = 0.0;
 		double average = 0.0;
@@ -42,33 +46,40 @@ public class TemporalTickersCallable implements Callable<TemporalTicker> {
 		double sell = 0.0;
 
 		if (trades.size() > 0) {
-			List<Trade> buyingTrades = new TradeTypeFilter(TradeType.BUY).filter(trades);
-			List<Trade> sellingTrades = new TradeTypeFilter(TradeType.SELL).filter(trades);
+			Map<Long, Trade> buyingTrades = new TradeTypeFilter(TradeType.BUY).filter(trades);
+			Map<Long, Trade> sellingTrades = new TradeTypeFilter(TradeType.SELL).filter(trades);
 
-			high = trades.stream().mapToDouble(Trade::getPrice).max().orElse(0.0);
+			high = trades.entrySet().stream().map(Entry<Long, Trade>::getValue).mapToDouble(Trade::getPrice).max()
+					.orElse(0.0);
 
-			average = trades.stream().mapToDouble(Trade::getPrice).average().orElse(0.0);
+			average = trades.entrySet().stream().map(Entry<Long, Trade>::getValue).mapToDouble(Trade::getPrice)
+					.average().orElse(0.0);
 
-			low = trades.stream().mapToDouble(Trade::getPrice).min().orElse(0.0);
+			low = trades.entrySet().stream().map(Entry<Long, Trade>::getValue).mapToDouble(Trade::getPrice).min()
+					.orElse(0.0);
 
-			vol = trades.stream().mapToDouble(Trade::getAmount).sum();
+			vol = trades.entrySet().stream().map(Entry<Long, Trade>::getValue).mapToDouble(Trade::getAmount).sum();
 
-			int lastTradeId = trades.stream().mapToInt(Trade::getId).max().orElse(0);
+			long lastTradeId = trades.entrySet().stream().map(Entry<Long, Trade>::getValue).mapToLong(Trade::getId)
+					.max().orElse(0);
 			if (lastTradeId != 0) {
 				last = trades.get(lastTradeId).getPrice();
 			}
 
-			int firstTradeId = trades.stream().mapToInt(Trade::getId).min().orElse(0);
+			long firstTradeId = trades.entrySet().stream().map(Entry<Long, Trade>::getValue).mapToLong(Trade::getId)
+					.min().orElse(0);
 			if (firstTradeId != 0) {
 				first = trades.get(firstTradeId).getPrice();
 			}
 
-			int lastSellingTradeId = sellingTrades.stream().mapToInt(Trade::getId).max().orElse(0);
+			long lastSellingTradeId = sellingTrades.entrySet().stream().map(Entry<Long, Trade>::getValue)
+					.mapToLong(Trade::getId).max().orElse(0);
 			if (lastSellingTradeId != 0) {
 				buy = trades.get(lastSellingTradeId).getPrice();
 			}
 
-			int lastBuyingTradeId = buyingTrades.stream().mapToInt(Trade::getId).max().orElse(0);
+			long lastBuyingTradeId = buyingTrades.entrySet().stream().map(Entry<Long, Trade>::getValue)
+					.mapToLong(Trade::getId).max().orElse(0);
 			if (lastBuyingTradeId != 0) {
 				sell = trades.get(lastBuyingTradeId).getPrice();
 			}

@@ -7,15 +7,13 @@ import org.marceloleite.mercado.commons.util.converter.Converter;
 import org.marceloleite.mercado.databasemodel.Trade;
 import org.marceloleite.mercado.siteretriever.model.JsonTrade;
 
-public class OldListToMapJsonTradeConverter implements Converter<Map<Integer, JsonTrade>, Map<Integer, Trade>> {
+public class OldListToMapJsonTradeConverter implements Converter<Map<Long, JsonTrade>, Map<Long, Trade>> {
 
 	@Override
-	public Map<Integer, Trade> convert(Map<Integer, JsonTrade> jsonTrades) {
+	public Map<Long, Trade> convert(Map<Long, JsonTrade> jsonTrades) {
 		TradeConverter tradeFormatter = new TradeConverter();
-		return jsonTrades.entrySet()
-			.stream()
-			.map(entry -> tradeFormatter.convert(entry.getValue()))
-			.collect(Collectors.toConcurrentMap(Trade::getId, trade -> trade, (oldTrade, newTrade) -> newTrade));
+		return jsonTrades.entrySet().stream().map(entry -> tradeFormatter.convert(entry.getValue()))
+				.collect(Collectors.toConcurrentMap(Trade::getId, trade -> trade, (oldTrade, newTrade) -> newTrade));
 	}
 
 }

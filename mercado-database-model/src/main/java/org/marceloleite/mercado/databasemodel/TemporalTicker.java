@@ -3,22 +3,22 @@ package org.marceloleite.mercado.databasemodel;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 
-@Entity(name="TemporalTickers")
+@Entity(name = "TemporalTickers")
 public class TemporalTicker {
 
 	@EmbeddedId
 	private TemporalTickerId temporalTickerId;
-	
+
 	private long orders;
 
 	private double high;
-	
+
 	private double average;
 
 	private double low;
 
 	private double vol;
-	
+
 	private double first;
 
 	private double last;
@@ -110,7 +110,4 @@ public class TemporalTicker {
 	public void setTemporalTickerId(TemporalTickerId temporalTickerId) {
 		this.temporalTickerId = temporalTickerId;
 	}
-	
-	
-
 }
