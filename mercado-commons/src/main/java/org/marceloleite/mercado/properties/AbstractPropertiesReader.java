@@ -4,9 +4,11 @@ import java.util.Properties;
 
 import javax.swing.plaf.synth.SynthSpinnerUI;
 
+import org.marceloleite.mercado.commons.util.converter.ObjectToJsonConverter;
+
 public abstract class AbstractPropertiesReader<E extends Property> implements PropertiesReader<E> {
 
-	protected static final String DEFAULT_PROPERTIES_FILE_PATH = "application.properties";
+	protected static final String DEFAULT_PROPERTIES_FILE_PATH = "src/main/resources/application.properties";
 
 	private Properties properties;
 
@@ -34,6 +36,7 @@ public abstract class AbstractPropertiesReader<E extends Property> implements Pr
 	public void readConfiguration(String configurationFilePath) {
 		this.propertiesFileReader = new PropertiesFileReader(configurationFilePath);
 		this.properties = propertiesFileReader.readPropertiesFile();
+		System.out.println(new ObjectToJsonConverter().convert(properties));
 	}
 
 	public void readConfiguration() {

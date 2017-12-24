@@ -1,13 +1,16 @@
 package org.marceloleite.mercado.consultant.configuration;
 
+import org.marceloleite.mercado.properties.Property;
 import org.marceloleite.mercado.properties.StandardProperty;
 
-public enum ConsultantProperty {
+public enum ConsultantProperty implements Property {
 
-	CONSULTING_TIME_INTERVAL("consulting.timeInterval", true), 
+	CONSULTING_TIME_INTERVAL("consulting.tradeRetrieveDuration", true),
 	CONSULTING_PERIOD("consulting.period", true);
 
 	private String name;
+
+	private String value;
 
 	private boolean required;
 
@@ -21,7 +24,7 @@ public enum ConsultantProperty {
 	}
 
 	public void setName(String name) {
-		this.name = name;
+		throw new IllegalAccessError();
 	}
 
 	public boolean isRequired() {
@@ -31,9 +34,19 @@ public enum ConsultantProperty {
 	public void setRequired(boolean required) {
 		this.required = required;
 	}
-	
+
 	public StandardProperty toProperty() {
 		return new StandardProperty(name, null, required);
+	}
+
+	@Override
+	public String getValue() {
+		return this.value;
+	}
+
+	@Override
+	public void setValue(String value) {
+		this.value = value;
 	}
 
 }
