@@ -19,7 +19,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.marceloleite</groupId>
-			<artifactId>mercado-site-retriever</artifactId>
+			<artifactId>mercado-retriever</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>

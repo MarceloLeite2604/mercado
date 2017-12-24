@@ -2,6 +2,8 @@ package org.marceloleite.mercado.properties;
 
 import java.util.Properties;
 
+import javax.swing.plaf.synth.SynthSpinnerUI;
+
 public abstract class AbstractPropertiesReader<E extends Property> implements PropertiesReader<E> {
 
 	protected static final String DEFAULT_PROPERTIES_FILE_PATH = "application.properties";
@@ -11,20 +13,20 @@ public abstract class AbstractPropertiesReader<E extends Property> implements Pr
 	private PropertiesFileReader propertiesFileReader;
 
 	@Override
-	public E getProperty(E property) {
+	public Property getProperty(Property property) {
 		String value = null;
 		try {
 			value = (String) properties.get(property.getName());
 		} catch (NullPointerException nullPointerException) {
-			if (!property.isRequired()) {
+			if (property.isRequired()) {
 				throw new RuntimeException("Property \"" + property.getName() + "\" not found on configuration file \""
 						+ propertiesFileReader.getPropertiesFilePath() + "\".");
 			}
 		}
 
-		E retrievedProperty = getTemplateObject();
+		Property retrievedProperty = getTemplateObject();
 		retrievedProperty.setName(property.getName());
-		retrievedProperty.setName(value);
+		retrievedProperty.setValue(value);
 		return retrievedProperty;
 	}
 

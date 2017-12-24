@@ -26,6 +26,12 @@ public class TradeDAO extends AbstractDAO<TradePO> {
 			+ " WHERE currency = :" + CURRENCY_PARAMETER + " AND date BETWEEN :" + START_PARAMETER + " AND :"
 			+ END_PARAMETER;
 
+	private static final String NEWEST_TRADE_RETRIEVED = "SELECT * FROM " + Entity.TRADE.getName()
+			+ " WHERE date = ( SELECT max(date) FROM " + Entity.TRADE.getName() + ")";
+
+	private static final String OLDEST_TRADE_RETRIEVED = "SELECT * FROM " + Entity.TRADE.getName()
+			+ " WHERE date = ( SELECT min(date) FROM " + Entity.TRADE.getName() + ")";
+
 	public List<TradePO> retrieve(Currency currency, LocalDateTime start, LocalDateTime end) {
 		createEntityManager();
 
@@ -43,14 +49,28 @@ public class TradeDAO extends AbstractDAO<TradePO> {
 		List<TradePO> trades = new ArrayList<>();
 
 		for (Object object : objects) {
-			if (object instanceof TradePO) {
-				trades.add((TradePO) object);
-			} else {
-				new ClassCastExceptionThrower(getPOClass(), object).throwException();
-			}
+			trades.add(castToTradePO(object));
 		}
 
 		return trades;
+	}
+
+	public TradePO castToTradePO(Object object) {
+
+		if (!(object instanceof TradePO)) {
+			new ClassCastExceptionThrower(getPOClass(), object).throwException();
+		}
+		return (TradePO) object;
+	}
+
+	public TradePO retrieveNewestTrade() {
+		PersistenceObject<?> queryResult = executeQueryForSingleResult(NEWEST_TRADE_RETRIEVED, null);
+		return castToTradePO(queryResult);
+	}
+
+	public TradePO retrieveOldestTrade() {
+		PersistenceObject<?> queryResult = executeQueryForSingleResult(OLDEST_TRADE_RETRIEVED, null);
+		return castToTradePO(queryResult);
 	}
 
 	@Override

@@ -10,13 +10,14 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 
 import org.marceloleite.mercado.databasemodel.PersistenceObject;
+import org.marceloleite.mercado.databasemodel.TradePO;
 import org.marceloleite.mercado.databaseretriever.persistence.EntityManagerController;
 import org.marceloleite.mercado.databaseretriever.util.JpaOperation;
 
 public abstract class AbstractDAO<E extends PersistenceObject<?>> implements DataAccessObject<E> {
 
 	private EntityManager entityManager;
-	
+
 	private EntityTransaction transaction;
 
 	@Override
@@ -109,20 +110,32 @@ public abstract class AbstractDAO<E extends PersistenceObject<?>> implements Dat
 
 		return retrievedPersistenceObjects;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	protected List<? extends PersistenceObject<?>> executeQuery(String stringQuery, Map<String, String> parameters) {
 		createEntityManager();
 		// createTransaction();
 		Query query = createNativeQuery(stringQuery);
-		for (String parameterName : parameters.keySet()) {
-			String parameterValue = parameters.get(parameterName);
-			query.setParameter(parameterName, parameterValue);
+		if (null != parameters && !parameters.isEmpty()) {
+			for (String parameterName : parameters.keySet()) {
+				String parameterValue = parameters.get(parameterName);
+				query.setParameter(parameterName, parameterValue);
+			}
 		}
 		List<? extends PersistenceObject<?>> result = query.getResultList();
 		// commitTransaction();
 		closeEntityManager();
 		return result;
+	}
+
+	protected PersistenceObject<?> executeQueryForSingleResult(String queryString, Map<String, String> parameters) {
+		createEntityManager();
+		List<? extends PersistenceObject<?>> queryResult = executeQuery(queryString, parameters);
+		if (queryResult.size() > 0) {
+			return queryResult.get(0);
+		} else {
+			return null;
+		}
 	}
 
 	private void closeEntityManager() {
@@ -140,13 +153,13 @@ public abstract class AbstractDAO<E extends PersistenceObject<?>> implements Dat
 		transaction.commit();
 		transaction = null;
 	}
-	
+
 	protected void createEntityManager() {
 		if (entityManager == null) {
 			entityManager = EntityManagerController.getInstance().createEntityManager();
 		}
 	}
-	
+
 	protected EntityManager getEntityManager() {
 		return entityManager;
 	}
