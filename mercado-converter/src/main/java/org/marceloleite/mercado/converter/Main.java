@@ -3,7 +3,7 @@ package org.marceloleite.mercado.converter;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.util.converter.ObjectToJsonConverter;
 import org.marceloleite.mercado.databasemodel.Orderbook;
-import org.marceloleite.mercado.databasemodel.Ticker;
+import org.marceloleite.mercado.databasemodel.TickerPO;
 import org.marceloleite.mercado.databaseretriever.persistence.EntityManagerController;
 import org.marceloleite.mercado.databaseretriever.persistence.dao.TickerDAO;
 import org.marceloleite.mercado.siteretriever.OrderbookSiteRetriever;
@@ -21,7 +21,7 @@ public class Main {
 
  ticker() {
 		JsonTicker jsonTicker = new TickerSiteRetriever(Currency.BITCOIN).retrieve();
-		Ticker ticker = new TickerConverter().convert(jsonTicker);
+		TickerPO ticker = new TickerConverter().convert(jsonTicker);
 		System.out.println(new ObjectToJsonConverter().convert(ticker));
 		
 		TickerDAO tickerDAO = new TickerDAO();

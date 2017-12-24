@@ -13,7 +13,7 @@ import org.marceloleite.mercado.additional.TemporalTickerGenerator;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeDivisionController;
 import org.marceloleite.mercado.commons.util.converter.LocalDateTimeToStringConverter;
-import org.marceloleite.mercado.databasemodel.TemporalTicker;
+import org.marceloleite.mercado.databasemodel.TemporalTickerPO;
 
 public class Simulator {
 
@@ -74,12 +74,12 @@ public class Simulator {
 		for (long step = 0; step < totalSteps; step++) {
 			Duration stepDuration = calculateStepDuration(startStepTime, stopTime, stepTime);
 			stopStepTime = startStepTime.plus(stepDuration);
-			Map<LocalDateTime, Map<Currency, TemporalTicker>> temporalTickersCurrencyByTime = retrieveTemporalTickersCurrencyByTime(
+			Map<LocalDateTime, Map<Currency, TemporalTickerPO>> temporalTickersCurrencyByTime = retrieveTemporalTickersCurrencyByTime(
 					startStepTime, stopStepTime, stepDuration);
 
 			Set<LocalDateTime> stepTimes = temporalTickersCurrencyByTime.keySet();
 			for (LocalDateTime stepTime : stepTimes) {
-				Map<Currency, TemporalTicker> currenciesTemporalTickers = temporalTickersCurrencyByTime.get(stepTime);
+				Map<Currency, TemporalTickerPO> currenciesTemporalTickers = temporalTickersCurrencyByTime.get(stepTime);
 
 				updateBasePrices(currenciesTemporalTickers);
 			}
@@ -89,19 +89,19 @@ public class Simulator {
 		System.out.println("Simulation finished.");
 	}
 
-	private Map<LocalDateTime, Map<Currency, TemporalTicker>> retrieveTemporalTickersCurrencyByTime(
+	private Map<LocalDateTime, Map<Currency, TemporalTickerPO>> retrieveTemporalTickersCurrencyByTime(
 			LocalDateTime startTime, LocalDateTime stopTime, Duration stepTime) {
 		TemporalTickerGenerator temporalTickerGenerator = new TemporalTickerGenerator();
-		Map<LocalDateTime, Map<Currency, TemporalTicker>> temporalTickersCurrencyByTime = new HashMap<>();
+		Map<LocalDateTime, Map<Currency, TemporalTickerPO>> temporalTickersCurrencyByTime = new HashMap<>();
 
 		for (Currency currency : Currency.values()) {
 			if (currency.isDigital()) {
 				TimeDivisionController timeDivisionController = new TimeDivisionController(startTime, stopTime,
 						stepTime);
-				List<TemporalTicker> temporalTickers = temporalTickerGenerator.generate(currency,
+				List<TemporalTickerPO> temporalTickers = temporalTickerGenerator.generate(currency,
 						timeDivisionController);
-				for (TemporalTicker temporalTicker : temporalTickers) {
-					Map<Currency, TemporalTicker> currencyMap = Optional
+				for (TemporalTickerPO temporalTicker : temporalTickers) {
+					Map<Currency, TemporalTickerPO> currencyMap = Optional
 							.ofNullable(temporalTickersCurrencyByTime.get(temporalTicker.getTemporalTickerId().getEnd()))
 							.orElse(new EnumMap<>(Currency.class));
 					currencyMap.put(currency, temporalTicker);
@@ -139,13 +139,13 @@ public class Simulator {
 		}
 	}
 
-	private void updateBasePrices(Map<Currency, TemporalTicker> currenciesTemporalTickers) {
+	private void updateBasePrices(Map<Currency, TemporalTickerPO> currenciesTemporalTickers) {
 		for (Account account : accounts) {
 			updateBasePricesForAccount(currenciesTemporalTickers, account);
 		}
 	}
 
-	private void updateBasePricesForAccount(Map<Currency, TemporalTicker> currenciesTemporalTickers, Account account) {
+	private void updateBasePricesForAccount(Map<Currency, TemporalTickerPO> currenciesTemporalTickers, Account account) {
 		LocalDateTimeToStringConverter localDateTimeToString = new LocalDateTimeToStringConverter();
 		boolean updateBasePrice = false;
 		Map<Currency, CurrencyMonitoring> currenciesMonitoring = account.getCurrenciesMonitoring();
@@ -154,7 +154,7 @@ public class Simulator {
 			if (currency.isDigital()) {
 
 				if (currenciesMonitoring.containsKey(currency)) {
-					TemporalTicker temporalTicker = currenciesTemporalTickers.get(currency);
+					TemporalTickerPO temporalTicker = currenciesTemporalTickers.get(currency);
 					double currentPrice = temporalTicker.getLast();
 					if (currentPrice != 0) {
 

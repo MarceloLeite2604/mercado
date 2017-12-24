@@ -1,6 +1,6 @@
-package org.marceloleite.mercado.configuration;
+package org.marceloleite.mercado.properties;
 
-public interface Configuration {
+public interface PropertiesReader {
 
 	void readConfiguration(String configurationFilePath);
 	

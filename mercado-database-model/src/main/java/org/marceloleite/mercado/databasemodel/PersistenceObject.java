@@ -1,6 +1,6 @@
 package org.marceloleite.mercado.databasemodel;
 
-public interface DatabaseEntity<I> {
+public interface PersistenceObject<I> {
 
 	Class<?> getEntityClass();
 	

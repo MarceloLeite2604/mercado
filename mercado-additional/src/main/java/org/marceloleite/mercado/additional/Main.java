@@ -8,7 +8,7 @@ import java.util.List;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeDivisionController;
 import org.marceloleite.mercado.commons.util.converter.LocalDateTimeToStringConverter;
-import org.marceloleite.mercado.databasemodel.TemporalTicker;
+import org.marceloleite.mercado.databasemodel.TemporalTickerPO;
 
 public class Main {
 	public static void main(String[] args) {
@@ -19,11 +19,11 @@ public class Main {
 		Duration stepDuration = Duration.ofMinutes(1);
 		TemporalTickerGenerator temporalTickerGenerator = new TemporalTickerGenerator();
 		TimeDivisionController timeDivisionController = new TimeDivisionController(from, to, stepDuration);
-		List<TemporalTicker> temporalTickers = temporalTickerGenerator.generate(Currency.BITCOIN, timeDivisionController);
+		List<TemporalTickerPO> temporalTickers = temporalTickerGenerator.generate(Currency.BITCOIN, timeDivisionController);
 		List<Comparison> changes = compare(temporalTickers);
 
 		for (int counter = 0; counter < temporalTickers.size(); counter++) {
-			TemporalTicker temporalTicker = temporalTickers.get(counter);
+			TemporalTickerPO temporalTicker = temporalTickers.get(counter);
 			StringBuffer stringBuffer = new StringBuffer();
 			stringBuffer.append(new LocalDateTimeToStringConverter().convert(temporalTicker.getTemporalTickerId().getStart()) + " - First: "
 					+ temporalTicker.getFirst() + ", last: " + temporalTicker.getLast() + ", highest: "
@@ -38,12 +38,12 @@ public class Main {
 		}
 	}
 
-	private static List<Comparison> compare(List<TemporalTicker> temporalTickers) {
-		TemporalTicker previousTemporalTicker = null;
+	private static List<Comparison> compare(List<TemporalTickerPO> temporalTickers) {
+		TemporalTickerPO previousTemporalTicker = null;
 
 		List<Comparison> comparisons = new ArrayList<>();
 
-		for (TemporalTicker temporalTicker : temporalTickers) {
+		for (TemporalTickerPO temporalTicker : temporalTickers) {
 			if (previousTemporalTicker != null) {
 				comparisons.add(createComparison(previousTemporalTicker, temporalTicker));
 			}
@@ -53,7 +53,7 @@ public class Main {
 		return comparisons;
 	}
 
-	private static Comparison createComparison(TemporalTicker previousTemporalTicker, TemporalTicker temporalTicker) {
+	private static Comparison createComparison(TemporalTickerPO previousTemporalTicker, TemporalTickerPO temporalTicker) {
 
 		Comparison comparison = new Comparison();
 		comparison.setPreviousValue(previousTemporalTicker.getLast());

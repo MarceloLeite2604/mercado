@@ -4,7 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 @Entity(name="Properties")
-public class Property implements DatabaseEntity<String> {
+public class PropertyPO implements PersistenceObject<String> {
 
 	@Id
 	private String name;
@@ -29,7 +29,7 @@ public class Property implements DatabaseEntity<String> {
 
 	@Override
 	public Class<?> getEntityClass() {
-		return Property.class;
+		return PropertyPO.class;
 	}
 
 	@Override

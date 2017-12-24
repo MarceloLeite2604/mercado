@@ -5,8 +5,9 @@ import java.util.List;
 
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.util.converter.ObjectToJsonConverter;
-import org.marceloleite.mercado.databasemodel.Trade;
+import org.marceloleite.mercado.databasemodel.TradePO;
 import org.marceloleite.mercado.databaseretriever.persistence.EntityManagerController;
+import org.marceloleite.mercado.databaseretriever.persistence.dao.TradeDAO;
 
 public class Main {
 
@@ -16,10 +17,10 @@ public class Main {
 	}
 
 	private static void tradesDatabaseRetriever() {
-		TradesDatabaseRetriever tradesDatabaseRetriever = new TradesDatabaseRetriever();
+		TradeDAO tradesDAO = new TradeDAO();
 		LocalDateTime end = LocalDateTime.now();
 		LocalDateTime start = LocalDateTime.from(end).minusSeconds(60);
-		List<Trade> trades = tradesDatabaseRetriever.retrieve(Currency.BITCOIN, start, end);
+		List<TradePO> trades = tradesDAO.retrieve(Currency.BITCOIN, start, end);
 		ObjectToJsonConverter objectToJsonConverter = new ObjectToJsonConverter();
 		System.out.println(objectToJsonConverter.convert(trades));
 	}

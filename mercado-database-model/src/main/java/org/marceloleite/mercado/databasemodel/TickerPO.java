@@ -3,23 +3,17 @@ package org.marceloleite.mercado.databasemodel;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 
-@Entity(name = "TemporalTickers")
-public class TemporalTicker {
+@Entity(name = "Tickers")
+public class TickerPO implements PersistenceObject<TickerIdPO> {
 
 	@EmbeddedId
-	private TemporalTickerId temporalTickerId;
-
-	private long orders;
+	private TickerIdPO tickerId;
 
 	private double high;
-
-	private double average;
 
 	private double low;
 
 	private double vol;
-
-	private double first;
 
 	private double last;
 
@@ -27,8 +21,19 @@ public class TemporalTicker {
 
 	private double sell;
 
-	public TemporalTicker() {
+	public TickerPO() {
 		super();
+	}
+
+	public TickerPO(double high, double low, double vol, double last, double buy, double sell, TickerIdPO tickerId) {
+		super();
+		this.high = high;
+		this.low = low;
+		this.vol = vol;
+		this.last = last;
+		this.buy = buy;
+		this.sell = sell;
+		this.tickerId = tickerId;
 	}
 
 	public double getHigh() {
@@ -79,35 +84,21 @@ public class TemporalTicker {
 		this.sell = sell;
 	}
 
-	public long getOrders() {
-		return orders;
+	public TickerIdPO getTickerId() {
+		return tickerId;
 	}
 
-	public void setOrders(long orders) {
-		this.orders = orders;
+	public void setTickerId(TickerIdPO tickerId) {
+		this.tickerId = tickerId;
 	}
 
-	public double getAverage() {
-		return average;
+	@Override
+	public Class<?> getEntityClass() {
+		return TickerPO.class;
 	}
 
-	public void setAverage(double average) {
-		this.average = average;
-	}
-
-	public double getFirst() {
-		return first;
-	}
-
-	public void setFirst(double first) {
-		this.first = first;
-	}
-
-	public TemporalTickerId getTemporalTickerId() {
-		return temporalTickerId;
-	}
-
-	public void setTemporalTickerId(TemporalTickerId temporalTickerId) {
-		this.temporalTickerId = temporalTickerId;
+	@Override
+	public TickerIdPO getId() {
+		return tickerId;
 	}
 }

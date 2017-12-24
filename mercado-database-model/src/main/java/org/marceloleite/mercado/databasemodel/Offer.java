@@ -1,11 +1,11 @@
 package org.marceloleite.mercado.databasemodel;
 
 public class Offer {
-	
+
 	private double unitPrice;
-	
+
 	private double quantity;
-	
+
 	public Offer() {
 		super();
 	}

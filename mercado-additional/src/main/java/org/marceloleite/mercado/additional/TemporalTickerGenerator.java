@@ -14,25 +14,25 @@ import java.util.concurrent.Future;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeDivisionController;
 import org.marceloleite.mercado.commons.TimeInterval;
-import org.marceloleite.mercado.databasemodel.TemporalTicker;
+import org.marceloleite.mercado.databasemodel.TemporalTickerPO;
 
 public class TemporalTickerGenerator {
 
-	public List<TemporalTicker> generate(Currency currency, TimeDivisionController timeDivisionController) {
-		Set<Future<TemporalTicker>> futureSet = new HashSet<>();
+	public List<TemporalTickerPO> generate(Currency currency, TimeDivisionController timeDivisionController) {
+		Set<Future<TemporalTickerPO>> futureSet = new HashSet<>();
 		ExecutorService executorService = Executors.newFixedThreadPool(8);
 
 		for (long step = 0; step < timeDivisionController.getDivisions(); step++) {
 			TimeInterval nextTimeInterval = timeDivisionController.getNextTimeInterval();
-			Callable<TemporalTicker> temporalTickersCallable = new TemporalTickersCallable(currency, nextTimeInterval);
+			Callable<TemporalTickerPO> temporalTickersCallable = new TemporalTickersCallable(currency, nextTimeInterval);
 			futureSet.add(executorService.submit(temporalTickersCallable));
 		}
 
-		List<TemporalTicker> temporalTickers = new ArrayList<>();
+		List<TemporalTickerPO> temporalTickers = new ArrayList<>();
 
-		for (Future<TemporalTicker> future : futureSet) {
+		for (Future<TemporalTickerPO> future : futureSet) {
 			try {
-				TemporalTicker temporalTicker = future.get();
+				TemporalTickerPO temporalTicker = future.get();
 				temporalTickers.add(temporalTicker);
 			} catch (InterruptedException | ExecutionException e) {
 				e.printStackTrace();
@@ -48,9 +48,9 @@ public class TemporalTickerGenerator {
 		return temporalTickers;
 	}
 
-	private void adjustValues(List<TemporalTicker> temporalTickers) {
-		TemporalTicker previousTemporalTicker = null;
-		for (TemporalTicker temporalTicker : temporalTickers) {
+	private void adjustValues(List<TemporalTickerPO> temporalTickers) {
+		TemporalTickerPO previousTemporalTicker = null;
+		for (TemporalTickerPO temporalTicker : temporalTickers) {
 			if (previousTemporalTicker != null) {
 				if (temporalTicker.getOrders() == 0) {
 					temporalTicker.setHigh(previousTemporalTicker.getHigh());

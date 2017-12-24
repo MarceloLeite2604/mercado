@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import org.marceloleite.mercado.commons.Currency;
 
 @Entity(name = "Trades")
-public class Trade implements DatabaseEntity<Long> {
+public class TradePO implements PersistenceObject<Long> {
 
 	@Id
 	private Long id;
@@ -26,7 +26,7 @@ public class Trade implements DatabaseEntity<Long> {
 	@Enumerated(EnumType.STRING)
 	private TradeType tradeType;
 
-	public Trade() {
+	public TradePO() {
 	}
 
 	@Override
@@ -80,6 +80,6 @@ public class Trade implements DatabaseEntity<Long> {
 
 	@Override
 	public Class<?> getEntityClass() {
-		return Trade.class;
+		return TradePO.class;
 	}
 }

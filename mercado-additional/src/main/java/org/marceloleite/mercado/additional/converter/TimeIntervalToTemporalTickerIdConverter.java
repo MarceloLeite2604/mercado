@@ -2,13 +2,13 @@ package org.marceloleite.mercado.additional.converter;
 
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.util.converter.Converter;
-import org.marceloleite.mercado.databasemodel.TemporalTickerId;
+import org.marceloleite.mercado.databasemodel.TemporalTickerIdPO;
 
-public class TimeIntervalToTemporalTickerIdConverter implements Converter<TimeInterval, TemporalTickerId> {
+public class TimeIntervalToTemporalTickerIdConverter implements Converter<TimeInterval, TemporalTickerIdPO> {
 
 	@Override
-	public TemporalTickerId convert(TimeInterval timeInterval) {
-		TemporalTickerId temporalTickerId = new TemporalTickerId();
+	public TemporalTickerIdPO convert(TimeInterval timeInterval) {
+		TemporalTickerIdPO temporalTickerId = new TemporalTickerIdPO();
 		temporalTickerId.setStart(timeInterval.getStart());
 		temporalTickerId.setEnd(timeInterval.getEnd());
 		return temporalTickerId;
