@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeDivisionController;
-import org.marceloleite.mercado.databasemodel.TemporalTicker;
+import org.marceloleite.mercado.databasemodel.TemporalTickerPO;
 
 public class PriceRetriever {
 
@@ -20,8 +20,8 @@ public class PriceRetriever {
 
 		while (!priceRetrieved) {
 			TimeDivisionController timeDivisionController = new TimeDivisionController(startTime, time, duration);
-			List<TemporalTicker> temporalTickers = temporalTickerGenerator.generate(currency, timeDivisionController);
-			TemporalTicker temporalTicker = temporalTickers.get(0);
+			List<TemporalTickerPO> temporalTickers = temporalTickerGenerator.generate(currency, timeDivisionController);
+			TemporalTickerPO temporalTicker = temporalTickers.get(0);
 			price = temporalTicker.getLast();
 			if (price == 0) {
 				duration = duration.multipliedBy(2);

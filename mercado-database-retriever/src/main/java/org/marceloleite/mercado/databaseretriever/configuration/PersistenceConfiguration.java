@@ -2,9 +2,9 @@ package org.marceloleite.mercado.databaseretriever.configuration;
 
 import java.util.Properties;
 
-import org.marceloleite.mercado.configuration.MercadoAbstractConfiguration;
+import org.marceloleite.mercado.properties.AbstractPropertiesReader;
 
-public class PersistenceConfiguration extends MercadoAbstractConfiguration {
+public class PersistenceConfiguration extends AbstractPropertiesReader {
 
 	private static final String PERSISTENCE_CONFIGURATION_FILE_PATH = "src/main/resources/persistence.properties";
 

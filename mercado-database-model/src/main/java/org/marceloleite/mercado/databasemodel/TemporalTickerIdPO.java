@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import javax.persistence.Embeddable;
 
 @Embeddable
-public class TemporalTickerId implements Serializable {
+public class TemporalTickerIdPO implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 
@@ -47,7 +47,7 @@ public class TemporalTickerId implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		TemporalTickerId other = (TemporalTickerId) obj;
+		TemporalTickerIdPO other = (TemporalTickerIdPO) obj;
 		if (end == null) {
 			if (other.end != null)
 				return false;

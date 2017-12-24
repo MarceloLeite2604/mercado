@@ -3,17 +3,23 @@ package org.marceloleite.mercado.databasemodel;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 
-@Entity(name = "Tickers")
-public class Ticker implements DatabaseEntity<TickerId> {
+@Entity(name = "TemporalTickers")
+public class TemporalTickerPO implements PersistenceObject<TemporalTickerIdPO> {
 
 	@EmbeddedId
-	private TickerId tickerId;
+	private TemporalTickerIdPO temporalTickerId;
+
+	private long orders;
 
 	private double high;
+
+	private double average;
 
 	private double low;
 
 	private double vol;
+
+	private double first;
 
 	private double last;
 
@@ -21,19 +27,8 @@ public class Ticker implements DatabaseEntity<TickerId> {
 
 	private double sell;
 
-	public Ticker() {
+	public TemporalTickerPO() {
 		super();
-	}
-
-	public Ticker(double high, double low, double vol, double last, double buy, double sell, TickerId tickerId) {
-		super();
-		this.high = high;
-		this.low = low;
-		this.vol = vol;
-		this.last = last;
-		this.buy = buy;
-		this.sell = sell;
-		this.tickerId = tickerId;
 	}
 
 	public double getHigh() {
@@ -84,21 +79,45 @@ public class Ticker implements DatabaseEntity<TickerId> {
 		this.sell = sell;
 	}
 
-	public TickerId getTickerId() {
-		return tickerId;
+	public long getOrders() {
+		return orders;
 	}
 
-	public void setTickerId(TickerId tickerId) {
-		this.tickerId = tickerId;
+	public void setOrders(long orders) {
+		this.orders = orders;
+	}
+
+	public double getAverage() {
+		return average;
+	}
+
+	public void setAverage(double average) {
+		this.average = average;
+	}
+
+	public double getFirst() {
+		return first;
+	}
+
+	public void setFirst(double first) {
+		this.first = first;
+	}
+
+	public TemporalTickerIdPO getTemporalTickerId() {
+		return temporalTickerId;
+	}
+
+	public void setTemporalTickerId(TemporalTickerIdPO temporalTickerId) {
+		this.temporalTickerId = temporalTickerId;
 	}
 
 	@Override
 	public Class<?> getEntityClass() {
-		return Ticker.class;
+		return TemporalTickerPO.class;
 	}
 
 	@Override
-	public TickerId getId() {
-		return tickerId;
+	public TemporalTickerIdPO getId() {
+		return this.temporalTickerId;
 	}
 }

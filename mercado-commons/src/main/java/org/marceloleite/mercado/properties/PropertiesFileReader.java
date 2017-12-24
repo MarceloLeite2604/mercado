@@ -1,24 +1,28 @@
-package org.marceloleite.mercado.configuration;
+package org.marceloleite.mercado.properties;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-public class ConfigurationFileReader {
+public class PropertiesFileReader {
 
-	private String configurationFilePath;
+	private String propertiesFilePath;
 
-	public ConfigurationFileReader(String configurationFilePath) {
+	public PropertiesFileReader(String propertiesFilePath) {
 		super();
-		this.configurationFilePath = configurationFilePath;
+		this.propertiesFilePath = propertiesFilePath;
 	}
 
-	public Properties readConfigurationFile() {
+	public String getPropertiesFilePath() {
+		return propertiesFilePath;
+	}
+
+	public Properties readPropertiesFile() {
 		Properties properties;
 		FileInputStream fileInputStream = null;
 		try {
-			File file = new File(configurationFilePath);
+			File file = new File(propertiesFilePath);
 			fileInputStream = new FileInputStream(file);
 			properties = new Properties();
 			properties.load(fileInputStream);
@@ -35,9 +39,5 @@ public class ConfigurationFileReader {
 		}
 
 		return properties;
-	}
-	
-	public String getConfigurationFilePath() {
-		return configurationFilePath;
 	}
 }

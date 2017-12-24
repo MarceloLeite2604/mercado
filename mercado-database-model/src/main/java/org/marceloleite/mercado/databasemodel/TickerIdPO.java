@@ -8,7 +8,7 @@ import javax.persistence.Embeddable;
 import org.marceloleite.mercado.commons.Currency;
 
 @Embeddable
-public class TickerId implements Serializable {
+public class TickerIdPO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -49,7 +49,7 @@ public class TickerId implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		TickerId other = (TickerId) obj;
+		TickerIdPO other = (TickerIdPO) obj;
 		if (currency == null) {
 			if (other.currency != null)
 				return false;

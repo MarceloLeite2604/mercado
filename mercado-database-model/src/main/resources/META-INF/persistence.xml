@@ -5,11 +5,11 @@
 	<persistence-unit name="mercadoPU" transaction-type="RESOURCE_LOCAL">
 		<provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
-		<class>org.marceloleite.mercado.databasemodel.Ticker</class>
-		<class>org.marceloleite.mercado.databasemodel.TickerId</class>
-		<class>org.marceloleite.mercado.databasemodel.TemporalTicker</class>
-		<class>org.marceloleite.mercado.databasemodel.TemporalTickerId</class>
-		<class>org.marceloleite.mercado.databasemodel.Trade</class>
+		<class>org.marceloleite.mercado.databasemodel.TickerPO</class>
+		<class>org.marceloleite.mercado.databasemodel.TickerIdPO</class>
+		<class>org.marceloleite.mercado.databasemodel.TemporalTickerPO</class>
+		<class>org.marceloleite.mercado.databasemodel.TemporalTickerIdPO</class>
+		<class>org.marceloleite.mercado.databasemodel.TradePO</class>
 		<class>org.marceloleite.mercado.databasemodel.converter.CurrencyAttributeConverter</class>
 		<class>org.marceloleite.mercado.databasemodel.converter.LocalDateTimeAttributeConverter</class>
 

@@ -1,4 +1,4 @@
-package org.marceloleite.mercado.configuration;
+package org.marceloleite.mercado.properties;
 
 public class StandardProperty implements Property {
 

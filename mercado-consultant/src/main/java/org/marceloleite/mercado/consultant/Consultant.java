@@ -1,10 +1,10 @@
 package org.marceloleite.mercado.consultant;
 
-import org.marceloleite.mercado.configuration.StandardConfiguration;
+import org.marceloleite.mercado.properties.StandardPropertiesReader;
 
 public class Consultant {
 	
-	StandardConfiguration standardConfiguration;
+	StandardPropertiesReader standardConfiguration;
 
 	public void startConsulting() {
 		retrieveConfiguration();
