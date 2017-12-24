@@ -14,7 +14,7 @@ import org.marceloleite.mercado.databasemodel.PersistenceObject;
 import org.marceloleite.mercado.databasemodel.TradePO;
 import org.marceloleite.mercado.databasemodel.converter.CurrencyAttributeConverter;
 
-public class TradeDAO extends AbstractDAO {
+public class TradeDAO extends AbstractDAO<TradePO> {
 
 	private static final String START_PARAMETER = "start";
 

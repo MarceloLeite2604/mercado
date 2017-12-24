@@ -7,13 +7,18 @@ import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.converter.ListJsonTradeToListTradeConverter;
 import org.marceloleite.mercado.databasemodel.TradePO;
-import org.marceloleite.mercado.databaseretriever.TradesDatabaseRetriever;
 import org.marceloleite.mercado.databaseretriever.persistence.dao.TradeDAO;
 import org.marceloleite.mercado.retriever.database.TradesDatabaseUtils;
 import org.marceloleite.mercado.siteretriever.model.JsonTrade;
 import org.marceloleite.mercado.siteretriever.trades.TradesSiteRetriever;
 
 public class TradesRetriever {
+	
+	private TradeDAO tradeDAO;
+	
+	public TradesRetriever() {
+		this.tradeDAO = new TradeDAO();
+	}
 
 	public List<TradePO> retrieve(Currency currency, LocalDateTime start, LocalDateTime end) {
 		
@@ -22,14 +27,13 @@ public class TradesRetriever {
 	}
 
 	private List<TradePO> retrieveTradesFromDatabase(Currency currency, LocalDateTime start, LocalDateTime end) {
-		List<TradePO> trades = new TradesDatabaseRetriever().retrieve(currency, start, end);
+		List<TradePO> trades = new TradeDAO().retrieve(currency, start, end);
 		System.out.println(trades.size());
 		return trades;
 	}
 
 	private void retrieveUnavailableTradesOnDatabase(Currency currency, LocalDateTime start, LocalDateTime end) {
 		TimeInterval retrieveTimeIntervalAvailable = new TradesDatabaseUtils().retrieveTimeIntervalAvailable();
-		TradeDAO tradeDAO = new TradeDAO();
 		
 		if ( retrieveTimeIntervalAvailable != null ) {
 			if ( start.isBefore(retrieveTimeIntervalAvailable.getStart())) {

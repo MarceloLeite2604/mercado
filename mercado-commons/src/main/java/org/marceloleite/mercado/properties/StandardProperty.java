@@ -4,12 +4,22 @@ public class StandardProperty implements Property {
 
 	private String name;
 
-	private boolean required;
+	private String value;
 
-	public StandardProperty(String name, boolean required) {
+	private boolean required;
+	
+	public StandardProperty() {
+		super();
+	}
+	
+	public StandardProperty(String name, String value, boolean required) {
 		super();
 		this.name = name;
 		this.required = required;
+	}
+
+	public StandardProperty(String name, boolean required) {
+		this(name, null, required);
 	}
 
 	public String getName() {
@@ -26,6 +36,14 @@ public class StandardProperty implements Property {
 
 	public void setRequired(boolean required) {
 		this.required = required;
+	}
+
+	public String getValue() {
+		return value;
+	}
+
+	public void setValue(String value) {
+		this.value = value;
 	}
 
 }
