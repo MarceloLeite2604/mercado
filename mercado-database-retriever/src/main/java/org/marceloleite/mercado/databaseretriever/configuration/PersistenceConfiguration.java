@@ -3,6 +3,7 @@ package org.marceloleite.mercado.databaseretriever.configuration;
 import java.util.Properties;
 
 import org.marceloleite.mercado.properties.AbstractPropertiesReader;
+import org.marceloleite.mercado.properties.Property;
 import org.marceloleite.mercado.properties.StandardProperty;
 
 public class PersistenceConfiguration extends AbstractPropertiesReader<StandardProperty> {
@@ -22,16 +23,16 @@ public class PersistenceConfiguration extends AbstractPropertiesReader<StandardP
 		return new StandardProperty();
 	}
 
-	public StandardProperty getPersistenceProperty(PersistenceProperty persistenceProperty) {
-		return getProperty(persistenceProperty.toProperty());
+	public Property getPersistenceProperty(PersistenceProperty persistenceProperty) {
+		return getProperty(persistenceProperty);
 	}
 
 	public Properties getProperties() {
 		Properties properties = new Properties();
 		for (PersistenceProperty persistenceProperty : PersistenceProperty.values()) {
-			StandardProperty standardProperty = getPersistenceProperty(persistenceProperty);
-			if (null != standardProperty) {
-				properties.setProperty(standardProperty.getName(), standardProperty.getValue());
+			Property property = getPersistenceProperty(persistenceProperty);
+			if (null != property) {
+				properties.setProperty(property.getName(), property.getValue());
 			}
 		}
 		return properties;

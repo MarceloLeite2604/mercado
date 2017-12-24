@@ -2,6 +2,7 @@ package org.marceloleite.mercado.retriever;
 
 import org.marceloleite.mercado.databasemodel.PropertyPO;
 import org.marceloleite.mercado.databaseretriever.persistence.dao.PropertyDAO;
+import org.marceloleite.mercado.properties.Property;
 import org.marceloleite.mercado.properties.StandardPropertiesReader;
 import org.marceloleite.mercado.properties.StandardProperty;
 
@@ -36,9 +37,9 @@ public class PropertyRetriever {
 		StandardProperty propertyForEnquirement = new StandardProperty(name, false);
 
 		createStandardConfiguration();
-		StandardProperty propertyRetrieved = standardConfiguration.getProperty(propertyForEnquirement);
+		Property property = standardConfiguration.getProperty(propertyForEnquirement);
 
-		return propertyRetrieved;
+		return new StandardProperty(property.getName(), property.getValue(), property.isRequired());
 	}
 
 	private void createStandardConfiguration() {

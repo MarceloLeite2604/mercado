@@ -4,7 +4,7 @@ public interface PropertiesReader<E extends Property> {
 
 	void readConfiguration(String configurationFilePath);
 	
-	E getProperty(E property);
+	Property getProperty(Property property);
 	
 	E getTemplateObject();
 }
