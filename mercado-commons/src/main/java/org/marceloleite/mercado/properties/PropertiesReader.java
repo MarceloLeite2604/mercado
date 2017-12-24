@@ -1,8 +1,10 @@
 package org.marceloleite.mercado.properties;
 
-public interface PropertiesReader {
+public interface PropertiesReader<E extends Property> {
 
 	void readConfiguration(String configurationFilePath);
 	
-	String getProperty(Property property);
+	E getProperty(E property);
+	
+	E getTemplateObject();
 }

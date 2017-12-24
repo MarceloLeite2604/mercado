@@ -1,7 +1,6 @@
 package org.marceloleite.mercado.retriever;
 
 import org.marceloleite.mercado.databasemodel.PropertyPO;
-import org.marceloleite.mercado.databaseretriever.PropertyDatabaseRetriever;
 import org.marceloleite.mercado.databaseretriever.persistence.dao.PropertyDAO;
 import org.marceloleite.mercado.properties.StandardPropertiesReader;
 import org.marceloleite.mercado.properties.StandardProperty;
@@ -17,42 +16,29 @@ public class PropertyRetriever {
 		this.configurationFilePath = configurationFilePath;
 	}
 
-	public PropertyPO retrieve(String name, boolean ignoreDatabaseValue) {
-		PropertyPO property = null;
+	public StandardProperty retrieve(String name, boolean ignoreDatabaseValue) {
+		StandardProperty standardProperty = null;
 		PropertyPO propertyPO = null;
-		PropertyPO configurationFileRetrievedProperty = null;
 		if (!ignoreDatabaseValue) {
-			PropertyPO propertyPO = new PropertyPO();
-			property.setName(name);
-			propertyPO = new PropertyDAO().findById(property);
+			PropertyPO propertyPOforEnquirement = new PropertyPO();
+			propertyPOforEnquirement.setName(name);
+			propertyPO = new PropertyDAO().findById(propertyPOforEnquirement);
+			standardProperty = new PropertyPOToStandardPropertyConverter().convert(propertyPO);
 		}
 		if (ignoreDatabaseValue || (!ignoreDatabaseValue && propertyPO == null)) {
-			configurationFileRetrievedProperty = retrievePropertyFromConfigurationFile(name);
+			standardProperty = retrievePropertyFromConfigurationFile(name);
 		}
 
-		if (propertyPO != null) {
-			property = propertyPO;
-		} else {
-			property = configurationFileRetrievedProperty;
-		}
-
-		return property;
+		return standardProperty;
 	}
 
-	private PropertyPO retrievePropertyFromConfigurationFile(String name) {
-		PropertyPO property = null;
-		String configurationFileRetrievedProperty;
+	private StandardProperty retrievePropertyFromConfigurationFile(String name) {
+		StandardProperty propertyForEnquirement = new StandardProperty(name, false);
 
 		createStandardConfiguration();
-		configurationFileRetrievedProperty = standardConfiguration.getProperty(new StandardProperty(name, false));
+		StandardProperty propertyRetrieved = standardConfiguration.getProperty(propertyForEnquirement);
 
-		if (configurationFileRetrievedProperty != null) {
-			property = new PropertyPO();
-			property.setName(name);
-			property.setValue(configurationFileRetrievedProperty);
-		}
-
-		return property;
+		return propertyRetrieved;
 	}
 
 	private void createStandardConfiguration() {

@@ -2,16 +2,16 @@ package org.marceloleite.mercado.properties;
 
 import java.util.Properties;
 
-public abstract class AbstractPropertiesReader implements PropertiesReader {
-	
+public abstract class AbstractPropertiesReader<E extends Property> implements PropertiesReader<E> {
+
 	protected static final String DEFAULT_PROPERTIES_FILE_PATH = "application.properties";
 
 	private Properties properties;
-	
+
 	private PropertiesFileReader propertiesFileReader;
 
 	@Override
-	public String getProperty(Property property) {
+	public E getProperty(E property) {
 		String value = null;
 		try {
 			value = (String) properties.get(property.getName());
@@ -21,7 +21,11 @@ public abstract class AbstractPropertiesReader implements PropertiesReader {
 						+ propertiesFileReader.getPropertiesFilePath() + "\".");
 			}
 		}
-		return value;
+
+		E retrievedProperty = getTemplateObject();
+		retrievedProperty.setName(property.getName());
+		retrievedProperty.setName(value);
+		return retrievedProperty;
 	}
 
 	@Override
@@ -29,7 +33,7 @@ public abstract class AbstractPropertiesReader implements PropertiesReader {
 		this.propertiesFileReader = new PropertiesFileReader(configurationFilePath);
 		this.properties = propertiesFileReader.readPropertiesFile();
 	}
-	
+
 	public void readConfiguration() {
 		readConfiguration(DEFAULT_PROPERTIES_FILE_PATH);
 	}

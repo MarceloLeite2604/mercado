@@ -13,49 +13,49 @@ import org.marceloleite.mercado.databasemodel.PersistenceObject;
 import org.marceloleite.mercado.databaseretriever.persistence.EntityManagerController;
 import org.marceloleite.mercado.databaseretriever.util.JpaOperation;
 
-public abstract class AbstractDAO implements DataAccessObject {
+public abstract class AbstractDAO<E extends PersistenceObject<?>> implements DataAccessObject<E> {
 
 	private EntityManager entityManager;
 	
 	private EntityTransaction transaction;
 
 	@Override
-	public void merge(PersistenceObject<?> persistenceObject) {
+	public void merge(E persistenceObject) {
 		executeOperation(JpaOperation.MERGE, Arrays.asList(persistenceObject));
 	}
 
 	@Override
-	public void merge(List<? extends PersistenceObject<?>> persistenceObjects) {
+	public void merge(List<E> persistenceObjects) {
 		executeOperation(JpaOperation.MERGE, persistenceObjects);
 	}
 
 	@Override
-	public void persist(PersistenceObject<?> persistenceObject) {
+	public void persist(E persistenceObject) {
 		executeOperation(JpaOperation.PERSIST, Arrays.asList(persistenceObject));
 	}
 
 	@Override
-	public void persist(List<? extends PersistenceObject<?>> persistenceObjects) {
+	public void persist(List<E> persistenceObjects) {
 		executeOperation(JpaOperation.PERSIST, persistenceObjects);
 	}
 
 	@Override
-	public void remove(PersistenceObject<?> persistenceObject) {
+	public void remove(E persistenceObject) {
 		executeOperation(JpaOperation.REMOVE, Arrays.asList(persistenceObject));
 	}
 
 	@Override
-	public void remove(List<? extends PersistenceObject<?>> persistenceObjects) {
+	public void remove(List<E> persistenceObjects) {
 		executeOperation(JpaOperation.REMOVE, persistenceObjects);
 	}
 
 	@Override
-	public PersistenceObject<?> findById(PersistenceObject<?> persistenceObject) {
+	public E findById(E persistenceObject) {
 		return null;
 	}
 
 	@Override
-	public List<PersistenceObject<?>> findById(List<PersistenceObject<?>> persistenceObjects) {
+	public List<E> findById(List<E> persistenceObjects) {
 		return null;
 	}
 

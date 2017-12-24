@@ -1,6 +1,5 @@
 package org.marceloleite.mercado.databaseretriever.configuration;
 
-import org.marceloleite.mercado.properties.Property;
 import org.marceloleite.mercado.properties.StandardProperty;
 
 public enum PersistenceProperty {
@@ -35,7 +34,7 @@ public enum PersistenceProperty {
 		return name;
 	}
 	
-	public Property toProperty() {
+	public StandardProperty toProperty() {
 		return new StandardProperty(name, required);
 	}
 }

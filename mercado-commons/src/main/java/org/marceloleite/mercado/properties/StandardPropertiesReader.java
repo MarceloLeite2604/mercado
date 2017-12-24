@@ -1,6 +1,6 @@
 package org.marceloleite.mercado.properties;
 
-public class StandardPropertiesReader extends AbstractPropertiesReader {
+public class StandardPropertiesReader extends AbstractPropertiesReader<StandardProperty> {
 
 	public StandardPropertiesReader(String propertiesFilePath) {
 		readConfiguration(propertiesFilePath);
@@ -10,4 +10,8 @@ public class StandardPropertiesReader extends AbstractPropertiesReader {
 		this(DEFAULT_PROPERTIES_FILE_PATH);
 	}
 
+	@Override
+	public StandardProperty getTemplateObject() {
+		return new StandardProperty();
+	}
 }
