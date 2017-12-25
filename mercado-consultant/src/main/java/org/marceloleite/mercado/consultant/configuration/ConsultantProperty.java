@@ -5,8 +5,8 @@ import org.marceloleite.mercado.properties.StandardProperty;
 
 public enum ConsultantProperty implements Property {
 
-	CONSULTING_TIME_INTERVAL("consulting.tradeRetrieveDuration", true),
-	CONSULTING_PERIOD("consulting.period", true);
+	TRADE_RETRIEVE_DURATION("consulting.tradeRetrieveDuration", true),
+	TIME_INTERVAL("consulting.timeInterval", true);
 
 	private String name;
 

@@ -23,5 +23,7 @@ public interface DataAccessObject<E extends PersistenceObject<?>> {
 	List<E> findById(List<E> entities);
 
 	Class<? extends PersistenceObject<?>> getPOClass();
+	
+	E castPersistenceObject(PersistenceObject<?> persistenceObject);
 
 }

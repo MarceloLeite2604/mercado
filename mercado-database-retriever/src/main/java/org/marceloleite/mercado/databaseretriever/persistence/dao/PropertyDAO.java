@@ -45,4 +45,12 @@ public class PropertyDAO extends AbstractDAO<PropertyPO> {
 		return PropertyPO.class;
 	}
 
+	@Override
+	public PropertyPO castPersistenceObject(PersistenceObject<?> persistenceObject) {
+		if (!(persistenceObject instanceof PropertyPO)) {
+			new ClassCastExceptionThrower(PropertyPO.class, persistenceObject);
+		}
+
+		return (PropertyPO) persistenceObject;
+	}
 }

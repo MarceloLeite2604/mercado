@@ -10,7 +10,6 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 
 import org.marceloleite.mercado.databasemodel.PersistenceObject;
-import org.marceloleite.mercado.databasemodel.TradePO;
 import org.marceloleite.mercado.databaseretriever.persistence.EntityManagerController;
 import org.marceloleite.mercado.databaseretriever.util.JpaOperation;
 
@@ -52,7 +51,12 @@ public abstract class AbstractDAO<E extends PersistenceObject<?>> implements Dat
 
 	@Override
 	public E findById(E persistenceObject) {
-		return null;
+		List<E> retrievedObjects = executeOperationWithResult(JpaOperation.FIND_BY_ID, Arrays.asList(persistenceObject));
+		if ( !retrievedObjects.isEmpty()) {
+			return retrievedObjects.get(0);
+		} else {
+			return null;
+		}
 	}
 
 	@Override
@@ -75,9 +79,6 @@ public abstract class AbstractDAO<E extends PersistenceObject<?>> implements Dat
 			case REMOVE:
 				entityManager.remove(persistenceObject);
 				break;
-			case FIND_BY_ID:
-				entityManager.find(persistenceObject.getClass(), persistenceObject.getId());
-				break;
 			default:
 				throw new IllegalStateException("Invalid void operation " + jpaOperation + ".");
 			}
@@ -87,18 +88,19 @@ public abstract class AbstractDAO<E extends PersistenceObject<?>> implements Dat
 		closeEntityManager();
 	}
 
-	public List<PersistenceObject<?>> executeOperationWithResult(JpaOperation jpaOperation,
-			List<PersistenceObject<?>> persistenceObjects) {
+	public List<E> executeOperationWithResult(JpaOperation jpaOperation,
+			List<E> persistenceObjects) {
 		createEntityManager();
 		createTransaction();
 
-		List<PersistenceObject<?>> retrievedPersistenceObjects = new ArrayList<>();
-		for (PersistenceObject<?> persistenceObject : persistenceObjects) {
+		List<E> retrievedPersistenceObjects = new ArrayList<>();
+		for (E persistenceObject : persistenceObjects) {
 			switch (jpaOperation) {
 			case FIND_BY_ID:
-				PersistenceObject<?> retrievedDatabaseEntity = entityManager.find(persistenceObject.getClass(),
+				
+				PersistenceObject<?> persistenceObjectRetrieved = entityManager.find(persistenceObject.getClass(),
 						persistenceObject.getId());
-				retrievedPersistenceObjects.add(retrievedDatabaseEntity);
+				retrievedPersistenceObjects.add(castPersistenceObject(persistenceObjectRetrieved));
 				break;
 			default:
 				throw new IllegalStateException("Invalid returning operation " + jpaOperation + ".");

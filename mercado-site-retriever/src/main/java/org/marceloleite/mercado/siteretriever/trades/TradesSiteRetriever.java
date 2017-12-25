@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.MediaType;
 
 import org.marceloleite.mercado.commons.Currency;
@@ -14,6 +15,10 @@ import org.marceloleite.mercado.siteretriever.model.JsonTrade;
 
 public class TradesSiteRetriever extends AbstractSiteRetriever implements Retriever<List<JsonTrade>> {
 
+	private static final long MAX_RETRIES = 5l;
+
+	private static final long WAIT_TIME = 500l;
+
 	public TradesSiteRetriever(Currency currency) {
 		super(currency);
 	}
@@ -21,7 +26,7 @@ public class TradesSiteRetriever extends AbstractSiteRetriever implements Retrie
 	private static final String METHOD = "trades";
 
 	public List<JsonTrade> retrieve(Object... args) {
-		
+
 		LocalDateTime from = null;
 		if (args[0] instanceof LocalDateTime) {
 			from = (LocalDateTime) args[0];
@@ -30,12 +35,28 @@ public class TradesSiteRetriever extends AbstractSiteRetriever implements Retrie
 		LocalDateTime to = null;
 		if (args[1] instanceof LocalDateTime) {
 			to = (LocalDateTime) args[1];
-		
+
 		}
 
-		List<JsonTrade> jsonTrades = Arrays.asList(createWebTarget().path(getPathWithParameters(from, to))
-			.request(MediaType.APPLICATION_JSON)
-			.get(JsonTrade[].class));
+		boolean concluded = false;
+		long retries = 0l;
+		List<JsonTrade> jsonTrades = null;
+		while (!concluded) {
+			try {
+				jsonTrades = Arrays.asList(createWebTarget().path(getPathWithParameters(from, to))
+						.request(MediaType.APPLICATION_JSON).get(JsonTrade[].class));
+				concluded = true;
+			} catch (NotFoundException notFoundException) {
+				if (++retries > MAX_RETRIES) {
+					throw notFoundException;
+				}
+				try {
+					Thread.sleep(WAIT_TIME);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 		jsonTrades.stream().forEach(jsonTrade -> jsonTrade.setCurrency(currency));
 		return jsonTrades;
 	}
