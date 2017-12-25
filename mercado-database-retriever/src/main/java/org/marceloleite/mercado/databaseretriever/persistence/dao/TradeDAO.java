@@ -78,4 +78,13 @@ public class TradeDAO extends AbstractDAO<TradePO> {
 		return TradePO.class;
 	}
 
+	@Override
+	public TradePO castPersistenceObject(PersistenceObject<?> persistenceObject) {
+		if (!(persistenceObject instanceof TradePO)) {
+			new ClassCastExceptionThrower(TradePO.class, persistenceObject);
+		}
+
+		return (TradePO) persistenceObject;
+	}
+
 }

@@ -15,6 +15,7 @@ public class StandardProperty implements Property {
 	public StandardProperty(String name, String value, boolean required) {
 		super();
 		this.name = name;
+		this.value = value;
 		this.required = required;
 	}
 

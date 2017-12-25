@@ -36,7 +36,6 @@ public abstract class AbstractPropertiesReader<E extends Property> implements Pr
 	public void readConfiguration(String configurationFilePath) {
 		this.propertiesFileReader = new PropertiesFileReader(configurationFilePath);
 		this.properties = propertiesFileReader.readPropertiesFile();
-		System.out.println(new ObjectToJsonConverter().convert(properties));
 	}
 
 	public void readConfiguration() {
