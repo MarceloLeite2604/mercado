@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.retriever.TradesRetriever;
 
-public class ConsultantThread extends Thread {
+public class ForwardConsultantThread extends Thread {
 
 	private LocalDateTime lastTimeRetrieved;
 
@@ -16,7 +16,7 @@ public class ConsultantThread extends Thread {
 
 	private LocalDateTime lastExecution;
 
-	public ConsultantThread(LocalDateTime lastTimeRetrieved, Duration tradeRetrieveDuration, Duration timeInterval) {
+	public ForwardConsultantThread(LocalDateTime lastTimeRetrieved, Duration tradeRetrieveDuration, Duration timeInterval) {
 		super();
 		this.lastTimeRetrieved = lastTimeRetrieved;
 		this.tradeRetrieveDuration = tradeRetrieveDuration;
@@ -37,7 +37,21 @@ public class ConsultantThread extends Thread {
 				}
 			}
 			lastTimeRetrieved = LocalDateTime.from(end);
-			waitForNextExecution();
+			waitTime();
+		}
+	}
+
+	private void waitTime() {
+		waitForTimeSlot();
+		waitForNextExecution();
+	}
+
+	private void waitForTimeSlot() {
+		LocalDateTime now = LocalDateTime.now();
+		if (Duration.between(lastExecution, now).getSeconds() < timeInterval.getSeconds()) {
+			LocalDateTime nextExecution = lastExecution.plus(timeInterval);
+			Duration waitTime = Duration.between(now, nextExecution);
+			threadSleep(waitTime);
 		}
 	}
 
@@ -46,11 +60,15 @@ public class ConsultantThread extends Thread {
 		LocalDateTime now = LocalDateTime.now();
 		if (now.isBefore(nextExecution)) {
 			Duration duration = Duration.between(now, nextExecution);
-			try {
-				Thread.sleep(duration.toMillis());
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+			threadSleep(duration);
+		}
+	}
+
+	private void threadSleep(Duration duration) {
+		try {
+			Thread.sleep(duration.toMillis());
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}
 	}
 }
