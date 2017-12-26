@@ -10,6 +10,8 @@ import org.marceloleite.mercado.properties.Property;
 import org.marceloleite.mercado.retriever.PropertyRetriever;
 
 public class Consultant {
+	
+	private static final LocalDateTime START_TIME = LocalDateTime.of(2017, 01, 01, 0, 0);
 
 	private static final Duration DEFAULT_TRADE_RETRIEVE_DURATION = Duration.ofSeconds(10);
 
@@ -17,7 +19,9 @@ public class Consultant {
 
 	PropertyRetriever propertyRetriever;
 
-	private LocalDateTime lastTimeRetrieved;
+	private LocalDateTime newestTimeRetrieved;
+	
+	private LocalDateTime oldestTimeRetrieved;
 
 	private Duration tradeRetrieveDuration;
 
@@ -25,7 +29,9 @@ public class Consultant {
 
 	private TradeDAO tradeDAO;
 	
-	private ConsultantThread consultantThread;
+	private ForwardConsultantThread forwardConsultantThread;
+
+	private BackwardConsultantThread backwardConsultantThread;
 
 	public Consultant() {
 		this.tradeDAO = new TradeDAO();
@@ -38,17 +44,21 @@ public class Consultant {
 	}
 	
 	public void consultLoop() {
-		consultantThread = new ConsultantThread(lastTimeRetrieved, tradeRetrieveDuration, timeInterval);
-		consultantThread.start();
+		forwardConsultantThread = new ForwardConsultantThread(newestTimeRetrieved, tradeRetrieveDuration, timeInterval);
+		backwardConsultantThread = new BackwardConsultantThread(oldestTimeRetrieved, tradeRetrieveDuration, timeInterval);
+		forwardConsultantThread.start();
+		backwardConsultantThread.start();
 		try {
-			consultantThread.join();
+			forwardConsultantThread.join();
+			backwardConsultantThread.join();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 	}
 
 	private void retrieveConfiguration() {
-		retrieveLastTimeRetrieved();
+		retrieveNewestTimeRetrieved();
+		retrieveOldestTimeRetrieved();
 		retrieveTradeRetrieveDuration();
 		retrieveTimeInterval();
 	}
@@ -73,15 +83,23 @@ public class Consultant {
 		} else {
 			tradeRetrieveDuration = DEFAULT_TRADE_RETRIEVE_DURATION;
 		}
-
 	}
 
-	private void retrieveLastTimeRetrieved() {
+	private void retrieveNewestTimeRetrieved() {
 		TradePO newestTrade = tradeDAO.retrieveNewestTrade();
 		if (null != newestTrade) {
-			lastTimeRetrieved = newestTrade.getDate();
+			newestTimeRetrieved = newestTrade.getDate();
 		} else {
-			lastTimeRetrieved = LocalDateTime.of(2017, 01, 01, 0, 0);
+			newestTimeRetrieved = LocalDateTime.from(START_TIME);
+		}
+	}
+	
+	private void retrieveOldestTimeRetrieved() {
+		TradePO newestTrade = tradeDAO.retrieveOldestTrade();
+		if (null != newestTrade) {
+			oldestTimeRetrieved = newestTrade.getDate();
+		} else {
+			oldestTimeRetrieved = LocalDateTime.from(START_TIME);
 		}
 	}
 }
