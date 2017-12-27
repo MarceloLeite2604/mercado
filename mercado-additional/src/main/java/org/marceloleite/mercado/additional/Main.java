@@ -9,14 +9,14 @@ import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeDivisionController;
 import org.marceloleite.mercado.commons.util.converter.LocalDateTimeToStringConverter;
 import org.marceloleite.mercado.databasemodel.TemporalTickerPO;
+import org.marceloleite.mercado.databaseretriever.persistence.EntityManagerController;
 
 public class Main {
 	public static void main(String[] args) {
 		
-		LocalDateTime to = LocalDateTime.of(2017, 12, 11, 13, 58);
-		LocalDateTime from = LocalDateTime.from(to)
-			.minus(Duration.ofMinutes(60));
-		Duration stepDuration = Duration.ofMinutes(1);
+		LocalDateTime to = LocalDateTime.of(2017, 01, 01, 00, 00);
+		LocalDateTime from = LocalDateTime.of(2016, 01, 01, 00, 00);
+		Duration stepDuration = Duration.ofDays(1);
 		TemporalTickerGenerator temporalTickerGenerator = new TemporalTickerGenerator();
 		TimeDivisionController timeDivisionController = new TimeDivisionController(from, to, stepDuration);
 		List<TemporalTickerPO> temporalTickers = temporalTickerGenerator.generate(Currency.BITCOIN, timeDivisionController);
@@ -36,6 +36,8 @@ public class Main {
 			}
 			System.out.println(stringBuffer);
 		}
+		
+		EntityManagerController.getInstance().close();
 	}
 
 	private static List<Comparison> compare(List<TemporalTickerPO> temporalTickers) {

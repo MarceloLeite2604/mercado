@@ -18,8 +18,8 @@ public class Main {
 
 	private static void tradesDatabaseRetriever() {
 		TradeDAO tradesDAO = new TradeDAO();
-		LocalDateTime end = LocalDateTime.now();
-		LocalDateTime start = LocalDateTime.from(end).minusSeconds(60);
+		LocalDateTime end = LocalDateTime.of(2017, 01, 01, 00, 00);
+		LocalDateTime start = LocalDateTime.from(end).minusDays(60);
 		List<TradePO> trades = tradesDAO.retrieve(Currency.BITCOIN, start, end);
 		ObjectToJsonConverter objectToJsonConverter = new ObjectToJsonConverter();
 		System.out.println(objectToJsonConverter.convert(trades));

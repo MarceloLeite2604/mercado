@@ -114,13 +114,13 @@ public abstract class AbstractDAO<E extends PersistenceObject<?>> implements Dat
 	}
 
 	@SuppressWarnings("unchecked")
-	protected List<? extends PersistenceObject<?>> executeQuery(String stringQuery, Map<String, String> parameters) {
+	protected List<? extends PersistenceObject<?>> executeQuery(String stringQuery, Map<String, Object> parameters) {
 		createEntityManager();
 		// createTransaction();
 		Query query = createNativeQuery(stringQuery);
 		if (null != parameters && !parameters.isEmpty()) {
 			for (String parameterName : parameters.keySet()) {
-				String parameterValue = parameters.get(parameterName);
+				Object parameterValue = parameters.get(parameterName);
 				query.setParameter(parameterName, parameterValue);
 			}
 		}
@@ -130,7 +130,7 @@ public abstract class AbstractDAO<E extends PersistenceObject<?>> implements Dat
 		return result;
 	}
 
-	protected PersistenceObject<?> executeQueryForSingleResult(String queryString, Map<String, String> parameters) {
+	protected PersistenceObject<?> executeQueryForSingleResult(String queryString, Map<String, Object> parameters) {
 		createEntityManager();
 		List<? extends PersistenceObject<?>> queryResult = executeQuery(queryString, parameters);
 		if (queryResult.size() > 0) {

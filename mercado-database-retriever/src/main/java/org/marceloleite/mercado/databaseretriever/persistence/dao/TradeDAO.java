@@ -8,7 +8,6 @@ import java.util.Map;
 
 import org.marceloleite.mercado.commons.ClassCastExceptionThrower;
 import org.marceloleite.mercado.commons.Currency;
-import org.marceloleite.mercado.commons.util.converter.LocalDateTimeToStringConverter;
 import org.marceloleite.mercado.databasemodel.Entity;
 import org.marceloleite.mercado.databasemodel.PersistenceObject;
 import org.marceloleite.mercado.databasemodel.TradePO;
@@ -35,11 +34,10 @@ public class TradeDAO extends AbstractDAO<TradePO> {
 	public List<TradePO> retrieve(Currency currency, LocalDateTime start, LocalDateTime end) {
 		createEntityManager();
 
-		Map<String, String> parameters = new HashMap<>();
-		LocalDateTimeToStringConverter localDateTimeToStringConverter = new LocalDateTimeToStringConverter();
-		parameters.put(START_PARAMETER, localDateTimeToStringConverter.convert(start));
-		parameters.put(END_PARAMETER, localDateTimeToStringConverter.convert(end));
 		CurrencyAttributeConverter currencyAttributeConverter = new CurrencyAttributeConverter();
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put(START_PARAMETER, start);
+		parameters.put(END_PARAMETER, end);
 		parameters.put(CURRENCY_PARAMETER, currencyAttributeConverter.convertToDatabaseColumn(currency));
 		List<? extends PersistenceObject<?>> queryResult = executeQuery(BETWEEN_TIME_INTERVAL_QUERY, parameters);
 		return castToTradeList(queryResult);

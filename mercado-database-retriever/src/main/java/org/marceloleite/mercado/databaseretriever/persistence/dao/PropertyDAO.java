@@ -20,7 +20,7 @@ public class PropertyDAO extends AbstractDAO<PropertyPO> {
 	public List<PropertyPO> retrieveAll(String namePrefix) {
 		createEntityManager();
 
-		Map<String, String> parameters = new HashMap<>();
+		Map<String, Object> parameters = new HashMap<>();
 		parameters.put(NAME_PREFIX_PARAMETER, namePrefix);
 		List<? extends PersistenceObject<?>> queryResult = executeQuery(RETRIEVE_BY_PREFIX_QUERY, parameters);
 		return castToPropertiesList(queryResult);

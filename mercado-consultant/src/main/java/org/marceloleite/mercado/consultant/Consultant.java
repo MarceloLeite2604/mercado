@@ -45,12 +45,12 @@ public class Consultant {
 	
 	public void consultLoop() {
 		forwardConsultantThread = new ForwardConsultantThread(newestTimeRetrieved, tradeRetrieveDuration, timeInterval);
-		backwardConsultantThread = new BackwardConsultantThread(oldestTimeRetrieved, tradeRetrieveDuration, timeInterval);
+		// backwardConsultantThread = new BackwardConsultantThread(oldestTimeRetrieved, tradeRetrieveDuration, timeInterval);
 		forwardConsultantThread.start();
-		backwardConsultantThread.start();
+		// backwardConsultantThread.start();
 		try {
 			forwardConsultantThread.join();
-			backwardConsultantThread.join();
+			// backwardConsultantThread.join();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -64,7 +64,7 @@ public class Consultant {
 	}
 
 	private void retrieveTimeInterval() {
-		Property property = propertyRetriever.retrieve(ConsultantProperty.TIME_INTERVAL, false);
+		Property property = propertyRetriever.retrieve(ConsultantProperty.TIME_INTERVAL, true);
 		if (propertyIsValid(property)) {
 			timeInterval = new StringToDurationConverter().convert(property.getValue());
 		} else {
@@ -77,7 +77,7 @@ public class Consultant {
 	}
 
 	private void retrieveTradeRetrieveDuration() {
-		Property property = propertyRetriever.retrieve(ConsultantProperty.TRADE_RETRIEVE_DURATION, false);
+		Property property = propertyRetriever.retrieve(ConsultantProperty.TRADE_RETRIEVE_DURATION, true);
 		if (propertyIsValid(property)) {
 			tradeRetrieveDuration = new StringToDurationConverter().convert(property.getValue());
 		} else {

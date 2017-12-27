@@ -12,7 +12,7 @@ public class ListToMapTradeConverter implements Converter<List<TradePO>, Map<Lon
 	@Override
 	public Map<Long, TradePO> convert(List<TradePO> trades) {
 		return trades.stream().map(trade -> trade)
-				.collect(Collectors.toConcurrentMap(TradePO::getId, trade -> trade, (oldTrade, newTrade) -> newTrade));
+				.collect(Collectors.toConcurrentMap(tradePO -> tradePO.getTradeIdPO().getId(), trade -> trade, (oldTrade, newTrade) -> newTrade));
 	}
 
 }

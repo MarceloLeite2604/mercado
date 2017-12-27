@@ -14,26 +14,48 @@ import java.util.concurrent.Future;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeDivisionController;
 import org.marceloleite.mercado.commons.TimeInterval;
+import org.marceloleite.mercado.databasemodel.TemporalTickerIdPO;
 import org.marceloleite.mercado.databasemodel.TemporalTickerPO;
+import org.marceloleite.mercado.databaseretriever.persistence.dao.TemporalTickerDAO;
 
 public class TemporalTickerGenerator {
+
+	private TemporalTickerDAO temporalTickerDAO;
+
+	public TemporalTickerGenerator() {
+		super();
+		this.temporalTickerDAO = new TemporalTickerDAO();
+	}
 
 	public List<TemporalTickerPO> generate(Currency currency, TimeDivisionController timeDivisionController) {
 		Set<Future<TemporalTickerPO>> futureSet = new HashSet<>();
 		ExecutorService executorService = Executors.newFixedThreadPool(8);
 
+		List<TemporalTickerPO> temporalTickers = new ArrayList<>();
+		
 		for (long step = 0; step < timeDivisionController.getDivisions(); step++) {
 			TimeInterval nextTimeInterval = timeDivisionController.getNextTimeInterval();
-			Callable<TemporalTickerPO> temporalTickersCallable = new TemporalTickersCallable(currency, nextTimeInterval);
-			futureSet.add(executorService.submit(temporalTickersCallable));
-		}
+			TemporalTickerIdPO temporalTickerIdPO = new TemporalTickerIdPO();
+			temporalTickerIdPO.setStart(nextTimeInterval.getStart());
+			temporalTickerIdPO.setEnd(nextTimeInterval.getEnd());
+			TemporalTickerPO temporalTickerPOForEnquirement = new TemporalTickerPO();
+			temporalTickerPOForEnquirement.setTemporalTickerIdPO(temporalTickerIdPO);
+			TemporalTickerPO TemporalTickerPO = temporalTickerDAO.findById(temporalTickerPOForEnquirement);
 
-		List<TemporalTickerPO> temporalTickers = new ArrayList<>();
+			if (TemporalTickerPO == null) {
+				Callable<TemporalTickerPO> temporalTickersCallable = new TemporalTickersCallable(currency,
+						nextTimeInterval);
+				futureSet.add(executorService.submit(temporalTickersCallable));
+			} else {
+				temporalTickers.add(TemporalTickerPO);
+			}
+		}
 
 		for (Future<TemporalTickerPO> future : futureSet) {
 			try {
 				TemporalTickerPO temporalTicker = future.get();
 				temporalTickers.add(temporalTicker);
+				temporalTickerDAO.persist(temporalTicker);
 			} catch (InterruptedException | ExecutionException e) {
 				e.printStackTrace();
 			}

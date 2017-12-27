@@ -2,20 +2,16 @@ package org.marceloleite.mercado.databasemodel;
 
 import java.time.LocalDateTime;
 
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.Id;
-
-import org.marceloleite.mercado.commons.Currency;
 
 @Entity(name = "Trades")
-public class TradePO implements PersistenceObject<Long> {
+public class TradePO implements PersistenceObject<TradeIdPO> {
 
-	@Id
-	private Long id;
-
-	private Currency currency;
+	@EmbeddedId
+	private TradeIdPO tradeIdPO;
 
 	private LocalDateTime date;
 
@@ -30,12 +26,16 @@ public class TradePO implements PersistenceObject<Long> {
 	}
 
 	@Override
-	public Long getId() {
-		return id;
+	public TradeIdPO getId() {
+		return tradeIdPO;
+	}
+	
+	public TradeIdPO getTradeIdPO() {
+		return this.tradeIdPO;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public void setTradeIdPO(TradeIdPO tradeIdPO) {
+		this.tradeIdPO = tradeIdPO;
 	}
 
 	public LocalDateTime getDate() {
@@ -68,14 +68,6 @@ public class TradePO implements PersistenceObject<Long> {
 
 	public void setTradeType(TradeType tradeType) {
 		this.tradeType = tradeType;
-	}
-
-	public Currency getCurrency() {
-		return currency;
-	}
-
-	public void setCurrency(Currency currency) {
-		this.currency = currency;
 	}
 
 	@Override
