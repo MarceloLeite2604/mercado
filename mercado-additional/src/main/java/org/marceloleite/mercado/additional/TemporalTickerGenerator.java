@@ -55,7 +55,6 @@ public class TemporalTickerGenerator {
 			try {
 				TemporalTickerPO temporalTicker = future.get();
 				temporalTickers.add(temporalTicker);
-				temporalTickerDAO.persist(temporalTicker);
 			} catch (InterruptedException | ExecutionException e) {
 				e.printStackTrace();
 			}
@@ -66,8 +65,19 @@ public class TemporalTickerGenerator {
 		Collections.sort(temporalTickers, new TemporalTickersComparator());
 
 		adjustValues(temporalTickers);
+		
+		persistOnDatabase(temporalTickers);
 
 		return temporalTickers;
+	}
+
+	private void persistOnDatabase(List<TemporalTickerPO> temporalTickers) {
+		for(TemporalTickerPO temporalTickerPO : temporalTickers ) {
+			TemporalTickerPO temporalTickerRetrieved = temporalTickerDAO.findById(temporalTickerPO);
+			if ( temporalTickerRetrieved == null ) 
+				temporalTickerDAO.persist(temporalTickerPO);
+		}
+		
 	}
 
 	private void adjustValues(List<TemporalTickerPO> temporalTickers) {
@@ -75,11 +85,11 @@ public class TemporalTickerGenerator {
 		for (TemporalTickerPO temporalTicker : temporalTickers) {
 			if (previousTemporalTicker != null) {
 				if (temporalTicker.getOrders() == 0) {
-					temporalTicker.setHigh(previousTemporalTicker.getHigh());
-					temporalTicker.setLow(previousTemporalTicker.getLow());
+					/*temporalTicker.setHigh(previousTemporalTicker.getHigh());*/
+					/*temporalTicker.setLow(previousTemporalTicker.getLow());*/
 					temporalTicker.setLast(previousTemporalTicker.getLast());
-					temporalTicker.setBuy(previousTemporalTicker.getBuy());
-					temporalTicker.setSell(previousTemporalTicker.getSell());
+					/*temporalTicker.setBuy(previousTemporalTicker.getBuy());*/
+					/*temporalTicker.setSell(previousTemporalTicker.getSell());*/
 				}
 			}
 			previousTemporalTicker = temporalTicker;

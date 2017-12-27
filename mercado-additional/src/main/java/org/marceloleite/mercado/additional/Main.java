@@ -14,8 +14,8 @@ import org.marceloleite.mercado.databaseretriever.persistence.EntityManagerContr
 public class Main {
 	public static void main(String[] args) {
 		
-		LocalDateTime to = LocalDateTime.of(2017, 01, 01, 00, 00);
-		LocalDateTime from = LocalDateTime.of(2016, 01, 01, 00, 00);
+		LocalDateTime to = LocalDateTime.of(2016, 01, 01, 00, 00);
+		LocalDateTime from = LocalDateTime.of(2015, 01, 01, 00, 00);
 		Duration stepDuration = Duration.ofDays(1);
 		TemporalTickerGenerator temporalTickerGenerator = new TemporalTickerGenerator();
 		TimeDivisionController timeDivisionController = new TimeDivisionController(from, to, stepDuration);
