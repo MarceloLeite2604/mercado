@@ -44,13 +44,13 @@ public class Consultant {
 	}
 	
 	public void consultLoop() {
-		forwardConsultantThread = new ForwardConsultantThread(newestTimeRetrieved, tradeRetrieveDuration, timeInterval);
-		// backwardConsultantThread = new BackwardConsultantThread(oldestTimeRetrieved, tradeRetrieveDuration, timeInterval);
-		forwardConsultantThread.start();
-		// backwardConsultantThread.start();
+		// forwardConsultantThread = new ForwardConsultantThread(newestTimeRetrieved, tradeRetrieveDuration, timeInterval);
+		backwardConsultantThread = new BackwardConsultantThread(oldestTimeRetrieved, tradeRetrieveDuration, timeInterval);
+		// forwardConsultantThread.start();
+		backwardConsultantThread.start();
 		try {
-			forwardConsultantThread.join();
-			// backwardConsultantThread.join();
+			// forwardConsultantThread.join();
+			backwardConsultantThread.join();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
