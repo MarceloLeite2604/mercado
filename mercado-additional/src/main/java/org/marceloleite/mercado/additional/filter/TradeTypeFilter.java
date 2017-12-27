@@ -21,7 +21,7 @@ public class TradeTypeFilter implements Filter<Map<Long, TradePO>> {
 	public Map<Long, TradePO> filter(Map<Long, TradePO> trades) {
 		return trades.entrySet().stream().filter(entry -> type.equals(entry.getValue().getTradeType()))
 				.map(Entry<Long, TradePO>::getValue)
-				.collect(Collectors.toConcurrentMap(TradePO::getId, trade -> trade, (oldTrade, newTrade) -> newTrade));
+				.collect(Collectors.toConcurrentMap(tradePO -> tradePO.getTradeIdPO().getId(), trade -> trade, (oldTrade, newTrade) -> newTrade));
 	}
 
 }

@@ -59,6 +59,7 @@ public class TimeDivisionController {
 	public TimeInterval getNextTimeInterval() {
 		TimeInterval result = nextTimeInterval;
 		if (currentDivision < divisions) {
+			currentDivision++;
 			nextTimeInterval = elaborateNextTimeInterval();
 		}
 		return result;
@@ -68,7 +69,7 @@ public class TimeDivisionController {
 		Duration timeIntervalDuration = calculateTimeIntervalDuration();
 		LocalDateTime time;
 		if (nextTimeInterval != null ) {
-			time = LocalDateTime.from(nextTimeInterval.getStart());
+			time = LocalDateTime.from(nextTimeInterval.getEnd());
 		} else {
 			time = start;
 		}

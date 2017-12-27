@@ -29,6 +29,10 @@ public class ForwardConsultantThread extends Thread {
 		while (true) {
 			lastExecution = LocalDateTime.now();
 			LocalDateTime end = lastTimeRetrieved.plus(tradeRetrieveDuration);
+			if (end.isAfter(LocalDateTime.now())) {
+				end = LocalDateTime.now();
+				lastTimeRetrieved = end.minus(tradeRetrieveDuration);
+			}
 			System.out.println("Start time: " + lastTimeRetrieved);
 			System.out.println("End time: " + end);
 			for (Currency currency : Currency.values()) {

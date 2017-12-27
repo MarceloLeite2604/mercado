@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
+import org.marceloleite.mercado.commons.util.converter.ObjectToJsonConverter;
 import org.marceloleite.mercado.converter.ListJsonTradeToListTradeConverter;
 import org.marceloleite.mercado.databasemodel.TradePO;
 import org.marceloleite.mercado.databaseretriever.persistence.dao.TradeDAO;
@@ -33,7 +34,6 @@ public class TradesRetriever {
 
 	private void retrieveUnavailableTradesOnDatabase(Currency currency, LocalDateTime start, LocalDateTime end) {
 		TimeInterval retrieveTimeIntervalAvailable = new TradesDatabaseUtils().retrieveTimeIntervalAvailable();
-
 		if (retrieveTimeIntervalAvailable != null) {
 			if (start.isBefore(retrieveTimeIntervalAvailable.getStart())) {
 				LocalDateTime endRetrieveTime = LocalDateTime.from(retrieveTimeIntervalAvailable.getStart())

@@ -107,7 +107,7 @@ public class TemporalTickerPO implements PersistenceObject<TemporalTickerIdPO> {
 		return temporalTickerId;
 	}
 
-	public void setTemporalTickerId(TemporalTickerIdPO temporalTickerId) {
+	public void setTemporalTickerIdPO(TemporalTickerIdPO temporalTickerId) {
 		this.temporalTickerId = temporalTickerId;
 	}
 

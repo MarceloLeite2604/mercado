@@ -60,26 +60,26 @@ public class TemporalTickersCallable implements Callable<TemporalTickerPO> {
 
 			vol = trades.entrySet().stream().map(Entry<Long, TradePO>::getValue).mapToDouble(TradePO::getAmount).sum();
 
-			long lastTradeId = trades.entrySet().stream().map(Entry<Long, TradePO>::getValue).mapToLong(TradePO::getId)
+			long lastTradeId = trades.entrySet().stream().map(Entry<Long, TradePO>::getValue).mapToLong(tradePO -> tradePO.getTradeIdPO().getId())
 					.max().orElse(0);
 			if (lastTradeId != 0) {
 				last = trades.get(lastTradeId).getPrice();
 			}
 
-			long firstTradeId = trades.entrySet().stream().map(Entry<Long, TradePO>::getValue).mapToLong(TradePO::getId)
+			long firstTradeId = trades.entrySet().stream().map(Entry<Long, TradePO>::getValue).mapToLong(tradePO -> tradePO.getTradeIdPO().getId())
 					.min().orElse(0);
 			if (firstTradeId != 0) {
 				first = trades.get(firstTradeId).getPrice();
 			}
 
 			long lastSellingTradeId = sellingTrades.entrySet().stream().map(Entry<Long, TradePO>::getValue)
-					.mapToLong(TradePO::getId).max().orElse(0);
+					.mapToLong(tradePO -> tradePO.getTradeIdPO().getId()).max().orElse(0);
 			if (lastSellingTradeId != 0) {
 				buy = trades.get(lastSellingTradeId).getPrice();
 			}
 
 			long lastBuyingTradeId = buyingTrades.entrySet().stream().map(Entry<Long, TradePO>::getValue)
-					.mapToLong(TradePO::getId).max().orElse(0);
+					.mapToLong(tradePO -> tradePO.getTradeIdPO().getId()).max().orElse(0);
 			if (lastBuyingTradeId != 0) {
 				sell = trades.get(lastBuyingTradeId).getPrice();
 			}
@@ -87,7 +87,7 @@ public class TemporalTickersCallable implements Callable<TemporalTickerPO> {
 
 		TemporalTickerPO temporalTicker = new TemporalTickerPO();
 		TemporalTickerIdPO temporalTickerId = new TimeIntervalToTemporalTickerIdConverter().convert(timeInterval);
-		temporalTicker.setTemporalTickerId(temporalTickerId);
+		temporalTicker.setTemporalTickerIdPO(temporalTickerId);
 		temporalTicker.setOrders(trades.size());
 		temporalTicker.setHigh(high);
 		temporalTicker.setAverage(average);

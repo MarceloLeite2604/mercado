@@ -13,7 +13,7 @@ public class OldListToMapJsonTradeConverter implements Converter<Map<Long, JsonT
 	public Map<Long, TradePO> convert(Map<Long, JsonTrade> jsonTrades) {
 		TradeConverter tradeFormatter = new TradeConverter();
 		return jsonTrades.entrySet().stream().map(entry -> tradeFormatter.convert(entry.getValue()))
-				.collect(Collectors.toConcurrentMap(TradePO::getId, trade -> trade, (oldTrade, newTrade) -> newTrade));
+				.collect(Collectors.toConcurrentMap(tradePO -> tradePO.getTradeIdPO().getId(), trade -> trade, (oldTrade, newTrade) -> newTrade));
 	}
 
 }
