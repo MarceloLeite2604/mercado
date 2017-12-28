@@ -2,19 +2,20 @@ package org.marceloleite.mercado.consultant.thread;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.jboss.logging.Logger;
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.commons.util.converter.LocalDateTimeToStringConverter;
 import org.marceloleite.mercado.consultant.thread.properties.ForwardConsultantPropertiesRetriever;
+import org.marceloleite.mercado.databasemodel.TradePO;
 import org.marceloleite.mercado.retriever.TradesRetriever;
 
 public class ForwardConsultantThread extends AbstractConsultantThread {
-	
+
 	private static final Logger LOGGER = Logger.getLogger(ForwardConsultantThread.class);
 
 	private LocalDateTime lastExecution;
-	
-	private LocalDateTime lastTimeRetrieved;
 
 	public ForwardConsultantThread() {
 		super(new ForwardConsultantPropertiesRetriever());
@@ -23,21 +24,31 @@ public class ForwardConsultantThread extends AbstractConsultantThread {
 	@Override
 	public void run() {
 		TradesRetriever tradesRetriever = new TradesRetriever();
+		LocalDateTime start = getConsultantProperties().getStartTime();
 		while (!finished()) {
 			lastExecution = LocalDateTime.now();
-			LocalDateTime end = lastTimeRetrieved.plus(getConsultantProperties().getTradeRetrieveDuration());
+			LocalDateTime end = start.plus(getConsultantProperties().getTradeRetrieveDuration());
 			if (end.isAfter(LocalDateTime.now())) {
 				end = LocalDateTime.now();
-				lastTimeRetrieved = end.minus(getConsultantProperties().getTradeRetrieveDuration());
+				start = end.minus(getConsultantProperties().getTradeRetrieveDuration());
 			}
-			LOGGER.info("Start time: " + lastTimeRetrieved);
-			LOGGER.info("End time: " + end);
+			LocalDateTimeToStringConverter localDateTimeToStringConverter = new LocalDateTimeToStringConverter();
+			LOGGER.info("Retrieving trades from " + localDateTimeToStringConverter.convert(start) + " to "
+					+ localDateTimeToStringConverter.convert(end));
 			for (Currency currency : Currency.values()) {
 				if (currency.isDigital()) {
-					tradesRetriever.retrieve(currency, lastTimeRetrieved, end);
+
+					List<TradePO> trades = tradesRetriever.retrieve(currency, start, end);
+					int totalTrades;
+					if (trades != null) {
+						totalTrades = trades.size();
+					} else {
+						totalTrades = 0;
+					}
+					LOGGER.info(totalTrades + " trade(s) retrieved for " + currency + " currency.");
 				}
 			}
-			lastTimeRetrieved = LocalDateTime.from(end);
+			start = LocalDateTime.from(end);
 			waitTime();
 		}
 	}
@@ -49,7 +60,8 @@ public class ForwardConsultantThread extends AbstractConsultantThread {
 
 	private void waitForTimeSlot() {
 		LocalDateTime now = LocalDateTime.now();
-		if (Duration.between(lastExecution, now).getSeconds() < getConsultantProperties().getTimeInterval().getSeconds()) {
+		if (Duration.between(lastExecution, now).getSeconds() < getConsultantProperties().getTimeInterval()
+				.getSeconds()) {
 			LocalDateTime nextExecution = lastExecution.plus(getConsultantProperties().getTimeInterval());
 			Duration waitTime = Duration.between(now, nextExecution);
 			threadSleep(waitTime);
@@ -65,15 +77,7 @@ public class ForwardConsultantThread extends AbstractConsultantThread {
 		}
 	}
 
-	private void threadSleep(Duration duration) {
-		try {
-			Thread.sleep(duration.toMillis());
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	private boolean finished() {
+	protected boolean finished() {
 		return false;
 	}
 }
