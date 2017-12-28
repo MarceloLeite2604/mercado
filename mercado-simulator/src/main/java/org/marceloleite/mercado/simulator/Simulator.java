@@ -2,22 +2,27 @@ package org.marceloleite.mercado.simulator;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.additional.TemporalTickerGenerator;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeDivisionController;
+import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.util.converter.LocalDateTimeToStringConverter;
 import org.marceloleite.mercado.databasemodel.TemporalTickerPO;
 
 public class Simulator {
 
 	private static final Duration DEFAULT_STEP_TIME = Duration.ofSeconds(30);
+
+	private static final Logger LOGGER = LogManager.getLogger(Simulator.class);
 
 	private House house;
 
@@ -32,6 +37,7 @@ public class Simulator {
 	public Simulator() {
 		this.stepTime = DEFAULT_STEP_TIME;
 		this.house = new House();
+		this.accounts = new ArrayList<>();
 	}
 
 	public Duration getStepTime() {
@@ -63,53 +69,48 @@ public class Simulator {
 	}
 
 	public void runSimulation() {
+		LOGGER.traceEntry();
 		checkSimulationRequirements();
 
-		System.out.println("Running simulation.");
+		LOGGER.info("Running simulation.");
 
-		long totalSteps = calculateSteps(startTime, stopTime, stepTime);
-		LocalDateTime startStepTime = startTime;
-		LocalDateTime stopStepTime;
+		TimeDivisionController timeDivisionController = new TimeDivisionController(startTime, stopTime, stepTime);
 
-		for (long step = 0; step < totalSteps; step++) {
-			Duration stepDuration = calculateStepDuration(startStepTime, stopTime, stepTime);
-			stopStepTime = startStepTime.plus(stepDuration);
+		for (long step = 0; step < timeDivisionController.getDivisions(); step++) {
+			TimeInterval nextTimeInterval = timeDivisionController.getNextTimeInterval();
 			Map<LocalDateTime, Map<Currency, TemporalTickerPO>> temporalTickersCurrencyByTime = retrieveTemporalTickersCurrencyByTime(
-					startStepTime, stopStepTime, stepDuration);
+					nextTimeInterval);
 
-			Set<LocalDateTime> stepTimes = temporalTickersCurrencyByTime.keySet();
-			for (LocalDateTime stepTime : stepTimes) {
+			for (LocalDateTime stepTime : temporalTickersCurrencyByTime.keySet()) {
 				Map<Currency, TemporalTickerPO> currenciesTemporalTickers = temporalTickersCurrencyByTime.get(stepTime);
-
 				updateBasePrices(currenciesTemporalTickers);
 			}
-			startStepTime = stopStepTime;
 		}
 
-		System.out.println("Simulation finished.");
+		LOGGER.info("Simulation finished.");
 	}
 
 	private Map<LocalDateTime, Map<Currency, TemporalTickerPO>> retrieveTemporalTickersCurrencyByTime(
-			LocalDateTime startTime, LocalDateTime stopTime, Duration stepTime) {
+			TimeInterval timeInterval) {
 		TemporalTickerGenerator temporalTickerGenerator = new TemporalTickerGenerator();
 		Map<LocalDateTime, Map<Currency, TemporalTickerPO>> temporalTickersCurrencyByTime = new HashMap<>();
 
 		for (Currency currency : Currency.values()) {
 			if (currency.isDigital()) {
-				TimeDivisionController timeDivisionController = new TimeDivisionController(startTime, stopTime,
-						stepTime);
+				TimeDivisionController timeDivisionController = new TimeDivisionController(timeInterval.getStart(),
+						timeInterval.getEnd(), timeInterval.getDuration());
 				List<TemporalTickerPO> temporalTickers = temporalTickerGenerator.generate(currency,
 						timeDivisionController);
 				for (TemporalTickerPO temporalTicker : temporalTickers) {
 					Map<Currency, TemporalTickerPO> currencyMap = Optional
-							.ofNullable(temporalTickersCurrencyByTime.get(temporalTicker.getTemporalTickerId().getEnd()))
+							.ofNullable(
+									temporalTickersCurrencyByTime.get(temporalTicker.getTemporalTickerId().getEnd()))
 							.orElse(new EnumMap<>(Currency.class));
 					currencyMap.put(currency, temporalTicker);
 					temporalTickersCurrencyByTime.put(temporalTicker.getTemporalTickerId().getEnd(), currencyMap);
 				}
 			}
 		}
-
 		return temporalTickersCurrencyByTime;
 	}
 
@@ -123,29 +124,16 @@ public class Simulator {
 		}
 	}
 
-	private long calculateSteps(LocalDateTime from, LocalDateTime to, Duration stepDuration) {
-		Duration timeDuration = Duration.between(from, to);
-		long totalSteps = (long) Math.ceil((double) timeDuration.getSeconds() / (double) stepDuration.getSeconds());
-		totalSteps = (totalSteps == 0 ? 1 : totalSteps);
-		return totalSteps;
-	}
-
-	private Duration calculateStepDuration(LocalDateTime from, LocalDateTime to, Duration stepDuration) {
-		Duration remainingDuration = Duration.between(from, to);
-		if (stepDuration.compareTo(remainingDuration) > 0) {
-			return remainingDuration;
-		} else {
-			return stepDuration;
-		}
-	}
-
 	private void updateBasePrices(Map<Currency, TemporalTickerPO> currenciesTemporalTickers) {
-		for (Account account : accounts) {
-			updateBasePricesForAccount(currenciesTemporalTickers, account);
+		if (accounts.size() > 0) {
+			for (Account account : accounts) {
+				updateBasePricesForAccount(currenciesTemporalTickers, account);
+			}
 		}
 	}
 
-	private void updateBasePricesForAccount(Map<Currency, TemporalTickerPO> currenciesTemporalTickers, Account account) {
+	private void updateBasePricesForAccount(Map<Currency, TemporalTickerPO> currenciesTemporalTickers,
+			Account account) {
 		LocalDateTimeToStringConverter localDateTimeToString = new LocalDateTimeToStringConverter();
 		boolean updateBasePrice = false;
 		Map<Currency, CurrencyMonitoring> currenciesMonitoring = account.getCurrenciesMonitoring();

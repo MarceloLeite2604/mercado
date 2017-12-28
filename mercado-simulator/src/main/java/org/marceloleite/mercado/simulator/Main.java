@@ -9,12 +9,13 @@ import org.marceloleite.mercado.commons.TimeDivisionController;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.util.converter.ObjectToJsonConverter;
 import org.marceloleite.mercado.commons.util.converter.StringToLocalDateTimeConverter;
-import org.marceloleite.mercado.commons.util.converter.StringToLocalDateTimeConverterTest;
+import org.marceloleite.mercado.databaseretriever.persistence.EntityManagerController;
 
 public class Main {
 
 	public static void main(String[] args) {
-		timeDivisionController();
+		// timeDivisionController();
+		simulator();
 	}
 
 	private static void timeDivisionController() {
@@ -26,7 +27,6 @@ public class Main {
 			TimeInterval nextTimeInterval = timeDivisionController.getNextTimeInterval();
 			System.out.println(new ObjectToJsonConverter().convert(nextTimeInterval));
 		}
-
 	}
 
 	private static void simulator() {
@@ -82,46 +82,19 @@ public class Main {
 		currencyMonitoring.setDecreasePercentage(0.03);
 		account.addCurrencyMonitoring(currencyMonitoring);
 
-		simulator.runSimulation();
-
-		/*
-		 * System.out.println(new
-		 * ObjectToJsonFormatter().format(simulator.getBalance()));
-		 * System.out.println(new
-		 * ObjectToJsonFormatter().format(simulator.getComission()));
-		 */
-
-		/*
-		 * Map<Currency, CurrencyAmount> balances = simulator.getBalance()
-		 * .getBalances();
-		 */
-
-		/*
-		 * System.out.println("Balance: "); for (Currency currency :
-		 * Currency.values()) { CurrencyAmount currencyAmount =
-		 * balances.get(currency); if (currencyAmount != null) {
-		 * calculateRealValueOf(currencyAmount); } }
-		 */
-
-		/*
-		 * System.out.println("Comission: "); Map<Currency, CurrencyAmount>
-		 * comission = simulator.getComission() .getBalances(); for (Currency
-		 * currency : Currency.values()) { CurrencyAmount currencyAmount =
-		 * comission.get(currency); if (currencyAmount != null) {
-		 * calculateRealValueOf(currencyAmount); } }
-		 */
+		try {
+			simulator.runSimulation();
+		} finally {
+			EntityManagerController.getInstance().close();
+		}		
 	}
 
 	private static Simulator configureSimulator() {
 		StringToLocalDateTimeConverter stringToLocalDateTimeFormatter = new StringToLocalDateTimeConverter();
 		Simulator simulator = new Simulator();
 		LocalDateTime startTime = stringToLocalDateTimeFormatter.convert("01/09/2017 00:00:00");
-		LocalDateTime stopTime = LocalDateTime.now();
-		/*
-		 * LocalDateTime stopTime =
-		 * stringToLocalDateTimeFormatter.format("02/09/2017 00:00:00");
-		 */
-		Duration stepDuration = Duration.ofMinutes(10);
+		LocalDateTime stopTime = stringToLocalDateTimeFormatter.convert("02/09/2017 00:00:00");
+		Duration stepDuration = Duration.ofMinutes(30);
 		simulator.setStartTime(startTime);
 		simulator.setStopTime(stopTime);
 		simulator.setStepTime(stepDuration);
