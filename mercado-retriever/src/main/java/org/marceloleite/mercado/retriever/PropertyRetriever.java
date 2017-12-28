@@ -39,7 +39,7 @@ public class PropertyRetriever {
 			standardProperty = retrievePropertyFromConfigurationFile(property.getName());
 			if (standardProperty != null && standardProperty.getValue() != null) {
 				PropertyPO propertyPoToPersist = new StandardPropertyToPropertyPOConverter().convert(standardProperty);
-				propertyDAO.persist(propertyPoToPersist);
+				propertyDAO.merge(propertyPoToPersist);
 			}
 		}
 

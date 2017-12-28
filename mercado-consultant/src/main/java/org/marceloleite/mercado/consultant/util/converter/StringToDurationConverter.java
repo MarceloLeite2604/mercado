@@ -1,4 +1,4 @@
-package org.marceloleite.mercado.consultant;
+package org.marceloleite.mercado.consultant.util.converter;
 
 import java.time.Duration;
 

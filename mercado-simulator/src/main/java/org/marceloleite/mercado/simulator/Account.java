@@ -25,6 +25,8 @@ public class Account {
 		this.owner = owner;
 		this.balance = new Balance();
 		this.currenciesMonitoring = new EnumMap<>(Currency.class);
+		this.depositsTemporalController = new TemporalController<>();
+		this.buyOrdersTemporalController = new TemporalController<>();
 	}
 	
 	public void addCurrencyMonitoring(CurrencyMonitoring currencyMonitoring) {

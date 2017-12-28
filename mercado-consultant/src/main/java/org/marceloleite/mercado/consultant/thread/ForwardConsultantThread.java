@@ -1,40 +1,37 @@
-package org.marceloleite.mercado.consultant;
+package org.marceloleite.mercado.consultant.thread;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 
+import org.jboss.logging.Logger;
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.consultant.thread.properties.ForwardConsultantPropertiesRetriever;
 import org.marceloleite.mercado.retriever.TradesRetriever;
 
-public class ForwardConsultantThread extends Thread {
-
-	private LocalDateTime lastTimeRetrieved;
-
-	private Duration tradeRetrieveDuration;
-
-	private Duration timeInterval;
+public class ForwardConsultantThread extends AbstractConsultantThread {
+	
+	private static final Logger LOGGER = Logger.getLogger(ForwardConsultantThread.class);
 
 	private LocalDateTime lastExecution;
+	
+	private LocalDateTime lastTimeRetrieved;
 
-	public ForwardConsultantThread(LocalDateTime lastTimeRetrieved, Duration tradeRetrieveDuration, Duration timeInterval) {
-		super();
-		this.lastTimeRetrieved = lastTimeRetrieved;
-		this.tradeRetrieveDuration = tradeRetrieveDuration;
-		this.timeInterval = timeInterval;
+	public ForwardConsultantThread() {
+		super(new ForwardConsultantPropertiesRetriever());
 	}
 
 	@Override
 	public void run() {
 		TradesRetriever tradesRetriever = new TradesRetriever();
-		while (true) {
+		while (!finished()) {
 			lastExecution = LocalDateTime.now();
-			LocalDateTime end = lastTimeRetrieved.plus(tradeRetrieveDuration);
+			LocalDateTime end = lastTimeRetrieved.plus(getConsultantProperties().getTradeRetrieveDuration());
 			if (end.isAfter(LocalDateTime.now())) {
 				end = LocalDateTime.now();
-				lastTimeRetrieved = end.minus(tradeRetrieveDuration);
+				lastTimeRetrieved = end.minus(getConsultantProperties().getTradeRetrieveDuration());
 			}
-			System.out.println("Start time: " + lastTimeRetrieved);
-			System.out.println("End time: " + end);
+			LOGGER.info("Start time: " + lastTimeRetrieved);
+			LOGGER.info("End time: " + end);
 			for (Currency currency : Currency.values()) {
 				if (currency.isDigital()) {
 					tradesRetriever.retrieve(currency, lastTimeRetrieved, end);
@@ -52,15 +49,15 @@ public class ForwardConsultantThread extends Thread {
 
 	private void waitForTimeSlot() {
 		LocalDateTime now = LocalDateTime.now();
-		if (Duration.between(lastExecution, now).getSeconds() < timeInterval.getSeconds()) {
-			LocalDateTime nextExecution = lastExecution.plus(timeInterval);
+		if (Duration.between(lastExecution, now).getSeconds() < getConsultantProperties().getTimeInterval().getSeconds()) {
+			LocalDateTime nextExecution = lastExecution.plus(getConsultantProperties().getTimeInterval());
 			Duration waitTime = Duration.between(now, nextExecution);
 			threadSleep(waitTime);
 		}
 	}
 
 	private void waitForNextExecution() {
-		LocalDateTime nextExecution = lastExecution.plus(timeInterval);
+		LocalDateTime nextExecution = lastExecution.plus(getConsultantProperties().getTimeInterval());
 		LocalDateTime now = LocalDateTime.now();
 		if (now.isBefore(nextExecution)) {
 			Duration duration = Duration.between(now, nextExecution);
@@ -74,5 +71,9 @@ public class ForwardConsultantThread extends Thread {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private boolean finished() {
+		return false;
 	}
 }
