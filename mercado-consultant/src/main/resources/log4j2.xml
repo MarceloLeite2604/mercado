@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="info">
+	<Appenders>
+		<File name="LogFile" fileName="src/main/resources/log/mercado-simulator.log">
+			<PatternLayout>
+				<Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
+			</PatternLayout>
+		</File>
+		<File name="BackwardConsultantLogFile" fileName="src/main/resources/log/mercado-consultant-backward.log">
+			<PatternLayout>
+				<Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
+			</PatternLayout>
+		</File>
+		<File name="ForwardConsultantLogFile" fileName="src/main/resources/log/mercado-consultant-forward.log">
+			<PatternLayout>
+				<Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
+			</PatternLayout>
+		</File>
+	</Appenders>
+	<Loggers>
+		<Root level="info">
+			<AppenderRef ref="LogFile"/>
+		</Root>
+		<Logger name="org.marceloleite.mercado.consultant.thread.ForwardConsultantThread" level="info">
+			<AppenderRef ref="ForwardConsultantLogFile"/>
+		</Logger>
+		<Logger name="org.marceloleite.mercado.consultant.thread.BackwardConsultantThread" level="info">
+			<AppenderRef ref="BackwardConsultantLogFile"/>
+		</Logger>
+	</Loggers>
+</Configuration>

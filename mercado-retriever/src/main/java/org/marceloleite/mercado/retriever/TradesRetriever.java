@@ -38,17 +38,17 @@ public class TradesRetriever {
 				LocalDateTime endRetrieveTime = LocalDateTime.from(retrieveTimeIntervalAvailable.getStart())
 						.minusSeconds(1);
 				List<TradePO> trades = retrieveTradesFromSite(currency, start, endRetrieveTime);
-				tradeDAO.persist(trades);
+				tradeDAO.merge(trades);
 			}
 			if (end.isAfter(retrieveTimeIntervalAvailable.getEnd())) {
 				LocalDateTime startRetrieveTime = LocalDateTime.from(retrieveTimeIntervalAvailable.getEnd())
 						.plusSeconds(1);
 				List<TradePO> trades = retrieveTradesFromSite(currency, startRetrieveTime, end);
-				tradeDAO.persist(trades);
+				tradeDAO.merge(trades);
 			}
 		} else {
 			List<TradePO> trades = retrieveTradesFromSite(currency, start, end);
-			tradeDAO.persist(trades);
+			tradeDAO.merge(trades);
 		}
 	}
 

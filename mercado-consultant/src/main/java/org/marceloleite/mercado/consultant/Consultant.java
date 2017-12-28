@@ -20,6 +20,7 @@ public class Consultant {
 	public Consultant() {
 		super();
 		this.consultantThreads = new ArrayList<>();
+		this.propertyRetriever = new PropertyRetriever();
 	}
 
 	public void startConsulting() {
