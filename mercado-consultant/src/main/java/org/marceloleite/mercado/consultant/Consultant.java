@@ -11,7 +11,7 @@ import org.marceloleite.mercado.retriever.PropertyRetriever;
 
 public class Consultant {
 
-	public static final boolean IGNORE_DATABASE_PROPETIES = true;
+	public static final boolean IGNORE_DATABASE_PROPERTIES = true;
 
 	PropertyRetriever propertyRetriever;
 
@@ -54,7 +54,7 @@ public class Consultant {
 	}
 
 	private boolean retrieveBooleanProperty(ConsultantProperty consultantProperty) {
-		StandardProperty standardProperty = propertyRetriever.retrieve(consultantProperty, IGNORE_DATABASE_PROPETIES);
+		StandardProperty standardProperty = propertyRetriever.retrieve(consultantProperty, IGNORE_DATABASE_PROPERTIES);
 		return Boolean.parseBoolean(standardProperty.getValue());
 	}
 

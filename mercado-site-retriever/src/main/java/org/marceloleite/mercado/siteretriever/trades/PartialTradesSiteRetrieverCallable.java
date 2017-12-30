@@ -12,7 +12,7 @@ import org.marceloleite.mercado.siteretriever.model.JsonTrade;
 import org.marceloleite.mercado.siteretriever.util.checker.MaxTradesReachedCheck;
 import org.marceloleite.mercado.siteretriever.util.converter.ListToMapJsonTradeConverter;
 
-public class TradesSiteRetrieverCallable implements Callable<Map<Integer, JsonTrade>> {
+class PartialTradesSiteRetrieverCallable implements Callable<Map<Long, JsonTrade>> {
 
 	private Currency currency;
 
@@ -20,7 +20,7 @@ public class TradesSiteRetrieverCallable implements Callable<Map<Integer, JsonTr
 
 	private LocalDateTime to;
 
-	public TradesSiteRetrieverCallable(Currency currency, LocalDateTime from, LocalDateTime to) {
+	public PartialTradesSiteRetrieverCallable(Currency currency, LocalDateTime from, LocalDateTime to) {
 		super();
 
 		this.currency = currency;
@@ -29,10 +29,10 @@ public class TradesSiteRetrieverCallable implements Callable<Map<Integer, JsonTr
 	}
 
 	@Override
-	public Map<Integer, JsonTrade> call() throws Exception {
+	public Map<Long, JsonTrade> call() throws Exception {
 		LocalDateTimeToStringConverter localDateTimeToString = new LocalDateTimeToStringConverter();
-		List<JsonTrade> jsonTrades = new TradesSiteRetriever(currency).retrieve(from, to);
-		Map<Integer, JsonTrade> result;
+		List<JsonTrade> jsonTrades = new PartialTradesSiteRetriever(currency).retrieve(from, to);
+		Map<Long, JsonTrade> result;
 		if (new MaxTradesReachedCheck().check(jsonTrades)) {
 
 			System.err.println("Warning: Maximum trades exceeded from " + localDateTimeToString.convert(from) + " to "
@@ -44,11 +44,11 @@ public class TradesSiteRetrieverCallable implements Callable<Map<Integer, JsonTr
 		return result;
 	}
 
-	public Map<Integer, JsonTrade> splitExecution() {
+	public Map<Long, JsonTrade> splitExecution() {
 		Duration totalDuration = Duration.between(from, to);
 		Duration stepDuration = totalDuration.dividedBy(2);
-		TradesSiteRetrieverController tradesRetriever = new TradesSiteRetrieverController(stepDuration);
-		return tradesRetriever.retrieve(currency, from, totalDuration);
+		TradesSiteRetriever tradesRetriever = new TradesSiteRetriever(currency, stepDuration);
+		return tradesRetriever.retrieve(from, totalDuration);
 	}
 
 }

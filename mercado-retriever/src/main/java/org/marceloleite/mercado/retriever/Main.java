@@ -19,7 +19,7 @@ public class Main {
 			LocalDateTime end = LocalDateTime.now();
 			LocalDateTime start = end.minus(Duration.ofSeconds(30));
 			TradesRetriever tradesRetriever = new TradesRetriever();
-			List<TradePO> trades = tradesRetriever.retrieve(Currency.BITCOIN, start, end);
+			List<TradePO> trades = tradesRetriever.retrieve(Currency.BITCOIN, start, end, false);
 			if (trades.size() > 0) {
 				System.out.println(trades.get(trades.size() - 1).getPrice());
 			}

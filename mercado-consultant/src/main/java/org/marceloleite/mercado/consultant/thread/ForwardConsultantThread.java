@@ -7,7 +7,7 @@ import java.util.List;
 import org.jboss.logging.Logger;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.util.converter.LocalDateTimeToStringConverter;
-import org.marceloleite.mercado.consultant.thread.properties.ForwardConsultantPropertiesRetriever;
+import org.marceloleite.mercado.consultant.thread.property.ForwardConsultantPropertiesRetriever;
 import org.marceloleite.mercado.databasemodel.TradePO;
 import org.marceloleite.mercado.retriever.TradesRetriever;
 
@@ -38,7 +38,7 @@ public class ForwardConsultantThread extends AbstractConsultantThread {
 			for (Currency currency : Currency.values()) {
 				if (currency.isDigital()) {
 
-					List<TradePO> trades = tradesRetriever.retrieve(currency, start, end);
+					List<TradePO> trades = tradesRetriever.retrieve(currency, start, end, getConsultantProperties().isDatabaseValuesIgnored());
 					int totalTrades;
 					if (trades != null) {
 						totalTrades = trades.size();

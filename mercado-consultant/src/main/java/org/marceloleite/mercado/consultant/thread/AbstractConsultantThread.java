@@ -2,8 +2,8 @@ package org.marceloleite.mercado.consultant.thread;
 
 import java.time.Duration;
 
-import org.marceloleite.mercado.consultant.thread.properties.ConsultantThreadProperties;
-import org.marceloleite.mercado.consultant.thread.properties.ConsultantThreadPropertiesRetriever;
+import org.marceloleite.mercado.consultant.thread.property.ConsultantThreadProperties;
+import org.marceloleite.mercado.consultant.thread.property.ConsultantThreadPropertiesRetriever;
 
 public abstract class AbstractConsultantThread extends Thread {
 
