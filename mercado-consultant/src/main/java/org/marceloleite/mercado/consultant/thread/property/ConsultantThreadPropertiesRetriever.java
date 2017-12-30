@@ -1,4 +1,4 @@
-package org.marceloleite.mercado.consultant.thread.properties;
+package org.marceloleite.mercado.consultant.thread.property;
 
 public interface ConsultantThreadPropertiesRetriever {
 

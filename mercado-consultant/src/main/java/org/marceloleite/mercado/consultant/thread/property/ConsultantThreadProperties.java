@@ -1,4 +1,4 @@
-package org.marceloleite.mercado.consultant.thread.properties;
+package org.marceloleite.mercado.consultant.thread.property;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -13,13 +13,19 @@ public class ConsultantThreadProperties {
 
 	private Duration timeInterval;
 
+	private boolean databaseValuesIgnored;
+
+	private Duration tradesSiteRetrieverStepDuration;
+
 	public ConsultantThreadProperties(LocalDateTime startTime, LocalDateTime endTime, Duration tradeRetrieveDuration,
-			Duration timeInterval) {
+			Duration timeInterval, boolean databaseValuesIgnored, Duration tradesSiteRetrieverStepDuration) {
 		super();
 		this.startTime = startTime;
 		this.endTime = endTime;
 		this.tradeRetrieveDuration = tradeRetrieveDuration;
 		this.timeInterval = timeInterval;
+		this.databaseValuesIgnored = databaseValuesIgnored;
+		this.tradesSiteRetrieverStepDuration = tradesSiteRetrieverStepDuration;
 	}
 
 	public LocalDateTime getStartTime() {
@@ -52,6 +58,22 @@ public class ConsultantThreadProperties {
 
 	public void setTimeInterval(Duration timeInterval) {
 		this.timeInterval = timeInterval;
+	}
+
+	public boolean isDatabaseValuesIgnored() {
+		return databaseValuesIgnored;
+	}
+
+	public void setDatabaseValuesIgnored(boolean databaseValuesIgnored) {
+		this.databaseValuesIgnored = databaseValuesIgnored;
+	}
+
+	public Duration getTradesSiteRetrieverStepDuration() {
+		return tradesSiteRetrieverStepDuration;
+	}
+
+	public void setTradesSiteRetrieverStepDuration(Duration tradesSiteRetrieverStepDuration) {
+		this.tradesSiteRetrieverStepDuration = tradesSiteRetrieverStepDuration;
 	}
 
 }

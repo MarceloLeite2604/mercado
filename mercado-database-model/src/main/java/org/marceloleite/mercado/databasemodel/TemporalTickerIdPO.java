@@ -5,14 +5,26 @@ import java.time.LocalDateTime;
 
 import javax.persistence.Embeddable;
 
+import org.marceloleite.mercado.commons.Currency;
+
 @Embeddable
 public class TemporalTickerIdPO implements Serializable {
-	
+
 	private static final long serialVersionUID = 1L;
+
+	private Currency currency;
 
 	private LocalDateTime start;
 
 	private LocalDateTime end;
+
+	public Currency getCurrency() {
+		return currency;
+	}
+
+	public void setCurrency(Currency currency) {
+		this.currency = currency;
+	}
 
 	public LocalDateTime getStart() {
 		return start;

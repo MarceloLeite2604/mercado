@@ -21,10 +21,10 @@
 		<Root level="info">
 			<AppenderRef ref="LogFile"/>
 		</Root>
-		<Logger name="org.marceloleite.mercado.consultant.thread.ForwardConsultantThread" level="info">
+		<Logger name="org.marceloleite.mercado.consultant.thread.ForwardConsultantThread" level="debug">
 			<AppenderRef ref="ForwardConsultantLogFile"/>
 		</Logger>
-		<Logger name="org.marceloleite.mercado.consultant.thread.BackwardConsultantThread" level="info">
+		<Logger name="org.marceloleite.mercado.consultant.thread.BackwardConsultantThread" level="debug">
 			<AppenderRef ref="BackwardConsultantLogFile"/>
 		</Logger>
 	</Loggers>

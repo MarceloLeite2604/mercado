@@ -1,20 +1,19 @@
-package org.marceloleite.mercado.additional;
+package org.marceloleite.mercado.tickergenerator;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.Callable;
 
-import org.marceloleite.mercado.additional.converter.ListToMapTradeConverter;
-import org.marceloleite.mercado.additional.converter.TimeIntervalToTemporalTickerIdConverter;
-import org.marceloleite.mercado.additional.filter.TradeTypeFilter;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
-import org.marceloleite.mercado.databasemodel.TemporalTickerPO;
 import org.marceloleite.mercado.databasemodel.TemporalTickerIdPO;
+import org.marceloleite.mercado.databasemodel.TemporalTickerPO;
 import org.marceloleite.mercado.databasemodel.TradePO;
 import org.marceloleite.mercado.databasemodel.TradeType;
 import org.marceloleite.mercado.retriever.TradesRetriever;
+import org.marceloleite.mercado.tickergenerator.converter.ListToMapTradeConverter;
+import org.marceloleite.mercado.tickergenerator.filter.TradeTypeFilter;
 
 public class TemporalTickersCallable implements Callable<TemporalTickerPO> {
 

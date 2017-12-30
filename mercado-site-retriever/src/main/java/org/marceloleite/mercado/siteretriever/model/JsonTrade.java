@@ -26,7 +26,7 @@ public class JsonTrade {
 	private Double amount;
 
 	@JsonProperty("tid")
-	private Integer tid;
+	private Long tid;
 
 	@JsonProperty("type")
 	private String type;
@@ -68,12 +68,12 @@ public class JsonTrade {
 	}
 
 	@JsonProperty("tid")
-	public Integer getTid() {
+	public Long getTid() {
 		return tid;
 	}
 
 	@JsonProperty("tid")
-	public void setTid(Integer tid) {
+	public void setTid(Long tid) {
 		this.tid = tid;
 	}
 

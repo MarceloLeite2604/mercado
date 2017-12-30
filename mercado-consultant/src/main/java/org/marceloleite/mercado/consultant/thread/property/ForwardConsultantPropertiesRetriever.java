@@ -1,4 +1,4 @@
-package org.marceloleite.mercado.consultant.thread.properties;
+package org.marceloleite.mercado.consultant.thread.property;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -10,27 +10,27 @@ public class ForwardConsultantPropertiesRetriever extends AbstractConsultantThre
 
 	@Override
 	protected Duration retrieveTimeInterval() {
-		return retrieveDurationFromProperties(ConsultantProperty.FORWARD_TIME_INTERVAL,
+		return retrieveDurationProperty(ConsultantProperty.FORWARD_TIME_INTERVAL,
 				AbstractConsultantThreadPropertiesRetriever.DEFAULT_TIME_INTERVAL_DURATION);
 	}
 
 	@Override
 	protected Duration retrieveTradeRetrieveDuration() {
-		return retrieveDurationFromProperties(ConsultantProperty.FORWARD_TRADE_RETRIEVE_DURATION,
+		return retrieveDurationProperty(ConsultantProperty.FORWARD_TRADE_RETRIEVE_DURATION,
 				AbstractConsultantThreadPropertiesRetriever.DEFAULT_TRADE_RETRIEVE_DURATION);
 
 	}
 
 	@Override
 	protected LocalDateTime retrieveEndTime() {
-		return retrieveLocalDateTimeFromProperty(ConsultantProperty.FORWARD_END_TIME,
+		return retrieveLocalDateTimeProperty(ConsultantProperty.FORWARD_END_TIME,
 				AbstractConsultantThreadPropertiesRetriever.DEFAULT_START_TIME);
 	}
 
 	@Override
 	protected LocalDateTime retrieveStartTime() {
 		LocalDateTime startTime;
-		startTime = retrieveLocalDateTimeFromProperty(ConsultantProperty.FORWARD_START_TIME, null);
+		startTime = retrieveLocalDateTimeProperty(ConsultantProperty.FORWARD_START_TIME, null);
 
 		if (startTime == null) {
 			startTime = retrieveForwardStartTimeFromNewestTrade();
@@ -40,6 +40,16 @@ public class ForwardConsultantPropertiesRetriever extends AbstractConsultantThre
 			startTime = AbstractConsultantThreadPropertiesRetriever.DEFAULT_START_TIME;
 		}
 		return startTime;
+	}
+	
+	@Override
+	protected boolean retrieveDatabaseValuesIgnored() {
+		return retrieveBooleanProperty(ConsultantProperty.FORWARD_IGNORE_VALUES_ON_DATABASE, false);
+	}
+	
+	@Override
+	protected Duration retrieveTradesSiteRetrieverStepDuration() {
+		return retrieveDurationProperty(ConsultantProperty.FORWARD_TRADES_SITE_RETRIEVER_STEP_DURATION, null);
 	}
 
 	private LocalDateTime retrieveForwardStartTimeFromNewestTrade() {
