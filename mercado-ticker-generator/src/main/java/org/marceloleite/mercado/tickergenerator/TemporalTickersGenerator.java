@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeDivisionController;
 import org.marceloleite.mercado.commons.TimeInterval;
+import org.marceloleite.mercado.commons.util.converter.DurationToStringConverter;
 import org.marceloleite.mercado.commons.util.converter.LocalDateTimeToStringConverter;
 import org.marceloleite.mercado.databasemodel.TemporalTickerIdPO;
 import org.marceloleite.mercado.databasemodel.TemporalTickerPO;
@@ -44,9 +45,11 @@ public class TemporalTickersGenerator {
 
 		retrieveProperties();
 		LocalDateTimeToStringConverter localDateTimeToStringConverter = new LocalDateTimeToStringConverter();
+		DurationToStringConverter durationToStringConverter = new DurationToStringConverter();
 		LOGGER.info("Starting temporal tickers generator for period between "
 				+ localDateTimeToStringConverter.convert(timeDivisionController.getStart()) + " and "
-				+ localDateTimeToStringConverter.convert(timeDivisionController.getEnd()) + " with steps of " + );
+				+ localDateTimeToStringConverter.convert(timeDivisionController.getEnd()) + " with steps of "
+				+ durationToStringConverter.convert(timeDivisionController.getDivisionDuration()));
 
 		for (long step = 0; step < timeDivisionController.getDivisions(); step++) {
 			TimeInterval nextTimeInterval = timeDivisionController.getNextTimeInterval();

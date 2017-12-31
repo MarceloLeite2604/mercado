@@ -10,6 +10,6 @@ public class Main
     {
         TemporalTickersGenerator temporalTickersGenerator = new TemporalTickersGenerator();
         
-        temporalTickersGenerator.generate()
+        temporalTickersGenerator.generate();
     }
 }
