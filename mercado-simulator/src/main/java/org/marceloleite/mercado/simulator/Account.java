@@ -5,6 +5,10 @@ import java.util.EnumMap;
 import java.util.Map;
 
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.simulator.structure.CurrencyMonitoring;
+import org.marceloleite.mercado.xmlstructures.BuyOrder;
+import org.marceloleite.mercado.xmlstructures.Deposit;
+import org.marceloleite.mercado.xmlstructures.TemporalController;
 
 public class Account {
 	

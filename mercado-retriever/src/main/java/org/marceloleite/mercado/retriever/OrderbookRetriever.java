@@ -1,7 +1,7 @@
 package org.marceloleite.mercado.retriever;
 
 import org.marceloleite.mercado.commons.Currency;
-import org.marceloleite.mercado.converter.OrderbookConverter;
+import org.marceloleite.mercado.converter.json.OrderbookConverter;
 import org.marceloleite.mercado.databasemodel.Orderbook;
 import org.marceloleite.mercado.siteretriever.OrderbookSiteRetriever;
 import org.marceloleite.mercado.siteretriever.model.JsonOrderbook;

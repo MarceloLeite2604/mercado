@@ -8,7 +8,7 @@ import java.util.Map;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.util.converter.LocalDateTimeToStringConverter;
-import org.marceloleite.mercado.converter.MapJsonTradeToListTradeConverter;
+import org.marceloleite.mercado.converter.json.MapJsonTradeToListTradeConverter;
 import org.marceloleite.mercado.databasemodel.TradePO;
 import org.marceloleite.mercado.databaseretriever.persistence.dao.TradeDAO;
 import org.marceloleite.mercado.retriever.database.TradesDatabaseUtils;

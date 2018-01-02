@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.xmlstructures.CurrencyAmount;
 
 public class Balance {
 
@@ -31,5 +32,4 @@ public class Balance {
 	public Map<Currency, CurrencyAmount> getBalances() {
 		return balances;
 	}
-
 }

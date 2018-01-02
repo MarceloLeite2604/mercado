@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.xmlstructures.CurrencyAmount;
+import org.marceloleite.mercado.xmlstructures.Deposit;
 import org.marceloleite.mercado.additional.PriceRetriever;
 
 public class House {
