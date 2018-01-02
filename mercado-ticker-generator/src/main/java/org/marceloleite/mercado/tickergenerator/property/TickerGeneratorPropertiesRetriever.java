@@ -43,7 +43,11 @@ public class TickerGeneratorPropertiesRetriever {
 
 	private StandardProperty retrieveProperty(Property property) {
 		propertyRetriever = new PropertyRetriever();
-		return propertyRetriever.retrieve(property, IGNORE_DATABASE_VALUE);
+		StandardProperty propertyRetrieved = propertyRetriever.retrieve(property, IGNORE_DATABASE_VALUE);
+		if (propertyRetrieved.getValue() == null && property.isRequired()) {
+			throw new RuntimeException("Required property \"" + property.getName() + "\" not found.");
+		}
+		return propertyRetrieved;
 	}
 
 }

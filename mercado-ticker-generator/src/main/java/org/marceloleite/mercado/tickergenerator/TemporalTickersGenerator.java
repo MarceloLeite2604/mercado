@@ -1,5 +1,7 @@
 package org.marceloleite.mercado.tickergenerator;
 
+import java.time.Duration;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -17,6 +19,7 @@ import org.marceloleite.mercado.databasemodel.TradePO;
 import org.marceloleite.mercado.databasemodel.TradeType;
 import org.marceloleite.mercado.databaseretriever.persistence.dao.TemporalTickerDAO;
 import org.marceloleite.mercado.retriever.TradesRetriever;
+import org.marceloleite.mercado.tickergenerator.checker.ValidDurationForTickerCheck;
 import org.marceloleite.mercado.tickergenerator.converter.ListToMapTradeConverter;
 import org.marceloleite.mercado.tickergenerator.filter.TradeTypeFilter;
 import org.marceloleite.mercado.tickergenerator.property.TickerGeneratorPropertiesRetriever;
@@ -39,6 +42,7 @@ public class TemporalTickersGenerator {
 		super();
 		this.temporalTickerDAO = new TemporalTickerDAO();
 		this.tradesRetriever = new TradesRetriever();
+		this.previousTemporalTickers = new HashMap<>();
 	}
 
 	public void generate() {
@@ -49,17 +53,22 @@ public class TemporalTickersGenerator {
 		LOGGER.info("Starting temporal tickers generator for period between "
 				+ localDateTimeToStringConverter.convert(timeDivisionController.getStart()) + " and "
 				+ localDateTimeToStringConverter.convert(timeDivisionController.getEnd()) + " with steps of "
-				+ durationToStringConverter.convert(timeDivisionController.getDivisionDuration()));
+				+ durationToStringConverter.convert(timeDivisionController.getDivisionDuration()) + ".");
 
 		for (long step = 0; step < timeDivisionController.getDivisions(); step++) {
 			TimeInterval nextTimeInterval = timeDivisionController.getNextTimeInterval();
 			for (Currency currency : Currency.values()) {
 				if (currency.isDigital()) {
-					TemporalTickerPO temporalTickerPO;
-					if (ignoreTemporalTickersOnDatabase) {
-						temporalTickerPO = generateNewTemporalTicker(currency, nextTimeInterval);
-					} else {
+					LOGGER.info("Retrieving temporal ticker to " + currency + " currency for period between "
+							+ localDateTimeToStringConverter.convert(nextTimeInterval.getStart()) + " and "
+							+ localDateTimeToStringConverter.convert(nextTimeInterval.getEnd()) + ".");
+					TemporalTickerPO temporalTickerPO = null;
+					if (!ignoreTemporalTickersOnDatabase) {
 						temporalTickerPO = retrieveTemporalTickerFromDatabase(currency, nextTimeInterval);
+					}
+					if (ignoreTemporalTickersOnDatabase
+							|| (!ignoreTemporalTickersOnDatabase && temporalTickerPO == null)) {
+						temporalTickerPO = generateNewTemporalTicker(currency, nextTimeInterval);
 					}
 					if (temporalTickerPO != null) {
 						temporalTickerPO = adjustValues(temporalTickerPO);
@@ -69,6 +78,7 @@ public class TemporalTickersGenerator {
 				}
 			}
 		}
+		LOGGER.info("Finishing execution.");
 	}
 
 	private TemporalTickerPO generateNewTemporalTicker(Currency currency, TimeInterval timeInterval) {
@@ -93,6 +103,18 @@ public class TemporalTickersGenerator {
 		TickerGeneratorPropertiesRetriever tickerGeneratorPropertiesRetriever = new TickerGeneratorPropertiesRetriever();
 		timeDivisionController = tickerGeneratorPropertiesRetriever.retrieveTimeDivisionController();
 		ignoreTemporalTickersOnDatabase = tickerGeneratorPropertiesRetriever.retrieveIgnoreTemporalTickersOnDatabase();
+
+		checkTimeDivisionController();
+	}
+
+	private void checkTimeDivisionController() {
+		ValidDurationForTickerCheck validDurationForTickerCheck = new ValidDurationForTickerCheck();
+		Duration divisionDuration = timeDivisionController.getDivisionDuration();
+		if (!validDurationForTickerCheck.check(divisionDuration)) {
+			DurationToStringConverter durationToStringConverter = new DurationToStringConverter();
+			throw new RuntimeException(durationToStringConverter.convert(divisionDuration)
+					+ " is not a valid duration to elaborate temporal tickers.");
+		}
 	}
 
 	private TemporalTickerPO adjustValues(TemporalTickerPO temporalTickerPO) {
