@@ -2,6 +2,8 @@ package org.marceloleite.mercado.converter;
 
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.util.converter.ObjectToJsonConverter;
+import org.marceloleite.mercado.converter.json.OrderbookConverter;
+import org.marceloleite.mercado.converter.json.TickerConverter;
 import org.marceloleite.mercado.databasemodel.Orderbook;
 import org.marceloleite.mercado.databasemodel.TickerPO;
 import org.marceloleite.mercado.databaseretriever.persistence.EntityManagerController;

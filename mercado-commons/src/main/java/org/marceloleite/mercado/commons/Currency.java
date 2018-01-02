@@ -2,7 +2,10 @@ package org.marceloleite.mercado.commons;
 
 public enum Currency {
 
-	BITCOIN("BTC", true), LITECOIN("LTC", true), BCASH("BCH", true), REAL("BRL", false);
+	BITCOIN("BTC", true),
+	LITECOIN("LTC", true),
+	BCASH("BCH", true),
+	REAL("BRL", false);
 
 	private String acronym;
 

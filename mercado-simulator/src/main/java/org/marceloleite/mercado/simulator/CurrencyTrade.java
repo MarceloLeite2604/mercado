@@ -1,5 +1,7 @@
 package org.marceloleite.mercado.simulator;
 
+import org.marceloleite.mercado.xmlstructures.CurrencyAmount;
+
 public class CurrencyTrade {
 
 	private double price;

@@ -10,6 +10,10 @@ import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.util.converter.ObjectToJsonConverter;
 import org.marceloleite.mercado.commons.util.converter.StringToLocalDateTimeConverter;
 import org.marceloleite.mercado.databaseretriever.persistence.EntityManagerController;
+import org.marceloleite.mercado.simulator.structure.CurrencyMonitoring;
+import org.marceloleite.mercado.xmlstructures.BuyOrder;
+import org.marceloleite.mercado.xmlstructures.CurrencyAmount;
+import org.marceloleite.mercado.xmlstructures.Deposit;
 
 public class Main {
 
