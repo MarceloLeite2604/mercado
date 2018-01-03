@@ -6,18 +6,44 @@ import org.marceloleite.mercado.commons.Currency;
 
 public class BuyOrder {
 
-	private Currency currencyToBuy;
-	
-	private double buyingAmount;
-	
-	private Currency currencyToSpend;
-	
-	private double spendAmount;
-
 	private LocalDateTime time;
 
+	private Currency currencyToBuy;
+
+	private Double amountToBuy;
+
+	private Currency currencyToPay;
+
+	private Double amountToPay;
+
 	public BuyOrder() {
+		this(null, null, null, null, null);
+	}
+
+	private BuyOrder(LocalDateTime time, Currency currencyToBuy, Double amountToBuy, Currency currencyToPay,
+			Double amountToPay) {
 		super();
+		this.time = time;
+		this.currencyToBuy = currencyToBuy;
+		this.amountToBuy = amountToBuy;
+		this.currencyToPay = currencyToPay;
+		this.amountToPay = amountToPay;
+	}
+
+	public BuyOrder(LocalDateTime time, Currency currencyToBuy, Double amountToBuy, Currency currencyToPay) {
+		this(time, currencyToBuy, amountToBuy, currencyToPay, null);
+	}
+
+	public BuyOrder(LocalDateTime time, Currency currencyToBuy, Currency currencyToPay, Double amountToPay) {
+		this(time, currencyToBuy, null, currencyToPay, amountToPay);
+	}
+	
+	public LocalDateTime getTime() {
+		return time;
+	}
+
+	public void setTime(LocalDateTime time) {
+		this.time = time;
 	}
 
 	public Currency getCurrencyToBuy() {
@@ -28,35 +54,27 @@ public class BuyOrder {
 		this.currencyToBuy = currencyToBuy;
 	}
 
-	public double getBuyingAmount() {
-		return buyingAmount;
+	public Double getAmountToBuy() {
+		return amountToBuy;
 	}
 
-	public void setBuyingAmount(double buyingAmount) {
-		this.buyingAmount = buyingAmount;
+	public void setAmountToBuy(Double amountToBuy) {
+		this.amountToBuy = amountToBuy;
 	}
 
-	public Currency getCurrencyToSpend() {
-		return currencyToSpend;
+	public Currency getCurrencyToPay() {
+		return currencyToPay;
 	}
 
-	public void setCurrencyToSpend(Currency currencyToSpend) {
-		this.currencyToSpend = currencyToSpend;
+	public void setCurrencyToPay(Currency currencyToPay) {
+		this.currencyToPay = currencyToPay;
 	}
 
-	public double getSpendAmount() {
-		return spendAmount;
+	public Double getAmountToPay() {
+		return amountToPay;
 	}
 
-	public void setSpendAmount(double spendAmount) {
-		this.spendAmount = spendAmount;
-	}
-
-	public LocalDateTime getTime() {
-		return time;
-	}
-
-	public void setTime(LocalDateTime time) {
-		this.time = time;
+	public void setAmountToPay(Double amountToPay) {
+		this.amountToPay = amountToPay;
 	}
 }
