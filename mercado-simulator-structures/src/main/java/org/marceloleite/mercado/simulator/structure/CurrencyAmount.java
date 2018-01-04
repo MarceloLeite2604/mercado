@@ -8,9 +8,9 @@ public class CurrencyAmount {
 
 	private Currency currency;
 
-	private double amount;
+	private Double amount;
 
-	public CurrencyAmount(Currency currency, double amount) {
+	public CurrencyAmount(Currency currency, Double amount) {
 		super();
 		this.currency = currency;
 		this.amount = amount;
@@ -25,12 +25,12 @@ public class CurrencyAmount {
 		this.currency = currency;
 	}
 
-	public double getAmount() {
+	public Double getAmount() {
 		return amount;
 	}
 
 	@XmlElement
-	public void setAmount(double amount) {
+	public void setAmount(Double amount) {
 		this.amount = amount;
 	}
 

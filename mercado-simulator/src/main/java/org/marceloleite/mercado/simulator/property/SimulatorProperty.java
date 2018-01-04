@@ -1,13 +1,17 @@
 package org.marceloleite.mercado.simulator.property;
 
 import org.marceloleite.mercado.properties.Property;
-import org.marceloleite.mercado.properties.StandardProperty;
 
-public enum SimulatorProperty {
+public enum SimulatorProperty implements Property {
 
-	BALANCE_REAL_INITIAL_VALUE("simulator.house.tradePercentage", false);
+	HOUSE_TRADE_PERCENTAGE("simulator.house.tradePercentage", true),
+	START_TIME("simulator.startTime", true),
+	END_TIME("simulator.endTime", true),
+	STEP_DURATION("simulator.stepDuration", true);
 
 	private String name;
+	
+	private String value;
 
 	private boolean required;
 
@@ -15,6 +19,7 @@ public enum SimulatorProperty {
 		this.name = name;
 	}
 
+	@Override
 	public String getName() {
 		return name;
 	}
@@ -24,7 +29,24 @@ public enum SimulatorProperty {
 		return name;
 	}
 
-	public Property toProperty() {
-		return new StandardProperty(name, required);
+	@Override
+	public void setName(String name) {
+		throw new IllegalAccessError();
+	}
+
+	@Override
+	public String getValue() {
+		return this.value;
+	}
+
+	@Override
+	public void setValue(String value) {
+		this.value = value;
+		
+	}
+
+	@Override
+	public boolean isRequired() {
+		return this.required;
 	}
 }

@@ -55,20 +55,19 @@ public class TemporalTickersGenerator {
 				+ localDateTimeToStringConverter.convert(timeDivisionController.getEnd()) + " with steps of "
 				+ durationToStringConverter.convert(timeDivisionController.getDivisionDuration()) + ".");
 
-		for (long step = 0; step < timeDivisionController.getDivisions(); step++) {
-			TimeInterval nextTimeInterval = timeDivisionController.getNextTimeInterval();
+		for (TimeInterval timeInterval : timeDivisionController.geTimeIntervals()) {
 			for (Currency currency : Currency.values()) {
 				if (currency.isDigital()) {
 					LOGGER.info("Retrieving temporal ticker to " + currency + " currency for period between "
-							+ localDateTimeToStringConverter.convert(nextTimeInterval.getStart()) + " and "
-							+ localDateTimeToStringConverter.convert(nextTimeInterval.getEnd()) + ".");
+							+ localDateTimeToStringConverter.convert(timeInterval.getStart()) + " and "
+							+ localDateTimeToStringConverter.convert(timeInterval.getEnd()) + ".");
 					TemporalTickerPO temporalTickerPO = null;
 					if (!ignoreTemporalTickersOnDatabase) {
-						temporalTickerPO = retrieveTemporalTickerFromDatabase(currency, nextTimeInterval);
+						temporalTickerPO = retrieveTemporalTickerFromDatabase(currency, timeInterval);
 					}
 					if (ignoreTemporalTickersOnDatabase
 							|| (!ignoreTemporalTickersOnDatabase && temporalTickerPO == null)) {
-						temporalTickerPO = generateNewTemporalTicker(currency, nextTimeInterval);
+						temporalTickerPO = generateNewTemporalTicker(currency, timeInterval);
 					}
 					if (temporalTickerPO != null) {
 						temporalTickerPO = adjustValues(temporalTickerPO);

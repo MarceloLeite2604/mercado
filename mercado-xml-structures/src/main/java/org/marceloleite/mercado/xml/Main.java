@@ -1,4 +1,4 @@
-package org.marceloleite.mercado.xml.structures;
+package org.marceloleite.mercado.xml;
 
 import java.io.File;
 import java.time.LocalDateTime;
@@ -11,11 +11,13 @@ import javax.xml.bind.Unmarshaller;
 
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.xml.adapter.XmlBalancesXmlAdapter;
+import org.marceloleite.mercado.xml.structures.XmlAccount;
+import org.marceloleite.mercado.xml.structures.XmlBalanceEntryList;
+import org.marceloleite.mercado.xml.structures.XmlBalances;
+import org.marceloleite.mercado.xml.structures.XmlBuyOrder;
+import org.marceloleite.mercado.xml.structures.XmlCurrencyAmount;
+import org.marceloleite.mercado.xml.structures.XmlDeposit;
 
-/**
- * Hello world!
- *
- */
 public class Main {
 
 	private static Marshaller marshaller;

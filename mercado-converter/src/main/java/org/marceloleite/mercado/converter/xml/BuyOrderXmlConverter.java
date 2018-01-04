@@ -1,6 +1,7 @@
 package org.marceloleite.mercado.converter.xml;
 
 import org.marceloleite.mercado.simulator.structure.BuyOrder;
+import org.marceloleite.mercado.simulator.structure.CurrencyAmount;
 import org.marceloleite.mercado.xml.structures.XmlBuyOrder;
 
 public class BuyOrderXmlConverter implements XmlConverter<XmlBuyOrder, BuyOrder> {
@@ -8,10 +9,13 @@ public class BuyOrderXmlConverter implements XmlConverter<XmlBuyOrder, BuyOrder>
 	@Override
 	public XmlBuyOrder convertToXml(BuyOrder buyOrder) {
 		XmlBuyOrder xmlBuyOrder = new XmlBuyOrder();
-		xmlBuyOrder.setCurrencyToBuy(buyOrder.getCurrencyToBuy());
-		xmlBuyOrder.setAmountToBuy(buyOrder.getAmountToBuy());
-		xmlBuyOrder.setCurrencyToPay(buyOrder.getCurrencyToPay());
-		xmlBuyOrder.setAmountToPay(buyOrder.getAmountToPay());
+		xmlBuyOrder.setTime(buyOrder.getTime());
+		CurrencyAmount currencyAmountToBuy = buyOrder.getCurrencyAmountToBuy();
+		CurrencyAmount currencyAmountToPay = buyOrder.getCurrencyAmountToPay();
+		xmlBuyOrder.setCurrencyToBuy(currencyAmountToBuy.getCurrency());
+		xmlBuyOrder.setAmountToBuy(currencyAmountToBuy.getAmount());
+		xmlBuyOrder.setCurrencyToPay(currencyAmountToPay.getCurrency());
+		xmlBuyOrder.setAmountToPay(currencyAmountToPay.getAmount());
 
 		return xmlBuyOrder;
 	}
@@ -19,10 +23,13 @@ public class BuyOrderXmlConverter implements XmlConverter<XmlBuyOrder, BuyOrder>
 	@Override
 	public BuyOrder convertToObject(XmlBuyOrder xmlBuyOrder) {
 		BuyOrder buyOrder = new BuyOrder();
-		buyOrder.setCurrencyToBuy(xmlBuyOrder.getCurrencyToBuy());
-		buyOrder.setAmountToBuy(xmlBuyOrder.getAmountToBuy());
-		buyOrder.setCurrencyToPay(xmlBuyOrder.getCurrencyToPay());
-		buyOrder.setAmountToPay(xmlBuyOrder.getAmountToPay());
+		buyOrder.setTime(xmlBuyOrder.getTime());
+		CurrencyAmount currencyAmountToBuy = buyOrder.getCurrencyAmountToBuy();
+		currencyAmountToBuy.setAmount(xmlBuyOrder.getAmountToBuy());
+		currencyAmountToBuy.setCurrency(xmlBuyOrder.getCurrencyToBuy());
+		CurrencyAmount currencyAmountToPay = buyOrder.getCurrencyAmountToPay();
+		currencyAmountToPay.setAmount(xmlBuyOrder.getAmountToPay());
+		currencyAmountToPay.setCurrency(xmlBuyOrder.getCurrencyToPay());
 		return buyOrder;
 	}
 

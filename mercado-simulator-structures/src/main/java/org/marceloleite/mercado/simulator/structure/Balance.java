@@ -22,14 +22,13 @@ public class Balance extends EnumMap<Currency, CurrencyAmount> {
 
 	public Balance() {
 		super(Currency.class);
-		/* balances = new EnumMap<>(Currency.class); */
 	}
 
-	public void deposit(CurrencyAmount currencyAmountToDeposit) {
-		CurrencyAmount currencyAmount = Optional.ofNullable(get(currencyAmountToDeposit.getCurrency()))
-				.orElse(new CurrencyAmount(currencyAmountToDeposit.getCurrency(), 0.0));
-		currencyAmount.setAmount(currencyAmount.getAmount() + currencyAmountToDeposit.getAmount());
-		put(currencyAmount.getCurrency(), currencyAmount);
+	public void deposit(CurrencyAmount currencyAmount) {
+		Currency currency = currencyAmount.getCurrency();
+		CurrencyAmount retrievedCurrency = getOrDefault(currency, new CurrencyAmount(currency, 0.0));
+		retrievedCurrency.setAmount(retrievedCurrency.getAmount() + currencyAmount.getAmount());
+		put(currency, currencyAmount);
 	}
 
 	public void withdraw(CurrencyAmount currencyAmountToWithdraw) {
@@ -39,7 +38,7 @@ public class Balance extends EnumMap<Currency, CurrencyAmount> {
 		put(currencyAmount.getCurrency(), currencyAmount);
 	}
 
-	/*public Map<Currency, CurrencyAmount> getBalances() {
-		return balances;
-	}*/
+	/*
+	 * public Map<Currency, CurrencyAmount> getBalances() { return balances; }
+	 */
 }
