@@ -22,6 +22,7 @@ public class Main {
 		// checkTrades();
 	}
 
+	@SuppressWarnings("unused")
 	private static void checkTrades() {
 		try {
 			long lastId = -1l;
@@ -31,13 +32,12 @@ public class Main {
 			LocalDateTime end = stringToLocalDateTimeConverter.convert("31/12/2017 00:00:00");
 			Duration divisionDuration = Duration.ofDays(30);
 			TimeDivisionController timeDivisionController = new TimeDivisionController(start, end, divisionDuration);
-			for (long counter = 0; counter < timeDivisionController.getDivisions(); counter++) {
-				TimeInterval nextTimeInterval = timeDivisionController.getNextTimeInterval();
-				System.out.println("From " + localDateTimeToStringConverter.convert(nextTimeInterval.getStart())
-						+ " to " + localDateTimeToStringConverter.convert(nextTimeInterval.getEnd()));
+			for (TimeInterval timeInterval : timeDivisionController.geTimeIntervals()) {
+				System.out.println("From " + localDateTimeToStringConverter.convert(timeInterval.getStart()) + " to "
+						+ localDateTimeToStringConverter.convert(timeInterval.getEnd()));
 				TradesRetriever tradesRetriever = new TradesRetriever();
-				List<TradePO> trades = tradesRetriever.retrieve(Currency.LITECOIN, nextTimeInterval.getStart(),
-						nextTimeInterval.getEnd(), false);
+				List<TradePO> trades = tradesRetriever.retrieve(Currency.LITECOIN, timeInterval.getStart(),
+						timeInterval.getEnd(), false);
 				if (trades != null && trades.size() > 0) {
 					for (int tradesCounter = 0; tradesCounter < trades.size(); tradesCounter++) {
 						TradePO tradePO = trades.get(tradesCounter);

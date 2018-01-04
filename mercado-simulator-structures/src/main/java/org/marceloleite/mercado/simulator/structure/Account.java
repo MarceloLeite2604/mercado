@@ -1,8 +1,12 @@
 package org.marceloleite.mercado.simulator.structure;
 
+import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.commons.TimeInterval;
+import org.marceloleite.mercado.databasemodel.TemporalTickerPO;
 
 public class Account {
 
@@ -14,55 +18,21 @@ public class Account {
 
 	private TemporalController<BuyOrder> buyOrdersTemporalController;
 
-	private Map<Currency, Double> basePrices;
+	private Map<Currency, List<Strategy>> currenciesStrategies;
 
-	private Map<Currency, CurrencyMonitoring> currenciesMonitoring;
-
-	public Account() {
-		this("");
-		/*
-		 * this.currenciesMonitoring = new EnumMap<>(Currency.class);
-		 * 
-		 * this.buyOrdersTemporalController = new TemporalController<>();
-		 */
+	public Account(String owner, Balance balance, TemporalController<Deposit> depositsTemporalController,
+			TemporalController<BuyOrder> buyOrdersTemporalController) {
+		super();
+		this.owner = owner;
+		this.balance = balance;
+		this.depositsTemporalController = depositsTemporalController;
+		this.buyOrdersTemporalController = buyOrdersTemporalController;
+		this.currenciesStrategies = new EnumMap<>(Currency.class);
 	}
 
 	public Account(String owner) {
-		super();
-		this.owner = owner;
-		this.balance = new Balance();
-		this.depositsTemporalController = new TemporalController<>();
-		/*
-		 * this.currenciesMonitoring = new EnumMap<>(Currency.class);
-		 * this.depositsTemporalController = new TemporalController<>();
-		 * this.buyOrdersTemporalController = new TemporalController<>();
-		 */
+		this(owner, null, null, null);
 	}
-
-	/*
-	 * public void addCurrencyMonitoring(CurrencyMonitoring currencyMonitoring) {
-	 * currenciesMonitoring.put(currencyMonitoring.getCurrency(),
-	 * currencyMonitoring); }
-	 */
-
-	/*
-	 * public void addDeposit(Deposit deposit, LocalDateTime time) {
-	 * depositsTemporalController.add(time, deposit); }
-	 */
-
-	/*
-	 * public void addBuyOrder(BuyOrder buyOrder, LocalDateTime time) {
-	 * buyOrdersTemporalController.add(time, buyOrder); }
-	 */
-
-	/*
-	 * public Map<Currency, CurrencyMonitoring> getCurrenciesMonitoring() { return
-	 * currenciesMonitoring; }
-	 */
-
-	/*
-	 * public Map<Currency, Double> getBasePrices() { return basePrices; }
-	 */
 
 	public String getOwner() {
 		return owner;
@@ -72,20 +42,29 @@ public class Account {
 		return balance;
 	}
 
-	public void setOwner(String owner) {
-		this.owner = owner;
-	}
-
-	public void setBalance(Balance balance) {
-		this.balance = balance;
-	}
-
 	public TemporalController<Deposit> getDepositsTemporalController() {
 		return depositsTemporalController;
 	}
 
-	public void setDepositsTemporalController(TemporalController<Deposit> depositsTemporalController) {
-		this.depositsTemporalController = depositsTemporalController;
+	public TemporalController<BuyOrder> getBuyOrdersTemporalController() {
+		return buyOrdersTemporalController;
+	}
+
+	public Map<Currency, List<Strategy>> getCurrenciesStrategies() {
+		return currenciesStrategies;
+	}
+
+	public void checkTimedEvents(TimeInterval currentTimeInterval) {
+		checkDeposits(currentTimeInterval);
+	}
+
+	
+
+	private void checkDeposits(TimeInterval currentTimeInterval) {
+		List<Deposit> deposits = depositsTemporalController.retrieve(currentTimeInterval.getEnd());
+		for (Deposit deposit : deposits) {
+			balance.deposit(deposit.getCurrencyAmount());
+		}
 	}
 
 }

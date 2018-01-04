@@ -1,20 +1,18 @@
 package org.marceloleite.mercado.simulator.structure;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.databasemodel.TemporalTickerPO;
 
 public class BuyOrder {
 
 	private LocalDateTime time;
 
-	private Currency currencyToBuy;
+	private CurrencyAmount currencyAmountToBuy;
 
-	private Double amountToBuy;
-
-	private Currency currencyToPay;
-
-	private Double amountToPay;
+	private CurrencyAmount currencyAmountToPay;
 
 	public BuyOrder() {
 		this(null, null, null, null, null);
@@ -24,10 +22,8 @@ public class BuyOrder {
 			Double amountToPay) {
 		super();
 		this.time = time;
-		this.currencyToBuy = currencyToBuy;
-		this.amountToBuy = amountToBuy;
-		this.currencyToPay = currencyToPay;
-		this.amountToPay = amountToPay;
+		this.currencyAmountToBuy = new CurrencyAmount(currencyToBuy, amountToBuy);
+		this.currencyAmountToPay = new CurrencyAmount(currencyToPay, amountToPay);
 	}
 
 	public BuyOrder(LocalDateTime time, Currency currencyToBuy, Double amountToBuy, Currency currencyToPay) {
@@ -37,7 +33,7 @@ public class BuyOrder {
 	public BuyOrder(LocalDateTime time, Currency currencyToBuy, Currency currencyToPay, Double amountToPay) {
 		this(time, currencyToBuy, null, currencyToPay, amountToPay);
 	}
-	
+
 	public LocalDateTime getTime() {
 		return time;
 	}
@@ -46,35 +42,33 @@ public class BuyOrder {
 		this.time = time;
 	}
 
-	public Currency getCurrencyToBuy() {
-		return currencyToBuy;
+	public CurrencyAmount getCurrencyAmountToBuy() {
+		return currencyAmountToBuy;
 	}
 
-	public void setCurrencyToBuy(Currency currencyToBuy) {
-		this.currencyToBuy = currencyToBuy;
+	public void setCurrencyAmountToBuy(CurrencyAmount currencyAmountToBuy) {
+		this.currencyAmountToBuy = currencyAmountToBuy;
 	}
 
-	public Double getAmountToBuy() {
-		return amountToBuy;
+	public CurrencyAmount getCurrencyAmountToPay() {
+		return currencyAmountToPay;
 	}
 
-	public void setAmountToBuy(Double amountToBuy) {
-		this.amountToBuy = amountToBuy;
+	public void setCurrencyAmountToPay(CurrencyAmount currencyAmountToPay) {
+		this.currencyAmountToPay = currencyAmountToPay;
 	}
 
-	public Currency getCurrencyToPay() {
-		return currencyToPay;
-	}
+	public void updateOrder(Map<Currency, TemporalTickerPO> temporalTickers) {
+		TemporalTickerPO temporalTickerPO = temporalTickers.get(currencyAmountToBuy.getCurrency());
+		double buyingPrice = temporalTickerPO.getBuy();
+		if (getCurrencyAmountToBuy().getAmount() == null) {
+			Double amountToBuy = getCurrencyAmountToPay().getAmount() / buyingPrice;
+			currencyAmountToBuy.setAmount(amountToBuy);
 
-	public void setCurrencyToPay(Currency currencyToPay) {
-		this.currencyToPay = currencyToPay;
-	}
+		} else if (getCurrencyAmountToPay().getAmount() == null) {
+			Double amountToPay = getCurrencyAmountToBuy().getAmount() * buyingPrice;
+			currencyAmountToPay.setAmount(amountToPay);
+		}
 
-	public Double getAmountToPay() {
-		return amountToPay;
-	}
-
-	public void setAmountToPay(Double amountToPay) {
-		this.amountToPay = amountToPay;
 	}
 }

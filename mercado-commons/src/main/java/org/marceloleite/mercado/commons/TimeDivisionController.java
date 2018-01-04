@@ -2,6 +2,8 @@ package org.marceloleite.mercado.commons;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TimeDivisionController {
 
@@ -13,9 +15,11 @@ public class TimeDivisionController {
 
 	private long divisions;
 
-	private long currentDivision;
+	// private long currentDivision;
 
-	private TimeInterval nextTimeInterval;
+	// private TimeInterval nextTimeInterval;
+	
+	private List<TimeInterval> timeIntervals;
 
 	public TimeDivisionController(LocalDateTime start, LocalDateTime end, Duration divisionDuration) {
 		super();
@@ -26,18 +30,19 @@ public class TimeDivisionController {
 		this.end = end;
 		this.divisionDuration = divisionDuration;
 		this.divisions = calculateDivisions();
-		this.currentDivision = 0;
-		this.nextTimeInterval = elaborateNextTimeInterval();
+		// this.currentDivision = 0;
+		// this.nextTimeInterval = elaborateNextTimeInterval();
+		this.timeIntervals = createTimeIntervals();
 	}
 
 	public TimeDivisionController(LocalDateTime start, LocalDateTime end, Long divisions) {
 		super();
 		this.start = start;
 		this.end = end;
-		this.divisions = divisions;
+		// this.divisions = divisions;
 		this.divisionDuration = calculateDivisionDuration();
-		this.currentDivision = 0;
-		this.nextTimeInterval = elaborateNextTimeInterval();
+		// this.currentDivision = 0;
+		// this.nextTimeInterval = elaborateNextTimeInterval();
 	}
 
 	public LocalDateTime getStart() {
@@ -52,34 +57,50 @@ public class TimeDivisionController {
 		return Duration.from(divisionDuration);
 	}
 	
-	public long getDivisions() {
-		return divisions;
+	public List<TimeInterval> geTimeIntervals() {
+		return new ArrayList<>(timeIntervals);
 	}
+	
+	/*public long getDivisions() {
+		return divisions;
+	}*/
+	
+	private List<TimeInterval> createTimeIntervals() {
+		List<TimeInterval> timeIntervals = new ArrayList<>();
+		TimeInterval nextTimeInterval = null;
+		nextTimeInterval = elaborateNextTimeInterval(nextTimeInterval);
+		timeIntervals.add(nextTimeInterval);
+		while (!nextTimeInterval.getEnd().isEqual(end)) {
+			nextTimeInterval = elaborateNextTimeInterval(nextTimeInterval);
+			timeIntervals.add(nextTimeInterval);
+		}
+		return timeIntervals;
+	}	
 
-	public TimeInterval getNextTimeInterval() {
+	/*public TimeInterval getNextTimeInterval() {
 		TimeInterval result = nextTimeInterval;
 		if (currentDivision < divisions) {
 			currentDivision++;
 			nextTimeInterval = elaborateNextTimeInterval();
 		}
 		return result;
-	}
+	}*/
 
-	private TimeInterval elaborateNextTimeInterval() {
-		Duration timeIntervalDuration = calculateTimeIntervalDuration();
+	private TimeInterval elaborateNextTimeInterval(TimeInterval previousTimeInterval) {
+		Duration timeIntervalDuration = calculateTimeIntervalDuration(previousTimeInterval);
 		LocalDateTime time;
-		if (nextTimeInterval != null ) {
-			time = LocalDateTime.from(nextTimeInterval.getEnd());
+		if (previousTimeInterval != null ) {
+			time = LocalDateTime.from(previousTimeInterval.getEnd());
 		} else {
 			time = start;
 		}
 		return new TimeInterval(time, Duration.from(timeIntervalDuration));
 	}
 
-	private Duration calculateTimeIntervalDuration() {
+	private Duration calculateTimeIntervalDuration(TimeInterval previousTimeInterval) {
 		Duration timeIntervalDuration;
-		if (nextTimeInterval != null) {
-			timeIntervalDuration = Duration.between(nextTimeInterval.getStart(), end);
+		if (previousTimeInterval != null) {
+			timeIntervalDuration = Duration.between(previousTimeInterval.getStart(), end);
 		} else {
 			timeIntervalDuration = Duration.between(start, end);
 		}

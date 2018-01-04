@@ -19,8 +19,8 @@ public class BalanceXmlConverter implements XmlConverter<XmlBalances, Balance> {
 	@Override
 	public Balance convertToObject(XmlBalances xmlBalances) {
 		Balance balance = new Balance();
-		for (Currency currency : xmlBalances.keySet()) {
-			Double amount = xmlBalances.get(currency);
+		for (Currency currency : Currency.values()) {
+			Double amount = xmlBalances.getOrDefault(currency, 0.0);
 			CurrencyAmount currencyAmount = new CurrencyAmount(currency, amount);
 			balance.put(currency, currencyAmount);
 		}
