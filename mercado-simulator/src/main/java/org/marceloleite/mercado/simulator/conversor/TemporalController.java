@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class TemporalController<T> extends ArrayList<TemporalToken<T>> {
+import org.marceloleite.mercado.simulator.TimedObject;
+
+public class TemporalController<T extends TimedObject> extends ArrayList<T> {
 
 	/**
 	 * 
@@ -16,17 +18,13 @@ public class TemporalController<T> extends ArrayList<TemporalToken<T>> {
 		super();
 	}
 
-	public void add(LocalDateTime time, T object) {
-		add(new TemporalToken<>(time, object));
-	}
-
 	public List<T> retrieve(LocalDateTime time) {
-		List<TemporalToken<T>> temporalTokensToConsume = stream().filter(temporalToken -> temporalToken.isTime(time))
-				.collect(Collectors.toList());
-		for (TemporalToken<T> temporalToken : temporalTokensToConsume) {
-			remove(temporalToken);
+		List<T> timedObjects = stream().filter(timedObject -> timedObject.isTime(time)).collect(Collectors.toList());
+
+		for (TimedObject timedObject : timedObjects) {
+			remove(timedObject);
 		}
 
-		return temporalTokensToConsume.stream().map(TemporalToken::getObject).collect(Collectors.toList());
+		return timedObjects;
 	}
 }

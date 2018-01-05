@@ -10,9 +10,14 @@ import org.marceloleite.mercado.databasemodel.TradePO;
 public class ListToMapTradeConverter implements Converter<List<TradePO>, Map<Long, TradePO>> {
 
 	@Override
-	public Map<Long, TradePO> convert(List<TradePO> trades) {
+	public Map<Long, TradePO> convertTo(List<TradePO> trades) {
 		return trades.stream().map(trade -> trade)
 				.collect(Collectors.toConcurrentMap(tradePO -> tradePO.getTradeIdPO().getId(), trade -> trade, (oldTrade, newTrade) -> newTrade));
+	}
+
+	@Override
+	public List<TradePO> convertFrom(Map<Long, TradePO> object) {
+		throw new UnsupportedOperationException();
 	}
 
 }

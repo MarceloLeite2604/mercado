@@ -3,23 +3,21 @@ package org.marceloleite.mercado.xml.reader;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.sql.rowset.spi.XmlReader;
-
-import org.marceloleite.mercado.converter.xml.AccountXmlConverter;
-import org.marceloleite.mercado.simulator.structure.Account;
+import org.marceloleite.mercado.converter.xml.AccountDataXmlConverter;
+import org.marceloleite.mercado.simulator.structure.AccountData;
 import org.marceloleite.mercado.xml.structures.XmlAccount;
 
 public class AccountsReader {
 
-	public List<Account> readAccounts() {
+	public List<AccountData> readAccounts() {
 		XmlReader xmlReader = new XmlReader();
 		List<XmlAccount> xmlAccounts = xmlReader.readAccounts();
-		List<Account> accounts = new ArrayList<>();
-		AccountXmlConverter accountXmlConverter = new AccountXmlConverter();
+		List<AccountData> accountsData = new ArrayList<>();
+		AccountDataXmlConverter accountDataXmlConverter = new AccountDataXmlConverter();
 		for (XmlAccount xmlAccount : xmlAccounts) {
-			Account account = accountXmlConverter.convertToObject(xmlAccount);
-			accounts.add(account);
+			AccountData accountData = accountDataXmlConverter.convertToObject(xmlAccount);
+			accountsData.add(accountData);
 		}
-		return accounts;
+		return accountsData;
 	}
 }

@@ -1,24 +1,22 @@
 package org.marceloleite.mercado.simulator.conversor;
 
-import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.marceloleite.mercado.additional.TemporalTickerGenerator;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.util.converter.LocalDateTimeToStringConverter;
 import org.marceloleite.mercado.databasemodel.TemporalTickerPO;
+import org.marceloleite.mercado.simulator.CurrencyAmount;
+import org.marceloleite.mercado.tickergenerator.TemporalTickersGenerator;
 import org.marceloleite.mercado.xml.reader.AccountsReader;
 
 public class House {
 
 	private static final double DEFAULT_COMISSION_PERCENTAGE = 0.007;
 
-	private List<CurrencyTrade> currencyTrades;
-	
 	private List<Account> accounts;
 
 	private Map<String, Balance> comissionBalance;
@@ -27,24 +25,19 @@ public class House {
 
 	private Map<Currency, TemporalTickerPO> temporalTickers;
 
-	private TemporalTickerGenerator temporalTickerGenerator;
+	private TemporalTickersGenerator temporalTickersGenerator;
 
 	public House() {
 		super();
-		currencyTrades = new ArrayList<>();
 		comissionBalance = new HashMap<>();
 		comissionPercentage = DEFAULT_COMISSION_PERCENTAGE;
-		this.temporalTickerGenerator = new TemporalTickerGenerator();
+		this.temporalTickersGenerator = new TemporalTickersGenerator();
 		this.temporalTickers = new EnumMap<>(Currency.class);
 		this.accounts = new AccountsReader().readAccounts();
 	}
 
 	public static double getDefaultComissionPercentage() {
 		return DEFAULT_COMISSION_PERCENTAGE;
-	}
-
-	public List<CurrencyTrade> getCurrencyTrades() {
-		return currencyTrades;
 	}
 
 	public double getComissionPercentage() {
@@ -65,13 +58,14 @@ public class House {
 	public void updateTemporalTickers(TimeInterval timeInterval) {
 		for (Currency currency : Currency.values()) {
 			if (currency.isDigital()) {
-				List<TemporalTickerPO> temporalTickersRetrieved = temporalTickerGenerator.generate(currency,
+				List<TemporalTickerPO> temporalTickersRetrieved = temporalTickersGenerator.generate(currency,
 						timeInterval);
 				if (temporalTickersRetrieved == null || temporalTickersRetrieved.size() != 0) {
 					LocalDateTimeToStringConverter localDateTimeToStringConverter = new LocalDateTimeToStringConverter();
-					throw new RuntimeException("Could not retrieve temporal ticker for " + currency.getAcronym()
-							+ " currency for period " + localDateTimeToStringConverter.convertTo(timeInterval.getStart())
-							+ " to " + localDateTimeToStringConverter.convertTo(timeInterval.getEnd()) + ".");
+					throw new RuntimeException(
+							"Could not retrieve temporal ticker for " + currency.getAcronym() + " currency for period "
+									+ localDateTimeToStringConverter.convertTo(timeInterval.getStart()) + " to "
+									+ localDateTimeToStringConverter.convertTo(timeInterval.getEnd()) + ".");
 				}
 				TemporalTickerPO temporalTickerPO = temporalTickersRetrieved.get(0);
 				temporalTickers.put(currency, temporalTickerPO);
@@ -93,7 +87,7 @@ public class House {
 			checkBuyOrders(currentTimeInterval, account);
 		}
 	}
-	
+
 	private void checkBuyOrders(TimeInterval currentTimeInterval, Account account) {
 		List<BuyOrder> buyOrders = account.getBuyOrdersTemporalController().retrieve(currentTimeInterval.getEnd());
 		for (BuyOrder buyOrder : buyOrders) {
@@ -121,7 +115,7 @@ public class House {
 
 	private CurrencyAmount calculateComission(BuyOrder buyOrder) {
 		CurrencyAmount currencyAmountToBuy = buyOrder.getCurrencyAmountToBuy();
-		double comissionAmount = currencyAmountToBuy.getAmount()*comissionPercentage;
+		double comissionAmount = currencyAmountToBuy.getAmount() * comissionPercentage;
 		return new CurrencyAmount(currencyAmountToBuy.getCurrency(), comissionAmount);
 	}
 }

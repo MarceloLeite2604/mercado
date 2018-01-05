@@ -4,13 +4,13 @@ import javax.xml.bind.annotation.XmlElement;
 
 import org.marceloleite.mercado.commons.Currency;
 
-public class CurrencyAmount {
+public class CurrencyAmountData {
 
 	private Currency currency;
 
 	private Double amount;
 
-	public CurrencyAmount(Currency currency, Double amount) {
+	public CurrencyAmountData(Currency currency, Double amount) {
 		super();
 		this.currency = currency;
 		this.amount = amount;

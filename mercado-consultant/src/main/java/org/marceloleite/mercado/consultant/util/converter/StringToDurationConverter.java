@@ -12,4 +12,9 @@ public class StringToDurationConverter implements Converter<String, Duration> {
 		return Duration.ofSeconds(seconds);
 	}
 
+	@Override
+	public String convertFrom(Duration object) {
+		throw new UnsupportedOperationException();
+	}
+
 }

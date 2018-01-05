@@ -6,15 +6,15 @@ public class BuyOrderData {
 
 	private LocalDateTime time;
 
-	private CurrencyAmount currencyAmountToBuy;
+	private CurrencyAmountData currencyAmountToBuy;
 
-	private CurrencyAmount currencyAmountToPay;
+	private CurrencyAmountData currencyAmountToPay;
 
 	public BuyOrderData() {
 		this(null, null, null);
 	}
 
-	public BuyOrderData(LocalDateTime time, CurrencyAmount currencyAmountToBuy, CurrencyAmount currencyAmountToPay) {
+	public BuyOrderData(LocalDateTime time, CurrencyAmountData currencyAmountToBuy, CurrencyAmountData currencyAmountToPay) {
 		super();
 		this.time = time;
 		this.currencyAmountToBuy = currencyAmountToBuy;
@@ -29,19 +29,19 @@ public class BuyOrderData {
 		this.time = time;
 	}
 
-	public CurrencyAmount getCurrencyAmountToBuy() {
+	public CurrencyAmountData getCurrencyAmountToBuy() {
 		return currencyAmountToBuy;
 	}
 
-	public void setCurrencyAmountToBuy(CurrencyAmount currencyAmountToBuy) {
+	public void setCurrencyAmountToBuy(CurrencyAmountData currencyAmountToBuy) {
 		this.currencyAmountToBuy = currencyAmountToBuy;
 	}
 
-	public CurrencyAmount getCurrencyAmountToPay() {
+	public CurrencyAmountData getCurrencyAmountToPay() {
 		return currencyAmountToPay;
 	}
 
-	public void setCurrencyAmountToPay(CurrencyAmount currencyAmountToPay) {
+	public void setCurrencyAmountToPay(CurrencyAmountData currencyAmountToPay) {
 		this.currencyAmountToPay = currencyAmountToPay;
 	}
 }

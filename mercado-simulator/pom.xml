@@ -19,7 +19,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.marceloleite</groupId>
-			<artifactId>mercado-simulator-structures</artifactId>
+			<artifactId>mercado-converter</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
@@ -43,6 +43,6 @@
 			<version>3.8.1</version>
 			<scope>test</scope>
 		</dependency>
-		
+
 	</dependencies>
 </project>

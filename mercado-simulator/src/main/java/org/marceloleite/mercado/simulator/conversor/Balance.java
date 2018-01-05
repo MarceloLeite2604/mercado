@@ -1,12 +1,14 @@
 package org.marceloleite.mercado.simulator.conversor;
 
+import java.util.EnumMap;
 import java.util.Optional;
 
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.simulator.CurrencyAmount;
 import org.marceloleite.mercado.simulator.structure.BalanceData;
-import org.marceloleite.mercado.simulator.structure.CurrencyAmount;
+import org.marceloleite.mercado.simulator.structure.CurrencyAmountData;
 
-public class Balance extends BalanceData {
+public class Balance extends EnumMap<Currency, CurrencyAmount> {
 
 	/**
 	 * 
@@ -14,7 +16,15 @@ public class Balance extends BalanceData {
 	private static final long serialVersionUID = 1L;
 
 	public Balance() {
-		super();
+		super(Currency.class);
+	}
+
+	public Balance(BalanceData balanceData) {
+		super(Currency.class);
+
+		for (CurrencyAmountData currencyAmount : balanceData.values()) {
+			put(currencyAmount.getCurrency(), new CurrencyAmount(currencyAmount));
+		}
 	}
 
 	public void deposit(CurrencyAmount currencyAmount) {
