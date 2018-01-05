@@ -1,4 +1,4 @@
-package org.marceloleite.mercado.retriever.temporalticker;
+package org.marceloleite.mercado.tickergenerator.another;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -17,12 +17,13 @@ import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.databasemodel.TemporalTickerIdPO;
 import org.marceloleite.mercado.databasemodel.TemporalTickerPO;
 import org.marceloleite.mercado.databaseretriever.persistence.dao.TemporalTickerDAO;
+import org.marceloleite.mercado.retriever.temporalticker.OldTemporalTickersComparator;
 
-public class OldTemporalTickerGenerator {
+public class AnotherTemporalTickerGenerator {
 
 	private TemporalTickerDAO temporalTickerDAO;
 
-	public OldTemporalTickerGenerator() {
+	public AnotherTemporalTickerGenerator() {
 		super();
 		this.temporalTickerDAO = new TemporalTickerDAO();
 	}
@@ -47,7 +48,7 @@ public class OldTemporalTickerGenerator {
 			TemporalTickerPO TemporalTickerPO = temporalTickerDAO.findById(temporalTickerPOForEnquirement);
 
 			if (TemporalTickerPO == null) {
-				Callable<TemporalTickerPO> temporalTickersCallable = new OldTemporalTickersCallable(currency,
+				Callable<TemporalTickerPO> temporalTickersCallable = new AnotherTemporalTickersCallable(currency,
 						timeInterval);
 				futureSet.add(executorService.submit(temporalTickersCallable));
 			} else {

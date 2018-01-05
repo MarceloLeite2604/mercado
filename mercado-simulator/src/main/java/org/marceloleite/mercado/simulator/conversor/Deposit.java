@@ -3,18 +3,18 @@ package org.marceloleite.mercado.simulator.conversor;
 import java.time.LocalDateTime;
 
 import org.marceloleite.mercado.simulator.AbstractTimedObject;
-import org.marceloleite.mercado.simulator.structure.CurrencyAmountData;
+import org.marceloleite.mercado.simulator.CurrencyAmount;
 import org.marceloleite.mercado.simulator.structure.DepositData;
 
 public class Deposit extends AbstractTimedObject {
 
 	private LocalDateTime time;
 
-	private CurrencyAmountData currencyAmount;
+	private CurrencyAmount currencyAmount;
 
 	public Deposit(DepositData depositData) {
 		this.time = depositData.getTime();
-		this.currencyAmount = depositData.getCurrencyAmount();
+		this.currencyAmount = new CurrencyAmount(depositData.getCurrencyAmount());
 	}
 
 	public LocalDateTime getTime() {
@@ -25,11 +25,11 @@ public class Deposit extends AbstractTimedObject {
 		this.time = time;
 	}
 
-	public CurrencyAmountData getCurrencyAmount() {
+	public CurrencyAmount getCurrencyAmount() {
 		return currencyAmount;
 	}
 
-	public void setCurrencyAmount(CurrencyAmountData currencyAmount) {
+	public void setCurrencyAmount(CurrencyAmount currencyAmount) {
 		this.currencyAmount = currencyAmount;
 	}
 }

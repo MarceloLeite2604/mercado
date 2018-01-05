@@ -1,4 +1,4 @@
-package org.marceloleite.mercado.retriever.temporalticker;
+package org.marceloleite.mercado.tickergenerator.another;
 
 import java.util.List;
 import java.util.Map;
@@ -10,14 +10,18 @@ import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.databasemodel.TemporalTickerIdPO;
 import org.marceloleite.mercado.databasemodel.TemporalTickerPO;
 import org.marceloleite.mercado.databasemodel.TradePO;
+import org.marceloleite.mercado.databasemodel.TradeType;
 import org.marceloleite.mercado.retriever.TradesRetriever;
+import org.marceloleite.mercado.tickergenerator.converter.ListToMapTradeConverter;
+import org.marceloleite.mercado.tickergenerator.converter.TimeIntervalToTemporalTickerIdConverter;
+import org.marceloleite.mercado.tickergenerator.filter.TradeTypeFilter;
 
-public class OldTemporalTickersCallable implements Callable<TemporalTickerPO> {
+public class AnotherTemporalTickersCallable implements Callable<TemporalTickerPO> {
 
 	private Currency currency;
 	private TimeInterval timeInterval;
 
-	public OldTemporalTickersCallable(Currency currency, TimeInterval timeInterval) {
+	public AnotherTemporalTickersCallable(Currency currency, TimeInterval timeInterval) {
 		this.currency = currency;
 		this.timeInterval = timeInterval;
 	}
@@ -27,8 +31,8 @@ public class OldTemporalTickersCallable implements Callable<TemporalTickerPO> {
 		TradesRetriever tradesRetriever = new TradesRetriever();
 		List<TradePO> trades = tradesRetriever.retrieve(currency, timeInterval.getStart(), timeInterval.getEnd(),
 				false);
-		// Map<Long, TradePO> tradesMap = new ListToMapTradeConverter().convert(trades);
-		return null; // generateTemporalTickerFromTrades(tradesMap);
+		Map<Long, TradePO> tradesMap = new ListToMapTradeConverter().convertTo(trades);
+		return generateTemporalTickerFromTrades(tradesMap);
 	}
 
 	private TemporalTickerPO generateTemporalTickerFromTrades(Map<Long, TradePO> trades) {
@@ -43,8 +47,8 @@ public class OldTemporalTickersCallable implements Callable<TemporalTickerPO> {
 		double sell = 0.0;
 
 		if (trades.size() > 0) {
-			Map<Long, TradePO> buyingTrades = null; // new TradeTypeFilter(TradeType.BUY).filter(trades);
-			Map<Long, TradePO> sellingTrades = null; // new TradeTypeFilter(TradeType.SELL).filter(trades);
+			Map<Long, TradePO> buyingTrades = new TradeTypeFilter(TradeType.BUY).filter(trades);
+			Map<Long, TradePO> sellingTrades = new TradeTypeFilter(TradeType.SELL).filter(trades);
 
 			high = trades.entrySet().stream().map(Entry<Long, TradePO>::getValue).mapToDouble(TradePO::getPrice).max()
 					.orElse(0.0);
@@ -83,8 +87,7 @@ public class OldTemporalTickersCallable implements Callable<TemporalTickerPO> {
 		}
 
 		TemporalTickerPO temporalTicker = new TemporalTickerPO();
-		TemporalTickerIdPO temporalTickerId = null; // new
-													// TimeIntervalToTemporalTickerIdConverter().convert(timeInterval);
+		TemporalTickerIdPO temporalTickerId = new TimeIntervalToTemporalTickerIdConverter().convertTo(timeInterval);
 		temporalTicker.setTemporalTickerIdPO(temporalTickerId);
 		temporalTicker.setOrders(trades.size());
 		temporalTicker.setHigh(high);

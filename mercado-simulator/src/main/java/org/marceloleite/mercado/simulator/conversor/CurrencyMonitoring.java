@@ -4,8 +4,6 @@ import org.marceloleite.mercado.commons.Currency;
 
 public class CurrencyMonitoring {
 	
-	private static final double DEFAULT_CURRENCY_MONITORING_PERCENTAGE = 0.03;
-
 	private Currency currency;
 
 	private double increasePercentage;
