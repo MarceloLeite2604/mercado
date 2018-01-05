@@ -11,8 +11,8 @@ import org.marceloleite.mercado.commons.util.converter.LocalDateTimeToStringConv
 import org.marceloleite.mercado.converter.json.MapJsonTradeToListTradeConverter;
 import org.marceloleite.mercado.databasemodel.TradePO;
 import org.marceloleite.mercado.databaseretriever.persistence.dao.TradeDAO;
+import org.marceloleite.mercado.jsonmodel.JsonTrade;
 import org.marceloleite.mercado.retriever.database.TradesDatabaseUtils;
-import org.marceloleite.mercado.siteretriever.model.JsonTrade;
 import org.marceloleite.mercado.siteretriever.trades.TradesSiteRetriever;
 
 public class TradesRetriever {
@@ -75,8 +75,8 @@ public class TradesRetriever {
 	private List<TradePO> retrieveTradesFromSite(Currency currency, LocalDateTime start, LocalDateTime end) {
 		if (end.isBefore(start)) {
 			LocalDateTimeToStringConverter localDateTimeToStringConverter = new LocalDateTimeToStringConverter();
-			System.err.println("From " + localDateTimeToStringConverter.convert(start) + " to "
-					+ localDateTimeToStringConverter.convert(end) + ".");
+			System.err.println("From " + localDateTimeToStringConverter.convertTo(start) + " to "
+					+ localDateTimeToStringConverter.convertTo(end) + ".");
 			throw new IllegalArgumentException("End time cannot be before start time.");
 		}
 		Duration duration = Duration.between(start, end);
@@ -85,6 +85,6 @@ public class TradesRetriever {
 			tradesSiteRetriever.setStepDuration(tradesSiteRetrieverStepDuration);
 		}
 		Map<Long, JsonTrade> jsonTrades = tradesSiteRetriever.retrieve(start, duration);
-		return new MapJsonTradeToListTradeConverter().convert(jsonTrades);
+		return new MapJsonTradeToListTradeConverter().convertTo(jsonTrades);
 	}
 }

@@ -31,7 +31,7 @@ public class ObjectToJsonConverterTest {
 		stringBuffer.append("}");
 		String expected = stringBuffer.toString();
 		
-		String result = objectToJsonConverter.convert(testClass);
+		String result = objectToJsonConverter.convertTo(testClass);
 
 		Assert.assertEquals(expected, result);
 	}

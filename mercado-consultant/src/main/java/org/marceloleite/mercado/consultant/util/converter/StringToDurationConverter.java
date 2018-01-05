@@ -7,7 +7,7 @@ import org.marceloleite.mercado.commons.util.converter.Converter;
 public class StringToDurationConverter implements Converter<String, Duration> {
 
 	@Override
-	public Duration convert(String stringSeconds) {
+	public Duration convertTo(String stringSeconds) {
 		long seconds = Long.parseLong(stringSeconds);
 		return Duration.ofSeconds(seconds);
 	}

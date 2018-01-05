@@ -33,8 +33,8 @@ public class ForwardConsultantThread extends AbstractConsultantThread {
 				start = end.minus(getConsultantProperties().getTradeRetrieveDuration());
 			}
 			LocalDateTimeToStringConverter localDateTimeToStringConverter = new LocalDateTimeToStringConverter();
-			LOGGER.info("Retrieving trades from " + localDateTimeToStringConverter.convert(start) + " to "
-					+ localDateTimeToStringConverter.convert(end));
+			LOGGER.info("Retrieving trades from " + localDateTimeToStringConverter.convertTo(start) + " to "
+					+ localDateTimeToStringConverter.convertTo(end));
 			for (Currency currency : Currency.values()) {
 				if (currency.isDigital()) {
 

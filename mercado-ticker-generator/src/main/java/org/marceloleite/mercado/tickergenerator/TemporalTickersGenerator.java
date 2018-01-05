@@ -21,6 +21,7 @@ import org.marceloleite.mercado.databaseretriever.persistence.dao.TemporalTicker
 import org.marceloleite.mercado.retriever.TradesRetriever;
 import org.marceloleite.mercado.tickergenerator.checker.ValidDurationForTickerCheck;
 import org.marceloleite.mercado.tickergenerator.converter.ListToMapTradeConverter;
+import org.marceloleite.mercado.tickergenerator.converter.TimeIntervalToTemporalTickerIdConverter;
 import org.marceloleite.mercado.tickergenerator.filter.TradeTypeFilter;
 import org.marceloleite.mercado.tickergenerator.property.TickerGeneratorPropertiesRetriever;
 

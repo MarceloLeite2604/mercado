@@ -7,7 +7,7 @@ import org.marceloleite.mercado.properties.StandardProperty;
 public class PropertyPOToStandardPropertyConverter implements Converter<PropertyPO, StandardProperty> {
 
 	@Override
-	public StandardProperty convert(PropertyPO propertyPO) {
+	public StandardProperty convertTo(PropertyPO propertyPO) {
 		StandardProperty standardProperty = new StandardProperty();
 		standardProperty.setName(propertyPO.getName());
 		standardProperty.setValue(propertyPO.getValue());

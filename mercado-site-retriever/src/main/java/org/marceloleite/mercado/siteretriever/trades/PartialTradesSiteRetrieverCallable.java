@@ -8,7 +8,7 @@ import java.util.concurrent.Callable;
 
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.util.converter.LocalDateTimeToStringConverter;
-import org.marceloleite.mercado.siteretriever.model.JsonTrade;
+import org.marceloleite.mercado.jsonmodel.JsonTrade;
 import org.marceloleite.mercado.siteretriever.util.checker.MaxTradesReachedCheck;
 import org.marceloleite.mercado.siteretriever.util.converter.ListToMapJsonTradeConverter;
 
@@ -35,11 +35,11 @@ class PartialTradesSiteRetrieverCallable implements Callable<Map<Long, JsonTrade
 		Map<Long, JsonTrade> result;
 		if (new MaxTradesReachedCheck().check(jsonTrades)) {
 
-			System.err.println("Warning: Maximum trades exceeded from " + localDateTimeToString.convert(from) + " to "
-					+ localDateTimeToString.convert(to) + ". Splitting execution.");
+			System.err.println("Warning: Maximum trades exceeded from " + localDateTimeToString.convertTo(from) + " to "
+					+ localDateTimeToString.convertTo(to) + ". Splitting execution.");
 			result = splitExecution();
 		} else {
-			result = new ListToMapJsonTradeConverter().convert(jsonTrades);
+			result = new ListToMapJsonTradeConverter().convertTo(jsonTrades);
 		}
 		return result;
 	}

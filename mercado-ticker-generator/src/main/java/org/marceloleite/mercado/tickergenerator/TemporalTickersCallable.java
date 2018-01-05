@@ -13,6 +13,7 @@ import org.marceloleite.mercado.databasemodel.TradePO;
 import org.marceloleite.mercado.databasemodel.TradeType;
 import org.marceloleite.mercado.retriever.TradesRetriever;
 import org.marceloleite.mercado.tickergenerator.converter.ListToMapTradeConverter;
+import org.marceloleite.mercado.tickergenerator.converter.TimeIntervalToTemporalTickerIdConverter;
 import org.marceloleite.mercado.tickergenerator.filter.TradeTypeFilter;
 
 public class TemporalTickersCallable implements Callable<TemporalTickerPO> {

@@ -10,8 +10,8 @@ import org.marceloleite.mercado.additional.converter.TimeIntervalToTemporalTicke
 import org.marceloleite.mercado.additional.filter.TradeTypeFilter;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
-import org.marceloleite.mercado.databasemodel.TemporalTickerPO;
 import org.marceloleite.mercado.databasemodel.TemporalTickerIdPO;
+import org.marceloleite.mercado.databasemodel.TemporalTickerPO;
 import org.marceloleite.mercado.databasemodel.TradePO;
 import org.marceloleite.mercado.databasemodel.TradeType;
 import org.marceloleite.mercado.retriever.TradesRetriever;

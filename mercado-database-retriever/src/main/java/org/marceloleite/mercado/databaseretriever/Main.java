@@ -22,6 +22,6 @@ public class Main {
 		LocalDateTime start = LocalDateTime.from(end).minusDays(60);
 		List<TradePO> trades = tradesDAO.retrieve(Currency.BITCOIN, start, end);
 		ObjectToJsonConverter objectToJsonConverter = new ObjectToJsonConverter();
-		System.out.println(objectToJsonConverter.convert(trades));
+		System.out.println(objectToJsonConverter.convertTo(trades));
 	}
 }
