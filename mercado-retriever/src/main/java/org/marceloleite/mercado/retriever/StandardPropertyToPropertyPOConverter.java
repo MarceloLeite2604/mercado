@@ -14,4 +14,9 @@ public class StandardPropertyToPropertyPOConverter implements Converter<Standard
 		return propertyPO;
 	}
 
+	@Override
+	public StandardProperty convertFrom(PropertyPO propertyPO) {
+		throw new UnsupportedOperationException();
+	}
+
 }

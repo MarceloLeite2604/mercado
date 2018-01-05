@@ -3,7 +3,7 @@ package org.marceloleite.mercado.consultant.thread.property;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-import org.marceloleite.mercado.commons.util.converter.StringToLocalDateTimeConverter;
+import org.marceloleite.mercado.commons.util.converter.LocalDateTimeToStringConverter;
 import org.marceloleite.mercado.consultant.property.ConsultantProperty;
 import org.marceloleite.mercado.databaseretriever.persistence.dao.TradeDAO;
 import org.marceloleite.mercado.properties.Property;
@@ -89,7 +89,7 @@ public abstract class AbstractConsultantThreadPropertiesRetriever implements Con
 			LocalDateTime defaultValue) {
 		Property property = retrieveProperty(consultantProperty);
 		if (property.getValue() != null) {
-			return new StringToLocalDateTimeConverter().convertTo(property.getValue());
+			return new LocalDateTimeToStringConverter().convertFrom(property.getValue());
 		} else {
 			return defaultValue;
 		}

@@ -6,13 +6,13 @@ public class DepositData {
 	
 	private LocalDateTime time;
 	
-	private CurrencyAmount currencyAmount;
+	private CurrencyAmountData currencyAmount;
 	
 	public DepositData() {
 		super();
 	}
 	
-	public DepositData(LocalDateTime time, CurrencyAmount currencyAmount) {
+	public DepositData(LocalDateTime time, CurrencyAmountData currencyAmount) {
 		super();
 		this.time = time;
 		this.currencyAmount = currencyAmount;
@@ -26,11 +26,11 @@ public class DepositData {
 		this.time = time;
 	}
 
-	public CurrencyAmount getCurrencyAmount() {
+	public CurrencyAmountData getCurrencyAmount() {
 		return currencyAmount;
 	}
 	
-	public void setCurrencyAmount(CurrencyAmount currencyAmount) {
+	public void setCurrencyAmount(CurrencyAmountData currencyAmount) {
 		this.currencyAmount = currencyAmount;
 	}
 	

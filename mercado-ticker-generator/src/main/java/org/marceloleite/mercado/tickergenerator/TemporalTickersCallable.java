@@ -30,7 +30,7 @@ public class TemporalTickersCallable implements Callable<TemporalTickerPO> {
 	public TemporalTickerPO call() throws Exception {
 		TradesRetriever tradesRetriever = new TradesRetriever();
 		List<TradePO> trades = tradesRetriever.retrieve(currency, timeInterval.getStart(), timeInterval.getEnd(), false);
-		Map<Long, TradePO> tradesMap = new ListToMapTradeConverter().convert(trades);
+		Map<Long, TradePO> tradesMap = new ListToMapTradeConverter().convertTo(trades);
 		return generateTemporalTickerFromTrades(tradesMap);
 	}
 
@@ -86,7 +86,7 @@ public class TemporalTickersCallable implements Callable<TemporalTickerPO> {
 		}
 
 		TemporalTickerPO temporalTicker = new TemporalTickerPO();
-		TemporalTickerIdPO temporalTickerId = new TimeIntervalToTemporalTickerIdConverter().convert(timeInterval);
+		TemporalTickerIdPO temporalTickerId = new TimeIntervalToTemporalTickerIdConverter().convertTo(timeInterval);
 		temporalTicker.setTemporalTickerIdPO(temporalTickerId);
 		temporalTicker.setOrders(trades.size());
 		temporalTicker.setHigh(high);

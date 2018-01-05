@@ -8,7 +8,6 @@ import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeDivisionController;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.util.converter.LocalDateTimeToStringConverter;
-import org.marceloleite.mercado.commons.util.converter.StringToLocalDateTimeConverter;
 import org.marceloleite.mercado.databasemodel.TradeIdPO;
 import org.marceloleite.mercado.databasemodel.TradePO;
 import org.marceloleite.mercado.databaseretriever.persistence.EntityManagerController;
@@ -26,10 +25,9 @@ public class Main {
 	private static void checkTrades() {
 		try {
 			long lastId = -1l;
-			StringToLocalDateTimeConverter stringToLocalDateTimeConverter = new StringToLocalDateTimeConverter();
 			LocalDateTimeToStringConverter localDateTimeToStringConverter = new LocalDateTimeToStringConverter();
-			LocalDateTime start = stringToLocalDateTimeConverter.convertTo("01/07/2013 00:00:00");
-			LocalDateTime end = stringToLocalDateTimeConverter.convertTo("31/12/2017 00:00:00");
+			LocalDateTime start = localDateTimeToStringConverter.convertFrom("01/07/2013 00:00:00");
+			LocalDateTime end = localDateTimeToStringConverter.convertFrom("31/12/2017 00:00:00");
 			Duration divisionDuration = Duration.ofDays(30);
 			TimeDivisionController timeDivisionController = new TimeDivisionController(start, end, divisionDuration);
 			for (TimeInterval timeInterval : timeDivisionController.geTimeIntervals()) {

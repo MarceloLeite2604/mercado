@@ -5,8 +5,11 @@ import java.util.Map;
 
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.databasemodel.TemporalTickerPO;
+import org.marceloleite.mercado.simulator.AbstractTimedObject;
+import org.marceloleite.mercado.simulator.CurrencyAmount;
+import org.marceloleite.mercado.simulator.structure.BuyOrderData;
 
-public class BuyOrder {
+public class BuyOrder extends AbstractTimedObject {
 
 	private LocalDateTime time;
 
@@ -34,6 +37,17 @@ public class BuyOrder {
 		this(time, currencyToBuy, null, currencyToPay, amountToPay);
 	}
 
+	private BuyOrder(LocalDateTime time, CurrencyAmount currencyAmountToBuy, CurrencyAmount currencyAmountToPay) {
+		this(time, currencyAmountToBuy.getCurrency(), currencyAmountToBuy.getAmount(),
+				currencyAmountToPay.getCurrency(), currencyAmountToPay.getAmount());
+	}
+
+	public BuyOrder(BuyOrderData buyOrderData) {
+		this(buyOrderData.getTime(), new CurrencyAmount(buyOrderData.getCurrencyAmountToBuy()),
+				new CurrencyAmount(buyOrderData.getCurrencyAmountToPay()));
+	}
+
+	@Override
 	public LocalDateTime getTime() {
 		return time;
 	}

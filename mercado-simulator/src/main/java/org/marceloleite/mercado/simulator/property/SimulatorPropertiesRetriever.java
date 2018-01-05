@@ -3,7 +3,7 @@ package org.marceloleite.mercado.simulator.property;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
-import org.marceloleite.mercado.commons.util.converter.StringToLocalDateTimeConverter;
+import org.marceloleite.mercado.commons.util.converter.LocalDateTimeToStringConverter;
 import org.marceloleite.mercado.properties.Property;
 import org.marceloleite.mercado.retriever.PropertyRetriever;
 
@@ -42,8 +42,8 @@ public class SimulatorPropertiesRetriever {
 
 	private LocalDateTime retrieveLocalDateTimeProperty(Property property) {
 		Property retrievedProperty = retrieveProperty(property);
-		StringToLocalDateTimeConverter stringToLocalDateTimeConverter = new StringToLocalDateTimeConverter();
-		return stringToLocalDateTimeConverter.convertTo(retrievedProperty.getValue());
+		LocalDateTimeToStringConverter localDateTimeToStringConverter = new LocalDateTimeToStringConverter(); 
+		return localDateTimeToStringConverter.convertFrom(retrievedProperty.getValue());
 	}
 
 	private Property retrieveProperty(Property property) {

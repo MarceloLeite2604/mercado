@@ -2,7 +2,7 @@ package org.marceloleite.mercado.converter.xml;
 
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.simulator.structure.BalanceData;
-import org.marceloleite.mercado.simulator.structure.CurrencyAmount;
+import org.marceloleite.mercado.simulator.structure.CurrencyAmountData;
 import org.marceloleite.mercado.xml.structures.XmlBalances;
 
 public class BalanceXmlConverter implements XmlConverter<XmlBalances, BalanceData> {
@@ -21,7 +21,7 @@ public class BalanceXmlConverter implements XmlConverter<XmlBalances, BalanceDat
 		BalanceData balanceData = new BalanceData();
 		for (Currency currency : Currency.values()) {
 			Double amount = xmlBalances.getOrDefault(currency, 0.0);
-			CurrencyAmount currencyAmount = new CurrencyAmount(currency, amount);
+			CurrencyAmountData currencyAmount = new CurrencyAmountData(currency, amount);
 			balanceData.put(currency, currencyAmount);
 		}
 		return balanceData;
