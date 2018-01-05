@@ -1,5 +1,6 @@
 package org.marceloleite.mercado.simulator.conversor;
 
+import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
@@ -10,7 +11,8 @@ import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.util.converter.LocalDateTimeToStringConverter;
 import org.marceloleite.mercado.databasemodel.TemporalTickerPO;
 import org.marceloleite.mercado.simulator.CurrencyAmount;
-import org.marceloleite.mercado.tickergenerator.TemporalTickersGenerator;
+import org.marceloleite.mercado.simulator.structure.AccountData;
+import org.marceloleite.mercado.tickergenerator.another.AnotherTemporalTickerGenerator;
 import org.marceloleite.mercado.xml.reader.AccountsReader;
 
 public class House {
@@ -25,15 +27,24 @@ public class House {
 
 	private Map<Currency, TemporalTickerPO> temporalTickers;
 
-	private TemporalTickersGenerator temporalTickersGenerator;
+	private AnotherTemporalTickerGenerator anotherTemporalTickerGenerator;
 
 	public House() {
 		super();
 		comissionBalance = new HashMap<>();
 		comissionPercentage = DEFAULT_COMISSION_PERCENTAGE;
-		this.temporalTickersGenerator = new TemporalTickersGenerator();
+		this.anotherTemporalTickerGenerator = new AnotherTemporalTickerGenerator();
 		this.temporalTickers = new EnumMap<>(Currency.class);
-		this.accounts = new AccountsReader().readAccounts();
+		this.accounts = retrieveAccounts();
+	}
+
+	private List<Account> retrieveAccounts() {
+		List<Account> accounts = new ArrayList<>();
+		List<AccountData> accountsData = new AccountsReader().readAccounts();
+		for (AccountData accountData : accountsData) {
+			accounts.add(new Account(accountData));
+		}
+		return accounts;
 	}
 
 	public static double getDefaultComissionPercentage() {
@@ -58,7 +69,7 @@ public class House {
 	public void updateTemporalTickers(TimeInterval timeInterval) {
 		for (Currency currency : Currency.values()) {
 			if (currency.isDigital()) {
-				List<TemporalTickerPO> temporalTickersRetrieved = temporalTickersGenerator.generate(currency,
+				List<TemporalTickerPO> temporalTickersRetrieved = anotherTemporalTickerGenerator.generate(currency,
 						timeInterval);
 				if (temporalTickersRetrieved == null || temporalTickersRetrieved.size() != 0) {
 					LocalDateTimeToStringConverter localDateTimeToStringConverter = new LocalDateTimeToStringConverter();

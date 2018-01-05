@@ -2,15 +2,11 @@ package org.marceloleite.mercado.properties;
 
 import java.util.Properties;
 
-import javax.swing.plaf.synth.SynthSpinnerUI;
-
-import org.marceloleite.mercado.commons.util.converter.ObjectToJsonConverter;
-
 public abstract class AbstractPropertiesReader<E extends Property> implements PropertiesReader<E> {
 
 	protected static final String DEFAULT_PROPERTIES_FILE_PATH = "src/main/resources/application.properties";
 
-	private Properties properties;
+	private Properties properties;	
 
 	private PropertiesFileReader propertiesFileReader;
 
