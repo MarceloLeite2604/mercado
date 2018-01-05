@@ -89,7 +89,7 @@ public abstract class AbstractConsultantThreadPropertiesRetriever implements Con
 			LocalDateTime defaultValue) {
 		Property property = retrieveProperty(consultantProperty);
 		if (property.getValue() != null) {
-			return new StringToLocalDateTimeConverter().convert(property.getValue());
+			return new StringToLocalDateTimeConverter().convertTo(property.getValue());
 		} else {
 			return defaultValue;
 		}

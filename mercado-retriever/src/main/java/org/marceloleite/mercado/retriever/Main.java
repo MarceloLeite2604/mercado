@@ -27,5 +27,5 @@ public class Main {
 		} finally {
 			EntityManagerController.getInstance().close();
 		}
-	}
+	}	
 }

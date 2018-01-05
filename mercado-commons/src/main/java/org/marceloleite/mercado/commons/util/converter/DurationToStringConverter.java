@@ -27,7 +27,7 @@ public class DurationToStringConverter implements Converter<Duration, String> {
 	private List<String> strings;
 
 	@Override
-	public String convert(Duration duration) {
+	public String convertTo(Duration duration) {
 		long total;
 		strings = new ArrayList<>();
 
@@ -72,6 +72,11 @@ public class DurationToStringConverter implements Converter<Duration, String> {
 			stringBuffer.append(string);
 		}
 		return stringBuffer.toString();
+	}
+
+	@Override
+	public Duration convertFrom(String object) {
+		throw new UnsupportedOperationException();
 	}
 
 }

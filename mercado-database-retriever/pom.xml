@@ -7,7 +7,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>mercado-site-retriever</name>
+	<name>mercado-database-retriever</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
@@ -19,12 +19,12 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.marceloleite</groupId>
-			<artifactId>mercado-database-model</artifactId>
+			<artifactId>mercado-commons</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.marceloleite</groupId>
-			<artifactId>mercado-commons</artifactId>
+			<artifactId>mercado-persistence-model</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
@@ -40,5 +40,5 @@
 		</dependency>
 	</dependencies>
 
-	
+
 </project>

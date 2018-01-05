@@ -10,8 +10,8 @@ import javax.ws.rs.core.MediaType;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.interfaces.Retriever;
 import org.marceloleite.mercado.commons.util.UnixTimeSeconds;
+import org.marceloleite.mercado.jsonmodel.JsonTrade;
 import org.marceloleite.mercado.siteretriever.AbstractSiteRetriever;
-import org.marceloleite.mercado.siteretriever.model.JsonTrade;
 
 class PartialTradesSiteRetriever extends AbstractSiteRetriever implements Retriever<List<JsonTrade>> {
 

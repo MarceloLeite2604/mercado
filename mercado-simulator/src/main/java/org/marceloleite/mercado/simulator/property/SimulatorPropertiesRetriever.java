@@ -43,7 +43,7 @@ public class SimulatorPropertiesRetriever {
 	private LocalDateTime retrieveLocalDateTimeProperty(Property property) {
 		Property retrievedProperty = retrieveProperty(property);
 		StringToLocalDateTimeConverter stringToLocalDateTimeConverter = new StringToLocalDateTimeConverter();
-		return stringToLocalDateTimeConverter.convert(retrievedProperty.getValue());
+		return stringToLocalDateTimeConverter.convertTo(retrievedProperty.getValue());
 	}
 
 	private Property retrieveProperty(Property property) {

@@ -18,9 +18,9 @@ public class LongToLocalDateTimeConverterTest {
 	public void convertTest() {
 		long epochTime = 955550412l;
 		LocalDateTime expectedLocalDateTime = LocalDateTime.of(2000, 04, 12, 14, 40, 12);
-		LocalDateTime resultLocalDateTime = longToLocalDateTimeConverter.convert(epochTime);
+		LocalDateTime resultLocalDateTime = longToLocalDateTimeConverter.convertTo(epochTime);
 		LocalDateTimeToStringConverter localDateTimeToStringConverter = new LocalDateTimeToStringConverter();
-		Assert.assertEquals(localDateTimeToStringConverter.convert(expectedLocalDateTime),
-				localDateTimeToStringConverter.convert(resultLocalDateTime));
+		Assert.assertEquals(localDateTimeToStringConverter.convertTo(expectedLocalDateTime),
+				localDateTimeToStringConverter.convertTo(resultLocalDateTime));
 	}
 }

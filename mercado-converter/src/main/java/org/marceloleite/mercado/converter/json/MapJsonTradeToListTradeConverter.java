@@ -6,19 +6,24 @@ import java.util.Map;
 
 import org.marceloleite.mercado.commons.util.converter.Converter;
 import org.marceloleite.mercado.databasemodel.TradePO;
-import org.marceloleite.mercado.siteretriever.model.JsonTrade;
+import org.marceloleite.mercado.jsonmodel.JsonTrade;
 
 public class MapJsonTradeToListTradeConverter implements Converter<Map<Long, JsonTrade>, List<TradePO>> {
 
 	@Override
-	public List<TradePO> convert(Map<Long, JsonTrade> jsonTrades) {
+	public List<TradePO> convertTo(Map<Long, JsonTrade> jsonTrades) {
 		TradeConverter tradeConverter = new TradeConverter();
 		List<TradePO> trades = new ArrayList<>();
 		for ( Long tid : jsonTrades.keySet()) {
 			JsonTrade jsonTrade = jsonTrades.get(tid);
-			trades.add(tradeConverter.convert(jsonTrade));
+			trades.add(tradeConverter.convertTo(jsonTrade));
 		}
 		return trades;
+	}
+
+	@Override
+	public Map<Long, JsonTrade> convertFrom(List<TradePO> object) {
+		throw new UnsupportedOperationException();
 	}
 
 }

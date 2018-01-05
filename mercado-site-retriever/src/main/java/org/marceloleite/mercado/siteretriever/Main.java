@@ -5,9 +5,9 @@ import java.util.Map;
 
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.util.converter.ObjectToJsonConverter;
-import org.marceloleite.mercado.siteretriever.model.JsonOrderbook;
-import org.marceloleite.mercado.siteretriever.model.JsonTicker;
-import org.marceloleite.mercado.siteretriever.model.JsonTrade;
+import org.marceloleite.mercado.jsonmodel.JsonOrderbook;
+import org.marceloleite.mercado.jsonmodel.JsonTicker;
+import org.marceloleite.mercado.jsonmodel.JsonTrade;
 import org.marceloleite.mercado.siteretriever.trades.TradesSiteRetriever;
 
 public class Main {
@@ -18,16 +18,18 @@ public class Main {
 		tradesSiteRetriever();
 	}
 	
+	@SuppressWarnings("unused")
 	private static void orderbookSiteRetriever() {
 		JsonOrderbook jsonOrderBook = new OrderbookSiteRetriever(Currency.BITCOIN).retrieve();
 		ObjectToJsonConverter objectToJsonConverter = new ObjectToJsonConverter();
-		System.out.println(objectToJsonConverter.convert(jsonOrderBook));
+		System.out.println(objectToJsonConverter.convertTo(jsonOrderBook));
 	}
 	
+	@SuppressWarnings("unused")
 	private static void tickerSiteRetriever() {
 		JsonTicker jsonTicker = new TickerSiteRetriever(Currency.BITCOIN).retrieve();
 		ObjectToJsonConverter objectToJsonConverter = new ObjectToJsonConverter();
-		System.out.println(objectToJsonConverter.convert(jsonTicker));
+		System.out.println(objectToJsonConverter.convertTo(jsonTicker));
 	}
 	
 	private static void tradesSiteRetriever() {

@@ -32,13 +32,13 @@ public class PropertyRetriever {
 			propertyPOforEnquirement.setName(property.getName());
 			propertyPO = propertyDAO.findById(propertyPOforEnquirement);
 			if (propertyPoIsValid(propertyPO)) {
-				standardProperty = new PropertyPOToStandardPropertyConverter().convert(propertyPO);
+				standardProperty = new PropertyPOToStandardPropertyConverter().convertTo(propertyPO);
 			}
 		}
 		if (ignoreDatabaseValue || (!ignoreDatabaseValue && !propertyPoIsValid(propertyPO))) {
 			standardProperty = retrievePropertyFromConfigurationFile(property.getName());
 			if (standardProperty != null && standardProperty.getValue() != null) {
-				PropertyPO propertyPoToPersist = new StandardPropertyToPropertyPOConverter().convert(standardProperty);
+				PropertyPO propertyPoToPersist = new StandardPropertyToPropertyPOConverter().convertTo(standardProperty);
 				propertyDAO.merge(propertyPoToPersist);
 			}
 		}

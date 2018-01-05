@@ -18,7 +18,7 @@ public class LocalDateTimeToStringConverterTest {
 	@Test
 	public void convertTest() {
 		LocalDateTime localDateTime = LocalDateTime.of(2000, 04, 12, 14, 40, 12);
-		String result = localDateTimeToStringConverter.convert(localDateTime);
+		String result = localDateTimeToStringConverter.convertTo(localDateTime);
 		String expected = "12/04/2000 14:40:12";
 		Assert.assertEquals(expected, result);
 	}

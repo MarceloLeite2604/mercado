@@ -28,13 +28,13 @@ public class Main {
 			long lastId = -1l;
 			StringToLocalDateTimeConverter stringToLocalDateTimeConverter = new StringToLocalDateTimeConverter();
 			LocalDateTimeToStringConverter localDateTimeToStringConverter = new LocalDateTimeToStringConverter();
-			LocalDateTime start = stringToLocalDateTimeConverter.convert("01/07/2013 00:00:00");
-			LocalDateTime end = stringToLocalDateTimeConverter.convert("31/12/2017 00:00:00");
+			LocalDateTime start = stringToLocalDateTimeConverter.convertTo("01/07/2013 00:00:00");
+			LocalDateTime end = stringToLocalDateTimeConverter.convertTo("31/12/2017 00:00:00");
 			Duration divisionDuration = Duration.ofDays(30);
 			TimeDivisionController timeDivisionController = new TimeDivisionController(start, end, divisionDuration);
 			for (TimeInterval timeInterval : timeDivisionController.geTimeIntervals()) {
-				System.out.println("From " + localDateTimeToStringConverter.convert(timeInterval.getStart()) + " to "
-						+ localDateTimeToStringConverter.convert(timeInterval.getEnd()));
+				System.out.println("From " + localDateTimeToStringConverter.convertTo(timeInterval.getStart()) + " to "
+						+ localDateTimeToStringConverter.convertTo(timeInterval.getEnd()));
 				TradesRetriever tradesRetriever = new TradesRetriever();
 				List<TradePO> trades = tradesRetriever.retrieve(Currency.LITECOIN, timeInterval.getStart(),
 						timeInterval.getEnd(), false);
@@ -47,7 +47,7 @@ public class Main {
 						} else {
 							if (tradeIdPO.getId() != (lastId + 1l)) {
 								System.err.println(tradeIdPO.getId() + ": "
-										+ localDateTimeToStringConverter.convert(tradePO.getDate()));
+										+ localDateTimeToStringConverter.convertTo(tradePO.getDate()));
 							}
 							lastId = tradeIdPO.getId();
 						}

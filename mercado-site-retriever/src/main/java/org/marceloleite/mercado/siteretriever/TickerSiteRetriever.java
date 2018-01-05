@@ -4,7 +4,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.interfaces.Retriever;
-import org.marceloleite.mercado.siteretriever.model.JsonTicker;
+import org.marceloleite.mercado.jsonmodel.JsonTicker;
 
 public class TickerSiteRetriever extends AbstractSiteRetriever implements Retriever<JsonTicker> {
 	

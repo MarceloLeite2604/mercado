@@ -89,11 +89,7 @@ public class TemporalTickerGenerator {
 		for (TemporalTickerPO temporalTicker : temporalTickers) {
 			if (previousTemporalTicker != null) {
 				if (temporalTicker.getOrders() == 0) {
-					/* temporalTicker.setHigh(previousTemporalTicker.getHigh()); */
-					/* temporalTicker.setLow(previousTemporalTicker.getLow()); */
 					temporalTicker.setLast(previousTemporalTicker.getLast());
-					/* temporalTicker.setBuy(previousTemporalTicker.getBuy()); */
-					/* temporalTicker.setSell(previousTemporalTicker.getSell()); */
 				}
 			}
 			previousTemporalTicker = temporalTicker;

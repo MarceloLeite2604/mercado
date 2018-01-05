@@ -27,11 +27,16 @@ public class ObjectToJsonConverter implements Converter<Object, String> {
 	}
 
 	@Override
-	public String convert(Object object) {
+	public String convertTo(Object object) {
 		try {
 			return objectWritter.writeValueAsString(object);
 		} catch (JsonProcessingException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	@Override
+	public Object convertFrom(String object) {
+		throw new UnsupportedOperationException();
 	}
 }
