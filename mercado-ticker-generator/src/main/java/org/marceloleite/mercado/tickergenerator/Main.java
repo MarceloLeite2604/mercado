@@ -2,10 +2,6 @@ package org.marceloleite.mercado.tickergenerator;
 
 import org.marceloleite.mercado.databaseretriever.persistence.EntityManagerController;
 
-/**
- * Hello world!
- *
- */
 public class Main {
 	public static void main(String[] args) {
 		temporalTickersGenerator();
@@ -13,9 +9,7 @@ public class Main {
 
 	private static void temporalTickersGenerator() {
 		try {
-			TemporalTickersGenerator temporalTickersGenerator = new TemporalTickersGenerator();
-
-			temporalTickersGenerator.generate();
+			new TickerGenerator().generate();
 		} finally {
 			EntityManagerController.getInstance().close();
 		}

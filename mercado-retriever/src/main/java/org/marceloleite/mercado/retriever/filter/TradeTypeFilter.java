@@ -1,4 +1,4 @@
-package org.marceloleite.mercado.tickergenerator.filter;
+package org.marceloleite.mercado.retriever.filter;
 
 import java.util.Map;
 import java.util.Map.Entry;

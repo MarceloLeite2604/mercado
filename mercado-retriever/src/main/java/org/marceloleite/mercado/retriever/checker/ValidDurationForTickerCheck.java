@@ -1,4 +1,4 @@
-package org.marceloleite.mercado.tickergenerator.checker;
+package org.marceloleite.mercado.retriever.checker;
 
 import java.time.Duration;
 

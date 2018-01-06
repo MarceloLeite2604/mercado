@@ -1,4 +1,4 @@
-package org.marceloleite.mercado.tickergenerator.converter;
+package org.marceloleite.mercado.retriever.converter;
 
 import java.util.List;
 import java.util.Map;

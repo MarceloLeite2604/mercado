@@ -8,11 +8,11 @@ import java.util.Map;
 
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
-import org.marceloleite.mercado.commons.util.converter.LocalDateTimeToStringConverter;
 import org.marceloleite.mercado.databasemodel.TemporalTickerPO;
+import org.marceloleite.mercado.retriever.TemporalTickerRetriever;
+import org.marceloleite.mercado.retriever.exception.NoTemporalTickerForPeriodException;
 import org.marceloleite.mercado.simulator.CurrencyAmount;
 import org.marceloleite.mercado.simulator.structure.AccountData;
-import org.marceloleite.mercado.tickergenerator.another.AnotherTemporalTickerGenerator;
 import org.marceloleite.mercado.xml.reader.AccountsReader;
 
 public class House {
@@ -27,13 +27,13 @@ public class House {
 
 	private Map<Currency, TemporalTickerPO> temporalTickers;
 
-	private AnotherTemporalTickerGenerator anotherTemporalTickerGenerator;
+	private TemporalTickerRetriever temporalTickerRetriever;
 
 	public House() {
 		super();
 		comissionBalance = new HashMap<>();
 		comissionPercentage = DEFAULT_COMISSION_PERCENTAGE;
-		this.anotherTemporalTickerGenerator = new AnotherTemporalTickerGenerator();
+		this.temporalTickerRetriever = new TemporalTickerRetriever();
 		this.temporalTickers = new EnumMap<>(Currency.class);
 		this.accounts = retrieveAccounts();
 	}
@@ -69,16 +69,13 @@ public class House {
 	public void updateTemporalTickers(TimeInterval timeInterval) {
 		for (Currency currency : Currency.values()) {
 			if (currency.isDigital()) {
-				List<TemporalTickerPO> temporalTickersRetrieved = anotherTemporalTickerGenerator.generate(currency,
-						timeInterval);
-				if (temporalTickersRetrieved == null || temporalTickersRetrieved.size() != 0) {
-					LocalDateTimeToStringConverter localDateTimeToStringConverter = new LocalDateTimeToStringConverter();
-					throw new RuntimeException(
-							"Could not retrieve temporal ticker for " + currency.getAcronym() + " currency for period "
-									+ localDateTimeToStringConverter.convertTo(timeInterval.getStart()) + " to "
-									+ localDateTimeToStringConverter.convertTo(timeInterval.getEnd()) + ".");
+				TemporalTickerPO temporalTickerPO;
+				try {
+					temporalTickerPO = temporalTickerRetriever.retrieve(currency,
+							timeInterval, false);
+				} catch (NoTemporalTickerForPeriodException e) {
+					temporalTickerPO = null;
 				}
-				TemporalTickerPO temporalTickerPO = temporalTickersRetrieved.get(0);
 				temporalTickers.put(currency, temporalTickerPO);
 			}
 		}

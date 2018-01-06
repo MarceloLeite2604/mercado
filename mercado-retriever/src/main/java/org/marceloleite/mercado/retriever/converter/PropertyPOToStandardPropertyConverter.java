@@ -1,4 +1,4 @@
-package org.marceloleite.mercado.retriever;
+package org.marceloleite.mercado.retriever.converter;
 
 import org.marceloleite.mercado.commons.util.converter.Converter;
 import org.marceloleite.mercado.databasemodel.PropertyPO;
