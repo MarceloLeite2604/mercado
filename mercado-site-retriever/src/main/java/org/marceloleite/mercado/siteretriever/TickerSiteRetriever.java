@@ -3,10 +3,9 @@ package org.marceloleite.mercado.siteretriever;
 import javax.ws.rs.core.MediaType;
 
 import org.marceloleite.mercado.commons.Currency;
-import org.marceloleite.mercado.commons.interfaces.Retriever;
 import org.marceloleite.mercado.jsonmodel.JsonTicker;
 
-public class TickerSiteRetriever extends AbstractSiteRetriever implements Retriever<JsonTicker> {
+public class TickerSiteRetriever extends AbstractSiteRetriever {
 	
 	private static final String METHOD = "ticker";
 	
@@ -14,7 +13,7 @@ public class TickerSiteRetriever extends AbstractSiteRetriever implements Retrie
 		super(currency);
 	}	
 	
-	public JsonTicker retrieve(Object... args) {
+	public JsonTicker retrieve() {
 		JsonTicker jsonTicker = createWebTarget()
 			.path(String.format(getPath()))
 			.request(MediaType.APPLICATION_JSON)
