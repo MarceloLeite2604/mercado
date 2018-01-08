@@ -1,4 +1,4 @@
-package org.marceloleite.mercado.simulator;
+package org.marceloleite.mercado.simulator.temporalcontroller;
 
 import java.time.LocalDateTime;
 

@@ -1,10 +1,9 @@
-package org.marceloleite.mercado.simulator.conversor;
+package org.marceloleite.mercado.simulator;
 
 import java.time.LocalDateTime;
 
-import org.marceloleite.mercado.simulator.AbstractTimedObject;
-import org.marceloleite.mercado.simulator.CurrencyAmount;
 import org.marceloleite.mercado.simulator.structure.DepositData;
+import org.marceloleite.mercado.simulator.temporalcontroller.AbstractTimedObject;
 
 public class Deposit extends AbstractTimedObject {
 

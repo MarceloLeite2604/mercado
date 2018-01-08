@@ -1,4 +1,4 @@
-package org.marceloleite.mercado.simulator.conversor;
+package org.marceloleite.mercado.simulator;
 
 import org.marceloleite.mercado.commons.Currency;
 

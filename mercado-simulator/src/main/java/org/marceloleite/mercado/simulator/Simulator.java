@@ -1,4 +1,4 @@
-package org.marceloleite.mercado.simulator.conversor;
+package org.marceloleite.mercado.simulator;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -7,8 +7,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.commons.TimeDivisionController;
 import org.marceloleite.mercado.commons.TimeInterval;
-import org.marceloleite.mercado.commons.util.converter.DurationToStringConverter;
-import org.marceloleite.mercado.commons.util.converter.LocalDateTimeToStringConverter;
+import org.marceloleite.mercado.commons.util.converter.TimeDivisionControllerToStringConverter;
+import org.marceloleite.mercado.commons.util.converter.TimeIntervalToStringConverter;
 import org.marceloleite.mercado.simulator.property.SimulatorPropertiesRetriever;
 
 public class Simulator {
@@ -39,18 +39,21 @@ public class Simulator {
 		logSimulationStart();
 
 		for (TimeInterval timeInterval : timeDivisionController.geTimeIntervals()) {
+			logSimulationStep(timeInterval);
 			house.executeTemporalEvents(timeInterval);
 		}
 
 		LOGGER.info("Simulation finished.");
 	}
 
+	private void logSimulationStep(TimeInterval timeInterval) {
+		TimeIntervalToStringConverter timeIntervalToStringConverter = new TimeIntervalToStringConverter(); 
+		LOGGER.info("Advancing to step time " + timeIntervalToStringConverter.convertTo(timeInterval) + "."); 
+	}
+
 	private void logSimulationStart() {
-		LocalDateTimeToStringConverter localDateTimeToStringConverter = new LocalDateTimeToStringConverter();
-		DurationToStringConverter durationToStringConverter = new DurationToStringConverter();
+		TimeDivisionControllerToStringConverter timeDivisionControllerToStringConverter = new TimeDivisionControllerToStringConverter();
 		LOGGER.info("Starting simulation from "
-				+ localDateTimeToStringConverter.convertTo(timeDivisionController.getStart()) + " to "
-				+ localDateTimeToStringConverter.convertTo(timeDivisionController.getEnd()) + " with a step of "
-				+ durationToStringConverter.convertTo(timeDivisionController.getDivisionDuration()) + ".");
+				+ timeDivisionControllerToStringConverter.convertTo(timeDivisionController) + ".");
 	}
 }

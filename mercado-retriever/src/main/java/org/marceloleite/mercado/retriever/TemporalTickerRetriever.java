@@ -22,6 +22,8 @@ import org.marceloleite.mercado.retriever.filter.TradeTypeFilter;
 
 public class TemporalTickerRetriever {
 
+	private static final boolean IGNORE_DATABASE_VALUES = false;
+
 	private static final int FIRST_CALL = 0;
 
 	private static final int MAX_CALLS = 3;
@@ -35,7 +37,8 @@ public class TemporalTickerRetriever {
 		this.temporalTickerDAO = new TemporalTickerDAO();
 	}
 
-	public TemporalTickerPO retrieve(Currency currency, TimeInterval timeInterval, boolean ignoreValueOnDatabsase) throws NoTemporalTickerForPeriodException {
+	public TemporalTickerPO retrieve(Currency currency, TimeInterval timeInterval, boolean ignoreValueOnDatabsase)
+			throws NoTemporalTickerForPeriodException {
 		return retrieve(currency, timeInterval, ignoreValueOnDatabsase, FIRST_CALL);
 	}
 
@@ -44,18 +47,22 @@ public class TemporalTickerRetriever {
 
 		TemporalTickerPO temporalTickerPO = null;
 		if (!ignoreValueOnDatabsase) {
+
 			TemporalTickerIdPO temporalTickerIdPO = new TemporalTickerIdPO();
+			temporalTickerIdPO.setCurrency(currency);
 			temporalTickerIdPO.setStart(timeInterval.getStart());
 			temporalTickerIdPO.setEnd(timeInterval.getEnd());
 			TemporalTickerPO temporalTickerPOForEnquirement = new TemporalTickerPO();
 			temporalTickerPOForEnquirement.setTemporalTickerIdPO(temporalTickerIdPO);
 			temporalTickerPO = temporalTickerDAO.findById(temporalTickerPOForEnquirement);
+
 		}
 
 		if (temporalTickerPO == null) {
 			TradesRetriever tradesRetriever = new TradesRetriever();
+			
 			List<TradePO> trades = tradesRetriever.retrieve(currency, timeInterval.getStart(), timeInterval.getEnd(),
-					false);
+					IGNORE_DATABASE_VALUES);
 			Map<Long, TradePO> tradesMap = new ListToMapTradeConverter().convertTo(trades);
 			temporalTickerPO = create(currency, timeInterval, tradesMap);
 			temporalTickerPO = adjustValues(temporalTickerPO, currency, timeInterval, ignoreValueOnDatabsase, calls);
@@ -72,7 +79,8 @@ public class TemporalTickerRetriever {
 	}
 
 	private TemporalTickerPO adjustValues(TemporalTickerPO temporalTickerPO, Currency currency,
-			TimeInterval timeInterval, boolean ignoreValueOnDatabase, int calls) throws NoTemporalTickerForPeriodException {
+			TimeInterval timeInterval, boolean ignoreValueOnDatabase, int calls)
+			throws NoTemporalTickerForPeriodException {
 		if (temporalTickerPO.getOrders() == 0) {
 			LocalDateTimeToStringConverter localDateTimeToStringConverter = new LocalDateTimeToStringConverter();
 			if (calls < MAX_CALLS) {

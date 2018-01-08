@@ -1,18 +1,15 @@
-package org.marceloleite.mercado.simulator.conversor;
+package org.marceloleite.mercado.simulator;
 
 import java.util.EnumMap;
 import java.util.Optional;
 
 import org.marceloleite.mercado.commons.Currency;
-import org.marceloleite.mercado.simulator.CurrencyAmount;
+import org.marceloleite.mercado.simulator.converter.CurrencyAmountToStringConverter;
 import org.marceloleite.mercado.simulator.structure.BalanceData;
 import org.marceloleite.mercado.simulator.structure.CurrencyAmountData;
 
 public class Balance extends EnumMap<Currency, CurrencyAmount> {
-
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
 
 	public Balance() {

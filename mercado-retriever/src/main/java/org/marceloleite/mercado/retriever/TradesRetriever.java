@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.converter.json.MapJsonTradeToListTradeConverter;
@@ -15,6 +17,9 @@ import org.marceloleite.mercado.retriever.database.TradesDatabaseUtils;
 import org.marceloleite.mercado.siteretriever.trades.TradesSiteRetriever;
 
 public class TradesRetriever {
+
+	@SuppressWarnings("unused")
+	private static final Logger LOGGER = LogManager.getLogger(TradesRetriever.class);
 
 	private TradeDAO tradeDAO;
 
@@ -32,8 +37,9 @@ public class TradesRetriever {
 	public List<TradePO> retrieve(Currency currency, LocalDateTime start, LocalDateTime end,
 			boolean ignoreValuesFromDatabase) {
 
-		if (ignoreValuesFromDatabase) {
+		if (!ignoreValuesFromDatabase) {
 			retrieveAllValuesFromDatabase(currency, start, end);
+			
 		} else {
 			retrieveUnavailableTradesOnDatabase(currency, start, end);
 		}
@@ -41,7 +47,7 @@ public class TradesRetriever {
 	}
 
 	private void retrieveAllValuesFromDatabase(Currency currency, LocalDateTime start, LocalDateTime end) {
-		List<TradePO> trades = retrieveTradesFromSite(currency, start, end);
+		List<TradePO> trades = retrieveTradesFromDatabase(currency, start, end);
 		tradeDAO.merge(trades);
 	}
 

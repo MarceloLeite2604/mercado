@@ -1,5 +1,6 @@
 package org.marceloleite.mercado.converter.xml;
 
+import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.simulator.structure.BuyOrderData;
 import org.marceloleite.mercado.simulator.structure.CurrencyAmountData;
 import org.marceloleite.mercado.xml.structures.XmlBuyOrder;
@@ -24,12 +25,15 @@ public class BuyOrderXmlConverter implements XmlConverter<XmlBuyOrder, BuyOrderD
 	public BuyOrderData convertToObject(XmlBuyOrder xmlBuyOrder) {
 		BuyOrderData buyOrderData = new BuyOrderData();
 		buyOrderData.setTime(xmlBuyOrder.getTime());
-		CurrencyAmountData currencyAmountToBuy = buyOrderData.getCurrencyAmountToBuy();
-		currencyAmountToBuy.setAmount(xmlBuyOrder.getAmountToBuy());
-		currencyAmountToBuy.setCurrency(xmlBuyOrder.getCurrencyToBuy());
-		CurrencyAmountData currencyAmountToPay = buyOrderData.getCurrencyAmountToPay();
-		currencyAmountToPay.setAmount(xmlBuyOrder.getAmountToPay());
-		currencyAmountToPay.setCurrency(xmlBuyOrder.getCurrencyToPay());
+		
+		Double amountToBuy = xmlBuyOrder.getAmountToBuy();
+		Currency currencyToBuy = xmlBuyOrder.getCurrencyToBuy();
+		CurrencyAmountData currencyAmountToBuy = new CurrencyAmountData(currencyToBuy, amountToBuy);
+		Double amountToPay = xmlBuyOrder.getAmountToPay();
+		Currency currencyToPay = xmlBuyOrder.getCurrencyToPay();
+		CurrencyAmountData currencyAmountToPay = new CurrencyAmountData(currencyToPay, amountToPay);
+		buyOrderData.setCurrencyAmountToBuy(currencyAmountToBuy);
+		buyOrderData.setCurrencyAmountToPay(currencyAmountToPay);
 		return buyOrderData;
 	}
 

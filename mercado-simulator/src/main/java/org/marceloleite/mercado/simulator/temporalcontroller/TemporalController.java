@@ -1,11 +1,9 @@
-package org.marceloleite.mercado.simulator.conversor;
+package org.marceloleite.mercado.simulator.temporalcontroller;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import org.marceloleite.mercado.simulator.TimedObject;
 
 public class TemporalController<T extends TimedObject> extends ArrayList<T> {
 
