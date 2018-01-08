@@ -30,9 +30,11 @@ public class TimeDivisionController {
 		this.end = end;
 		this.divisionDuration = divisionDuration;
 		this.divisions = calculateDivisions();
-		// this.currentDivision = 0;
-		// this.nextTimeInterval = elaborateNextTimeInterval();
 		this.timeIntervals = createTimeIntervals();
+	}
+	
+	public TimeDivisionController(TimeInterval timeInterval, Duration divisionDuration) {
+		this(timeInterval.getStart(), timeInterval.getEnd(), divisionDuration);
 	}
 
 	public TimeDivisionController(LocalDateTime start, LocalDateTime end, Long divisions) {

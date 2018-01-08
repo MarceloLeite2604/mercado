@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Map;
 
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.util.converter.ObjectToJsonConverter;
 import org.marceloleite.mercado.jsonmodel.JsonOrderbook;
 import org.marceloleite.mercado.jsonmodel.JsonTicker;
@@ -13,9 +14,7 @@ import org.marceloleite.mercado.siteretriever.trades.TradesSiteRetriever;
 public class Main {
 
 	public static void main(String[] args) {
-		/*
-		 * orderbookSiteRetriever(); tickerSiteRetriever();
-		 */
+		// orderbookSiteRetriever(); tickerSiteRetriever();
 		tradesSiteRetriever();
 	}
 
@@ -36,7 +35,8 @@ public class Main {
 	private static void tradesSiteRetriever() {
 		LocalDateTime to = LocalDateTime.now();
 		LocalDateTime from = LocalDateTime.from(to).minusDays(1);
-		Map<Long, JsonTrade> jsonTrades = new TradesSiteRetriever(Currency.BITCOIN).retrieve(from, to);
+		TimeInterval timeInterval = new TimeInterval(from, to);
+		Map<Long, JsonTrade> jsonTrades = new TradesSiteRetriever(Currency.BITCOIN).retrieve(timeInterval);
 		ObjectToJsonConverter objectToJsonConverter = new ObjectToJsonConverter();
 		System.out.println(jsonTrades.size());
 		System.out.println(objectToJsonConverter.convertTo(jsonTrades));

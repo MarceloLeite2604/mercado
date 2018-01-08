@@ -1,6 +1,5 @@
 package org.marceloleite.mercado.siteretriever.trades;
 
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -8,12 +7,12 @@ import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.MediaType;
 
 import org.marceloleite.mercado.commons.Currency;
-import org.marceloleite.mercado.commons.interfaces.Retriever;
-import org.marceloleite.mercado.commons.util.UnixTimeSeconds;
+import org.marceloleite.mercado.commons.TimeInterval;
+import org.marceloleite.mercado.commons.util.EpochSecondsToLocalDateTimeConveter;
 import org.marceloleite.mercado.jsonmodel.JsonTrade;
 import org.marceloleite.mercado.siteretriever.AbstractSiteRetriever;
 
-class PartialTradesSiteRetriever extends AbstractSiteRetriever implements Retriever<List<JsonTrade>> {
+class PartialTradesSiteRetriever extends AbstractSiteRetriever {
 
 	private static final long MAX_RETRIES = 5l;
 
@@ -25,25 +24,16 @@ class PartialTradesSiteRetriever extends AbstractSiteRetriever implements Retrie
 
 	private static final String METHOD = "trades";
 
-	public List<JsonTrade> retrieve(Object... args) {
+	public List<JsonTrade> retrieve(TimeInterval timeInterval) {
 
-		LocalDateTime from = null;
-		if (args[0] instanceof LocalDateTime) {
-			from = (LocalDateTime) args[0];
-		}
-
-		LocalDateTime to = null;
-		if (args[1] instanceof LocalDateTime) {
-			to = (LocalDateTime) args[1];
-
-		}
+		checkArguments(timeInterval);
 
 		boolean concluded = false;
 		long retries = 0l;
 		List<JsonTrade> jsonTrades = null;
 		while (!concluded) {
 			try {
-				jsonTrades = Arrays.asList(createWebTarget().path(getPathWithParameters(from, to))
+				jsonTrades = Arrays.asList(createWebTarget().path(getPathWithParameters(timeInterval))
 						.request(MediaType.APPLICATION_JSON).get(JsonTrade[].class));
 				concluded = true;
 			} catch (NotFoundException notFoundException) {
@@ -61,13 +51,22 @@ class PartialTradesSiteRetriever extends AbstractSiteRetriever implements Retrie
 		return jsonTrades;
 	}
 
+	private void checkArguments(TimeInterval timeInterval) {
+		if (timeInterval == null) {
+			throw new IllegalArgumentException("Time interval cannot be null.");
+		}
+	}
+
 	@Override
 	protected String getMethod() {
 		return METHOD;
 	}
 
-	private String getPathWithParameters(LocalDateTime from, LocalDateTime to) {
-		return String.format(getPath() + "%d/%d/", new UnixTimeSeconds(from).get(), new UnixTimeSeconds(to).get());
+	private String getPathWithParameters(TimeInterval timeInterval) {
+		EpochSecondsToLocalDateTimeConveter epochSecondsToLocalDateTimeConveter = new EpochSecondsToLocalDateTimeConveter();
+		return String.format(getPath() + "%d/%d/",
+				epochSecondsToLocalDateTimeConveter.convertTo(timeInterval.getStart()),
+				epochSecondsToLocalDateTimeConveter.convertTo(timeInterval.getEnd()));
 	}
 
 }
