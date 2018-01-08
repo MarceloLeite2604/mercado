@@ -1,7 +1,5 @@
-package org.marceloleite.mercado.simulator;
+package org.marceloleite.mercado.simulator.temporalcontroller;
 import java.time.LocalDateTime;
-
-import org.marceloleite.mercado.simulator.TimedObject;
 
 public abstract class AbstractTimedObject implements TimedObject {
 

@@ -1,4 +1,4 @@
-package org.marceloleite.mercado.simulator.conversor;
+package org.marceloleite.mercado.simulator;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -6,16 +6,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.databasemodel.TemporalTickerPO;
 import org.marceloleite.mercado.retriever.TemporalTickerRetriever;
 import org.marceloleite.mercado.retriever.exception.NoTemporalTickerForPeriodException;
-import org.marceloleite.mercado.simulator.CurrencyAmount;
+import org.marceloleite.mercado.simulator.strategy.Strategy;
 import org.marceloleite.mercado.simulator.structure.AccountData;
 import org.marceloleite.mercado.xml.reader.AccountsReader;
 
 public class House {
+	
+	@SuppressWarnings("unused")
+	private static final Logger LOGGER = LogManager.getLogger(House.class);
 
 	private static final double DEFAULT_COMISSION_PERCENTAGE = 0.007;
 

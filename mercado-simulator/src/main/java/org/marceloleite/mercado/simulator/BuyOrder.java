@@ -1,13 +1,12 @@
-package org.marceloleite.mercado.simulator.conversor;
+package org.marceloleite.mercado.simulator;
 
 import java.time.LocalDateTime;
 import java.util.Map;
 
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.databasemodel.TemporalTickerPO;
-import org.marceloleite.mercado.simulator.AbstractTimedObject;
-import org.marceloleite.mercado.simulator.CurrencyAmount;
 import org.marceloleite.mercado.simulator.structure.BuyOrderData;
+import org.marceloleite.mercado.simulator.temporalcontroller.AbstractTimedObject;
 
 public class BuyOrder extends AbstractTimedObject {
 
