@@ -15,20 +15,24 @@ public class AccountData {
 
 	private List<BuyOrderData> buyOrderDatas;
 
+	private List<SellOrderData> sellOrderDatas;
+
 	private Map<Currency, List<String>> currenciesStrategies;
 
-	public AccountData(String owner, BalanceData balanceData, List<DepositData> depositDatas,
-			List<BuyOrderData> buyOrderDatas, Map<Currency, List<String>> currenciesStrategies) {
+	public AccountData(String owner, BalanceData balanceData, List<DepositData> depositsData,
+			List<BuyOrderData> buyOrdersData, List<SellOrderData> sellOrdersData,
+			Map<Currency, List<String>> currenciesStrategies) {
 		super();
 		this.owner = owner;
 		this.balanceData = balanceData;
-		this.depositDatas = depositDatas;
-		this.buyOrderDatas = buyOrderDatas;
+		this.depositDatas = depositsData;
+		this.buyOrderDatas = buyOrdersData;
+		this.sellOrderDatas = sellOrdersData;
 		this.currenciesStrategies = currenciesStrategies;
 	}
 
 	public AccountData() {
-		this(null, null, null, null, null);
+		this(null, null, null, null, null, null);
 	}
 
 	public String getOwner() {
@@ -61,6 +65,14 @@ public class AccountData {
 
 	public void setBuyOrderDatas(List<BuyOrderData> buyOrderDatas) {
 		this.buyOrderDatas = buyOrderDatas;
+	}
+
+	public List<SellOrderData> getSellOrderDatas() {
+		return sellOrderDatas;
+	}
+
+	public void setSellOrderDatas(List<SellOrderData> sellOrderDatas) {
+		this.sellOrderDatas = sellOrderDatas;
 	}
 
 	public Map<Currency, List<String>> getCurrenciesStrategies() {

@@ -19,6 +19,10 @@ public class CurrencyAmount {
 		this(currencyAmountData.getCurrency(), currencyAmountData.getAmount());
 	}
 
+	public CurrencyAmount(CurrencyAmount currencyAmount) {
+		this(currencyAmount.getCurrency(), currencyAmount.getAmount());
+	}
+
 	public Currency getCurrency() {
 		return currency;
 	}

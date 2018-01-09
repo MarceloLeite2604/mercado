@@ -20,6 +20,8 @@ public class XmlAccount {
 	private List<XmlDeposit> xmlDeposits;
 	
 	private List<XmlBuyOrder> xmlBuyOrders;
+	
+	private List<XmlSellOrder> xmlSellOrders;
 
 	public XmlAccount() {
 		this("");
@@ -31,6 +33,7 @@ public class XmlAccount {
 		this.xmlBalances = new XmlBalances();
 		this.xmlDeposits = new ArrayList<>();
 		this.xmlBuyOrders = new ArrayList<>();
+		this.xmlSellOrders = new ArrayList<>();
 	}
 
 	@XmlElement
@@ -70,5 +73,14 @@ public class XmlAccount {
 
 	public void setXmlBuyOrders(List<XmlBuyOrder> xmlBuyOrders) {
 		this.xmlBuyOrders = xmlBuyOrders;
+	}
+	@XmlElementWrapper(name="sellOrders")
+	@XmlElement(name="sellOrder")
+	public List<XmlSellOrder> getXmlSellOrders() {
+		return this.xmlSellOrders;
+	}
+	
+	public void setXmlSellOrders(List<XmlSellOrder> xmlSellOrders) {
+		this.xmlSellOrders = xmlSellOrders;
 	}
 }

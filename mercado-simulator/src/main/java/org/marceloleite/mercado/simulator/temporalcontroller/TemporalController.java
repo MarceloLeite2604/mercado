@@ -1,9 +1,10 @@
 package org.marceloleite.mercado.simulator.temporalcontroller;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.marceloleite.mercado.commons.TimeInterval;
 
 public class TemporalController<T extends TimedObject> extends ArrayList<T> {
 
@@ -16,8 +17,9 @@ public class TemporalController<T extends TimedObject> extends ArrayList<T> {
 		super();
 	}
 
-	public List<T> retrieve(LocalDateTime time) {
-		List<T> timedObjects = stream().filter(timedObject -> timedObject.isTime(time)).collect(Collectors.toList());
+	public List<T> retrieve(TimeInterval timeInterval) {
+		List<T> timedObjects = stream().filter(timedObject -> timedObject.isTime(timeInterval))
+				.collect(Collectors.toList());
 
 		for (TimedObject timedObject : timedObjects) {
 			remove(timedObject);
