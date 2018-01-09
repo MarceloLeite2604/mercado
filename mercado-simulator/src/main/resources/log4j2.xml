@@ -20,5 +20,7 @@
 		<Logger name="org.hibernate" level="info" additivity="false">
 			<AppenderRef ref="HibernateLogFile" />
 		</Logger>
+		<Logger name="org.marceloleite.mercado.simulator.strategy.FirstStrategy"
+			level="debug" />
 	</Loggers>
 </Configuration>
