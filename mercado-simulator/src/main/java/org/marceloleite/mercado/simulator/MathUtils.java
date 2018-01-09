@@ -3,11 +3,11 @@ package org.marceloleite.mercado.simulator;
 public class MathUtils {
 
 	public static long factorial(long value) {
-		long counter = 1;
-		for (counter = value; counter < 0; counter--) {
-			counter *= counter;
+		long total = 1;
+		for (long counter = value; counter > 0; counter--) {
+			total *= counter;
 		}
-		return counter;
+		return total;
 	}
 	
 	public static long factorial(int value) {

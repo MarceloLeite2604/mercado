@@ -7,10 +7,12 @@ import org.marceloleite.mercado.simulator.structure.AccountData;
 import org.marceloleite.mercado.simulator.structure.BalanceData;
 import org.marceloleite.mercado.simulator.structure.BuyOrderData;
 import org.marceloleite.mercado.simulator.structure.DepositData;
+import org.marceloleite.mercado.simulator.structure.SellOrderData;
 import org.marceloleite.mercado.xml.structures.XmlAccount;
 import org.marceloleite.mercado.xml.structures.XmlBalances;
 import org.marceloleite.mercado.xml.structures.XmlBuyOrder;
 import org.marceloleite.mercado.xml.structures.XmlDeposit;
+import org.marceloleite.mercado.xml.structures.XmlSellOrder;
 
 public class AccountDataXmlConverter implements XmlConverter<XmlAccount, AccountData> {
 
@@ -26,11 +28,23 @@ public class AccountDataXmlConverter implements XmlConverter<XmlAccount, Account
 		BalanceData balanceData = new BalanceXmlConverter().convertToObject(xmlBalances);
 		List<XmlBuyOrder> xmlBuyOrders = xmlAccount.getXmlBuyOrders();
 		List<BuyOrderData> buyOrdersData = createBuyOrders(xmlBuyOrders);
+		List<XmlSellOrder> xmlSellOrders = xmlAccount.getXmlSellOrders();
+		List<SellOrderData> sellOrdersData = createSellOrders(xmlSellOrders);
 		List<XmlDeposit> xmlDeposits = xmlAccount.getXmlDeposits();
 		List<DepositData> depositsData = createDeposits(xmlDeposits);
 
-		AccountData account = new AccountData(owner, balanceData, depositsData, buyOrdersData, null);
+		AccountData account = new AccountData(owner, balanceData, depositsData, buyOrdersData, sellOrdersData, null);
 		return account;
+	}
+
+	private List<SellOrderData> createSellOrders(List<XmlSellOrder> xmlSellOrders) {
+		List<SellOrderData> sellOrdersData = new ArrayList<>();
+		SellOrderXmlConverter sellOrderXmlConverter = new SellOrderXmlConverter();
+		for (XmlSellOrder xmlSellOrder : xmlSellOrders) {
+			SellOrderData sellOrderData = sellOrderXmlConverter.convertToObject(xmlSellOrder);
+			sellOrdersData.add(sellOrderData);
+		}
+		return sellOrdersData;
 	}
 
 	private List<DepositData> createDeposits(List<XmlDeposit> xmlDeposits) {

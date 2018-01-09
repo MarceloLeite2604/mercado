@@ -2,9 +2,11 @@ package org.marceloleite.mercado.simulator.temporalcontroller;
 
 import java.time.LocalDateTime;
 
+import org.marceloleite.mercado.commons.TimeInterval;
+
 public interface TimedObject {
 
 	LocalDateTime getTime();
 	
-	boolean isTime(LocalDateTime time);
+	boolean isTime(TimeInterval timeInterval);
 }

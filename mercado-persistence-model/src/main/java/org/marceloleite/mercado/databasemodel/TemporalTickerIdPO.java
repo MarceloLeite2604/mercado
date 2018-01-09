@@ -18,6 +18,21 @@ public class TemporalTickerIdPO implements Serializable {
 
 	private LocalDateTime end;
 
+	public TemporalTickerIdPO() {
+		super();
+	}
+
+	public TemporalTickerIdPO(Currency currency, LocalDateTime start, LocalDateTime end) {
+		super();
+		this.currency = currency;
+		this.start = start;
+		this.end = end;
+	}
+
+	public TemporalTickerIdPO(TemporalTickerIdPO id) {
+		this(id.getCurrency(), LocalDateTime.from(id.getStart()), LocalDateTime.from(id.getEnd()));
+	}
+
 	public Currency getCurrency() {
 		return currency;
 	}

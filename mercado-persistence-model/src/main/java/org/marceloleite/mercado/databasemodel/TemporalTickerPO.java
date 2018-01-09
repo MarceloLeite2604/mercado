@@ -31,6 +31,28 @@ public class TemporalTickerPO implements PersistenceObject<TemporalTickerIdPO> {
 		super();
 	}
 
+	private TemporalTickerPO(TemporalTickerIdPO temporalTickerId, long orders, double high, double average, double low,
+			double vol, double first, double last, double buy, double sell) {
+		super();
+		this.temporalTickerId = temporalTickerId;
+		this.orders = orders;
+		this.high = high;
+		this.average = average;
+		this.low = low;
+		this.vol = vol;
+		this.first = first;
+		this.last = last;
+		this.buy = buy;
+		this.sell = sell;
+	}
+
+	public TemporalTickerPO(TemporalTickerPO temporalTickerPO) {
+		this(new TemporalTickerIdPO(temporalTickerPO.getId()), temporalTickerPO.getOrders(), temporalTickerPO.getHigh(),
+				temporalTickerPO.getAverage(), temporalTickerPO.getLow(), temporalTickerPO.getVol(),
+				temporalTickerPO.getFirst(), temporalTickerPO.getLast(), temporalTickerPO.getBuy(),
+				temporalTickerPO.getSell());
+	}
+
 	public double getHigh() {
 		return high;
 	}

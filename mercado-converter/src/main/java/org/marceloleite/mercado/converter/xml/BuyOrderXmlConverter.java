@@ -25,7 +25,7 @@ public class BuyOrderXmlConverter implements XmlConverter<XmlBuyOrder, BuyOrderD
 	public BuyOrderData convertToObject(XmlBuyOrder xmlBuyOrder) {
 		BuyOrderData buyOrderData = new BuyOrderData();
 		buyOrderData.setTime(xmlBuyOrder.getTime());
-		
+
 		Double amountToBuy = xmlBuyOrder.getAmountToBuy();
 		Currency currencyToBuy = xmlBuyOrder.getCurrencyToBuy();
 		CurrencyAmountData currencyAmountToBuy = new CurrencyAmountData(currencyToBuy, amountToBuy);
