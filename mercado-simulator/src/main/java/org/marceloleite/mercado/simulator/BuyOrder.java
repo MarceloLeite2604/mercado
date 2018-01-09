@@ -36,7 +36,7 @@ public class BuyOrder extends AbstractTimedObject {
 		this(time, currencyToBuy, null, currencyToPay, amountToPay);
 	}
 
-	private BuyOrder(LocalDateTime time, CurrencyAmount currencyAmountToBuy, CurrencyAmount currencyAmountToPay) {
+	public BuyOrder(LocalDateTime time, CurrencyAmount currencyAmountToBuy, CurrencyAmount currencyAmountToPay) {
 		this(time, currencyAmountToBuy.getCurrency(), currencyAmountToBuy.getAmount(),
 				currencyAmountToPay.getCurrency(), currencyAmountToPay.getAmount());
 	}

@@ -94,16 +94,6 @@ public class Account {
 
 	public void checkTimedEvents(TimeInterval currentTimeInterval) {
 		checkDeposits(currentTimeInterval);
-		checkBuyOrders(currentTimeInterval);
-	}
-
-	private void checkBuyOrders(TimeInterval currentTimeInterval) {
-		BuyOrderToStringConverter buyOrderToStringConverter = new BuyOrderToStringConverter();
-		List<BuyOrder> buyOrdersToExecute = buyOrdersTemporalController.retrieve(currentTimeInterval.getEnd());
-		for (BuyOrder buyOrder : buyOrdersToExecute) {
-			LOGGER.info(
-					"Executing " + buyOrderToStringConverter.convertTo(buyOrder) + " on \"" + owner + "\" account.");
-		}
 	}
 
 	private void checkDeposits(TimeInterval currentTimeInterval) {

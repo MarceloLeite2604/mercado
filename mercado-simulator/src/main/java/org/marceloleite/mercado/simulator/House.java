@@ -1,6 +1,7 @@
 package org.marceloleite.mercado.simulator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
@@ -13,12 +14,14 @@ import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.databasemodel.TemporalTickerPO;
 import org.marceloleite.mercado.retriever.TemporalTickerRetriever;
 import org.marceloleite.mercado.retriever.exception.NoTemporalTickerForPeriodException;
+import org.marceloleite.mercado.simulator.converter.BuyOrderToStringConverter;
+import org.marceloleite.mercado.simulator.strategy.FirstStrategy;
 import org.marceloleite.mercado.simulator.strategy.Strategy;
 import org.marceloleite.mercado.simulator.structure.AccountData;
 import org.marceloleite.mercado.xml.reader.AccountsReader;
 
 public class House {
-	
+
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = LogManager.getLogger(House.class);
 
@@ -32,6 +35,8 @@ public class House {
 
 	private Map<Currency, TemporalTickerPO> temporalTickers;
 
+	private Map<Currency, TemporalTickerVariation> temporalTickerVariations;
+
 	private TemporalTickerRetriever temporalTickerRetriever;
 
 	public House() {
@@ -40,7 +45,22 @@ public class House {
 		comissionPercentage = DEFAULT_COMISSION_PERCENTAGE;
 		this.temporalTickerRetriever = new TemporalTickerRetriever();
 		this.temporalTickers = new EnumMap<>(Currency.class);
+		this.temporalTickerVariations = new EnumMap<>(Currency.class);
 		this.accounts = retrieveAccounts();
+		/* TODO: Remove. */
+		for (Account account : accounts) {
+			FirstStrategy firstStrategy = new FirstStrategy();
+			firstStrategy.setCurrency(Currency.BITCOIN);
+			account.getCurrenciesStrategies().put(Currency.BITCOIN, Arrays.asList(firstStrategy));
+		}
+	}
+
+	public Map<Currency, TemporalTickerPO> getTemporalTickers() {
+		return new EnumMap<>(temporalTickers);
+	}
+
+	public Map<Currency, TemporalTickerVariation> getTemporalTickerVariations() {
+		return new EnumMap<>(temporalTickerVariations);
 	}
 
 	private List<Account> retrieveAccounts() {
@@ -72,16 +92,22 @@ public class House {
 	}
 
 	public void updateTemporalTickers(TimeInterval timeInterval) {
+		TemporalTickerPO previousTemporalTicker;
 		for (Currency currency : Currency.values()) {
 			if (currency.isDigital()) {
 				TemporalTickerPO temporalTickerPO;
 				try {
-					temporalTickerPO = temporalTickerRetriever.retrieve(currency,
-							timeInterval, false);
+					temporalTickerPO = temporalTickerRetriever.retrieve(currency, timeInterval, false);
 				} catch (NoTemporalTickerForPeriodException e) {
 					temporalTickerPO = null;
 				}
+				previousTemporalTicker = temporalTickers.get(currency);
 				temporalTickers.put(currency, temporalTickerPO);
+				if (temporalTickerPO != null) {
+					TemporalTickerVariation temporalTickerVariation = new TemporalTickerVariation(
+							previousTemporalTicker, temporalTickerPO);
+					temporalTickerVariations.put(currency, temporalTickerVariation);
+				}
 			}
 		}
 	}
@@ -90,20 +116,24 @@ public class House {
 		updateTemporalTickers(currentTimeInterval);
 		for (Account account : accounts) {
 			account.checkTimedEvents(currentTimeInterval);
-			Map<Currency, List<Strategy>> currenciesStrategies = account.getCurrenciesStrategies();
-			for (Currency currency : currenciesStrategies.keySet()) {
-				List<Strategy> strategies = currenciesStrategies.get(currency);
-				for (Strategy strategy : strategies) {
-					strategy.check(account, this);
-				}
-			}
+			checkStrategies(currentTimeInterval, account);
 			checkBuyOrders(currentTimeInterval, account);
 		}
 	}
 
+	private void checkStrategies(TimeInterval currentTimeInterval, Account account) {
+		Map<Currency, List<Strategy>> currenciesStrategies = account.getCurrenciesStrategies();
+		for (List<Strategy> strategies : currenciesStrategies.values()) {
+			strategies.forEach(strategy -> strategy.check(currentTimeInterval, account, this));
+		}
+	}
+
 	private void checkBuyOrders(TimeInterval currentTimeInterval, Account account) {
+		BuyOrderToStringConverter buyOrderToStringConverter = new BuyOrderToStringConverter();
 		List<BuyOrder> buyOrders = account.getBuyOrdersTemporalController().retrieve(currentTimeInterval.getEnd());
 		for (BuyOrder buyOrder : buyOrders) {
+			LOGGER.info("Executing " + buyOrderToStringConverter.convertTo(buyOrder) + " on \"" + account.getOwner()
+					+ "\" account.");
 			executeBuyOrder(account, buyOrder);
 			buyOrder.updateOrder(temporalTickers);
 			CurrencyAmount currencyAmountComission = calculateComission(buyOrder);
@@ -112,7 +142,6 @@ public class House {
 			account.getBalance().withdraw(buyOrder.getCurrencyAmountToPay());
 			account.getBalance().deposit(currencyAmountToDeposit);
 		}
-
 	}
 
 	private void depositComission(CurrencyAmount currencyAmountComission, Account account) {
