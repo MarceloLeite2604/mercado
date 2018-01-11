@@ -3,6 +3,8 @@ package org.marceloleite.mercado.databasemodel;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 
+import org.marceloleite.mercado.commons.util.NonDigitalCurrencyFormatter;
+
 @Entity(name = "TemporalTickers")
 public class TemporalTickerPO implements PersistenceObject<TemporalTickerIdPO> {
 
@@ -141,5 +143,21 @@ public class TemporalTickerPO implements PersistenceObject<TemporalTickerIdPO> {
 	@Override
 	public TemporalTickerIdPO getId() {
 		return this.temporalTickerId;
+	}
+
+	@Override
+	public String toString() {
+		StringBuffer stringBuffer = new StringBuffer();
+		NonDigitalCurrencyFormatter nonDigitalCurrencyFormatter = new NonDigitalCurrencyFormatter();
+		stringBuffer.append("[");
+		stringBuffer.append("Orders: " + orders);
+		stringBuffer.append(", High: " + nonDigitalCurrencyFormatter.format(high));
+		stringBuffer.append(", Average: " + nonDigitalCurrencyFormatter.format(average));
+		stringBuffer.append(", Low: " + nonDigitalCurrencyFormatter.format(low));
+		stringBuffer.append(", Vol: " + nonDigitalCurrencyFormatter.format(vol));
+		stringBuffer.append(", First: " + nonDigitalCurrencyFormatter.format(first));
+		stringBuffer.append(", Last: " + nonDigitalCurrencyFormatter.format(last));
+		stringBuffer.append("]");
+		return stringBuffer.toString();
 	}
 }

@@ -57,6 +57,14 @@ public class Account {
 		this.currenciesStrategies = new EnumMap<>(Currency.class);
 	}
 
+	public Account(Account account) {
+		this(new String(account.getOwner()), new Balance(account.getBalance()),
+				new TemporalController<Deposit>(account.getDepositsTemporalController()),
+				new TemporalController<>(account.getBuyOrdersTemporalController()),
+				new TemporalController<>(account.getSellOrdersTemporalController()),
+				new EnumMap<Currency, List<Strategy>>(account.getCurrenciesStrategies()));
+	}
+
 	private TemporalController<Deposit> createDepositsTemporalController(AccountData accountData) {
 		TemporalController<Deposit> deposits = new TemporalController<>();
 		for (DepositData depositData : accountData.getDepositDatas()) {

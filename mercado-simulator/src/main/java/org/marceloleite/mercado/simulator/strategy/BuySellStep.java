@@ -20,22 +20,12 @@ public class BuySellStep {
 		this.sellSteps = sellDivisions;
 		this.currentStep = 0l;
 	}
-
-	public void updateStep(OrderType orderType) {
-		Long result = null;
-		switch (orderType) {
-		case BUY:
-			result = calculateNextBuyStep();
-			break;
-		case SELL:
-			result = calculateNextSellStep();
-			break;
-		}
-		LOGGER.debug("Next step is: " + result);
-		currentStep = result;
+	
+	public long getCurrentStep() {
+		return currentStep;
 	}
 
-	public long checkStep(OrderType orderType) {
+	public long updateStep(OrderType orderType) {
 		Long result = null;
 		switch (orderType) {
 		case BUY:
@@ -45,7 +35,9 @@ public class BuySellStep {
 			result = calculateNextSellStep();
 			break;
 		}
-		return result;
+		LOGGER.debug("Next step is: " + result + ".");
+		currentStep = result;
+		return currentStep;
 	}
 
 	private long calculateNextBuyStep() {
@@ -59,7 +51,7 @@ public class BuySellStep {
 				result = currentStep;
 			}
 		}
-		LOGGER.debug("Next buy step is " + result);
+		LOGGER.debug("Next buy step is " + result + ".");
 		return result;
 	}
 
@@ -68,13 +60,13 @@ public class BuySellStep {
 		if (currentStep > 0l) {
 			result = -1l;
 		} else {
-			if (currentStep > sellSteps) {
+			if (currentStep > -sellSteps) {
 				result = currentStep - 1;
 			} else {
 				result = currentStep;
 			}
 		}
-		LOGGER.debug("Next sell step is " + result);
+		LOGGER.debug("Next sell step is " + result + ".");
 		return result;
 	}
 }

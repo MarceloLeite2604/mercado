@@ -5,10 +5,12 @@ import java.time.LocalDateTime;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeDivisionController;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.util.converter.TimeDivisionControllerToStringConverter;
 import org.marceloleite.mercado.commons.util.converter.TimeIntervalToStringConverter;
+import org.marceloleite.mercado.databasemodel.TemporalTickerPO;
 import org.marceloleite.mercado.simulator.property.SimulatorPropertiesRetriever;
 
 public class Simulator {
@@ -38,17 +40,51 @@ public class Simulator {
 		configure();
 		logSimulationStart();
 
+		logAccountsBalance(false);
+
 		for (TimeInterval timeInterval : timeDivisionController.geTimeIntervals()) {
 			logSimulationStep(timeInterval);
 			house.executeTemporalEvents(timeInterval);
 		}
 
+		logAccountsBalance(true);
+
 		LOGGER.info("Simulation finished.");
 	}
 
+	private void logAccountsBalance(boolean printTotalWorth) {
+		for (Account account : house.getAccounts()) {
+			LOGGER.info("Account \"" + account.getOwner() + "\":");
+			Balance balance = account.getBalance();
+
+			for (CurrencyAmount currencyAmount : balance.values()) {
+				LOGGER.info("\t" + currencyAmount);
+			}
+
+			if (printTotalWorth) {
+				logTotalWorth(account);
+			}
+		}
+	}
+
+	private void logTotalWorth(Account account) {
+		CurrencyAmount totalRealAmount = new CurrencyAmount(Currency.REAL, 0.0);
+		Balance balance = account.getBalance();
+
+		for (Currency currency : Currency.values()) {
+			if (currency.isDigital()) {
+				TemporalTickerPO temporalTickerPO = house.getTemporalTickers().get(currency);
+				CurrencyAmount currencyAmount = balance.get(currency);
+				totalRealAmount.setAmount(
+						totalRealAmount.getAmount() + (currencyAmount.getAmount() * temporalTickerPO.getAverage()));
+			}
+		}
+		LOGGER.info("\tTotal in " + Currency.REAL + ": " + totalRealAmount);
+	}
+
 	private void logSimulationStep(TimeInterval timeInterval) {
-		TimeIntervalToStringConverter timeIntervalToStringConverter = new TimeIntervalToStringConverter(); 
-		LOGGER.info("Advancing to step time " + timeIntervalToStringConverter.convertTo(timeInterval) + "."); 
+		TimeIntervalToStringConverter timeIntervalToStringConverter = new TimeIntervalToStringConverter();
+		LOGGER.debug("Advancing to step time " + timeIntervalToStringConverter.convertTo(timeInterval) + ".");
 	}
 
 	private void logSimulationStart() {

@@ -83,15 +83,32 @@ public class SellOrder extends AbstractTimedObject {
 
 	public void updateOrder(Map<Currency, TemporalTickerPO> temporalTickers) {
 		TemporalTickerPO temporalTickerPO = temporalTickers.get(currencyAmountToSell.getCurrency());
-		double buyingPrice = temporalTickerPO.getBuy();
+		double sellingPrice = temporalTickerPO.getSell();
 		if (getCurrencyAmountToSell().getAmount() == null) {
-			Double amountToBuy = getCurrencyAmountToReceive().getAmount() / buyingPrice;
+			Double amountToBuy = getCurrencyAmountToReceive().getAmount() / sellingPrice;
 			currencyAmountToSell.setAmount(amountToBuy);
 
 		} else if (getCurrencyAmountToReceive().getAmount() == null) {
-			Double amountToPay = getCurrencyAmountToSell().getAmount() * buyingPrice;
+			Double amountToPay = getCurrencyAmountToSell().getAmount() * sellingPrice;
 			currencyAmountToReceive.setAmount(amountToPay);
 		}
+	}
 
+	@Override
+	public String toString() {
+		String result = "sell order ";
+		if (currencyAmountToSell.getAmount() != null) {
+			result += "of " + currencyAmountToSell + " receiving ";
+			if (currencyAmountToReceive.getAmount() != null) {
+				result += currencyAmountToReceive;
+			} else {
+				result += currencyAmountToReceive.getCurrency() + " currency";
+			}
+
+		} else {
+			result += "receiving " + currencyAmountToReceive + " by selling " + currencyAmountToSell.getCurrency()
+					+ " currency";
+		}
+		return result;
 	}
 }

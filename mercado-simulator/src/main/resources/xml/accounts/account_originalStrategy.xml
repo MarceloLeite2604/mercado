@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<account>
+	<owner>OriginalStrategy</owner>
+	<balances>
+		<balance>
+			<currency>BRL</currency>
+			<amount>1000</amount>
+		</balance>
+	</balances>
+	<deposits />
+	<strategies>
+		<strategy>
+			<currency>BTC</currency>
+			<class>org.marceloleite.mercado.simulator.strategy.OriginalStrategy
+			</class>
+		</strategy>
+	</strategies>
+</account>

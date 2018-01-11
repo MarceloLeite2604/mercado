@@ -4,25 +4,24 @@ import org.marceloleite.mercado.commons.util.converter.Converter;
 import org.marceloleite.mercado.simulator.CurrencyAmount;
 import org.marceloleite.mercado.simulator.order.SellOrder;
 
-public class SellOrderToStringConverter implements Converter<SellOrder, String> {
+public class OldSellOrderToStringConverter implements Converter<SellOrder, String> {
 
 	@Override
 	public String convertTo(SellOrder sellOrder) {
-		String result;
-		CurrencyAmountToStringConverter currencyAmountToStringConverter = new CurrencyAmountToStringConverter();
+		String result = "sell order ";
 		CurrencyAmount currencyAmountToSell = sellOrder.getCurrencyAmountToSell();
 		CurrencyAmount currencyAmountToReceive = sellOrder.getCurrencyAmountToReceive();
 		if (currencyAmountToSell.getAmount() != null) {
-			result = "sell order of " + currencyAmountToStringConverter.convertTo(currencyAmountToSell) + " receiving ";
+			result = "of " + currencyAmountToSell + " receiving ";
 			if (currencyAmountToReceive.getAmount() != null) {
-				result += currencyAmountToStringConverter.convertTo(currencyAmountToReceive);
+				result += currencyAmountToReceive;
 			} else {
-				result += currencyAmountToReceive.getCurrency().getAcronym();
+				result += currencyAmountToReceive.getCurrency() + " currency";
 			}
 
 		} else {
-			result = "sell order receiving " + currencyAmountToStringConverter.convertTo(currencyAmountToReceive)
-					+ " to sell " + currencyAmountToSell.getCurrency().getAcronym();
+			result = "receiving " + currencyAmountToReceive + " by selling "
+					+ currencyAmountToSell.getCurrency() + " currency";
 		}
 		return result;
 	}

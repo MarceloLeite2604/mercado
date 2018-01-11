@@ -14,11 +14,10 @@ import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.databasemodel.TemporalTickerPO;
 import org.marceloleite.mercado.retriever.TemporalTickerRetriever;
 import org.marceloleite.mercado.retriever.exception.NoTemporalTickerForPeriodException;
-import org.marceloleite.mercado.simulator.converter.BuyOrderToStringConverter;
-import org.marceloleite.mercado.simulator.converter.SellOrderToStringConverter;
 import org.marceloleite.mercado.simulator.order.BuyOrder;
 import org.marceloleite.mercado.simulator.order.SellOrder;
 import org.marceloleite.mercado.simulator.strategy.FirstStrategy;
+import org.marceloleite.mercado.simulator.strategy.OriginalStrategy;
 import org.marceloleite.mercado.simulator.strategy.Strategy;
 import org.marceloleite.mercado.simulator.structure.AccountData;
 import org.marceloleite.mercado.xml.reader.AccountsReader;
@@ -42,6 +41,17 @@ public class House {
 
 	private TemporalTickerRetriever temporalTickerRetriever;
 
+	private House(List<Account> accounts, Map<String, Balance> comissionBalance, double comissionPercentage,
+			Map<Currency, TemporalTickerPO> temporalTickers,
+			Map<Currency, TemporalTickerVariation> temporalTickerVariations,
+			TemporalTickerRetriever temporalTickerRetriever) {
+		this.accounts = accounts;
+		this.comissionBalance = comissionBalance;
+		this.comissionPercentage = comissionPercentage;
+		this.temporalTickers = temporalTickers;
+		this.temporalTickerVariations = temporalTickerVariations;
+	}
+
 	public House() {
 		super();
 		comissionBalance = new HashMap<>();
@@ -52,10 +62,33 @@ public class House {
 		this.accounts = retrieveAccounts();
 		/* TODO: Remove. */
 		for (Account account : accounts) {
-			FirstStrategy firstStrategy = new FirstStrategy();
-			firstStrategy.setCurrency(Currency.BITCOIN);
-			account.getCurrenciesStrategies().put(Currency.BITCOIN, Arrays.asList(firstStrategy));
+
+			if ("FirstStrategy".equals(account.getOwner())) {
+				Strategy strategy = new FirstStrategy();
+				strategy.setCurrency(Currency.BITCOIN);
+				account.getCurrenciesStrategies().put(Currency.BITCOIN, Arrays.asList(strategy));
+			}
+
+			if ("OriginalStrategy".equals(account.getOwner())) {
+				Strategy strategy = new OriginalStrategy();
+				strategy.setCurrency(Currency.BITCOIN);
+				account.getCurrenciesStrategies().put(Currency.BITCOIN, Arrays.asList(strategy));
+			}
 		}
+	}
+
+	public House(House house) {
+		this(new ArrayList<>(house.getAccounts()), new HashMap<>(house.getComissionBalance()),
+				house.getComissionPercentage(), new EnumMap<>(house.getTemporalTickers()),
+				new EnumMap<>(house.getTemporalTickerVariations()), new TemporalTickerRetriever());
+	}
+
+	public List<Account> getAccounts() {
+		return new ArrayList<>(accounts);
+	}
+
+	public Map<String, Balance> getComissionBalance() {
+		return new HashMap<>(comissionBalance);
 	}
 
 	public Map<Currency, TemporalTickerPO> getTemporalTickers() {
@@ -126,31 +159,33 @@ public class House {
 	}
 
 	private void checkBuyOrders(TimeInterval currentTimeInterval, Account account) {
-		BuyOrderToStringConverter buyOrderToStringConverter = new BuyOrderToStringConverter();
 		List<BuyOrder> buyOrders = account.getBuyOrdersTemporalController().retrieve(currentTimeInterval);
 		for (BuyOrder buyOrder : buyOrders) {
-			LOGGER.info("Executing " + buyOrderToStringConverter.convertTo(buyOrder) + " on \"" + account.getOwner()
-					+ "\" account.");
 			buyOrder.updateOrder(temporalTickers);
-			CurrencyAmount currencyAmountComission = calculateComission(buyOrder);
-			CurrencyAmount currencyAmountToDeposit = calculateDeposit(buyOrder, currencyAmountComission);
-			depositComission(currencyAmountComission, account);
+			LOGGER.info("Executing " + buyOrder + " on \"" + account.getOwner() + "\" account.");
+			CurrencyAmount currencyAmountCommission = calculateComission(buyOrder);
+			LOGGER.debug("Commission amount is " + currencyAmountCommission + ".");
+			CurrencyAmount currencyAmountToDeposit = calculateDeposit(buyOrder, currencyAmountCommission);
+			LOGGER.debug("Amount to withdraw is " + buyOrder.getCurrencyAmountToPay() + ".");
+			depositComission(currencyAmountCommission, account);
 			account.getBalance().withdraw(buyOrder.getCurrencyAmountToPay());
+			LOGGER.debug("Amount to deposit is " + currencyAmountToDeposit + ".");
 			account.getBalance().deposit(currencyAmountToDeposit);
 		}
 	}
-	
+
 	private void checkSellOrders(TimeInterval currentTimeInterval, Account account) {
-		SellOrderToStringConverter sellOrderToStringConverter = new SellOrderToStringConverter();
 		List<SellOrder> sellOrders = account.getSellOrdersTemporalController().retrieve(currentTimeInterval);
 		for (SellOrder sellOrder : sellOrders) {
-			LOGGER.info("Executing " + sellOrderToStringConverter.convertTo(sellOrder) + " on \"" + account.getOwner()
-					+ "\" account.");
 			sellOrder.updateOrder(temporalTickers);
-			CurrencyAmount currencyAmountComission = calculateComission(sellOrder);
-			CurrencyAmount currencyAmountToDeposit = calculateDeposit(sellOrder, currencyAmountComission);
-			depositComission(currencyAmountComission, account);
+			LOGGER.info("Executing " + sellOrder + " on \"" + account.getOwner() + "\" account.");
+			CurrencyAmount currencyAmountCommission = calculateCommission(sellOrder);
+			CurrencyAmount currencyAmountToDeposit = calculateDeposit(sellOrder, currencyAmountCommission);
+			LOGGER.debug("Commission amount is " + currencyAmountCommission + ".");
+			depositComission(currencyAmountCommission, account);
+			LOGGER.debug("Amount to withdraw is " + sellOrder.getCurrencyAmountToSell() + ".");
 			account.getBalance().withdraw(sellOrder.getCurrencyAmountToSell());
+			LOGGER.debug("Amount to deposit is " + currencyAmountToDeposit + ".");
 			account.getBalance().deposit(currencyAmountToDeposit);
 		}
 	}
@@ -158,6 +193,7 @@ public class House {
 	private void depositComission(CurrencyAmount currencyAmountComission, Account account) {
 		Balance balance = comissionBalance.getOrDefault(account.getOwner(), new Balance());
 		balance.deposit(currencyAmountComission);
+		comissionBalance.put(account.getOwner(), balance);
 	}
 
 	private CurrencyAmount calculateDeposit(BuyOrder buyOrder, CurrencyAmount currencyAmountComission) {
@@ -165,11 +201,11 @@ public class House {
 		double amountToDeposit = currencyAmountToBuy.getAmount() - currencyAmountComission.getAmount();
 		return new CurrencyAmount(currencyAmountToBuy.getCurrency(), amountToDeposit);
 	}
-	
+
 	private CurrencyAmount calculateDeposit(SellOrder sellOrder, CurrencyAmount currencyAmountComission) {
-		CurrencyAmount currencyAmountToSell = sellOrder.getCurrencyAmountToSell();
-		double amountToDeposit = currencyAmountToSell.getAmount() - currencyAmountComission.getAmount();
-		return new CurrencyAmount(currencyAmountToSell.getCurrency(), amountToDeposit);
+		CurrencyAmount currencyAmountToReceive = sellOrder.getCurrencyAmountToReceive();
+		double amountToDeposit = currencyAmountToReceive.getAmount() - currencyAmountComission.getAmount();
+		return new CurrencyAmount(currencyAmountToReceive.getCurrency(), amountToDeposit);
 	}
 
 	private CurrencyAmount calculateComission(BuyOrder buyOrder) {
@@ -177,10 +213,10 @@ public class House {
 		double comissionAmount = currencyAmountToBuy.getAmount() * comissionPercentage;
 		return new CurrencyAmount(currencyAmountToBuy.getCurrency(), comissionAmount);
 	}
-	
-	private CurrencyAmount calculateComission(SellOrder sellOrder) {
-		CurrencyAmount currencyAmountToSell = sellOrder.getCurrencyAmountToSell();
-		double comissionAmount = currencyAmountToSell.getAmount() * comissionPercentage;
-		return new CurrencyAmount(currencyAmountToSell.getCurrency(), comissionAmount);
+
+	private CurrencyAmount calculateCommission(SellOrder sellOrder) {
+		CurrencyAmount currencyAmountToReceive = sellOrder.getCurrencyAmountToReceive();
+		double comissionAmount = currencyAmountToReceive.getAmount() * comissionPercentage;
+		return new CurrencyAmount(currencyAmountToReceive.getCurrency(), comissionAmount);
 	}
 }
