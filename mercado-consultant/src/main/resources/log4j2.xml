@@ -6,12 +6,12 @@
 				<Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
 			</PatternLayout>
 		</File>
-		<File name="BackwardConsultantLogFile" fileName="src/main/resources/log/mercado-consultant-backward.log">
+		<File name="BackwardConsultantLogFile" fileName="src/main/resources/log/mercado-consultant-backward.log" append="false">
 			<PatternLayout>
 				<Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
 			</PatternLayout>
 		</File>
-		<File name="ForwardConsultantLogFile" fileName="src/main/resources/log/mercado-consultant-forward.log">
+		<File name="ForwardConsultantLogFile" fileName="src/main/resources/log/mercado-consultant-forward.log" append="false">
 			<PatternLayout>
 				<Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
 			</PatternLayout>

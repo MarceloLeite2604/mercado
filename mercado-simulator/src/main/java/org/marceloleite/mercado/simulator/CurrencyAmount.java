@@ -1,6 +1,8 @@
 package org.marceloleite.mercado.simulator;
 
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.commons.util.DigitalCurrencyFormatter;
+import org.marceloleite.mercado.commons.util.NonDigitalCurrencyFormatter;
 import org.marceloleite.mercado.simulator.structure.CurrencyAmountData;
 
 public class CurrencyAmount {
@@ -40,6 +42,12 @@ public class CurrencyAmount {
 	}
 
 	public String toString() {
-		return currency.getAcronym() + " " + amount;
+		String stringAmount;
+		if (currency.isDigital()) {
+			stringAmount = new DigitalCurrencyFormatter().format(amount);
+		} else {
+			stringAmount = new NonDigitalCurrencyFormatter().format(amount);
+		}
+		return currency.getAcronym() + " " + stringAmount;
 	}
 }

@@ -11,9 +11,18 @@ public class Deposit extends AbstractTimedObject {
 
 	private CurrencyAmount currencyAmount;
 
+	public Deposit(LocalDateTime time, CurrencyAmount currencyAmount) {
+		this.time = time;
+		this.currencyAmount = currencyAmount;
+	}
+
 	public Deposit(DepositData depositData) {
 		this.time = depositData.getTime();
 		this.currencyAmount = new CurrencyAmount(depositData.getCurrencyAmount());
+	}
+
+	public Deposit(Deposit deposit) {
+		this(LocalDateTime.from(deposit.getTime()), new CurrencyAmount(deposit.getCurrencyAmount()));
 	}
 
 	public LocalDateTime getTime() {
