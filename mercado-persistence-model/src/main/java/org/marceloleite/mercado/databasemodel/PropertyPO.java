@@ -3,13 +3,22 @@ package org.marceloleite.mercado.databasemodel;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-@Entity(name="Properties")
+@Entity(name = "Properties")
 public class PropertyPO implements PersistenceObject<String> {
 
 	@Id
 	private String name;
-	
+
 	private String value;
+
+	public PropertyPO(String name, String value) {
+		this.name = name;
+		this.value = value;
+	}
+
+	public PropertyPO() {
+		this(null, null);
+	}
 
 	public String getName() {
 		return name;
