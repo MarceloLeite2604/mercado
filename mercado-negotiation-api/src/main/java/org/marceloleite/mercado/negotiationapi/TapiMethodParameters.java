@@ -19,8 +19,10 @@ public class TapiMethodParameters extends HashMap<String, Object> {
 		String result = "";
 		for (String propertyKey : keySet()) {
 			Object propertyValue = get(propertyKey);
-			result += propertyKey + "=" + URLEncoder.encode(propertyValue.toString(), StandardCharsets.UTF_8.name())
-					+ "&";
+			if (propertyValue != null) {
+				result += propertyKey + "=" + URLEncoder.encode(propertyValue.toString(), StandardCharsets.UTF_8.name())
+						+ "&";
+			}
 		}
 
 		result = result.substring(0, result.length() - 1);

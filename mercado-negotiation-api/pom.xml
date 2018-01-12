@@ -19,6 +19,16 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.marceloleite</groupId>
+			<artifactId>mercado-negotiation-api-model</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.marceloleite</groupId>
+			<artifactId>mercado-retriever</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.marceloleite</groupId>
 			<artifactId>mercado-commons</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>

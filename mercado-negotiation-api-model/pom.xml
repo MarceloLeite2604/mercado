@@ -3,11 +3,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.marceloleite</groupId>
-	<artifactId>mercado-converter</artifactId>
+	<artifactId>mercado-negotiation-api-model</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>mercado-converter</name>
+	<name>mercado-negotiation-api-model</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
@@ -20,31 +20,6 @@
 		<dependency>
 			<groupId>org.marceloleite</groupId>
 			<artifactId>mercado-commons</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.marceloleite</groupId>
-			<artifactId>mercado-json-model</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.marceloleite</groupId>
-			<artifactId>mercado-xml-model</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.marceloleite</groupId>
-			<artifactId>mercado-persistence-model</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.marceloleite</groupId>
-			<artifactId>mercado-simulator-structures</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.marceloleite</groupId>
-			<artifactId>mercado-negotiation-api-model</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
