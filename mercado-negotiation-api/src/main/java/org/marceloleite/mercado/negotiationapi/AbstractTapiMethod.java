@@ -1,7 +1,25 @@
 package org.marceloleite.mercado.negotiationapi;
 
-public abstract class AbstractTapiMethod {
-	
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.URL;
+
+import javax.net.ssl.HttpsURLConnection;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.marceloleite.mercado.converter.json.JsonToClassObjectConverter;
+import org.marceloleite.mercado.jsonmodel.JsonTapiResponse;
+import org.marceloleite.mercado.negotiationapi.util.HttpConnection;
+import org.marceloleite.mercado.negotiationapi.util.NonceGenerator;
+import org.marceloleite.mercado.negotiationapi.util.UrlGenerator;
+
+public abstract class AbstractTapiMethod<T extends AbstractTapiResponse<?, ?>> {
+
+	private static final Logger LOGGER = LogManager.getLogger(AbstractTapiMethod.class);
+
 	private static final String DOMAIN_ADDRESS = "https://www.mercadobitcoin.net";
 
 	private static final String TAPI_PATH = "/tapi/v3/";
@@ -9,8 +27,6 @@ public abstract class AbstractTapiMethod {
 	protected static final String PARAMETER_TAPI_METHOD = "tapi_method";
 
 	protected static final String PARAMETER_TAPI_NONCE = "tapi_nonce";
-	
-	protected static final int STATUS_OK = 100;
 
 	public TapiMethodParameters generateTapiMethodParameters() {
 		TapiMethodParameters tapiMethodParameters = new TapiMethodParameters();
@@ -21,7 +37,49 @@ public abstract class AbstractTapiMethod {
 
 	protected abstract TapiMethod getTapiMethod();
 
-	public String generateAddress() {
+	protected abstract T generateMethodResponse(JsonTapiResponse jsonTapiResponse);
+
+	protected String generateAddress() {
 		return DOMAIN_ADDRESS + TAPI_PATH;
 	}
+
+	protected void sendHttpUrlConnectionProperties(HttpsURLConnection httpsUrlConnection,
+			TapiMethodParameters tapiMethodParameters) throws IOException {
+		OutputStreamWriter outputStreamWriter = new OutputStreamWriter(httpsUrlConnection.getOutputStream());
+		outputStreamWriter.write(tapiMethodParameters.toUrlParametersString());
+		outputStreamWriter.flush();
+		outputStreamWriter.close();
+	}
+
+	protected String readHttpUrlConnectionResponse(HttpsURLConnection httpsUrlConnection) throws IOException {
+		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(httpsUrlConnection.getInputStream()));
+		StringBuffer stringBuffer = new StringBuffer();
+		String buffer;
+		while ((buffer = bufferedReader.readLine()) != null) {
+			stringBuffer.append(buffer + "\n");
+		}
+		return stringBuffer.toString();
+	}
+
+	private JsonTapiResponse generateJsonTapiResponse(String response) {
+		return new JsonToClassObjectConverter<JsonTapiResponse>(JsonTapiResponse.class).convertTo(response);
+	}
+
+	protected T connectAndReadResponse(TapiMethodParameters tapiMethodParameters) {
+		URL url = new UrlGenerator().generate(generateAddress(), tapiMethodParameters);
+		LOGGER.debug("Url generated is: " + url);
+		HttpsURLConnection httpsUrlConnection = new HttpConnection().createHttpsUrlConnection(url);
+		try {
+			httpsUrlConnection.connect();
+			sendHttpUrlConnectionProperties(httpsUrlConnection, tapiMethodParameters);
+			String response = readHttpUrlConnectionResponse(httpsUrlConnection);
+			LOGGER.debug("Response received: " + response);
+			JsonTapiResponse jsonTapiResponse = generateJsonTapiResponse(response);
+			return generateMethodResponse(jsonTapiResponse);
+		} catch (IOException exception) {
+			throw new RuntimeException("Error while connecting to URL \"" + url + "\".", exception);
+		}
+
+	}
+
 }

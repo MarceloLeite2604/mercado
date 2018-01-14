@@ -2,7 +2,8 @@ package org.marceloleite.mercado.negotiationapi;
 
 public enum TapiMethod {
 
-	LIST_ORDER("list_orders");
+	LIST_ORDER("list_orders"),
+	LIST_SYSTEM_MESSAGES("list_system_messages");
 	
 	private String methodName;
 

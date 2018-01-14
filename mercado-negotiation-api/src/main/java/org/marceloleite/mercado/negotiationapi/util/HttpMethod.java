@@ -1,4 +1,4 @@
-package org.marceloleite.mercado.negotiationapi;
+package org.marceloleite.mercado.negotiationapi.util;
 
 public enum HttpMethod {
 	GET,
