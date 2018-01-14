@@ -1,7 +1,10 @@
 package org.marceloleite.mercado.jsonmodel;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
+
+import org.marceloleite.mercado.commons.util.converter.ObjectToJsonConverter;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
@@ -9,11 +12,12 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.annotation.JsonRawValue;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({ "response_data", "status_code", "error_message", "server_unix_timestamp" })
 public class JsonTapiResponse {
+
+	private static final String RESPONSE_DATA = "response_data";
 
 	@JsonProperty("status_code")
 	private Long statusCode;
@@ -65,5 +69,10 @@ public class JsonTapiResponse {
 	@JsonAnySetter
 	public void setAdditionalProperty(String name, Object value) {
 		this.additionalProperties.put(name, value);
+	}
+	
+	public String getResponseData() {
+		Object responseData = getAdditionalProperties().get(RESPONSE_DATA);
+		return new ObjectToJsonConverter().convertTo(((LinkedHashMap<?, ?>) responseData));
 	}
 }

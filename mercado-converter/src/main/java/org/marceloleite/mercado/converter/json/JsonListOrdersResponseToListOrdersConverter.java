@@ -8,7 +8,7 @@ import org.marceloleite.mercado.jsonmodel.JsonListOrdersResponse;
 import org.marceloleite.mercado.jsonmodel.JsonOrder;
 import org.marceloleite.mercado.negotiationapi.model.Order;
 
-public class JsonListOrdersResponseToListOrders implements Converter<JsonListOrdersResponse, List<Order>> {
+public class JsonListOrdersResponseToListOrdersConverter implements Converter<JsonListOrdersResponse, List<Order>> {
 
 	@Override
 	public List<Order> convertTo(JsonListOrdersResponse jsonListOrdersResponse) {

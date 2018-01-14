@@ -1,4 +1,4 @@
-package org.marceloleite.mercado.negotiationapi;
+package org.marceloleite.mercado.negotiationapi.util;
 
 import org.marceloleite.mercado.databasemodel.PropertyPO;
 import org.marceloleite.mercado.databaseretriever.persistence.dao.PropertyDAO;

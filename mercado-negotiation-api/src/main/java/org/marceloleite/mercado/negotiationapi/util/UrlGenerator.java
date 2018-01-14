@@ -1,4 +1,4 @@
-package org.marceloleite.mercado.negotiationapi.listorders;
+package org.marceloleite.mercado.negotiationapi.util;
 
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;

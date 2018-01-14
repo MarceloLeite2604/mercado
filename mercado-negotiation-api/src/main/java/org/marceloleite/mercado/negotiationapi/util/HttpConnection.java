@@ -1,4 +1,4 @@
-package org.marceloleite.mercado.negotiationapi;
+package org.marceloleite.mercado.negotiationapi.util;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
