@@ -2,7 +2,7 @@ package org.marceloleite.mercado.converter.json.getaccountinfo;
 
 import org.marceloleite.mercado.commons.util.converter.Converter;
 import org.marceloleite.mercado.jsonmodel.api.negotiation.accountinfo.JsonAccountInfo;
-import org.marceloleite.mercado.negotiationapi.model.accountinfo.AccountInfo;
+import org.marceloleite.mercado.negotiationapi.model.getaccountinfo.AccountInfo;
 
 public class JsonAccountInfoToAccountInfoConverter implements Converter<JsonAccountInfo, AccountInfo>{
 

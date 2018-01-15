@@ -5,6 +5,7 @@ public enum Currency {
 	BITCOIN("BTC", true),
 	LITECOIN("LTC", true),
 	BCASH("BCH", true),
+	BGOLD("BTG", true),
 	REAL("BRL", false);
 
 	private String acronym;

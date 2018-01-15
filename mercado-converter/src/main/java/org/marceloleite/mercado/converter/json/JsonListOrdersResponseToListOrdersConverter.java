@@ -6,7 +6,7 @@ import java.util.List;
 import org.marceloleite.mercado.commons.util.converter.Converter;
 import org.marceloleite.mercado.jsonmodel.api.data.JsonOrder;
 import org.marceloleite.mercado.jsonmodel.api.negotiation.JsonListOrdersResponse;
-import org.marceloleite.mercado.negotiationapi.model.order.Order;
+import org.marceloleite.mercado.negotiationapi.model.listorders.Order;
 
 public class JsonListOrdersResponseToListOrdersConverter implements Converter<JsonListOrdersResponse, List<Order>> {
 

@@ -4,7 +4,7 @@ import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.util.converter.Converter;
 import org.marceloleite.mercado.jsonmodel.api.negotiation.accountinfo.JsonCurrencyAvailable;
 import org.marceloleite.mercado.jsonmodel.api.negotiation.accountinfo.JsonWithdrawalLimits;
-import org.marceloleite.mercado.negotiationapi.model.accountinfo.WithdrawalLimits;
+import org.marceloleite.mercado.negotiationapi.model.getaccountinfo.WithdrawalLimits;
 
 public class JsonWithdrawalLimitsToWithdrawalLimitsConverter
 		implements Converter<JsonWithdrawalLimits, WithdrawalLimits> {
