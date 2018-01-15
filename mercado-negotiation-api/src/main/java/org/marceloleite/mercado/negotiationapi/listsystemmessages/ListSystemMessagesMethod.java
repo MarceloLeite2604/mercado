@@ -2,11 +2,11 @@ package org.marceloleite.mercado.negotiationapi.listsystemmessages;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.marceloleite.mercado.jsonmodel.JsonTapiResponse;
+import org.marceloleite.mercado.jsonmodel.api.negotiation.JsonTapiResponse;
 import org.marceloleite.mercado.negotiationapi.AbstractTapiMethod;
 import org.marceloleite.mercado.negotiationapi.TapiMethod;
 import org.marceloleite.mercado.negotiationapi.TapiMethodParameters;
-import org.marceloleite.mercado.negotiationapi.model.SystemMessageLevel;
+import org.marceloleite.mercado.negotiationapi.model.systemmessage.SystemMessageLevel;
 
 public class ListSystemMessagesMethod extends AbstractTapiMethod<ListSystemMessagesMethodResponse> {
 

@@ -12,7 +12,7 @@ import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.converter.json.MapJsonTradeToListTradeConverter;
 import org.marceloleite.mercado.databasemodel.TradePO;
 import org.marceloleite.mercado.databaseretriever.persistence.dao.TradeDAO;
-import org.marceloleite.mercado.jsonmodel.JsonTrade;
+import org.marceloleite.mercado.jsonmodel.api.data.JsonTrade;
 import org.marceloleite.mercado.retriever.database.TradesDatabaseUtils;
 import org.marceloleite.mercado.siteretriever.trades.TradesSiteRetriever;
 

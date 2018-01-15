@@ -30,11 +30,26 @@ public enum Currency {
 	}
 
 	public static Currency getByAcronym(String acronym) {
+		if (acronym == null || acronym.isEmpty()) {
+			throw new IllegalArgumentException("Currency acronym cannot be empty.");
+		}
 		for (Currency currency : values()) {
-			if (acronym.equals(currency.getAcronym())) {
+			if (acronym.toUpperCase().equals(currency.getAcronym().toUpperCase())) {
 				return currency;
 			}
 		}
-		return null;
+		throw new IllegalArgumentException("Could not find a currency with acronym \"" + acronym + "\".");
+	}
+
+	public static Currency getByName(String currencyName) {
+		if (currencyName == null || currencyName.isEmpty()) {
+			throw new IllegalArgumentException("Currency name cannot be empty.");
+		}
+		for (Currency currency : values()) {
+			if (currencyName.toUpperCase().equals(currency.name().toUpperCase())) {
+				return currency;
+			}
+		}
+		throw new IllegalArgumentException("Could find not a currency with the name \"" + currencyName + "\".");
 	}
 }

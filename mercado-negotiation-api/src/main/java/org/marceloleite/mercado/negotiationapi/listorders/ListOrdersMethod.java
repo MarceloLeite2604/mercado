@@ -6,12 +6,12 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.commons.OrderType;
-import org.marceloleite.mercado.jsonmodel.JsonTapiResponse;
+import org.marceloleite.mercado.jsonmodel.api.negotiation.JsonTapiResponse;
 import org.marceloleite.mercado.negotiationapi.AbstractTapiMethod;
 import org.marceloleite.mercado.negotiationapi.TapiMethod;
 import org.marceloleite.mercado.negotiationapi.TapiMethodParameters;
-import org.marceloleite.mercado.negotiationapi.model.CurrencyPair;
-import org.marceloleite.mercado.negotiationapi.model.OrderStatus;
+import org.marceloleite.mercado.negotiationapi.model.order.CurrencyPair;
+import org.marceloleite.mercado.negotiationapi.model.order.OrderStatus;
 
 public class ListOrdersMethod extends AbstractTapiMethod<ListOrdersMethodResponse> {
 

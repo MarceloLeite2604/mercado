@@ -4,10 +4,10 @@ import java.util.List;
 
 import org.marceloleite.mercado.commons.util.converter.Converter;
 import org.marceloleite.mercado.converter.json.JsonListOrdersResponseToListOrdersConverter;
-import org.marceloleite.mercado.jsonmodel.JsonListOrdersResponse;
-import org.marceloleite.mercado.jsonmodel.JsonTapiResponse;
+import org.marceloleite.mercado.jsonmodel.api.negotiation.JsonListOrdersResponse;
+import org.marceloleite.mercado.jsonmodel.api.negotiation.JsonTapiResponse;
 import org.marceloleite.mercado.negotiationapi.AbstractTapiResponse;
-import org.marceloleite.mercado.negotiationapi.model.Order;
+import org.marceloleite.mercado.negotiationapi.model.order.Order;
 
 public class ListOrdersMethodResponse extends AbstractTapiResponse<JsonListOrdersResponse, List<Order>> {
 

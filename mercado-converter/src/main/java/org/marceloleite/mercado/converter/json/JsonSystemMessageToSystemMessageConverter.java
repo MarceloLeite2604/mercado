@@ -2,9 +2,9 @@ package org.marceloleite.mercado.converter.json;
 
 import org.marceloleite.mercado.commons.util.converter.Converter;
 import org.marceloleite.mercado.commons.util.converter.LongToLocalDateTimeConverter;
-import org.marceloleite.mercado.jsonmodel.JsonSystemMessage;
-import org.marceloleite.mercado.negotiationapi.model.SystemMessage;
-import org.marceloleite.mercado.negotiationapi.model.SystemMessageLevel;
+import org.marceloleite.mercado.jsonmodel.api.data.JsonSystemMessage;
+import org.marceloleite.mercado.negotiationapi.model.systemmessage.SystemMessage;
+import org.marceloleite.mercado.negotiationapi.model.systemmessage.SystemMessageLevel;
 
 public class JsonSystemMessageToSystemMessageConverter implements Converter<JsonSystemMessage, SystemMessage> {
 

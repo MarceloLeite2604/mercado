@@ -9,7 +9,7 @@ import javax.ws.rs.core.MediaType;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.util.EpochSecondsToLocalDateTimeConveter;
-import org.marceloleite.mercado.jsonmodel.JsonTrade;
+import org.marceloleite.mercado.jsonmodel.api.data.JsonTrade;
 import org.marceloleite.mercado.siteretriever.AbstractSiteRetriever;
 
 class PartialTradesSiteRetriever extends AbstractSiteRetriever {

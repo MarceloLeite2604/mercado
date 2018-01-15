@@ -10,8 +10,8 @@ import javax.net.ssl.HttpsURLConnection;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.marceloleite.mercado.converter.json.JsonToClassObjectConverter;
-import org.marceloleite.mercado.jsonmodel.JsonTapiResponse;
+import org.marceloleite.mercado.commons.util.converter.ObjectToJsonConverter;
+import org.marceloleite.mercado.jsonmodel.api.negotiation.JsonTapiResponse;
 import org.marceloleite.mercado.negotiationapi.util.HttpConnection;
 import org.marceloleite.mercado.negotiationapi.util.NonceGenerator;
 import org.marceloleite.mercado.negotiationapi.util.UrlGenerator;
@@ -43,7 +43,7 @@ public abstract class AbstractTapiMethod<T extends AbstractTapiResponse<?, ?>> {
 		return DOMAIN_ADDRESS + TAPI_PATH;
 	}
 
-	protected void sendHttpUrlConnectionProperties(HttpsURLConnection httpsUrlConnection,
+	private void sendHttpUrlConnectionProperties(HttpsURLConnection httpsUrlConnection,
 			TapiMethodParameters tapiMethodParameters) throws IOException {
 		OutputStreamWriter outputStreamWriter = new OutputStreamWriter(httpsUrlConnection.getOutputStream());
 		outputStreamWriter.write(tapiMethodParameters.toUrlParametersString());
@@ -51,7 +51,7 @@ public abstract class AbstractTapiMethod<T extends AbstractTapiResponse<?, ?>> {
 		outputStreamWriter.close();
 	}
 
-	protected String readHttpUrlConnectionResponse(HttpsURLConnection httpsUrlConnection) throws IOException {
+	private String readHttpUrlConnectionResponse(HttpsURLConnection httpsUrlConnection) throws IOException {
 		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(httpsUrlConnection.getInputStream()));
 		StringBuffer stringBuffer = new StringBuffer();
 		String buffer;
@@ -62,7 +62,7 @@ public abstract class AbstractTapiMethod<T extends AbstractTapiResponse<?, ?>> {
 	}
 
 	private JsonTapiResponse generateJsonTapiResponse(String response) {
-		return new JsonToClassObjectConverter<JsonTapiResponse>(JsonTapiResponse.class).convertTo(response);
+		return new ObjectToJsonConverter(JsonTapiResponse.class).convertFromToObject(response, JsonTapiResponse.class);
 	}
 
 	protected T connectAndReadResponse(TapiMethodParameters tapiMethodParameters) {

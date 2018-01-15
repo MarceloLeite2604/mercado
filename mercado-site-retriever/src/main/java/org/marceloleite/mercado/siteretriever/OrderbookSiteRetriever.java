@@ -3,7 +3,7 @@ package org.marceloleite.mercado.siteretriever;
 import javax.ws.rs.core.MediaType;
 
 import org.marceloleite.mercado.commons.Currency;
-import org.marceloleite.mercado.jsonmodel.JsonOrderbook;
+import org.marceloleite.mercado.jsonmodel.api.data.JsonOrderbook;
 
 public class OrderbookSiteRetriever extends AbstractSiteRetriever {
 
