@@ -6,12 +6,12 @@ import java.util.List;
 import org.marceloleite.mercado.commons.OrderType;
 import org.marceloleite.mercado.commons.util.converter.Converter;
 import org.marceloleite.mercado.commons.util.converter.LongToLocalDateTimeConverter;
-import org.marceloleite.mercado.jsonmodel.JsonOperation;
-import org.marceloleite.mercado.jsonmodel.JsonOrder;
-import org.marceloleite.mercado.negotiationapi.model.CurrencyPair;
-import org.marceloleite.mercado.negotiationapi.model.Operation;
-import org.marceloleite.mercado.negotiationapi.model.Order;
-import org.marceloleite.mercado.negotiationapi.model.OrderStatus;
+import org.marceloleite.mercado.jsonmodel.api.data.JsonOperation;
+import org.marceloleite.mercado.jsonmodel.api.data.JsonOrder;
+import org.marceloleite.mercado.negotiationapi.model.order.CurrencyPair;
+import org.marceloleite.mercado.negotiationapi.model.order.Operation;
+import org.marceloleite.mercado.negotiationapi.model.order.Order;
+import org.marceloleite.mercado.negotiationapi.model.order.OrderStatus;
 
 public class JsonOrderToOrderConverter implements Converter<JsonOrder, Order> {
 

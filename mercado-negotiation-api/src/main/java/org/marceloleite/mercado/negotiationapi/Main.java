@@ -5,18 +5,21 @@ import java.util.List;
 import org.marceloleite.mercado.commons.util.converter.LocalDateTimeToStringConverter;
 import org.marceloleite.mercado.commons.util.converter.ObjectToJsonConverter;
 import org.marceloleite.mercado.databaseretriever.persistence.EntityManagerController;
+import org.marceloleite.mercado.negotiationapi.getaccountinfo.GetAccountInfoMethod;
+import org.marceloleite.mercado.negotiationapi.getaccountinfo.GetAccountInfoMethodResponse;
 import org.marceloleite.mercado.negotiationapi.listorders.ListOrdersMethod;
 import org.marceloleite.mercado.negotiationapi.listorders.ListOrdersMethodResponse;
 import org.marceloleite.mercado.negotiationapi.listsystemmessages.ListSystemMessagesMethod;
 import org.marceloleite.mercado.negotiationapi.listsystemmessages.ListSystemMessagesMethodResponse;
-import org.marceloleite.mercado.negotiationapi.model.CurrencyPair;
-import org.marceloleite.mercado.negotiationapi.model.SystemMessage;
+import org.marceloleite.mercado.negotiationapi.model.order.CurrencyPair;
+import org.marceloleite.mercado.negotiationapi.model.systemmessage.SystemMessage;
 
 public class Main {
 	public static void main(String[] args) throws Exception {
 
-		listOrdersMethod();
+		// listOrdersMethod();
 		// listSystemMessagesMethod();
+		getAccountInfo();
 	} 
 
 	@SuppressWarnings("unused")
@@ -46,6 +49,16 @@ public class Main {
 		try {
 			ListOrdersMethodResponse listOrdersMethodResponse = new ListOrdersMethod().execute(CurrencyPair.BRLBCH);
 			System.out.println(new ObjectToJsonConverter().convertTo(listOrdersMethodResponse));
+		} finally {
+			EntityManagerController.getInstance().close();
+		}
+	}
+	
+	@SuppressWarnings("unused")
+	private static void getAccountInfo() {
+		try {
+			GetAccountInfoMethodResponse getAccountInfoMethodResponse = new GetAccountInfoMethod().execute();
+			System.out.println(new ObjectToJsonConverter().convertTo(getAccountInfoMethodResponse));
 		} finally {
 			EntityManagerController.getInstance().close();
 		}

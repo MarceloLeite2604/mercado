@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.marceloleite.mercado.commons.util.converter.Converter;
-import org.marceloleite.mercado.jsonmodel.JsonSystemMessage;
-import org.marceloleite.mercado.jsonmodel.JsonListSystemMessagesResponse;
-import org.marceloleite.mercado.negotiationapi.model.SystemMessage;
+import org.marceloleite.mercado.jsonmodel.api.data.JsonSystemMessage;
+import org.marceloleite.mercado.jsonmodel.api.negotiation.JsonListSystemMessagesResponse;
+import org.marceloleite.mercado.negotiationapi.model.systemmessage.SystemMessage;
 
 public class JsonSystemMessagesToListSystemMessageConverter
 		implements Converter<JsonListSystemMessagesResponse, List<SystemMessage>> {

@@ -4,10 +4,10 @@ import java.util.List;
 
 import org.marceloleite.mercado.commons.util.converter.Converter;
 import org.marceloleite.mercado.converter.json.JsonSystemMessagesToListSystemMessageConverter;
-import org.marceloleite.mercado.jsonmodel.JsonListSystemMessagesResponse;
-import org.marceloleite.mercado.jsonmodel.JsonTapiResponse;
+import org.marceloleite.mercado.jsonmodel.api.negotiation.JsonListSystemMessagesResponse;
+import org.marceloleite.mercado.jsonmodel.api.negotiation.JsonTapiResponse;
 import org.marceloleite.mercado.negotiationapi.AbstractTapiResponse;
-import org.marceloleite.mercado.negotiationapi.model.SystemMessage;
+import org.marceloleite.mercado.negotiationapi.model.systemmessage.SystemMessage;
 
 public class ListSystemMessagesMethodResponse extends AbstractTapiResponse<JsonListSystemMessagesResponse, List<SystemMessage>> {
 

@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 import org.marceloleite.mercado.commons.util.converter.Converter;
 import org.marceloleite.mercado.commons.util.converter.LongToLocalDateTimeConverter;
 import org.marceloleite.mercado.converter.json.JsonToClassObjectConverter;
-import org.marceloleite.mercado.jsonmodel.JsonTapiResponse;
+import org.marceloleite.mercado.jsonmodel.api.negotiation.JsonTapiResponse;
 
 public abstract class AbstractTapiResponse<T, T2> {
 
@@ -48,6 +48,14 @@ public abstract class AbstractTapiResponse<T, T2> {
 
 	public void setTimestamp(LocalDateTime timestamp) {
 		this.timestamp = timestamp;
+	}
+
+	public String getResponseData() {
+		return responseData;
+	}
+
+	public void setResponseData(String responseData) {
+		this.responseData = responseData;
 	}
 
 	protected T getJsonResponseData() {

@@ -6,9 +6,9 @@ import java.util.Map;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.util.converter.ObjectToJsonConverter;
-import org.marceloleite.mercado.jsonmodel.JsonOrderbook;
-import org.marceloleite.mercado.jsonmodel.JsonTicker;
-import org.marceloleite.mercado.jsonmodel.JsonTrade;
+import org.marceloleite.mercado.jsonmodel.api.data.JsonOrderbook;
+import org.marceloleite.mercado.jsonmodel.api.data.JsonTicker;
+import org.marceloleite.mercado.jsonmodel.api.data.JsonTrade;
 import org.marceloleite.mercado.siteretriever.trades.TradesSiteRetriever;
 
 public class Main {

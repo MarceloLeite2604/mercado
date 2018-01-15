@@ -1,4 +1,4 @@
-package org.marceloleite.mercado.jsonmodel;
+package org.marceloleite.mercado.jsonmodel.api.data;
 
 import java.util.HashMap;
 import java.util.Map;

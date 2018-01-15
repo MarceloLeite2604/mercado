@@ -3,7 +3,7 @@ package org.marceloleite.mercado.siteretriever.util.checker;
 import java.util.List;
 
 import org.marceloleite.mercado.commons.interfaces.Check;
-import org.marceloleite.mercado.jsonmodel.JsonTrade;
+import org.marceloleite.mercado.jsonmodel.api.data.JsonTrade;
 
 public class MaxTradesReachedCheck implements Check<List<JsonTrade>>{
 	

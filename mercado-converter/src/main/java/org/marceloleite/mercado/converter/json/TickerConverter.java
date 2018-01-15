@@ -3,8 +3,8 @@ package org.marceloleite.mercado.converter.json;
 import org.marceloleite.mercado.commons.util.converter.Converter;
 import org.marceloleite.mercado.commons.util.converter.LongToLocalDateTimeConverter;
 import org.marceloleite.mercado.databasemodel.TickerPO;
-import org.marceloleite.mercado.jsonmodel.JsonTicker;
-import org.marceloleite.mercado.jsonmodel.JsonTickerValues;
+import org.marceloleite.mercado.jsonmodel.api.data.JsonTicker;
+import org.marceloleite.mercado.jsonmodel.api.data.JsonTickerValues;
 import org.marceloleite.mercado.databasemodel.TickerIdPO;
 
 public class TickerConverter implements Converter<JsonTicker, TickerPO> {
