@@ -3,7 +3,7 @@ package org.marceloleite.mercado.converter.json;
 import org.marceloleite.mercado.commons.util.converter.Converter;
 import org.marceloleite.mercado.commons.util.converter.LongToLocalDateTimeConverter;
 import org.marceloleite.mercado.jsonmodel.api.data.JsonOperation;
-import org.marceloleite.mercado.negotiationapi.model.order.Operation;
+import org.marceloleite.mercado.negotiationapi.model.listorders.Operation;
 
 public class JsonOperationToOperationConverter implements Converter<JsonOperation, Operation> {
 

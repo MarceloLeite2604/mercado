@@ -2,7 +2,7 @@ package org.marceloleite.mercado.converter.json.getaccountinfo;
 
 import org.marceloleite.mercado.commons.util.converter.Converter;
 import org.marceloleite.mercado.jsonmodel.api.negotiation.accountinfo.JsonCurrencyAvailable;
-import org.marceloleite.mercado.negotiationapi.model.accountinfo.CurrencyAvailable;
+import org.marceloleite.mercado.negotiationapi.model.getaccountinfo.CurrencyAvailable;
 
 public class JsonCurrencyAvaliableToCurrencyAvaliableConverter
 		implements Converter<JsonCurrencyAvailable, CurrencyAvailable> {

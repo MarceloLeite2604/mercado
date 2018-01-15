@@ -6,7 +6,7 @@ import java.util.List;
 import org.marceloleite.mercado.commons.util.converter.Converter;
 import org.marceloleite.mercado.jsonmodel.api.data.JsonSystemMessage;
 import org.marceloleite.mercado.jsonmodel.api.negotiation.JsonListSystemMessagesResponse;
-import org.marceloleite.mercado.negotiationapi.model.systemmessage.SystemMessage;
+import org.marceloleite.mercado.negotiationapi.model.listsystemmessages.SystemMessage;
 
 public class JsonSystemMessagesToListSystemMessageConverter
 		implements Converter<JsonListSystemMessagesResponse, List<SystemMessage>> {

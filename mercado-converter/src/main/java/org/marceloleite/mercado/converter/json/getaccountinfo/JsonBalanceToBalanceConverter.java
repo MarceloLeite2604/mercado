@@ -4,7 +4,7 @@ import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.util.converter.Converter;
 import org.marceloleite.mercado.jsonmodel.api.negotiation.accountinfo.JsonBalance;
 import org.marceloleite.mercado.jsonmodel.api.negotiation.accountinfo.JsonCurrencyAvailable;
-import org.marceloleite.mercado.negotiationapi.model.accountinfo.Balance;
+import org.marceloleite.mercado.negotiationapi.model.getaccountinfo.Balance;
 
 public class JsonBalanceToBalanceConverter implements Converter<JsonBalance, Balance> {
 
