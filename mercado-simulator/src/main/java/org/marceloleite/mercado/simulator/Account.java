@@ -1,5 +1,6 @@
 package org.marceloleite.mercado.simulator;
 
+import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
@@ -54,7 +55,7 @@ public class Account {
 		this.depositsTemporalController = createDepositsTemporalController(accountData);
 		this.buyOrdersTemporalController = createBuyOrdersTemporalController(accountData);
 		this.sellOrdersTemporalController = createSellOrdersTemporalController(accountData);
-		this.currenciesStrategies = new EnumMap<>(Currency.class);
+		this.currenciesStrategies = createCurrenciesStrategies(accountData);
 	}
 
 	public Account(Account account) {
@@ -89,6 +90,26 @@ public class Account {
 		}
 
 		return sellOrders;
+	}
+	
+	private Map<Currency, List<Strategy>> createCurrenciesStrategies(AccountData accountData) {
+		Map<Currency, List<String>> currenciesStrategyClassnames = accountData.getCurrenciesStrategies();
+		Map<Currency, List<Strategy>> currenciesStrategies = new EnumMap<Currency, List<Strategy>>(Currency.class);
+		StrategyLoader strategyLoader = new StrategyLoader();
+		if (currenciesStrategyClassnames != null && !currenciesStrategyClassnames.isEmpty()) {
+			for (Currency currency : currenciesStrategyClassnames.keySet()) {
+				List<String> strategiesClassNames = currenciesStrategyClassnames.get(currency);
+				if ( strategiesClassNames != null && !strategiesClassNames.isEmpty()) {
+					List<Strategy> strategies = new ArrayList<>();
+					for (String strategyClassName : strategiesClassNames) {
+						Strategy strategy = strategyLoader.load(strategyClassName.trim(), currency);
+						strategies.add(strategy);
+					}
+					currenciesStrategies.put(currency, strategies);
+				}
+			}
+		}
+		return currenciesStrategies;
 	}
 
 	public Account(String owner) {

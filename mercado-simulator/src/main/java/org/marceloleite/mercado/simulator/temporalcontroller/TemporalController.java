@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.marceloleite.mercado.commons.TimeInterval;
-import org.marceloleite.mercado.simulator.Deposit;
 
 public class TemporalController<T extends TimedObject> extends ArrayList<T> {
 

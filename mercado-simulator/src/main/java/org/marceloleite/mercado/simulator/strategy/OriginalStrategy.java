@@ -14,6 +14,10 @@ public class OriginalStrategy implements Strategy {
 	private static final Logger LOGGER = LogManager.getLogger(OriginalStrategy.class);
 
 	private Currency currency;
+	
+	public OriginalStrategy(Currency currency) {
+		this.currency = currency;
+	}
 
 	public OriginalStrategy() {
 	}

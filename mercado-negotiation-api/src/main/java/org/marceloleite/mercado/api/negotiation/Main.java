@@ -6,6 +6,8 @@ import org.marceloleite.mercado.api.negotiation.methods.getaccountinfo.GetAccoun
 import org.marceloleite.mercado.api.negotiation.methods.getaccountinfo.GetAccountInfoMethodResponse;
 import org.marceloleite.mercado.api.negotiation.methods.getorder.GetOrderMethod;
 import org.marceloleite.mercado.api.negotiation.methods.getorder.GetOrderMethodResponse;
+import org.marceloleite.mercado.api.negotiation.methods.listorderbook.ListOrderbookMethod;
+import org.marceloleite.mercado.api.negotiation.methods.listorderbook.ListOrderbookMethodResponse;
 import org.marceloleite.mercado.api.negotiation.methods.listorders.ListOrdersMethod;
 import org.marceloleite.mercado.api.negotiation.methods.listorders.ListOrdersMethodResponse;
 import org.marceloleite.mercado.api.negotiation.methods.listsystemmessages.ListSystemMessagesMethod;
@@ -22,7 +24,18 @@ public class Main {
 		// listOrdersMethod();
 		// listSystemMessagesMethod();
 		// getAccountInfoMethod();
-		getOrderMethod();
+		// getOrderMethod();
+		listOrderbookMethod();
+	}
+
+	private static void listOrderbookMethod() {
+		try {
+			ListOrderbookMethodResponse listOrderbookMethodResponse = new ListOrderbookMethod()
+					.execute(CurrencyPair.BRLBCH);
+			System.out.println(new ObjectToJsonConverter().convertTo(listOrderbookMethodResponse.getListOrderbookResponse()));
+		} finally {
+			EntityManagerController.getInstance().close();
+		}
 	}
 
 	@SuppressWarnings("unused")

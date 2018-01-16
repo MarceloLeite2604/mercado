@@ -37,12 +37,4 @@ public class PersistenceConfiguration extends AbstractPropertiesReader<StandardP
 		}
 		return properties;
 	}
-
-	/*
-	 * @Override public StandardProperty getProperty(StandardProperty property) {
-	 * return getProperty(property); }
-	 * 
-	 * @Override public StandardProperty getTemplateObject() { // TODO
-	 * Auto-generated method stub return null; }
-	 */
 }

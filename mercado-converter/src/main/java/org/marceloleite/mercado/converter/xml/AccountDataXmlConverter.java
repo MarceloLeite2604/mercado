@@ -1,8 +1,11 @@
 package org.marceloleite.mercado.converter.xml;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 
+import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.simulator.structure.AccountData;
 import org.marceloleite.mercado.simulator.structure.BalanceData;
 import org.marceloleite.mercado.simulator.structure.BuyOrderData;
@@ -13,6 +16,7 @@ import org.marceloleite.mercado.xml.structures.XmlBalances;
 import org.marceloleite.mercado.xml.structures.XmlBuyOrder;
 import org.marceloleite.mercado.xml.structures.XmlDeposit;
 import org.marceloleite.mercado.xml.structures.XmlSellOrder;
+import org.marceloleite.mercado.xml.structures.XmlStrategy;
 
 public class AccountDataXmlConverter implements XmlConverter<XmlAccount, AccountData> {
 
@@ -32,9 +36,20 @@ public class AccountDataXmlConverter implements XmlConverter<XmlAccount, Account
 		List<SellOrderData> sellOrdersData = createSellOrders(xmlSellOrders);
 		List<XmlDeposit> xmlDeposits = xmlAccount.getXmlDeposits();
 		List<DepositData> depositsData = createDeposits(xmlDeposits);
+		List<XmlStrategy> xmlStrategies = xmlAccount.getXmlStrategies();
+		Map<Currency, List<String>> currenciesStrategies = createCurrenciesStrategies(xmlStrategies);
 
-		AccountData account = new AccountData(owner, balanceData, depositsData, buyOrdersData, sellOrdersData, null);
+		AccountData account = new AccountData(owner, balanceData, depositsData, buyOrdersData, sellOrdersData, currenciesStrategies);
 		return account;
+	}
+
+	private Map<Currency, List<String>> createCurrenciesStrategies(List<XmlStrategy> xmlStrategies) {
+		Map<Currency, List<String>> currenciesStrategies = new EnumMap<Currency, List<String>>(Currency.class);
+		for (XmlStrategy xmlStrategy : xmlStrategies) {
+			Currency currency = xmlStrategy.getCurrency();
+			currenciesStrategies.put(currency, xmlStrategy.getClassNames());
+		}
+		return currenciesStrategies;
 	}
 
 	private List<SellOrderData> createSellOrders(List<XmlSellOrder> xmlSellOrders) {
