@@ -1,7 +1,6 @@
 package org.marceloleite.mercado.simulator;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
@@ -16,15 +15,12 @@ import org.marceloleite.mercado.retriever.TemporalTickerRetriever;
 import org.marceloleite.mercado.retriever.exception.NoTemporalTickerForPeriodException;
 import org.marceloleite.mercado.simulator.order.BuyOrder;
 import org.marceloleite.mercado.simulator.order.SellOrder;
-import org.marceloleite.mercado.simulator.strategy.FirstStrategy;
-import org.marceloleite.mercado.simulator.strategy.OriginalStrategy;
 import org.marceloleite.mercado.simulator.strategy.Strategy;
 import org.marceloleite.mercado.simulator.structure.AccountData;
 import org.marceloleite.mercado.xml.reader.AccountsReader;
 
 public class House {
 
-	@SuppressWarnings("unused")
 	private static final Logger LOGGER = LogManager.getLogger(House.class);
 
 	private static final double DEFAULT_COMISSION_PERCENTAGE = 0.007;
@@ -60,21 +56,6 @@ public class House {
 		this.temporalTickers = new EnumMap<>(Currency.class);
 		this.temporalTickerVariations = new EnumMap<>(Currency.class);
 		this.accounts = retrieveAccounts();
-		/* TODO: Remove. */
-		for (Account account : accounts) {
-
-			if ("FirstStrategy".equals(account.getOwner())) {
-				Strategy strategy = new FirstStrategy();
-				strategy.setCurrency(Currency.BITCOIN);
-				account.getCurrenciesStrategies().put(Currency.BITCOIN, Arrays.asList(strategy));
-			}
-
-			if ("OriginalStrategy".equals(account.getOwner())) {
-				Strategy strategy = new OriginalStrategy();
-				strategy.setCurrency(Currency.BITCOIN);
-				account.getCurrenciesStrategies().put(Currency.BITCOIN, Arrays.asList(strategy));
-			}
-		}
 	}
 
 	public House(House house) {

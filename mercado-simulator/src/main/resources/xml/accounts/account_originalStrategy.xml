@@ -11,8 +11,10 @@
 	<strategies>
 		<strategy>
 			<currency>BTC</currency>
-			<class>org.marceloleite.mercado.simulator.strategy.OriginalStrategy
-			</class>
+			<classes>
+				<class>org.marceloleite.mercado.simulator.strategy.OriginalStrategy
+				</class>
+			</classes>
 		</strategy>
 	</strategies>
 </account>

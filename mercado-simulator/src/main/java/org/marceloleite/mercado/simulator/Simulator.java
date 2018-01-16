@@ -74,9 +74,19 @@ public class Simulator {
 		for (Currency currency : Currency.values()) {
 			if (currency.isDigital()) {
 				TemporalTickerPO temporalTickerPO = house.getTemporalTickers().get(currency);
+				if ( temporalTickerPO != null ) {
+					CurrencyAmount currencyAmount = balance.get(currency);
+					if (currencyAmount != null) {
+						totalRealAmount.setAmount(
+								totalRealAmount.getAmount() + (currencyAmount.getAmount() * temporalTickerPO.getAverage()));
+					}
+				}
+			} else {
 				CurrencyAmount currencyAmount = balance.get(currency);
-				totalRealAmount.setAmount(
-						totalRealAmount.getAmount() + (currencyAmount.getAmount() * temporalTickerPO.getAverage()));
+				if (currencyAmount != null) {
+					totalRealAmount.setAmount(
+							totalRealAmount.getAmount() + (currencyAmount.getAmount() ));
+				}
 			}
 		}
 		LOGGER.info("\tTotal in " + Currency.REAL + ": " + totalRealAmount);

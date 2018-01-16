@@ -5,7 +5,9 @@ public enum TapiMethod {
 	LIST_ORDER("list_orders"),
 	LIST_SYSTEM_MESSAGES("list_system_messages"),
 	GET_ACCOUNT_INFO("get_account_info"),
-	GET_ORDER("get_order");
+	GET_ORDER("get_order"),
+	LIST_ORDERBOOK("list_orderbook"),
+	PLACE_BUY_ORDER("place_buy_order");
 	
 	private String methodName;
 

@@ -6,7 +6,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.databasemodel.TemporalTickerPO;
-import org.marceloleite.mercado.simulator.strategy.FirstStrategy;
 
 public class TemporalTickerVariation {
 
@@ -43,6 +42,7 @@ public class TemporalTickerVariation {
 			this.volVariation = 0;
 			this.firstVariation = 0;
 			this.lastVariation = 0;
+			this.currency = currentTemporalTickerPO.getId().getCurrency();
 		} else {
 			LOGGER.debug("Previous temporal ticker: " + previousTemporalTickerPO);
 			LOGGER.debug("Current temporal ticker: " + currentTemporalTickerPO);
@@ -58,8 +58,8 @@ public class TemporalTickerVariation {
 					currentTemporalTickerPO.getFirst());
 			this.lastVariation = calculateVariation(previousTemporalTickerPO.getLast(),
 					currentTemporalTickerPO.getLast());
+			this.currency = previousTemporalTickerPO.getId().getCurrency();
 		}
-		this.currency = currentTemporalTickerPO.getId().getCurrency();
 	}
 
 	private TemporalTickerVariation(Currency currency, double orderVariation, double highVariation,

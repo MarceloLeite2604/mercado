@@ -39,9 +39,14 @@ public class FirstStrategy implements Strategy {
 	private TemporalTickerPO baseTemporalTickerPO;
 
 	private CurrencyAmount baseRealAmount;
+	
+	public FirstStrategy(Currency currency) {
+		this.currency = currency;
+		this.buySellStep = new BuySellStep(TOTAL_BUY_STEPS, TOTAL_SELL_STEPS);
+	}
 
 	public FirstStrategy() {
-		this.buySellStep = new BuySellStep(TOTAL_BUY_STEPS, TOTAL_SELL_STEPS);
+		this(null);
 	}
 
 	@Override
