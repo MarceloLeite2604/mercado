@@ -1,6 +1,6 @@
 package org.marceloleite.mercado.negotiationapi.model.getorder;
 
-import org.marceloleite.mercado.negotiationapi.model.listorders.Order;
+import org.marceloleite.mercado.negotiationapi.model.Order;
 
 public class GetOrderResponse {
 

@@ -15,24 +15,25 @@ import org.marceloleite.mercado.api.negotiation.methods.listsystemmessages.ListS
 import org.marceloleite.mercado.commons.util.converter.LocalDateTimeToStringConverter;
 import org.marceloleite.mercado.commons.util.converter.ObjectToJsonConverter;
 import org.marceloleite.mercado.databaseretriever.persistence.EntityManagerController;
-import org.marceloleite.mercado.negotiationapi.model.listorders.CurrencyPair;
+import org.marceloleite.mercado.negotiationapi.model.CurrencyPair;
 import org.marceloleite.mercado.negotiationapi.model.listsystemmessages.SystemMessage;
 
 public class Main {
 	public static void main(String[] args) throws Exception {
 
-		// listOrdersMethod();
+		listOrdersMethod();
 		// listSystemMessagesMethod();
 		// getAccountInfoMethod();
 		// getOrderMethod();
-		listOrderbookMethod();
+		// listOrderbookMethod();
 	}
 
+	@SuppressWarnings("unused")
 	private static void listOrderbookMethod() {
 		try {
 			ListOrderbookMethodResponse listOrderbookMethodResponse = new ListOrderbookMethod()
 					.execute(CurrencyPair.BRLBCH);
-			System.out.println(new ObjectToJsonConverter().convertTo(listOrderbookMethodResponse.getListOrderbookResponse()));
+			System.out.println(new ObjectToJsonConverter().convertTo(listOrderbookMethodResponse.getResponse()));
 		} finally {
 			EntityManagerController.getInstance().close();
 		}
@@ -47,7 +48,7 @@ public class Main {
 			System.out.println("Error message: " + listSystemMessagesMethodResponse.getErrorMessage());
 			System.out.println("Timestamp: "
 					+ new LocalDateTimeToStringConverter().convertTo(listSystemMessagesMethodResponse.getTimestamp()));
-			List<SystemMessage> systemMessages = listSystemMessagesMethodResponse.getSystemMessages();
+			List<SystemMessage> systemMessages = listSystemMessagesMethodResponse.getResponse();
 			System.out.println("Total messages: " + systemMessages.size());
 			if (!systemMessages.isEmpty()) {
 				for (SystemMessage systemMessage : systemMessages) {
@@ -74,7 +75,7 @@ public class Main {
 	private static void getAccountInfoMethod() {
 		try {
 			GetAccountInfoMethodResponse getAccountInfoMethodResponse = new GetAccountInfoMethod().execute();
-			System.out.println(new ObjectToJsonConverter().convertTo(getAccountInfoMethodResponse.getAccountInfo()));
+			System.out.println(new ObjectToJsonConverter().convertTo(getAccountInfoMethodResponse.getResponse()));
 		} finally {
 			EntityManagerController.getInstance().close();
 		}
@@ -84,7 +85,7 @@ public class Main {
 	private static void getOrderMethod() {
 		try {
 			GetOrderMethodResponse getOrderMethodResponse = new GetOrderMethod().execute(CurrencyPair.BRLBCH, 1024453l);
-			System.out.println(new ObjectToJsonConverter().convertTo(getOrderMethodResponse.getGetOrderResponse()));
+			System.out.println(new ObjectToJsonConverter().convertTo(getOrderMethodResponse.getResponse()));
 		} finally {
 			EntityManagerController.getInstance().close();
 		}

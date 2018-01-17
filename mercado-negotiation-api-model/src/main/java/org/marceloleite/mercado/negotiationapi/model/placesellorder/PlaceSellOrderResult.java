@@ -1,17 +1,17 @@
-package org.marceloleite.mercado.negotiationapi.model.placebuyorder;
+package org.marceloleite.mercado.negotiationapi.model.placesellorder;
 
 import org.marceloleite.mercado.negotiationapi.model.Order;
 
-public class PlaceBuyOrderResponse {
+public class PlaceSellOrderResult {
 
 	private Order order;
 
-	public PlaceBuyOrderResponse(Order order) {
+	public PlaceSellOrderResult(Order order) {
 		super();
 		this.order = order;
 	}
-
-	public PlaceBuyOrderResponse() {
+	
+	public PlaceSellOrderResult() {
 		this(null);
 	}
 

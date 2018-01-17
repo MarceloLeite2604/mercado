@@ -16,61 +16,47 @@ public abstract class AbstractTapiResponse<T, T2> {
 	private LocalDateTime timestamp;
 
 	private String responseData;
+	
+	private Class<?> jsonResponseDataClass;
+	
+	private T2 response;
 
-	public AbstractTapiResponse(JsonTapiResponse jsonTapiResponse) {
+	public AbstractTapiResponse(JsonTapiResponse jsonTapiResponse, Class<?> jsonResponseDataClass, Converter<T, T2> jsonTapiResponseConverter) {
 		super();
 		this.statusCode = jsonTapiResponse.getStatusCode();
 		this.errorMessage = jsonTapiResponse.getErrorMessage();
 		long longTimestamp = Long.parseLong(jsonTapiResponse.getServerUnixTimestamp());
 		this.timestamp = new LongToLocalDateTimeConverter().convertTo(longTimestamp);
 		this.responseData = jsonTapiResponse.getResponseData();
+		this.jsonResponseDataClass = jsonResponseDataClass;
+		this.response = jsonTapiResponseConverter.convertTo(getJsonResponseData());
 	}
 
 	public long getStatusCode() {
 		return statusCode;
 	}
 
-	public void setStatusCode(long statusCode) {
-		this.statusCode = statusCode;
-	}
-
 	public String getErrorMessage() {
 		return errorMessage;
-	}
-
-	public void setErrorMessage(String errorMessage) {
-		this.errorMessage = errorMessage;
 	}
 
 	public LocalDateTime getTimestamp() {
 		return timestamp;
 	}
-
-	public void setTimestamp(LocalDateTime timestamp) {
-		this.timestamp = timestamp;
-	}
-
-	public String getResponseData() {
+	
+	protected String getResponseData() {
 		return responseData;
 	}
-
-	public void setResponseData(String responseData) {
-		this.responseData = responseData;
+	
+	public T2 getResponse() {
+		return response;
 	}
 
 	protected T getJsonResponseData() {
 		T result = null;
 		if (responseData != null || !responseData.isEmpty()) {
-			result = new JsonToClassObjectConverter<T>(getJsonResponseDataClass()).convertTo(responseData);
+			result = new JsonToClassObjectConverter<T>(jsonResponseDataClass).convertTo(responseData);
 		}
 		return result;
 	}
-
-	protected T2 getFormattedResponseData() {
-		return getConverter().convertTo(getJsonResponseData());
-	}
-
-	protected abstract Class<?> getJsonResponseDataClass();
-
-	protected abstract Converter<T, T2> getConverter();
 }

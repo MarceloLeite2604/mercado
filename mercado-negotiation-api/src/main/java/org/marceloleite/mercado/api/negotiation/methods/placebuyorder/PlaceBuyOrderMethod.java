@@ -2,40 +2,27 @@ package org.marceloleite.mercado.api.negotiation.methods.placebuyorder;
 
 import org.marceloleite.mercado.api.negotiation.methods.AbstractTapiMethod;
 import org.marceloleite.mercado.api.negotiation.methods.TapiMethod;
-import org.marceloleite.mercado.api.negotiation.methods.TapiMethodParameters;
-import org.marceloleite.mercado.jsonmodel.api.negotiation.JsonTapiResponse;
-import org.marceloleite.mercado.negotiationapi.model.listorders.CurrencyPair;
+import org.marceloleite.mercado.negotiationapi.model.CurrencyPair;
 
 public class PlaceBuyOrderMethod extends AbstractTapiMethod<PlaceBuyOrderMethodResponse> {
+	
+	private static final String[] PARAMETER_NAMES = {"coin_pair", "quantity", "limit_price"};
 
+	public PlaceBuyOrderMethod() {
+		super(TapiMethod.PLACE_BUY_ORDER, PlaceBuyOrderMethodResponse.class, PARAMETER_NAMES);
+	}
+	
 	public PlaceBuyOrderMethodResponse execute(CurrencyPair currencyPair, Double quantity, Double limitPrice) {
-		TapiMethodParameters tapiMethodParameters = generateTapiMethodParameters(currencyPair, quantity, limitPrice);
-		return connectAndReadResponse(tapiMethodParameters);
+		checkQuantityParameter(currencyPair, quantity);
+		return executeMethod(currencyPair, quantity, limitPrice);
 	}
 
-	private TapiMethodParameters generateTapiMethodParameters(CurrencyPair currencyPair, Double quantity,
-			Double limitPrice) {
-		TapiMethodParameters tapiMethodParameters = generateTapiMethodParameters();
+	private void checkQuantityParameter(CurrencyPair currencyPair, Double quantity) {
 		PlaceBuyOrderQuantityCheck placeBuyOrderQuantityCheck = new PlaceBuyOrderQuantityCheck(
 				currencyPair.getSecondCurrency());
 		if (placeBuyOrderQuantityCheck.check(quantity)) {
 			throw new RuntimeException("Quantity " + quantity + " is below minimal accepted value for \""
 					+ currencyPair.getSecondCurrency() + "\" currency.");
 		}
-		tapiMethodParameters.put(PlaceBuyOrderParameters.COIN_PAIR.toString(), currencyPair);
-		tapiMethodParameters.put(PlaceBuyOrderParameters.QUANTITY.toString(), quantity);
-		tapiMethodParameters.put(PlaceBuyOrderParameters.LIMIT_PRICE.toString(), limitPrice);
-		return tapiMethodParameters;
 	}
-
-	@Override
-	protected TapiMethod getTapiMethod() {
-		return TapiMethod.PLACE_BUY_ORDER;
-	}
-
-	@Override
-	protected PlaceBuyOrderMethodResponse generateMethodResponse(JsonTapiResponse jsonTapiResponse) {
-		return new PlaceBuyOrderMethodResponse(jsonTapiResponse);
-	}
-
 }

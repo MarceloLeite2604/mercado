@@ -8,10 +8,10 @@ import org.marceloleite.mercado.commons.util.converter.Converter;
 import org.marceloleite.mercado.commons.util.converter.LongToLocalDateTimeConverter;
 import org.marceloleite.mercado.jsonmodel.api.data.JsonOperation;
 import org.marceloleite.mercado.jsonmodel.api.data.JsonOrder;
-import org.marceloleite.mercado.negotiationapi.model.listorders.CurrencyPair;
+import org.marceloleite.mercado.negotiationapi.model.CurrencyPair;
+import org.marceloleite.mercado.negotiationapi.model.Order;
+import org.marceloleite.mercado.negotiationapi.model.OrderStatus;
 import org.marceloleite.mercado.negotiationapi.model.listorders.Operation;
-import org.marceloleite.mercado.negotiationapi.model.listorders.Order;
-import org.marceloleite.mercado.negotiationapi.model.listorders.OrderStatus;
 
 public class JsonOrderToOrderConverter implements Converter<JsonOrder, Order> {
 
