@@ -3,63 +3,33 @@ package org.marceloleite.mercado.api.negotiation.methods.listorders;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.api.negotiation.methods.AbstractTapiMethod;
 import org.marceloleite.mercado.api.negotiation.methods.TapiMethod;
-import org.marceloleite.mercado.api.negotiation.methods.TapiMethodParameters;
 import org.marceloleite.mercado.commons.OrderType;
-import org.marceloleite.mercado.jsonmodel.api.negotiation.JsonTapiResponse;
-import org.marceloleite.mercado.negotiationapi.model.listorders.CurrencyPair;
-import org.marceloleite.mercado.negotiationapi.model.listorders.OrderStatus;
+import org.marceloleite.mercado.negotiationapi.model.CurrencyPair;
+import org.marceloleite.mercado.negotiationapi.model.OrderStatus;
 
 public class ListOrdersMethod extends AbstractTapiMethod<ListOrdersMethodResponse> {
+	
+	private static final String[] PARAMETER_NAMES = {"coin_pair", "order_type", "status_list", "has_fulls",
+			"from_id", "to_id", "from_timestamp", "to_timestamp"};
 
-	@SuppressWarnings("unused")
-	private static final Logger LOGGER = LogManager.getLogger(ListOrdersMethod.class);
-
-	public ListOrdersMethodResponse execute(CurrencyPair coinPair) {
-		return execute(coinPair, null, null, null, null, null, null);
+	public ListOrdersMethod() {
+		super(TapiMethod.LIST_ORDERS, ListOrdersMethodResponse.class, PARAMETER_NAMES);
 	}
 
 	public ListOrdersMethodResponse execute(CurrencyPair coinPair, OrderType orderType,
-			List<OrderStatus> orderStatusList, Boolean hasFills, Long fromId, Long toId, LocalDateTime toTimestamp) {
-		TapiMethodParameters tapiMethodParameters = generateTapiMethodParameters(coinPair, orderType, orderStatusList,
-				hasFills, fromId, toId, toTimestamp);
-		return connectAndReadResponse(tapiMethodParameters);
-	}
-
-	@Override
-	protected TapiMethod getTapiMethod() {
-		return TapiMethod.LIST_ORDER;
+			List<OrderStatus> orderStatusList, Boolean hasFills, Long fromId, Long toId, LocalDateTime toTimestamp, LocalDateTime fromTimeStamp) {
+		Long orderTypeValue = generateOrderTypeParameterValue(orderType);
+		String statusList = generateOrderStatusListParameterValue(orderStatusList);
+		return executeMethod(coinPair, orderTypeValue, statusList, hasFills, fromId, toId, toTimestamp, fromTimeStamp);
 	}
 	
-	@Override
-	protected ListOrdersMethodResponse generateMethodResponse(JsonTapiResponse jsonTapiResponse) {
-		return new ListOrdersMethodResponse(jsonTapiResponse);
+	public ListOrdersMethodResponse execute(CurrencyPair coinPair) {
+		return execute(coinPair, null, null, null, null, null, null, null);
 	}
 
-	private TapiMethodParameters generateTapiMethodParameters(CurrencyPair coinPair, OrderType orderType,
-			List<OrderStatus> orderStatusList, Boolean hasFills, Long fromId, Long toId, LocalDateTime toTimestamp) {
-		TapiMethodParameters tapiMethodParameters = generateTapiMethodParameters();
-		tapiMethodParameters.put(ListOrdersParameters.COIN_PAIR.toString(), coinPair);
-
-		Long orderTypeValue;
-		if (orderType == null) {
-			orderTypeValue = null;
-		} else {
-			orderTypeValue = orderType.getValue();
-		}
-		tapiMethodParameters.put(ListOrdersParameters.ORDER_TYPE.toString(), orderTypeValue);
-		tapiMethodParameters.put(ListOrdersParameters.STATUS_LIST.toString(),
-				generateOrderStatusListParameterValue(orderStatusList));
-		tapiMethodParameters.put(ListOrdersParameters.HAS_FILLS.toString(), hasFills);
-		tapiMethodParameters.put(ListOrdersParameters.FROM_ID.toString(), fromId);
-		tapiMethodParameters.put(ListOrdersParameters.TO_ID.toString(), toId);
-		tapiMethodParameters.put(ListOrdersParameters.TO_ID.toString(), toTimestamp);
-
-		return tapiMethodParameters;
-	}
+	
 
 	private String generateOrderStatusListParameterValue(List<OrderStatus> orderStatusList) {
 		String result = null;
@@ -72,7 +42,13 @@ public class ListOrdersMethod extends AbstractTapiMethod<ListOrdersMethodRespons
 			result = "]";
 		}
 		return result;
-	}
-
+	}	
 	
+	private Long generateOrderTypeParameterValue(OrderType orderType) {
+		Long orderTypeValue = null;
+		if (orderType != null) {
+			orderTypeValue = orderType.getValue();
+		}
+		return orderTypeValue;
+	}
 }

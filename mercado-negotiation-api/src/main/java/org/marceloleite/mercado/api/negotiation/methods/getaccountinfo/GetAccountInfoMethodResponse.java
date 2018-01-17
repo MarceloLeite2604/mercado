@@ -1,7 +1,6 @@
 package org.marceloleite.mercado.api.negotiation.methods.getaccountinfo;
 
 import org.marceloleite.mercado.api.negotiation.methods.AbstractTapiResponse;
-import org.marceloleite.mercado.commons.util.converter.Converter;
 import org.marceloleite.mercado.commons.util.converter.ObjectToJsonConverter;
 import org.marceloleite.mercado.converter.json.api.negotiation.getaccountinfo.JsonAccountInfoToAccountInfoConverter;
 import org.marceloleite.mercado.converter.json.api.negotiation.getaccountinfo.JsonBalanceDeserializer;
@@ -14,29 +13,8 @@ import org.marceloleite.mercado.negotiationapi.model.getaccountinfo.AccountInfo;
 
 public class GetAccountInfoMethodResponse extends AbstractTapiResponse<JsonAccountInfo, AccountInfo> {
 
-	private AccountInfo accountInfo;
-
 	public GetAccountInfoMethodResponse(JsonTapiResponse jsonTapiResponse) {
-		super(jsonTapiResponse);
-		this.accountInfo = getFormattedResponseData();
-	}
-
-	public AccountInfo getAccountInfo() {
-		return accountInfo;
-	}
-
-	public void setAccountInfo(AccountInfo accountInfo) {
-		this.accountInfo = accountInfo;
-	}
-
-	@Override
-	protected Class<?> getJsonResponseDataClass() {
-		return JsonAccountInfo.class;
-	}
-
-	@Override
-	protected Converter<JsonAccountInfo, AccountInfo> getConverter() {
-		return new JsonAccountInfoToAccountInfoConverter();
+		super(jsonTapiResponse, JsonAccountInfo.class, new JsonAccountInfoToAccountInfoConverter());
 	}
 
 	@Override

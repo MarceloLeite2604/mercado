@@ -1,24 +1,24 @@
-package org.marceloleite.mercado.negotiationapi.model.placebuyorder;
+package org.marceloleite.mercado.negotiationapi.model.cancelorder;
 
 import org.marceloleite.mercado.negotiationapi.model.Order;
 
-public class PlaceBuyOrderResponse {
+public class CancelOrderResponse {
 
 	private Order order;
 
-	public PlaceBuyOrderResponse(Order order) {
+	public CancelOrderResponse(Order order) {
 		super();
 		this.order = order;
 	}
-
-	public PlaceBuyOrderResponse() {
+	
+	public CancelOrderResponse() {
 		this(null);
 	}
 
 	public Order getOrder() {
 		return order;
 	}
-
+	
 	public void setOrder(Order order) {
 		this.order = order;
 	}

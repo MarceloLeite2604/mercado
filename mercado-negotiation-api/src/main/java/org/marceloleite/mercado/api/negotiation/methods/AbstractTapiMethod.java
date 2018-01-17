@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -24,22 +26,42 @@ public abstract class AbstractTapiMethod<T extends AbstractTapiResponse<?, ?>> {
 
 	private static final String TAPI_PATH = "/tapi/v3/";
 
-	protected static final String PARAMETER_TAPI_METHOD = "tapi_method";
+	private static final String PARAMETER_TAPI_METHOD = "tapi_method";
 
-	protected static final String PARAMETER_TAPI_NONCE = "tapi_nonce";
+	private static final String PARAMETER_TAPI_NONCE = "tapi_nonce";
 
-	public TapiMethodParameters generateTapiMethodParameters() {
+	private TapiMethod tapiMethod;
+
+	private Class<?> responseClass;
+
+	private String[] parameterNames;
+
+	public AbstractTapiMethod(TapiMethod tapiMethod, Class<?> responseClass, String[] parameterNames) {
+		this.tapiMethod = tapiMethod;
+		this.responseClass = responseClass;
+		this.parameterNames = parameterNames;
+	}
+
+	private TapiMethodParameters generateTapiMethodParameters(Object... objectParameters) {
 		TapiMethodParameters tapiMethodParameters = new TapiMethodParameters();
-		tapiMethodParameters.put(PARAMETER_TAPI_METHOD, getTapiMethod());
+		tapiMethodParameters.put(PARAMETER_TAPI_METHOD, tapiMethod);
 		tapiMethodParameters.put(PARAMETER_TAPI_NONCE, NonceGenerator.getInstance().nextNonce());
+
+		if (parameterNames != null && parameterNames.length > 0) {
+			if (objectParameters.length != parameterNames.length) {
+				throw new RuntimeException("Method \"" + tapiMethod + "\" requires " + parameterNames.length
+						+ " parameter(s) to be executed, but only " + objectParameters.length + " was(were) informed.");
+			}
+
+			int counter = 0;
+			for (String parameterName : parameterNames) {
+				tapiMethodParameters.put(parameterName, objectParameters[counter++]);
+			}
+		}
 		return tapiMethodParameters;
 	}
 
-	protected abstract TapiMethod getTapiMethod();
-
-	protected abstract T generateMethodResponse(JsonTapiResponse jsonTapiResponse);
-
-	protected String generateAddress() {
+	private String generateAddress() {
 		return DOMAIN_ADDRESS + TAPI_PATH;
 	}
 
@@ -65,7 +87,8 @@ public abstract class AbstractTapiMethod<T extends AbstractTapiResponse<?, ?>> {
 		return new ObjectToJsonConverter(JsonTapiResponse.class).convertFromToObject(response, JsonTapiResponse.class);
 	}
 
-	protected T connectAndReadResponse(TapiMethodParameters tapiMethodParameters) {
+	protected T executeMethod(Object... objectParameters) {
+		TapiMethodParameters tapiMethodParameters = generateTapiMethodParameters(objectParameters);
 		URL url = new UrlGenerator().generate(generateAddress(), tapiMethodParameters);
 		LOGGER.debug("Url generated is: " + url);
 		HttpsURLConnection httpsUrlConnection = new HttpConnection().createHttpsUrlConnection(url);
@@ -79,7 +102,17 @@ public abstract class AbstractTapiMethod<T extends AbstractTapiResponse<?, ?>> {
 		} catch (IOException exception) {
 			throw new RuntimeException("Error while connecting to URL \"" + url + "\".", exception);
 		}
-
 	}
 
+	@SuppressWarnings("unchecked")
+	private T generateMethodResponse(JsonTapiResponse jsonTapiResponse) {
+		try {
+			Constructor<?> constructor = responseClass.getConstructor(JsonTapiResponse.class);
+			Object object = constructor.newInstance(jsonTapiResponse);
+			return (T) object;
+		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
+				| NoSuchMethodException | SecurityException exception) {
+			throw new RuntimeException("Error while creating \"" + tapiMethod + "\" method response.\n", exception);
+		}
+	}
 }

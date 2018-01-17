@@ -1,10 +1,9 @@
 package org.marceloleite.mercado.jsonmodel.api.negotiation;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import org.marceloleite.mercado.jsonmodel.api.data.JsonSystemMessage;
+import org.marceloleite.mercado.jsonmodel.api.negotiation.getwithdrawal.JsonWithdrawal;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
@@ -14,23 +13,23 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({ "messages" })
-public class JsonListSystemMessagesResponse {
+@JsonPropertyOrder({ "withdrawal" })
+public class JsonWithdrawCoinResult {
 
-	@JsonProperty("messages")
-	private List<JsonSystemMessage> messages = null;
-	
+	@JsonProperty("withdrawal")
+	private JsonWithdrawal jsonWithdrawal;
+
 	@JsonIgnore
 	private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-	@JsonProperty("messages")
-	public List<JsonSystemMessage> getMessages() {
-		return messages;
+	@JsonProperty("withdrawal")
+	public JsonWithdrawal getJsonWithdrawal() {
+		return jsonWithdrawal;
 	}
 
-	@JsonProperty("messages")
-	public void setMessages(List<JsonSystemMessage> messages) {
-		this.messages = messages;
+	@JsonProperty("withdrawal")
+	public void setJsonWithdrawal(JsonWithdrawal jsonWithdrawal) {
+		this.jsonWithdrawal = jsonWithdrawal;
 	}
 
 	@JsonAnyGetter
@@ -42,5 +41,4 @@ public class JsonListSystemMessagesResponse {
 	public void setAdditionalProperty(String name, Object value) {
 		this.additionalProperties.put(name, value);
 	}
-
 }

@@ -1,9 +1,10 @@
-package org.marceloleite.mercado.negotiationapi.model.listorders;
+package org.marceloleite.mercado.negotiationapi.model;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 import org.marceloleite.mercado.commons.OrderType;
+import org.marceloleite.mercado.negotiationapi.model.listorders.Operation;
 
 public class Order {
 

@@ -4,13 +4,13 @@ public enum OrderType {
 	BUY(1l),
 	SELL(2l);
 
-	private long value;
+	private Long value;
 
 	private OrderType(long value) {
 		this.value = value;
 	}
 
-	public long getValue() {
+	public Long getValue() {
 		return value;
 	}
 

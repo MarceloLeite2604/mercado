@@ -1,4 +1,4 @@
-package org.marceloleite.mercado.negotiationapi.model.listorders;
+package org.marceloleite.mercado.negotiationapi.model;
 
 import org.marceloleite.mercado.commons.Currency;
 

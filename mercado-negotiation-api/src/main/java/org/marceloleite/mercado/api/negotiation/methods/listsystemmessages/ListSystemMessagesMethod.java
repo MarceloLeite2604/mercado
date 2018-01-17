@@ -1,43 +1,22 @@
 package org.marceloleite.mercado.api.negotiation.methods.listsystemmessages;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.api.negotiation.methods.AbstractTapiMethod;
 import org.marceloleite.mercado.api.negotiation.methods.TapiMethod;
-import org.marceloleite.mercado.api.negotiation.methods.TapiMethodParameters;
-import org.marceloleite.mercado.jsonmodel.api.negotiation.JsonTapiResponse;
 import org.marceloleite.mercado.negotiationapi.model.listsystemmessages.SystemMessageLevel;
 
 public class ListSystemMessagesMethod extends AbstractTapiMethod<ListSystemMessagesMethodResponse> {
+	
+	private static final String[] PARAMETER_NAMES = {"level"};
 
-	@SuppressWarnings("unused")
-	private static final Logger LOGGER = LogManager.getLogger(ListSystemMessagesMethod.class);
-
-	public ListSystemMessagesMethodResponse execute(SystemMessageLevel systemMessageLevel) {
-		TapiMethodParameters tapiMethodParameters = generateTapiMethodParameters(systemMessageLevel);
-			return connectAndReadResponse(tapiMethodParameters);
+	public ListSystemMessagesMethod() {
+		super(TapiMethod.LIST_SYSTEM_MESSAGES, ListSystemMessagesMethodResponse.class, PARAMETER_NAMES);
 	}
-
-	private TapiMethodParameters generateTapiMethodParameters(SystemMessageLevel systemMessageLevel) {
-		TapiMethodParameters tapiMethodParameters = generateTapiMethodParameters();
-		if (systemMessageLevel != null) {
-			tapiMethodParameters.put(ListSystemMessagesParameters.LEVEL.toString(), systemMessageLevel.toString());
-		}
-		return tapiMethodParameters;
+	
+	public ListSystemMessagesMethodResponse execute(SystemMessageLevel systemMessageLevel) {
+		return executeMethod(systemMessageLevel);
 	}
 
 	public ListSystemMessagesMethodResponse execute() {
 		return execute(null);
 	}
-
-	@Override
-	protected TapiMethod getTapiMethod() {
-		return TapiMethod.LIST_SYSTEM_MESSAGES;
-	}
-
-	@Override
-	protected ListSystemMessagesMethodResponse generateMethodResponse(JsonTapiResponse jsonTapiResponse) {
-		return new ListSystemMessagesMethodResponse(jsonTapiResponse);
-	}
-
 }

@@ -2,8 +2,8 @@ package org.marceloleite.mercado.converter.json.api.negotiation;
 
 import org.marceloleite.mercado.commons.util.converter.Converter;
 import org.marceloleite.mercado.jsonmodel.api.negotiation.JsonGetOrderResponse;
+import org.marceloleite.mercado.negotiationapi.model.Order;
 import org.marceloleite.mercado.negotiationapi.model.getorder.GetOrderResponse;
-import org.marceloleite.mercado.negotiationapi.model.listorders.Order;
 
 public class JsonGetOrderResponseToGetOrderResponseConverter
 		implements Converter<JsonGetOrderResponse, GetOrderResponse> {
