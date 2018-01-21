@@ -29,15 +29,21 @@ public class TemporalTickerPO implements PersistenceObject<TemporalTickerIdPO> {
 
 	private double sell;
 
+	private long buyOrders;
+
+	private long sellOrders;
+
 	public TemporalTickerPO() {
 		super();
 	}
 
 	private TemporalTickerPO(TemporalTickerIdPO temporalTickerId, long orders, double high, double average, double low,
-			double vol, double first, double last, double buy, double sell) {
+			double vol, double first, double last, double buy, double sell, long buyOrders, long sellOrders) {
 		super();
 		this.temporalTickerId = temporalTickerId;
 		this.orders = orders;
+		this.buyOrders = buyOrders;
+		this.sellOrders = sellOrders;
 		this.high = high;
 		this.average = average;
 		this.low = low;
@@ -52,7 +58,7 @@ public class TemporalTickerPO implements PersistenceObject<TemporalTickerIdPO> {
 		this(new TemporalTickerIdPO(temporalTickerPO.getId()), temporalTickerPO.getOrders(), temporalTickerPO.getHigh(),
 				temporalTickerPO.getAverage(), temporalTickerPO.getLow(), temporalTickerPO.getVol(),
 				temporalTickerPO.getFirst(), temporalTickerPO.getLast(), temporalTickerPO.getBuy(),
-				temporalTickerPO.getSell());
+				temporalTickerPO.getSell(), temporalTickerPO.getBuyOrders(), temporalTickerPO.getSellOrders());
 	}
 
 	public double getHigh() {
@@ -135,6 +141,22 @@ public class TemporalTickerPO implements PersistenceObject<TemporalTickerIdPO> {
 		this.temporalTickerId = temporalTickerId;
 	}
 
+	public long getBuyOrders() {
+		return buyOrders;
+	}
+
+	public void setBuyOrders(long buyOrders) {
+		this.buyOrders = buyOrders;
+	}
+
+	public long getSellOrders() {
+		return sellOrders;
+	}
+
+	public void setSellOrders(long sellOrders) {
+		this.sellOrders = sellOrders;
+	}
+
 	@Override
 	public Class<?> getEntityClass() {
 		return TemporalTickerPO.class;
@@ -151,6 +173,8 @@ public class TemporalTickerPO implements PersistenceObject<TemporalTickerIdPO> {
 		NonDigitalCurrencyFormatter nonDigitalCurrencyFormatter = new NonDigitalCurrencyFormatter();
 		stringBuffer.append("[");
 		stringBuffer.append("Orders: " + orders);
+		stringBuffer.append(", Buy orders: " + buyOrders);
+		stringBuffer.append(", Sell orders: " + sellOrders);
 		stringBuffer.append(", High: " + nonDigitalCurrencyFormatter.format(high));
 		stringBuffer.append(", Average: " + nonDigitalCurrencyFormatter.format(average));
 		stringBuffer.append(", Low: " + nonDigitalCurrencyFormatter.format(low));

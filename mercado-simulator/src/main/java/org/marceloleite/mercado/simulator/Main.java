@@ -5,11 +5,29 @@ import java.time.LocalDateTime;
 
 import org.marceloleite.mercado.commons.TimeDivisionController;
 import org.marceloleite.mercado.databaseretriever.persistence.EntityManagerController;
+import org.marceloleite.mercado.simulator.strategy.second.CircularArray;
 
 public class Main {
 
 	public static void main(String[] args) {
 		simulator();
+		// circularArrayList();
+	}
+
+	private static void circularArrayList() {
+		CircularArray<String> circularArrayList = new CircularArray<String>(4);
+		circularArrayList.add("First");
+		circularArrayList.add("Second");
+		circularArrayList.add("Third");
+		circularArrayList.add("Fourth");
+		circularArrayList.add("Fifth");
+		circularArrayList.add("Sixth");
+		circularArrayList.add("Seventh");
+		circularArrayList.add("Eighth");
+		System.out.println(circularArrayList.get(0));
+		System.out.println(circularArrayList.get(1));
+		System.out.println(circularArrayList.get(2));
+		System.out.println(circularArrayList.get(3));
 	}
 
 	@SuppressWarnings("unused")
@@ -21,6 +39,7 @@ public class Main {
 		timeDivisionController.geTimeIntervals().stream().forEach(System.out::println);
 	}
 
+	@SuppressWarnings("unused")
 	private static void simulator() {
 
 		try {

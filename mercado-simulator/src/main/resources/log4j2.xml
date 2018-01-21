@@ -22,5 +22,8 @@
 		</Logger>
 		<Logger name="org.marceloleite.mercado.simulator" level="info" />
 		<Logger name="org.marceloleite.mercado.simulator.TemporalTickerVariation" level="info" />
+		<Logger name="org.marceloleite.mercado.simulator.House" level="debug" />
+		<Logger name="org.marceloleite.mercado.simulator.Simulator" level="debug" />
+		<Logger name="org.marceloleite.mercado.simulator.strategy.first.FirstStrategy" level="debug" />
 	</Loggers>
 </Configuration>

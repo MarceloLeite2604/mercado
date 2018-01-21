@@ -37,9 +37,10 @@ public class BackwardConsultantThread extends AbstractConsultantThread {
 			LocalDateTime end = start.minus(getConsultantProperties().getTradeRetrieveDuration());
 			LocalDateTimeToStringConverter localDateTimeToStringConverter = new LocalDateTimeToStringConverter();
 			LOGGER.info("Retrieving trades from " + localDateTimeToStringConverter.convertTo(end) + " to "
-					+ localDateTimeToStringConverter.convertTo(start));
+					+ localDateTimeToStringConverter.convertTo(start) + ".");
 			for (Currency currency : Currency.values()) {
-				if (currency.isDigital()) {
+				/* TODO: Watch out with BGOLD. */
+				if (currency.isDigital() && currency != Currency.BGOLD) {
 					List<TradePO> trades = tradesRetriever.retrieve(currency, end, start,
 							getConsultantProperties().isDatabaseValuesIgnored());
 					int totalTrades;

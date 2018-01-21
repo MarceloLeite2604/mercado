@@ -1,4 +1,4 @@
-package org.marceloleite.mercado.simulator.strategy;
+package org.marceloleite.mercado.simulator.strategy.first;
 
 import java.util.Map;
 
@@ -9,6 +9,8 @@ import org.marceloleite.mercado.commons.OrderType;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.util.DigitalCurrencyFormatter;
 import org.marceloleite.mercado.commons.util.PercentageFormatter;
+import org.marceloleite.mercado.commons.util.converter.LocalDateTimeToStringConverter;
+import org.marceloleite.mercado.commons.util.converter.TimeIntervalToStringConverter;
 import org.marceloleite.mercado.databasemodel.TemporalTickerPO;
 import org.marceloleite.mercado.simulator.Account;
 import org.marceloleite.mercado.simulator.Balance;
@@ -19,6 +21,7 @@ import org.marceloleite.mercado.simulator.TemporalTickerVariation;
 import org.marceloleite.mercado.simulator.converter.CurrencyAmountToStringConverter;
 import org.marceloleite.mercado.simulator.order.BuyOrder;
 import org.marceloleite.mercado.simulator.order.SellOrder;
+import org.marceloleite.mercado.simulator.strategy.Strategy;
 
 public class FirstStrategy implements Strategy {
 
@@ -39,7 +42,7 @@ public class FirstStrategy implements Strategy {
 	private TemporalTickerPO baseTemporalTickerPO;
 
 	private CurrencyAmount baseRealAmount;
-	
+
 	public FirstStrategy(Currency currency) {
 		this.currency = currency;
 		this.buySellStep = new BuySellStep(TOTAL_BUY_STEPS, TOTAL_SELL_STEPS);
@@ -57,17 +60,24 @@ public class FirstStrategy implements Strategy {
 	@Override
 	public void check(TimeInterval simulationTimeInterval, Account account, House house) {
 		setBase(account, house);
-		TemporalTickerVariation temporalTickerVariation = generateTemporalTickerVariation(house);
+		TemporalTickerVariation temporalTickerVariation = generateTemporalTickerVariation(simulationTimeInterval,
+				house);
 
-		checkGrowthPercentage(simulationTimeInterval, account, house, temporalTickerVariation);
+		Double averageVariation = temporalTickerVariation.getAverageVariation();
+		if (averageVariation != null && averageVariation != Double.POSITIVE_INFINITY) {
+			checkGrowthPercentage(simulationTimeInterval, account, house, temporalTickerVariation);
 
-		checkShrinkPercentage(simulationTimeInterval, account, house, temporalTickerVariation);
+			checkShrinkPercentage(simulationTimeInterval, account, house, temporalTickerVariation);
+		}
 	}
 
 	private void checkShrinkPercentage(TimeInterval simulationTimeInterval, Account account, House house,
 			TemporalTickerVariation temporalTickerVariation) {
-		if (temporalTickerVariation.getAverageVariation() <= SHRINK_PERCENTAGE_THRESHOLD) {
-			LOGGER.debug("Shrink threshold reached.");
+		Double averageVariation = temporalTickerVariation.getAverageVariation();
+		if (averageVariation <= SHRINK_PERCENTAGE_THRESHOLD) {
+			LocalDateTimeToStringConverter localDateTimeToStringConverter = new LocalDateTimeToStringConverter();
+			LOGGER.debug(localDateTimeToStringConverter.convertTo(simulationTimeInterval.getEnd())
+					+ ": Shrink threshold reached.");
 			if (checkBalanceForSellOrder(account)) {
 				LOGGER.debug("Has balance for sell order.");
 				createSellOrder(simulationTimeInterval, account, house);
@@ -91,8 +101,11 @@ public class FirstStrategy implements Strategy {
 
 	private void checkGrowthPercentage(TimeInterval simulationTimeInterval, Account account, House house,
 			TemporalTickerVariation temporalTickerVariation) {
-		if (temporalTickerVariation.getAverageVariation() >= GROWTH_PERCENTAGE_THRESHOLD) {
-			LOGGER.debug("Growth threshold reached.");
+		LocalDateTimeToStringConverter localDateTimeToStringConverter = new LocalDateTimeToStringConverter();
+		Double averageVariation = temporalTickerVariation.getAverageVariation();
+		if (averageVariation >= GROWTH_PERCENTAGE_THRESHOLD) {
+			LOGGER.debug(localDateTimeToStringConverter.convertTo(simulationTimeInterval.getEnd())
+					+ ": Growth threshold reached.");
 			if (checkBalanceForBuyOrder(account)) {
 				LOGGER.debug("Has balance for buy order.");
 				createBuyOrder(simulationTimeInterval, account);
@@ -193,12 +206,14 @@ public class FirstStrategy implements Strategy {
 		return result;
 	}
 
-	private TemporalTickerVariation generateTemporalTickerVariation(House house) {
+	private TemporalTickerVariation generateTemporalTickerVariation(TimeInterval simulationTimeInterval, House house) {
 		Map<Currency, TemporalTickerPO> temporalTickers = house.getTemporalTickers();
 		TemporalTickerPO currentTemporalTickerPO = temporalTickers.get(currency);
 		TemporalTickerVariation temporalTickerVariation = new TemporalTickerVariation(baseTemporalTickerPO,
 				currentTemporalTickerPO);
-		LOGGER.debug("Average variation is "
+		LocalDateTimeToStringConverter localDateTimeToStringConverter = new LocalDateTimeToStringConverter();
+		TimeIntervalToStringConverter timeIntervalToStringConverter = new TimeIntervalToStringConverter();
+		LOGGER.debug(timeIntervalToStringConverter.convertTo(simulationTimeInterval) + ": Average variation is "
 				+ new PercentageFormatter().format(temporalTickerVariation.getAverageVariation()));
 		return temporalTickerVariation;
 	}

@@ -84,7 +84,7 @@ public class TemporalTickerRetriever {
 		if (temporalTickerPO.getOrders() == 0) {
 			LocalDateTimeToStringConverter localDateTimeToStringConverter = new LocalDateTimeToStringConverter();
 			if (calls < MAX_CALLS) {
-				LOGGER.info("Temporal ticker for currency " + currency.getAcronym() + " on period "
+				LOGGER.debug("Temporal ticker for currency " + currency.getAcronym() + " on period "
 						+ localDateTimeToStringConverter.convertTo(timeInterval.getStart()) + " to "
 						+ localDateTimeToStringConverter.convertTo(timeInterval.getEnd()) + " has no orders.");
 				LocalDateTime previousStartTime = timeInterval.getStart().minus(timeInterval.getDuration());
@@ -112,10 +112,15 @@ public class TemporalTickerRetriever {
 		double last = 0.0;
 		double buy = 0.0;
 		double sell = 0.0;
+		long buyOrders = 0;
+		long sellOrders = 0;
 
 		if (trades.size() > 0) {
 			Map<Long, TradePO> buyingTrades = new TradeTypeFilter(TradeType.BUY).filter(trades);
+			buyOrders = buyingTrades.size();
+			
 			Map<Long, TradePO> sellingTrades = new TradeTypeFilter(TradeType.SELL).filter(trades);
+			sellOrders = sellingTrades.size();
 
 			high = trades.entrySet().stream().map(Entry<Long, TradePO>::getValue).mapToDouble(TradePO::getPrice).max()
 					.orElse(0.0);
@@ -168,6 +173,8 @@ public class TemporalTickerRetriever {
 		temporalTicker.setLast(last);
 		temporalTicker.setBuy(buy);
 		temporalTicker.setSell(sell);
+		temporalTicker.setBuyOrders(buyOrders);
+		temporalTicker.setSellOrders(sellOrders);
 
 		return temporalTicker;
 	}

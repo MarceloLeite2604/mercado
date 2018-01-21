@@ -104,7 +104,8 @@ public class House {
 	public void updateTemporalTickers(TimeInterval timeInterval) {
 		TemporalTickerPO previousTemporalTicker;
 		for (Currency currency : Currency.values()) {
-			if (currency.isDigital()) {
+			/* TODO: Watch you with BGOLD. */
+			if (currency.isDigital() && currency != Currency.BGOLD) {
 				TemporalTickerPO temporalTickerPO;
 				try {
 					temporalTickerPO = temporalTickerRetriever.retrieve(currency, timeInterval, false);
