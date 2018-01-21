@@ -1,4 +1,4 @@
-package org.marceloleite.mercado.simulator.strategy;
+package org.marceloleite.mercado.simulator.strategy.first;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <account>
-	<owner>FirstStrategy</owner>
+	<owner>SecondStrategy</owner>
 	<balances>
 		<balance>
 			<currency>BRL</currency>
@@ -12,7 +12,7 @@
 		<strategy>
 			<currency>BTC</currency>
 			<classes>
-				<class>org.marceloleite.mercado.simulator.strategy.first.FirstStrategy
+				<class>org.marceloleite.mercado.simulator.strategy.second.SecondStrategy
 				</class>
 			</classes>
 		</strategy>

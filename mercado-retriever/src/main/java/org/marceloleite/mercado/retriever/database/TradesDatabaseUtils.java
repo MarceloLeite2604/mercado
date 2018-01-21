@@ -11,13 +11,27 @@ import org.marceloleite.mercado.databaseretriever.persistence.EntityManagerContr
 
 public class TradesDatabaseUtils {
 
+	private static TimeInterval cachedTimeIntervalAvailable;
+
 	private static final String QUERY_MAXIMUM_DATE_RETRIEVED = "SELECT max(date) FROM " + Entity.TRADE.getName();
 
 	private static final String QUERY_MINIMUM_DATE_RETRIEVED = "SELECT min(date) FROM " + Entity.TRADE.getName();
 
 	private EntityManager entityManager;
-	
-	public TimeInterval retrieveTimeIntervalAvailable() {
+
+	public TimeInterval retrieveTimeIntervalAvailable(boolean retrieveFromCache) {
+		if (retrieveFromCache) {
+			if (cachedTimeIntervalAvailable == null) {
+				cachedTimeIntervalAvailable = elaborateTimeIntervalAvailable();
+			}
+			return cachedTimeIntervalAvailable;
+		} else {
+
+			return elaborateTimeIntervalAvailable();
+		}
+	}
+
+	private TimeInterval elaborateTimeIntervalAvailable() {
 		LocalDateTime minimumTimeRetrieved = obtainMinimumTimeRetrieved();
 		LocalDateTime maximumTimeRetrieved = obtainMaximumTimeRetrieved();
 
@@ -41,7 +55,7 @@ public class TradesDatabaseUtils {
 	private LocalDateTime obtainMinimumTimeRetrieved() {
 		return getQueryResultAsLocalDateTime(QUERY_MINIMUM_DATE_RETRIEVED);
 	}
-	
+
 	private LocalDateTime getQueryResultAsLocalDateTime(String stringQuery) {
 		Query query = createQuery(stringQuery);
 		Object queryResult = query.getSingleResult();
@@ -58,7 +72,7 @@ public class TradesDatabaseUtils {
 			return null;
 		}
 	}
-	
+
 	private Query createQuery(String query) {
 		createEntityManager();
 		return entityManager.createQuery(query);

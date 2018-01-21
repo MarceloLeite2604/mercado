@@ -21,6 +21,8 @@ public class TradesRetriever {
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = LogManager.getLogger(TradesRetriever.class);
 
+	private static final boolean RETRIEVE_CACHED_TIME_INTERVAL_AVAILABLE = true;
+
 	private TradeDAO tradeDAO;
 
 	private Duration tradesSiteRetrieverStepDuration;
@@ -39,15 +41,17 @@ public class TradesRetriever {
 
 		if (!ignoreValuesFromDatabase) {
 			retrieveAllValuesFromDatabase(currency, start, end);
-			
 		} else {
-			retrieveUnavailableTradesOnDatabase(currency, start, end);
+			// retrieveUnavailableTradesOnDatabase(currency, start, end);
+			List<TradePO> tradesRetrievedFromSite = retrieveTradesFromSite(currency, start, end);
+			tradeDAO.merge(tradesRetrievedFromSite);
 		}
 		return retrieveTradesFromDatabase(currency, start, end);
 	}
 
 	private void retrieveAllValuesFromDatabase(Currency currency, LocalDateTime start, LocalDateTime end) {
 		List<TradePO> trades = retrieveTradesFromDatabase(currency, start, end);
+		retrieveUnavailableTradesOnDatabase(currency, start, end);
 		tradeDAO.merge(trades);
 	}
 
@@ -57,7 +61,8 @@ public class TradesRetriever {
 	}
 
 	private void retrieveUnavailableTradesOnDatabase(Currency currency, LocalDateTime start, LocalDateTime end) {
-		TimeInterval retrieveTimeIntervalAvailable = new TradesDatabaseUtils().retrieveTimeIntervalAvailable();
+		TimeInterval retrieveTimeIntervalAvailable = new TradesDatabaseUtils()
+				.retrieveTimeIntervalAvailable(RETRIEVE_CACHED_TIME_INTERVAL_AVAILABLE);
 		if (retrieveTimeIntervalAvailable != null) {
 			if (start.isBefore(retrieveTimeIntervalAvailable.getStart())) {
 				LocalDateTime endRetrieveTime = LocalDateTime.from(retrieveTimeIntervalAvailable.getStart())

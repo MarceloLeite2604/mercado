@@ -19,7 +19,7 @@ public abstract class AbstractConsultantThreadPropertiesRetriever implements Con
 
 	protected static final Duration DEFAULT_TIME_INTERVAL_DURATION = Duration.ofSeconds(5);
 
-	protected static final boolean IGNORE_DATABASE_PARAMETERS = false;
+	protected static final boolean IGNORE_DATABASE_PARAMETERS = true;
 
 	private PropertyRetriever propertyRetriever;
 

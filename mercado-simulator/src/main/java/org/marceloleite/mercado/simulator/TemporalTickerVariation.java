@@ -1,11 +1,10 @@
 package org.marceloleite.mercado.simulator;
 
-import java.util.OptionalDouble;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.databasemodel.TemporalTickerPO;
+import org.marceloleite.mercado.simulator.strategy.second.VariationCalculator;
 
 public class TemporalTickerVariation {
 
@@ -13,36 +12,40 @@ public class TemporalTickerVariation {
 
 	private Currency currency;
 
-	private double orderVariation;
+	private Double orderVariation;
 
-	private double highVariation;
+	private Double highVariation;
 
-	private double averageVariation;
+	private Double averageVariation;
 
-	private double lowVariation;
+	private Double lowVariation;
 
-	private double volVariation;
+	private Double volVariation;
 
-	private double firstVariation;
+	private Double firstVariation;
 
-	private double lastVariation;
+	private Double lastVariation;
 
-	private double buyVariation;
+	private Double buyVariation;
 
-	private double sellVariation;
+	private Double sellVariation;
 
 	public TemporalTickerVariation(TemporalTickerPO previousTemporalTickerPO,
 			TemporalTickerPO currentTemporalTickerPO) {
+		this.orderVariation = Double.NaN;
+		this.highVariation = Double.NaN;
+		this.averageVariation = Double.NaN;
+		this.lowVariation = Double.NaN;
+		this.volVariation = Double.NaN;
+		this.firstVariation = Double.NaN;
+		this.lastVariation = Double.NaN;
+		this.currency = null;
+		
 		if (previousTemporalTickerPO == null) {
 			LOGGER.debug("Previous temporal ticker is null.");
-			this.orderVariation = 0;
-			this.highVariation = 0;
-			this.averageVariation = 0;
-			this.lowVariation = 0;
-			this.volVariation = 0;
-			this.firstVariation = 0;
-			this.lastVariation = 0;
-			this.currency = currentTemporalTickerPO.getId().getCurrency();
+		} else if (currentTemporalTickerPO == null) {
+			LOGGER.debug("Current temporal ticker is null.");
+
 		} else {
 			LOGGER.debug("Previous temporal ticker: " + previousTemporalTickerPO);
 			LOGGER.debug("Current temporal ticker: " + currentTemporalTickerPO);
@@ -91,11 +94,7 @@ public class TemporalTickerVariation {
 	}
 
 	private double calculateVariation(double previous, double current) {
-		if (current == 0) {
-			return 0.0;
-		} else {
-			return (current / OptionalDouble.of(previous).orElse(current)) - 1.0;
-		}
+		return new VariationCalculator().calculate(current, previous);
 	}
 
 	public Currency getCurrency() {

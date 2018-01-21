@@ -15,10 +15,6 @@ public class TimeDivisionController {
 
 	private long divisions;
 
-	// private long currentDivision;
-
-	// private TimeInterval nextTimeInterval;
-	
 	private List<TimeInterval> timeIntervals;
 
 	public TimeDivisionController(LocalDateTime start, LocalDateTime end, Duration divisionDuration) {
@@ -41,10 +37,7 @@ public class TimeDivisionController {
 		super();
 		this.start = start;
 		this.end = end;
-		// this.divisions = divisions;
 		this.divisionDuration = calculateDivisionDuration();
-		// this.currentDivision = 0;
-		// this.nextTimeInterval = elaborateNextTimeInterval();
 	}
 
 	public LocalDateTime getStart() {
@@ -102,7 +95,7 @@ public class TimeDivisionController {
 	private Duration calculateTimeIntervalDuration(TimeInterval previousTimeInterval) {
 		Duration timeIntervalDuration;
 		if (previousTimeInterval != null) {
-			timeIntervalDuration = Duration.between(previousTimeInterval.getStart(), end);
+			timeIntervalDuration = Duration.between(previousTimeInterval.getEnd(), end);
 		} else {
 			timeIntervalDuration = Duration.between(start, end);
 		}
