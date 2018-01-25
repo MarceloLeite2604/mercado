@@ -1,7 +1,7 @@
 package org.marceloleite.mercado.retriever;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -36,7 +36,11 @@ public class TradesRetriever {
 		this.tradesSiteRetrieverStepDuration = tradesSiteRetrieverStepDuration;
 	}
 
-	public List<TradePO> retrieve(Currency currency, LocalDateTime start, LocalDateTime end,
+	public List<TradePO> retrieve(Currency currency, TimeInterval timeInterval, boolean ignoreValuesFromDatabase) {
+		return retrieve(currency, timeInterval.getStart(), timeInterval.getEnd(), ignoreValuesFromDatabase);
+	}
+
+	public List<TradePO> retrieve(Currency currency, ZonedDateTime start, ZonedDateTime end,
 			boolean ignoreValuesFromDatabase) {
 
 		if (!ignoreValuesFromDatabase) {
@@ -49,29 +53,29 @@ public class TradesRetriever {
 		return retrieveTradesFromDatabase(currency, start, end);
 	}
 
-	private void retrieveAllValuesFromDatabase(Currency currency, LocalDateTime start, LocalDateTime end) {
+	private void retrieveAllValuesFromDatabase(Currency currency, ZonedDateTime start, ZonedDateTime end) {
 		List<TradePO> trades = retrieveTradesFromDatabase(currency, start, end);
 		retrieveUnavailableTradesOnDatabase(currency, start, end);
 		tradeDAO.merge(trades);
 	}
 
-	private List<TradePO> retrieveTradesFromDatabase(Currency currency, LocalDateTime start, LocalDateTime end) {
+	private List<TradePO> retrieveTradesFromDatabase(Currency currency, ZonedDateTime start, ZonedDateTime end) {
 		List<TradePO> trades = new TradeDAO().retrieve(currency, start, end);
 		return trades;
 	}
 
-	private void retrieveUnavailableTradesOnDatabase(Currency currency, LocalDateTime start, LocalDateTime end) {
+	private void retrieveUnavailableTradesOnDatabase(Currency currency, ZonedDateTime start, ZonedDateTime end) {
 		TimeInterval retrieveTimeIntervalAvailable = new TradesDatabaseUtils()
 				.retrieveTimeIntervalAvailable(RETRIEVE_CACHED_TIME_INTERVAL_AVAILABLE);
 		if (retrieveTimeIntervalAvailable != null) {
 			if (start.isBefore(retrieveTimeIntervalAvailable.getStart())) {
-				LocalDateTime endRetrieveTime = LocalDateTime.from(retrieveTimeIntervalAvailable.getStart())
+				ZonedDateTime endRetrieveTime = ZonedDateTime.from(retrieveTimeIntervalAvailable.getStart())
 						.minusSeconds(1);
 				List<TradePO> trades = retrieveTradesFromSite(currency, start, endRetrieveTime);
 				tradeDAO.merge(trades);
 			}
 			if (end.isAfter(retrieveTimeIntervalAvailable.getEnd())) {
-				LocalDateTime startRetrieveTime = LocalDateTime.from(retrieveTimeIntervalAvailable.getEnd())
+				ZonedDateTime startRetrieveTime = ZonedDateTime.from(retrieveTimeIntervalAvailable.getEnd())
 						.plusSeconds(1);
 				List<TradePO> trades = retrieveTradesFromSite(currency, startRetrieveTime, end);
 				tradeDAO.merge(trades);
@@ -82,7 +86,7 @@ public class TradesRetriever {
 		}
 	}
 
-	private List<TradePO> retrieveTradesFromSite(Currency currency, LocalDateTime start, LocalDateTime end) {
+	private List<TradePO> retrieveTradesFromSite(Currency currency, ZonedDateTime start, ZonedDateTime end) {
 		TimeInterval timeInterval = new TimeInterval(start, end);
 		TradesSiteRetriever tradesSiteRetriever = new TradesSiteRetriever(currency);
 		if (tradesSiteRetrieverStepDuration != null) {

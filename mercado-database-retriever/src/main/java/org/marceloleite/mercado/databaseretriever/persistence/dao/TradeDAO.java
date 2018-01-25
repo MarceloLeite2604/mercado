@@ -1,6 +1,6 @@
 package org.marceloleite.mercado.databaseretriever.persistence.dao;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,7 +31,7 @@ public class TradeDAO extends AbstractDAO<TradePO> {
 	private static final String OLDEST_TRADE_RETRIEVED = "SELECT * FROM " + Entity.TRADE.getName()
 			+ " WHERE date = ( SELECT min(date) FROM " + Entity.TRADE.getName() + ")";
 
-	public List<TradePO> retrieve(Currency currency, LocalDateTime start, LocalDateTime end) {
+	public List<TradePO> retrieve(Currency currency, ZonedDateTime start, ZonedDateTime end) {
 		createEntityManager();
 
 		CurrencyAttributeConverter currencyAttributeConverter = new CurrencyAttributeConverter();

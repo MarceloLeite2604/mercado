@@ -1,6 +1,6 @@
 package org.marceloleite.mercado.xml.structures;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -8,12 +8,12 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.xml.adapter.CurrencyXmlAdapter;
-import org.marceloleite.mercado.xml.adapter.LocalDateTimeXmlAdapter;
+import org.marceloleite.mercado.xml.adapter.ZonedDateTimeXmlAdapter;
 
 @XmlRootElement(name="buyOrder")
 public class XmlBuyOrder {
 
-	private LocalDateTime time;
+	private ZonedDateTime time;
 
 	private Currency currencyToBuy;
 
@@ -27,7 +27,7 @@ public class XmlBuyOrder {
 		this(null, null, null, null, null);
 	}
 
-	private XmlBuyOrder(LocalDateTime time, Currency currencyToBuy, Double amountToBuy, Currency currencyToPay,
+	private XmlBuyOrder(ZonedDateTime time, Currency currencyToBuy, Double amountToBuy, Currency currencyToPay,
 			Double amountToPay) {
 		super();
 		this.time = time;
@@ -37,20 +37,20 @@ public class XmlBuyOrder {
 		this.amountToPay = amountToPay;
 	}
 
-	public XmlBuyOrder(LocalDateTime time, Currency currencyToBuy, Double amountToBuy, Currency currencyToPay) {
+	public XmlBuyOrder(ZonedDateTime time, Currency currencyToBuy, Double amountToBuy, Currency currencyToPay) {
 		this(time, currencyToBuy, amountToBuy, currencyToPay, null);
 	}
 
-	public XmlBuyOrder(LocalDateTime time, Currency currencyToBuy, Currency currencyToPay, Double amountToPay) {
+	public XmlBuyOrder(ZonedDateTime time, Currency currencyToBuy, Currency currencyToPay, Double amountToPay) {
 		this(time, currencyToBuy, null, currencyToPay, amountToPay);
 	}
 
-	@XmlJavaTypeAdapter(LocalDateTimeXmlAdapter.class)
-	public LocalDateTime getTime() {
+	@XmlJavaTypeAdapter(ZonedDateTimeXmlAdapter.class)
+	public ZonedDateTime getTime() {
 		return time;
 	}
 
-	public void setTime(LocalDateTime time) {
+	public void setTime(ZonedDateTime time) {
 		this.time = time;
 	}
 

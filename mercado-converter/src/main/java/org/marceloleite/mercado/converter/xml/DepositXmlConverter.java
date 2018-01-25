@@ -1,6 +1,6 @@
 package org.marceloleite.mercado.converter.xml;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.simulator.structure.CurrencyAmountData;
@@ -11,7 +11,7 @@ public class DepositXmlConverter implements XmlConverter<XmlDeposit, DepositData
 
 	@Override
 	public XmlDeposit convertToXml(DepositData deposit) {
-		LocalDateTime time = deposit.getTime();
+		ZonedDateTime time = deposit.getTime();
 		Currency currency = deposit.getCurrencyAmount().getCurrency();
 		double amount = deposit.getCurrencyAmount().getAmount();
 		return new XmlDeposit(time, currency, amount);
@@ -21,7 +21,7 @@ public class DepositXmlConverter implements XmlConverter<XmlDeposit, DepositData
 	public DepositData convertToObject(XmlDeposit xmlDeposit) {
 		Double amount = xmlDeposit.getAmount();
 		Currency currency = xmlDeposit.getCurrency();
-		LocalDateTime time = xmlDeposit.getTime();
+		ZonedDateTime time = xmlDeposit.getTime();
 		CurrencyAmountData currencyAmount = new CurrencyAmountData(currency, amount);
 		return new DepositData(time, currencyAmount);
 	}

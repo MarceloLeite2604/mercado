@@ -12,7 +12,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 public class LongToLocalDateTimeConverterTest {
 
 	@InjectMocks
-	private LongToLocalDateTimeConverter longToLocalDateTimeConverter;
+	private OldLongToLocalDateTimeConverter longToLocalDateTimeConverter;
 
 	@Test
 	public void convertTest() {

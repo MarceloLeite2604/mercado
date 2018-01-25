@@ -1,6 +1,6 @@
 package org.marceloleite.mercado.simulator.order;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Map;
 
 import org.marceloleite.mercado.commons.Currency;
@@ -11,7 +11,7 @@ import org.marceloleite.mercado.simulator.temporalcontroller.AbstractTimedObject
 
 public class BuyOrder extends AbstractTimedObject {
 
-	private LocalDateTime time;
+	private ZonedDateTime time;
 
 	private CurrencyAmount currencyAmountToBuy;
 
@@ -21,7 +21,7 @@ public class BuyOrder extends AbstractTimedObject {
 		this(null, null, null, null, null);
 	}
 
-	private BuyOrder(LocalDateTime time, Currency currencyToBuy, Double amountToBuy, Currency currencyToPay,
+	private BuyOrder(ZonedDateTime time, Currency currencyToBuy, Double amountToBuy, Currency currencyToPay,
 			Double amountToPay) {
 		super();
 		this.time = time;
@@ -38,15 +38,15 @@ public class BuyOrder extends AbstractTimedObject {
 		this.currencyAmountToPay = new CurrencyAmount(currencyToPay, amountToPay);
 	}
 
-	public BuyOrder(LocalDateTime time, Currency currencyToBuy, Double amountToBuy, Currency currencyToPay) {
+	public BuyOrder(ZonedDateTime time, Currency currencyToBuy, Double amountToBuy, Currency currencyToPay) {
 		this(time, currencyToBuy, amountToBuy, currencyToPay, null);
 	}
 
-	public BuyOrder(LocalDateTime time, Currency currencyToBuy, Currency currencyToPay, Double amountToPay) {
+	public BuyOrder(ZonedDateTime time, Currency currencyToBuy, Currency currencyToPay, Double amountToPay) {
 		this(time, currencyToBuy, null, currencyToPay, amountToPay);
 	}
 
-	public BuyOrder(LocalDateTime time, CurrencyAmount currencyAmountToBuy, CurrencyAmount currencyAmountToPay) {
+	public BuyOrder(ZonedDateTime time, CurrencyAmount currencyAmountToBuy, CurrencyAmount currencyAmountToPay) {
 		this(time, currencyAmountToBuy.getCurrency(), currencyAmountToBuy.getAmount(),
 				currencyAmountToPay.getCurrency(), currencyAmountToPay.getAmount());
 	}
@@ -57,11 +57,11 @@ public class BuyOrder extends AbstractTimedObject {
 	}
 
 	@Override
-	public LocalDateTime getTime() {
+	public ZonedDateTime getTime() {
 		return time;
 	}
 
-	public void setTime(LocalDateTime time) {
+	public void setTime(ZonedDateTime time) {
 		this.time = time;
 	}
 

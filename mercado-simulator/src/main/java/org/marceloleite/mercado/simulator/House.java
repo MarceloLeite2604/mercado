@@ -12,7 +12,6 @@ import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.databasemodel.TemporalTickerPO;
 import org.marceloleite.mercado.retriever.TemporalTickerRetriever;
-import org.marceloleite.mercado.retriever.exception.NoTemporalTickerForPeriodException;
 import org.marceloleite.mercado.simulator.order.BuyOrder;
 import org.marceloleite.mercado.simulator.order.SellOrder;
 import org.marceloleite.mercado.simulator.strategy.Strategy;
@@ -107,18 +106,23 @@ public class House {
 			/* TODO: Watch you with BGOLD. */
 			if (currency.isDigital() && currency != Currency.BGOLD) {
 				TemporalTickerPO temporalTickerPO;
-				try {
+				/*try {*/
 					temporalTickerPO = temporalTickerRetriever.retrieve(currency, timeInterval, false);
-				} catch (NoTemporalTickerForPeriodException e) {
+				/*} catch (NoTemporalTickerForPeriodException e) {
 					temporalTickerPO = null;
-				}
+				}*/
 				previousTemporalTicker = temporalTickers.get(currency);
-				temporalTickers.put(currency, temporalTickerPO);
+				TemporalTickerVariation temporalTickerVariation = null;
+				/*temporalTickers.put(currency, temporalTickerPO);*/
 				if (temporalTickerPO != null) {
-					TemporalTickerVariation temporalTickerVariation = new TemporalTickerVariation(
+					temporalTickers.put(currency, temporalTickerPO);
+					temporalTickerVariation = new TemporalTickerVariation(
 							previousTemporalTicker, temporalTickerPO);
-					temporalTickerVariations.put(currency, temporalTickerVariation);
-				}
+					/*TemporalTickerVariation temporalTickerVariation = new TemporalTickerVariation(
+							previousTemporalTicker, temporalTickerPO);
+					temporalTickerVariations.put(currency, temporalTickerVariation);*/
+				} 
+				temporalTickerVariations.put(currency, temporalTickerVariation);
 			}
 		}
 	}

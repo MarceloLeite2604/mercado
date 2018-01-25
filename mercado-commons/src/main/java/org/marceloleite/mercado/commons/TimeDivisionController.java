@@ -1,15 +1,17 @@
 package org.marceloleite.mercado.commons;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.marceloleite.mercado.commons.util.converter.DurationToStringConverter;
+
 public class TimeDivisionController {
 
-	private LocalDateTime start;
+	private ZonedDateTime start;
 
-	private LocalDateTime end;
+	private ZonedDateTime end;
 
 	private Duration divisionDuration;
 
@@ -17,9 +19,9 @@ public class TimeDivisionController {
 
 	private List<TimeInterval> timeIntervals;
 
-	public TimeDivisionController(LocalDateTime start, LocalDateTime end, Duration divisionDuration) {
+	public TimeDivisionController(ZonedDateTime start, ZonedDateTime end, Duration divisionDuration) {
 		super();
-		if ( end.isBefore(start) ) {
+		if (end.isBefore(start)) {
 			throw new IllegalArgumentException("Start time cannot be after end time.");
 		}
 		this.start = start;
@@ -28,38 +30,38 @@ public class TimeDivisionController {
 		this.divisions = calculateDivisions();
 		this.timeIntervals = createTimeIntervals();
 	}
-	
+
 	public TimeDivisionController(TimeInterval timeInterval, Duration divisionDuration) {
 		this(timeInterval.getStart(), timeInterval.getEnd(), divisionDuration);
 	}
 
-	public TimeDivisionController(LocalDateTime start, LocalDateTime end, Long divisions) {
+	public TimeDivisionController(ZonedDateTime start, ZonedDateTime end, Long divisions) {
 		super();
 		this.start = start;
 		this.end = end;
 		this.divisionDuration = calculateDivisionDuration();
 	}
 
-	public LocalDateTime getStart() {
-		return LocalDateTime.from(start);
+	public ZonedDateTime getStart() {
+		return ZonedDateTime.from(start);
 	}
 
-	public LocalDateTime getEnd() {
-		return LocalDateTime.from(end);
+	public ZonedDateTime getEnd() {
+		return ZonedDateTime.from(end);
 	}
 
 	public Duration getDivisionDuration() {
 		return Duration.from(divisionDuration);
 	}
-	
+
 	public List<TimeInterval> geTimeIntervals() {
 		return new ArrayList<>(timeIntervals);
 	}
-	
-	/*public long getDivisions() {
-		return divisions;
-	}*/
-	
+
+	/*
+	 * public long getDivisions() { return divisions; }
+	 */
+
 	private List<TimeInterval> createTimeIntervals() {
 		List<TimeInterval> timeIntervals = new ArrayList<>();
 		TimeInterval nextTimeInterval = null;
@@ -70,22 +72,19 @@ public class TimeDivisionController {
 			timeIntervals.add(nextTimeInterval);
 		}
 		return timeIntervals;
-	}	
+	}
 
-	/*public TimeInterval getNextTimeInterval() {
-		TimeInterval result = nextTimeInterval;
-		if (currentDivision < divisions) {
-			currentDivision++;
-			nextTimeInterval = elaborateNextTimeInterval();
-		}
-		return result;
-	}*/
+	/*
+	 * public TimeInterval getNextTimeInterval() { TimeInterval result =
+	 * nextTimeInterval; if (currentDivision < divisions) { currentDivision++;
+	 * nextTimeInterval = elaborateNextTimeInterval(); } return result; }
+	 */
 
 	private TimeInterval elaborateNextTimeInterval(TimeInterval previousTimeInterval) {
 		Duration timeIntervalDuration = calculateTimeIntervalDuration(previousTimeInterval);
-		LocalDateTime time;
-		if (previousTimeInterval != null ) {
-			time = LocalDateTime.from(previousTimeInterval.getEnd());
+		ZonedDateTime time;
+		if (previousTimeInterval != null) {
+			time = ZonedDateTime.from(previousTimeInterval.getEnd());
 		} else {
 			time = start;
 		}
@@ -114,5 +113,12 @@ public class TimeDivisionController {
 	private Duration calculateDivisionDuration() {
 		Duration duration = Duration.between(start, end);
 		return duration.dividedBy(divisions);
+	}
+
+	@Override
+	public String toString() {
+		DurationToStringConverter durationToStringConverter = new DurationToStringConverter();
+		TimeInterval timeInterval = new TimeInterval(start, end);
+		return timeInterval + " with steps of " + durationToStringConverter.convertTo(divisionDuration);
 	}
 }

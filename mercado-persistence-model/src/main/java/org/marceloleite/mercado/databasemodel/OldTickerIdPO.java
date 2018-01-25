@@ -1,20 +1,20 @@
 package org.marceloleite.mercado.databasemodel;
 
 import java.io.Serializable;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 
 import javax.persistence.Embeddable;
 
 import org.marceloleite.mercado.commons.Currency;
 
 @Embeddable
-public class TickerIdPO implements Serializable {
+public class OldTickerIdPO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	private Currency currency;
 
-	private ZonedDateTime time;
+	private LocalDateTime time;
 
 	public Currency getCurrency() {
 		return currency;
@@ -24,11 +24,11 @@ public class TickerIdPO implements Serializable {
 		this.currency = currency;
 	}
 
-	public ZonedDateTime getTime() {
+	public LocalDateTime getTime() {
 		return time;
 	}
 
-	public void setTime(ZonedDateTime time) {
+	public void setTime(LocalDateTime time) {
 		this.time = time;
 	}
 
@@ -49,7 +49,7 @@ public class TickerIdPO implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		TickerIdPO other = (TickerIdPO) obj;
+		OldTickerIdPO other = (OldTickerIdPO) obj;
 		if (currency == null) {
 			if (other.currency != null)
 				return false;

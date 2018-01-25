@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.marceloleite.mercado.commons.OrderType;
 import org.marceloleite.mercado.commons.util.converter.Converter;
-import org.marceloleite.mercado.commons.util.converter.LongToLocalDateTimeConverter;
+import org.marceloleite.mercado.commons.util.converter.LongToZonedDateTimeConverter;
 import org.marceloleite.mercado.jsonmodel.api.data.JsonOperation;
 import org.marceloleite.mercado.jsonmodel.api.data.JsonOrder;
 import org.marceloleite.mercado.negotiationapi.model.CurrencyPair;
@@ -28,11 +28,11 @@ public class JsonOrderToOrderConverter implements Converter<JsonOrder, Order> {
 		order.setExecutedQuantity(Double.parseDouble(jsonOrder.getExecutedQuantity()));
 		order.setExecutedPriceAverage(Double.parseDouble(jsonOrder.getExecutedPriceAvg()));
 		order.setFee(Double.parseDouble(jsonOrder.getFee()));
-		LongToLocalDateTimeConverter longToLocalDateTimeConverter = new LongToLocalDateTimeConverter();
+		LongToZonedDateTimeConverter longToZonedDateTimeConverter = new LongToZonedDateTimeConverter();
 		long longCreatedTimestamp = Long.parseLong(jsonOrder.getCreatedTimestamp());
-		order.setCreatedTimestamp(longToLocalDateTimeConverter.convertTo(longCreatedTimestamp));
+		order.setCreatedTimestamp(longToZonedDateTimeConverter.convertTo(longCreatedTimestamp));
 		long longUpdatedTimestamp = Long.parseLong(jsonOrder.getUpdatedTimestamp());
-		order.setUpdatedTimestamp(longToLocalDateTimeConverter.convertTo(longUpdatedTimestamp));
+		order.setUpdatedTimestamp(longToZonedDateTimeConverter.convertTo(longUpdatedTimestamp));
 		
 		List<JsonOperation> jsonOperations = jsonOrder.getOperations();
 		List<Operation> operations = null;

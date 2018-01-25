@@ -9,8 +9,7 @@ import org.marceloleite.mercado.commons.OrderType;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.util.DigitalCurrencyFormatter;
 import org.marceloleite.mercado.commons.util.PercentageFormatter;
-import org.marceloleite.mercado.commons.util.converter.LocalDateTimeToStringConverter;
-import org.marceloleite.mercado.commons.util.converter.TimeIntervalToStringConverter;
+import org.marceloleite.mercado.commons.util.converter.ZonedDateTimeToStringConverter;
 import org.marceloleite.mercado.databasemodel.TemporalTickerPO;
 import org.marceloleite.mercado.simulator.Account;
 import org.marceloleite.mercado.simulator.Balance;
@@ -63,11 +62,13 @@ public class FirstStrategy implements Strategy {
 		TemporalTickerVariation temporalTickerVariation = generateTemporalTickerVariation(simulationTimeInterval,
 				house);
 
-		Double averageVariation = temporalTickerVariation.getAverageVariation();
-		if (averageVariation != null && averageVariation != Double.POSITIVE_INFINITY) {
-			checkGrowthPercentage(simulationTimeInterval, account, house, temporalTickerVariation);
+		if (temporalTickerVariation != null) {
+			Double averageVariation = temporalTickerVariation.getAverageVariation();
+			if (averageVariation != null && averageVariation != Double.POSITIVE_INFINITY) {
+				checkGrowthPercentage(simulationTimeInterval, account, house, temporalTickerVariation);
 
-			checkShrinkPercentage(simulationTimeInterval, account, house, temporalTickerVariation);
+				checkShrinkPercentage(simulationTimeInterval, account, house, temporalTickerVariation);
+			}
 		}
 	}
 
@@ -75,8 +76,8 @@ public class FirstStrategy implements Strategy {
 			TemporalTickerVariation temporalTickerVariation) {
 		Double averageVariation = temporalTickerVariation.getAverageVariation();
 		if (averageVariation <= SHRINK_PERCENTAGE_THRESHOLD) {
-			LocalDateTimeToStringConverter localDateTimeToStringConverter = new LocalDateTimeToStringConverter();
-			LOGGER.debug(localDateTimeToStringConverter.convertTo(simulationTimeInterval.getEnd())
+			ZonedDateTimeToStringConverter zonedDateTimeToStringConverter = new ZonedDateTimeToStringConverter();
+			LOGGER.debug(zonedDateTimeToStringConverter.convertTo(simulationTimeInterval.getEnd())
 					+ ": Shrink threshold reached.");
 			if (checkBalanceForSellOrder(account)) {
 				LOGGER.debug("Has balance for sell order.");
@@ -101,10 +102,10 @@ public class FirstStrategy implements Strategy {
 
 	private void checkGrowthPercentage(TimeInterval simulationTimeInterval, Account account, House house,
 			TemporalTickerVariation temporalTickerVariation) {
-		LocalDateTimeToStringConverter localDateTimeToStringConverter = new LocalDateTimeToStringConverter();
+		ZonedDateTimeToStringConverter zonedDateTimeToStringConverter = new ZonedDateTimeToStringConverter();
 		Double averageVariation = temporalTickerVariation.getAverageVariation();
 		if (averageVariation >= GROWTH_PERCENTAGE_THRESHOLD) {
-			LOGGER.debug(localDateTimeToStringConverter.convertTo(simulationTimeInterval.getEnd())
+			LOGGER.debug(zonedDateTimeToStringConverter.convertTo(simulationTimeInterval.getEnd())
 					+ ": Growth threshold reached.");
 			if (checkBalanceForBuyOrder(account)) {
 				LOGGER.debug("Has balance for buy order.");
@@ -207,14 +208,15 @@ public class FirstStrategy implements Strategy {
 	}
 
 	private TemporalTickerVariation generateTemporalTickerVariation(TimeInterval simulationTimeInterval, House house) {
-		Map<Currency, TemporalTickerPO> temporalTickers = house.getTemporalTickers();
-		TemporalTickerPO currentTemporalTickerPO = temporalTickers.get(currency);
-		TemporalTickerVariation temporalTickerVariation = new TemporalTickerVariation(baseTemporalTickerPO,
-				currentTemporalTickerPO);
-		LocalDateTimeToStringConverter localDateTimeToStringConverter = new LocalDateTimeToStringConverter();
-		TimeIntervalToStringConverter timeIntervalToStringConverter = new TimeIntervalToStringConverter();
-		LOGGER.debug(timeIntervalToStringConverter.convertTo(simulationTimeInterval) + ": Average variation is "
-				+ new PercentageFormatter().format(temporalTickerVariation.getAverageVariation()));
+		TemporalTickerVariation temporalTickerVariation = null;
+		TemporalTickerPO currentTemporalTickerPO = house.getTemporalTickers().get(currency);
+		if (currentTemporalTickerPO != null) {
+			temporalTickerVariation = new TemporalTickerVariation(baseTemporalTickerPO, currentTemporalTickerPO);
+			LOGGER.debug(simulationTimeInterval + ": Average variation is "
+					+ new PercentageFormatter().format(temporalTickerVariation.getAverageVariation()));
+		} else {
+			LOGGER.debug("No ticker variation for period " + simulationTimeInterval + ".");
+		}
 		return temporalTickerVariation;
 	}
 

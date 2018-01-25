@@ -1,10 +1,11 @@
 package org.marceloleite.mercado.retriever;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.commons.util.ZonedDateTimeUtils;
 import org.marceloleite.mercado.databasemodel.TradePO;
 import org.marceloleite.mercado.databaseretriever.persistence.EntityManagerController;
 
@@ -16,8 +17,8 @@ public class Main {
 
 	private static void tradesRetriever() {
 		try {
-			LocalDateTime end = LocalDateTime.now();
-			LocalDateTime start = end.minus(Duration.ofSeconds(30));
+			ZonedDateTime end = ZonedDateTimeUtils.now();
+			ZonedDateTime start = end.minus(Duration.ofSeconds(30));
 			TradesRetriever tradesRetriever = new TradesRetriever();
 			List<TradePO> trades = tradesRetriever.retrieve(Currency.BITCOIN, start, end, false);
 			if (trades.size() > 0) {

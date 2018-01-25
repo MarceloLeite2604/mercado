@@ -1,15 +1,13 @@
 package org.marceloleite.mercado.simulator;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeDivisionController;
 import org.marceloleite.mercado.commons.TimeInterval;
-import org.marceloleite.mercado.commons.util.converter.TimeDivisionControllerToStringConverter;
-import org.marceloleite.mercado.commons.util.converter.TimeIntervalToStringConverter;
 import org.marceloleite.mercado.databasemodel.TemporalTickerPO;
 import org.marceloleite.mercado.simulator.property.SimulatorPropertiesRetriever;
 
@@ -27,8 +25,8 @@ public class Simulator {
 
 	private void configure() {
 		SimulatorPropertiesRetriever simulatorPropertiesRetriever = new SimulatorPropertiesRetriever();
-		LocalDateTime startTime = simulatorPropertiesRetriever.retrieveStartTime();
-		LocalDateTime endTime = simulatorPropertiesRetriever.retrieveEndTime();
+		ZonedDateTime startTime = simulatorPropertiesRetriever.retrieveStartTime();
+		ZonedDateTime endTime = simulatorPropertiesRetriever.retrieveEndTime();
 		Duration stepTime = simulatorPropertiesRetriever.retrieveStepDurationTime();
 		timeDivisionController = new TimeDivisionController(startTime, endTime, stepTime);
 		this.house = new House();
@@ -74,18 +72,17 @@ public class Simulator {
 		for (Currency currency : Currency.values()) {
 			if (currency.isDigital()) {
 				TemporalTickerPO temporalTickerPO = house.getTemporalTickers().get(currency);
-				if ( temporalTickerPO != null ) {
+				if (temporalTickerPO != null) {
 					CurrencyAmount currencyAmount = balance.get(currency);
 					if (currencyAmount != null) {
-						totalRealAmount.setAmount(
-								totalRealAmount.getAmount() + (currencyAmount.getAmount() * temporalTickerPO.getAverage()));
+						totalRealAmount.setAmount(totalRealAmount.getAmount()
+								+ (currencyAmount.getAmount() * temporalTickerPO.getAverage()));
 					}
 				}
 			} else {
 				CurrencyAmount currencyAmount = balance.get(currency);
 				if (currencyAmount != null) {
-					totalRealAmount.setAmount(
-							totalRealAmount.getAmount() + (currencyAmount.getAmount() ));
+					totalRealAmount.setAmount(totalRealAmount.getAmount() + (currencyAmount.getAmount()));
 				}
 			}
 		}
@@ -93,13 +90,10 @@ public class Simulator {
 	}
 
 	private void logSimulationStep(TimeInterval timeInterval) {
-		TimeIntervalToStringConverter timeIntervalToStringConverter = new TimeIntervalToStringConverter();
-		LOGGER.debug("Advancing to step time " + timeIntervalToStringConverter.convertTo(timeInterval) + ".");
+		LOGGER.debug("Advancing to step time " + timeInterval + ".");
 	}
 
 	private void logSimulationStart() {
-		TimeDivisionControllerToStringConverter timeDivisionControllerToStringConverter = new TimeDivisionControllerToStringConverter();
-		LOGGER.info("Starting simulation from "
-				+ timeDivisionControllerToStringConverter.convertTo(timeDivisionController) + ".");
+		LOGGER.info("Starting simulation from " + timeDivisionController + ".");
 	}
 }

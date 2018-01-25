@@ -1,6 +1,6 @@
 package org.marceloleite.mercado.negotiationapi.model.getwithdrawal;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 import org.marceloleite.mercado.commons.Currency;
 
@@ -24,14 +24,14 @@ public class Withdrawal {
 	
 	private String description;
 	
-	private LocalDateTime created;
+	private ZonedDateTime created;
 	
-	private LocalDateTime updated;
+	private ZonedDateTime updated;
 	
 	
 
 	public Withdrawal(long id, Currency currency, double quantity, double net_quantity, String account, double fee,
-			String address, WithdrawalStatus status, String description, LocalDateTime created, LocalDateTime updated) {
+			String address, WithdrawalStatus status, String description, ZonedDateTime created, ZonedDateTime updated) {
 		super();
 		this.id = id;
 		this.currency = currency;
@@ -122,19 +122,19 @@ public class Withdrawal {
 		this.description = description;
 	}
 
-	public LocalDateTime getCreated() {
+	public ZonedDateTime getCreated() {
 		return created;
 	}
 
-	public void setCreated(LocalDateTime created) {
+	public void setCreated(ZonedDateTime created) {
 		this.created = created;
 	}
 
-	public LocalDateTime getUpdated() {
+	public ZonedDateTime getUpdated() {
 		return updated;
 	}
 
-	public void setUpdated(LocalDateTime updated) {
+	public void setUpdated(ZonedDateTime updated) {
 		this.updated = updated;
 	}	
 }

@@ -1,6 +1,5 @@
 package org.marceloleite.mercado.retriever;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -9,7 +8,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
-import org.marceloleite.mercado.commons.util.converter.LocalDateTimeToStringConverter;
 import org.marceloleite.mercado.databasemodel.TemporalTickerIdPO;
 import org.marceloleite.mercado.databasemodel.TemporalTickerPO;
 import org.marceloleite.mercado.databasemodel.TradePO;
@@ -17,7 +15,6 @@ import org.marceloleite.mercado.databasemodel.TradeType;
 import org.marceloleite.mercado.databaseretriever.persistence.dao.TemporalTickerDAO;
 import org.marceloleite.mercado.retriever.converter.ListToMapTradeConverter;
 import org.marceloleite.mercado.retriever.converter.TimeIntervalToTemporalTickerIdConverter;
-import org.marceloleite.mercado.retriever.exception.NoTemporalTickerForPeriodException;
 import org.marceloleite.mercado.retriever.filter.TradeTypeFilter;
 
 public class TemporalTickerRetriever {
@@ -26,8 +23,7 @@ public class TemporalTickerRetriever {
 
 	private static final int FIRST_CALL = 0;
 
-	private static final int MAX_CALLS = 3;
-
+	@SuppressWarnings("unused")
 	private static final Logger LOGGER = LogManager.getLogger(TemporalTickerRetriever.class);
 
 	private TemporalTickerDAO temporalTickerDAO;
@@ -38,12 +34,12 @@ public class TemporalTickerRetriever {
 	}
 
 	public TemporalTickerPO retrieve(Currency currency, TimeInterval timeInterval, boolean ignoreValueOnDatabsase)
-			throws NoTemporalTickerForPeriodException {
+			/*throws NoTemporalTickerForPeriodException*/ {
 		return retrieve(currency, timeInterval, ignoreValueOnDatabsase, FIRST_CALL);
 	}
 
 	private TemporalTickerPO retrieve(Currency currency, TimeInterval timeInterval, boolean ignoreValueOnDatabsase,
-			int calls) throws NoTemporalTickerForPeriodException {
+			int calls) /*throws NoTemporalTickerForPeriodException*/ {
 
 		TemporalTickerPO temporalTickerPO = null;
 		if (!ignoreValueOnDatabsase) {
@@ -65,29 +61,29 @@ public class TemporalTickerRetriever {
 					IGNORE_DATABASE_VALUES);
 			Map<Long, TradePO> tradesMap = new ListToMapTradeConverter().convertTo(trades);
 			temporalTickerPO = create(currency, timeInterval, tradesMap);
-			temporalTickerPO = adjustValues(temporalTickerPO, currency, timeInterval, ignoreValueOnDatabsase, calls);
+			// temporalTickerPO = adjustValues(temporalTickerPO, currency, timeInterval, ignoreValueOnDatabsase, calls);
 			if (temporalTickerPO != null) {
 				temporalTickerDAO.merge(temporalTickerPO);
-			} else {
+			} /*else {
 				if (calls == FIRST_CALL) {
 					throw new NoTemporalTickerForPeriodException(currency, timeInterval);
 				}
-			}
+			}*/
 		}
 
 		return temporalTickerPO;
 	}
 
-	private TemporalTickerPO adjustValues(TemporalTickerPO temporalTickerPO, Currency currency,
+	/*private TemporalTickerPO adjustValues(TemporalTickerPO temporalTickerPO, Currency currency,
 			TimeInterval timeInterval, boolean ignoreValueOnDatabase, int calls)
 			throws NoTemporalTickerForPeriodException {
 		if (temporalTickerPO.getOrders() == 0) {
-			LocalDateTimeToStringConverter localDateTimeToStringConverter = new LocalDateTimeToStringConverter();
+			ZonedDateTimeToStringConverter zonedDateTimeToStringConverter = new ZonedDateTimeToStringConverter();
 			if (calls < MAX_CALLS) {
 				LOGGER.debug("Temporal ticker for currency " + currency.getAcronym() + " on period "
-						+ localDateTimeToStringConverter.convertTo(timeInterval.getStart()) + " to "
-						+ localDateTimeToStringConverter.convertTo(timeInterval.getEnd()) + " has no orders.");
-				LocalDateTime previousStartTime = timeInterval.getStart().minus(timeInterval.getDuration());
+						+ zonedDateTimeToStringConverter.convertTo(timeInterval.getStart()) + " to "
+						+ zonedDateTimeToStringConverter.convertTo(timeInterval.getEnd()) + " has no orders.");
+				ZonedDateTime previousStartTime = timeInterval.getStart().minus(timeInterval.getDuration());
 				TimeInterval previousTimeInterval = new TimeInterval(previousStartTime, timeInterval.getDuration());
 				TemporalTickerPO previousTemporalTickerPO = new TemporalTickerRetriever().retrieve(currency,
 						previousTimeInterval, ignoreValueOnDatabase, ++calls);
@@ -101,9 +97,12 @@ public class TemporalTickerRetriever {
 			}
 		}
 		return temporalTickerPO;
-	}
+	}*/
 
 	private TemporalTickerPO create(Currency currency, TimeInterval timeInterval, Map<Long, TradePO> trades) {
+		
+		TemporalTickerPO temporalTickerPO = null;
+		
 		double high = 0.0;
 		double average = 0.0;
 		double low = 0.0;
@@ -158,24 +157,24 @@ public class TemporalTickerRetriever {
 			if (lastBuyingTradeId != 0) {
 				sell = trades.get(lastBuyingTradeId).getPrice();
 			}
-		}
+			
+			temporalTickerPO = new TemporalTickerPO();
+			TemporalTickerIdPO temporalTickerIdPO = new TimeIntervalToTemporalTickerIdConverter().convertTo(timeInterval);
+			temporalTickerIdPO.setCurrency(currency);
+			temporalTickerPO.setTemporalTickerIdPO(temporalTickerIdPO);
+			temporalTickerPO.setOrders(trades.size());
+			temporalTickerPO.setHigh(high);
+			temporalTickerPO.setAverage(average);
+			temporalTickerPO.setLow(low);
+			temporalTickerPO.setVol(vol);
+			temporalTickerPO.setFirst(first);
+			temporalTickerPO.setLast(last);
+			temporalTickerPO.setBuy(buy);
+			temporalTickerPO.setSell(sell);
+			temporalTickerPO.setBuyOrders(buyOrders);
+			temporalTickerPO.setSellOrders(sellOrders);
+		}		
 
-		TemporalTickerPO temporalTicker = new TemporalTickerPO();
-		TemporalTickerIdPO temporalTickerId = new TimeIntervalToTemporalTickerIdConverter().convertTo(timeInterval);
-		temporalTickerId.setCurrency(currency);
-		temporalTicker.setTemporalTickerIdPO(temporalTickerId);
-		temporalTicker.setOrders(trades.size());
-		temporalTicker.setHigh(high);
-		temporalTicker.setAverage(average);
-		temporalTicker.setLow(low);
-		temporalTicker.setVol(vol);
-		temporalTicker.setFirst(first);
-		temporalTicker.setLast(last);
-		temporalTicker.setBuy(buy);
-		temporalTicker.setSell(sell);
-		temporalTicker.setBuyOrders(buyOrders);
-		temporalTicker.setSellOrders(sellOrders);
-
-		return temporalTicker;
+		return temporalTickerPO;
 	}
 }

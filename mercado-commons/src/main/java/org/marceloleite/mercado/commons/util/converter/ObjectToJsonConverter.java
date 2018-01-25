@@ -2,9 +2,10 @@ package org.marceloleite.mercado.commons.util.converter;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
-import org.marceloleite.mercado.commons.util.LocalDateTimeSerializer;
+import org.marceloleite.mercado.commons.util.ZonedDateTimeSerializer;
+import org.marceloleite.mercado.commons.util.ZonedDateTimeUtils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.Version;
@@ -35,8 +36,8 @@ public class ObjectToJsonConverter implements Converter<Object, String> {
 			simpleModuleName = "ObjectToJsonConverter";
 		}
 		simpleModule = new SimpleModule(simpleModuleName, new Version(1, 0, 0, null, null, null));
-		simpleModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer());
-		objectMapper.setDateFormat(new SimpleDateFormat(LocalDateTimeToStringConverter.DATE_FORMAT));
+		simpleModule.addSerializer(ZonedDateTime.class, new ZonedDateTimeSerializer());
+		objectMapper.setDateFormat(new SimpleDateFormat(ZonedDateTimeUtils.DATE_FORMAT));
 	}
 
 	public ObjectToJsonConverter(Class<?> clazz) {
@@ -50,8 +51,8 @@ public class ObjectToJsonConverter implements Converter<Object, String> {
 		}
 		objectMapper = new ObjectMapper();
 		simpleModule = new SimpleModule(simpleModuleName, new Version(1, 0, 0, null, null, null));
-		simpleModule.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer());
-		objectMapper.setDateFormat(new SimpleDateFormat(LocalDateTimeToStringConverter.DATE_FORMAT));
+		simpleModule.addSerializer(ZonedDateTime.class, new ZonedDateTimeSerializer());
+		objectMapper.setDateFormat(new SimpleDateFormat(ZonedDateTimeUtils.DATE_FORMAT));
 	}
 
 	@Override

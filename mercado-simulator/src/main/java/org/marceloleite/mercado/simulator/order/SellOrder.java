@@ -1,6 +1,6 @@
 package org.marceloleite.mercado.simulator.order;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Map;
 
 import org.marceloleite.mercado.commons.Currency;
@@ -11,7 +11,7 @@ import org.marceloleite.mercado.simulator.temporalcontroller.AbstractTimedObject
 
 public class SellOrder extends AbstractTimedObject {
 
-	private LocalDateTime time;
+	private ZonedDateTime time;
 
 	private CurrencyAmount currencyAmountToSell;
 
@@ -21,7 +21,7 @@ public class SellOrder extends AbstractTimedObject {
 		this(null, null, null, null, null);
 	}
 
-	private SellOrder(LocalDateTime time, Currency currencyToSell, Double amountToBuy, Currency currencyToReceive,
+	private SellOrder(ZonedDateTime time, Currency currencyToSell, Double amountToBuy, Currency currencyToReceive,
 			Double amountToReceive) {
 		super();
 		this.time = time;
@@ -38,15 +38,15 @@ public class SellOrder extends AbstractTimedObject {
 		this.currencyAmountToReceive = new CurrencyAmount(currencyToReceive, amountToReceive);
 	}
 
-	public SellOrder(LocalDateTime time, Currency currencyToSell, Double amountToSell, Currency currencyToReceive) {
+	public SellOrder(ZonedDateTime time, Currency currencyToSell, Double amountToSell, Currency currencyToReceive) {
 		this(time, currencyToSell, amountToSell, currencyToReceive, null);
 	}
 
-	public SellOrder(LocalDateTime time, Currency currencyToSell, Currency currencyToReceive, Double amountToReceive) {
+	public SellOrder(ZonedDateTime time, Currency currencyToSell, Currency currencyToReceive, Double amountToReceive) {
 		this(time, currencyToSell, null, currencyToReceive, amountToReceive);
 	}
 
-	public SellOrder(LocalDateTime time, CurrencyAmount currencyAmountToSell, CurrencyAmount currencyAmountToReceive) {
+	public SellOrder(ZonedDateTime time, CurrencyAmount currencyAmountToSell, CurrencyAmount currencyAmountToReceive) {
 		this(time, currencyAmountToSell.getCurrency(), currencyAmountToSell.getAmount(),
 				currencyAmountToReceive.getCurrency(), currencyAmountToReceive.getAmount());
 	}
@@ -57,11 +57,11 @@ public class SellOrder extends AbstractTimedObject {
 	}
 
 	@Override
-	public LocalDateTime getTime() {
+	public ZonedDateTime getTime() {
 		return time;
 	}
 
-	public void setTime(LocalDateTime time) {
+	public void setTime(ZonedDateTime time) {
 		this.time = time;
 	}
 

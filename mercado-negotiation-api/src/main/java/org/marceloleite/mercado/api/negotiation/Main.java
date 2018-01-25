@@ -12,8 +12,8 @@ import org.marceloleite.mercado.api.negotiation.methods.listorders.ListOrdersMet
 import org.marceloleite.mercado.api.negotiation.methods.listorders.ListOrdersMethodResponse;
 import org.marceloleite.mercado.api.negotiation.methods.listsystemmessages.ListSystemMessagesMethod;
 import org.marceloleite.mercado.api.negotiation.methods.listsystemmessages.ListSystemMessagesMethodResponse;
-import org.marceloleite.mercado.commons.util.converter.LocalDateTimeToStringConverter;
 import org.marceloleite.mercado.commons.util.converter.ObjectToJsonConverter;
+import org.marceloleite.mercado.commons.util.converter.ZonedDateTimeToStringConverter;
 import org.marceloleite.mercado.databaseretriever.persistence.EntityManagerController;
 import org.marceloleite.mercado.negotiationapi.model.CurrencyPair;
 import org.marceloleite.mercado.negotiationapi.model.listsystemmessages.SystemMessage;
@@ -47,7 +47,7 @@ public class Main {
 			System.out.println("Status code: " + listSystemMessagesMethodResponse.getStatusCode());
 			System.out.println("Error message: " + listSystemMessagesMethodResponse.getErrorMessage());
 			System.out.println("Timestamp: "
-					+ new LocalDateTimeToStringConverter().convertTo(listSystemMessagesMethodResponse.getTimestamp()));
+					+ new ZonedDateTimeToStringConverter().convertTo(listSystemMessagesMethodResponse.getTimestamp()));
 			List<SystemMessage> systemMessages = listSystemMessagesMethodResponse.getResponse();
 			System.out.println("Total messages: " + systemMessages.size());
 			if (!systemMessages.isEmpty()) {

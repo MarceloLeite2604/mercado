@@ -11,7 +11,7 @@
 		<class>org.marceloleite.mercado.databasemodel.TemporalTickerIdPO</class>
 		<class>org.marceloleite.mercado.databasemodel.TradePO</class>
 		<class>org.marceloleite.mercado.databasemodel.converter.CurrencyAttributeConverter</class>
-		<class>org.marceloleite.mercado.databasemodel.converter.LocalDateTimeAttributeConverter</class>
+		<class>org.marceloleite.mercado.databasemodel.converter.ZonedDateTimeAttributeConverter</class>
 
 		<properties>
 			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />

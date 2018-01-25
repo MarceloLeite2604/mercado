@@ -1,6 +1,6 @@
 package org.marceloleite.mercado.xml.structures;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -8,20 +8,21 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.commons.util.ZonedDateTimeUtils;
 import org.marceloleite.mercado.xml.adapter.CurrencyXmlAdapter;
-import org.marceloleite.mercado.xml.adapter.LocalDateTimeXmlAdapter;
+import org.marceloleite.mercado.xml.adapter.ZonedDateTimeXmlAdapter;
 
 @XmlRootElement(name = "deposit")
 @XmlType(propOrder= {"time", "currency", "amount"})
 public class XmlDeposit {
 
-	private LocalDateTime time;
+	private ZonedDateTime time;
 
 	private Currency currency;
 
 	private Double amount;
 
-	public XmlDeposit(LocalDateTime time, Currency currency, Double amount) {
+	public XmlDeposit(ZonedDateTime time, Currency currency, Double amount) {
 		super();
 		this.time = time;
 		this.currency = currency;
@@ -29,16 +30,16 @@ public class XmlDeposit {
 	}
 
 	public XmlDeposit() {
-		this(LocalDateTime.now(), null, null);
+		this(ZonedDateTimeUtils.now(), null, null);
 	}
 
 	@XmlElement
-	@XmlJavaTypeAdapter(LocalDateTimeXmlAdapter.class)
-	public LocalDateTime getTime() {
+	@XmlJavaTypeAdapter(ZonedDateTimeXmlAdapter.class)
+	public ZonedDateTime getTime() {
 		return time;
 	}
 
-	public void setTime(LocalDateTime time) {
+	public void setTime(ZonedDateTime time) {
 		this.time = time;
 	}
 

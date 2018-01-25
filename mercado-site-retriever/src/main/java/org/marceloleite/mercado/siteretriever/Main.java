@@ -1,10 +1,11 @@
 package org.marceloleite.mercado.siteretriever;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Map;
 
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
+import org.marceloleite.mercado.commons.util.ZonedDateTimeUtils;
 import org.marceloleite.mercado.commons.util.converter.ObjectToJsonConverter;
 import org.marceloleite.mercado.jsonmodel.api.data.JsonOrderbook;
 import org.marceloleite.mercado.jsonmodel.api.data.JsonTicker;
@@ -33,8 +34,8 @@ public class Main {
 	}
 
 	private static void tradesSiteRetriever() {
-		LocalDateTime to = LocalDateTime.now();
-		LocalDateTime from = LocalDateTime.from(to).minusDays(1);
+		ZonedDateTime to = ZonedDateTimeUtils.now();
+		ZonedDateTime from = ZonedDateTime.from(to).minusDays(1);
 		TimeInterval timeInterval = new TimeInterval(from, to);
 		Map<Long, JsonTrade> jsonTrades = new TradesSiteRetriever(Currency.BITCOIN).retrieve(timeInterval);
 		ObjectToJsonConverter objectToJsonConverter = new ObjectToJsonConverter();

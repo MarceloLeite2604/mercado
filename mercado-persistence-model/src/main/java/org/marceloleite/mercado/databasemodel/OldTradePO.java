@@ -1,28 +1,21 @@
 package org.marceloleite.mercado.databasemodel;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 
-@Entity(name = "Trades")
-public class TradePO implements PersistenceObject<TradeIdPO> {
+public class OldTradePO implements PersistenceObject<TradeIdPO> {
 
-	@EmbeddedId
 	private TradeIdPO tradeIdPO;
 
-	private ZonedDateTime date;
+	private LocalDateTime date;
 
 	private double price;
 
 	private double amount;
 
-	@Enumerated(EnumType.STRING)
 	private TradeType tradeType;
 
-	public TradePO() {
+	public OldTradePO() {
 	}
 
 	@Override
@@ -38,11 +31,11 @@ public class TradePO implements PersistenceObject<TradeIdPO> {
 		this.tradeIdPO = tradeIdPO;
 	}
 
-	public ZonedDateTime getDate() {
+	public LocalDateTime getDate() {
 		return date;
 	}
 
-	public void setDate(ZonedDateTime date) {
+	public void setDate(LocalDateTime date) {
 		this.date = date;
 	}
 
