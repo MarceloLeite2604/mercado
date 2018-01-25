@@ -5,7 +5,7 @@ import org.marceloleite.mercado.properties.Property;
 public enum TickerGeneratorProperty implements Property {
 	
 	START_TIME("tickerGenerator.startTime", true),
-	END_TIME("tickerGenerator.endTime", true),
+	END_TIME("tickerGenerator.endTime", false),
 	STEP_DURATION("tickerGenerator.stepDuration", true),
 	IGNORE_TEMPORAL_TICKERS_ON_DATABASE("tickerGenerator.ignoreTemporalTickersOnDatabase", false);
 	

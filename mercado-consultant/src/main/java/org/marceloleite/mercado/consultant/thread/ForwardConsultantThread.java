@@ -15,6 +15,7 @@ import org.marceloleite.mercado.retriever.TradesRetriever;
 public class ForwardConsultantThread extends AbstractConsultantThread {
 
 	private static final Logger LOGGER = Logger.getLogger(ForwardConsultantThread.class);
+	private static final String THREAD_NAME = "Forward consultant thread";
 
 	public ForwardConsultantThread() {
 		super(new ForwardConsultantPropertiesRetriever());
@@ -22,6 +23,7 @@ public class ForwardConsultantThread extends AbstractConsultantThread {
 
 	@Override
 	public void run() {
+		Thread.currentThread().setName(THREAD_NAME);
 		TradesRetriever tradesRetriever = new TradesRetriever();
 		TimeInterval timeIntervalToRetrieve = null;
 		while (!finished()) {
@@ -80,7 +82,7 @@ public class ForwardConsultantThread extends AbstractConsultantThread {
 
 	private void waitForTradeRetrieveDuration(TimeInterval previousTimeIntervalRetrieved) {
 		ZonedDateTime nextEndTime = previousTimeIntervalRetrieved.getEnd()
-				.plus(getConsultantProperties().getTimeInterval());
+				.plus(getConsultantProperties().getTradeRetrieveDuration());
 		ZonedDateTime now = ZonedDateTimeUtils.now();
 		if (now.isBefore(nextEndTime)) {
 			threadSleep(Duration.between(now, nextEndTime));
