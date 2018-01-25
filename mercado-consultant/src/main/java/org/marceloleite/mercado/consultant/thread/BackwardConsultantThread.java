@@ -16,6 +16,8 @@ import org.marceloleite.mercado.retriever.TradesRetriever;
 public class BackwardConsultantThread extends AbstractConsultantThread {
 
 	private static final Logger LOGGER = LogManager.getLogger(BackwardConsultantThread.class);
+	private static final String THREAD_NAME = "Backward consultant thread";
+	
 
 	private ZonedDateTime lastExecution;
 
@@ -27,6 +29,7 @@ public class BackwardConsultantThread extends AbstractConsultantThread {
 
 	@Override
 	public void run() {
+		Thread.currentThread().setName(THREAD_NAME);
 		TradesRetriever tradesRetriever = new TradesRetriever();
 		if (getConsultantProperties().getTradesSiteRetrieverStepDuration() != null) {
 			tradesRetriever
