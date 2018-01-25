@@ -1,7 +1,7 @@
 package org.marceloleite.mercado.consultant;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -13,8 +13,8 @@ import java.util.stream.Collectors;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeDivisionController;
 import org.marceloleite.mercado.commons.TimeInterval;
-import org.marceloleite.mercado.commons.util.converter.LocalDateTimeToStringConverter;
-import org.marceloleite.mercado.commons.util.converter.TimeIntervalToStringConverter;
+import org.marceloleite.mercado.commons.util.ZonedDateTimeUtils;
+import org.marceloleite.mercado.commons.util.converter.ZonedDateTimeToStringConverter;
 import org.marceloleite.mercado.databasemodel.TradeIdPO;
 import org.marceloleite.mercado.databasemodel.TradePO;
 import org.marceloleite.mercado.databaseretriever.persistence.EntityManagerController;
@@ -24,8 +24,16 @@ public class Main {
 
 	public static void main(String[] args) {
 
-		// consultant();
-		checkTrades();
+		consultant();
+		// checkTrades();
+		// zonedDateTime();
+	}
+
+	@SuppressWarnings("unused")
+	private static void zonedDateTime() {
+		
+		ZonedDateTime now = ZonedDateTimeUtils.now();
+		System.out.println(new ZonedDateTimeToStringConverter().convertTo(now));
 	}
 
 	@SuppressWarnings("unused")
@@ -39,10 +47,9 @@ public class Main {
 				if (currency.isDigital()) {
 					List<Long> exceptions = currencyExceptions.getOrDefault(currency, new ArrayList<>());
 					System.out.println("Checking " + currency + " currency.");
-					LocalDateTimeToStringConverter localDateTimeToStringConverter = new LocalDateTimeToStringConverter();
-					LocalDateTime start = localDateTimeToStringConverter.convertFrom("01/06/2013 00:00:00");
-					LocalDateTime end = localDateTimeToStringConverter.convertFrom("01/01/2018 00:00:00");
-					TimeIntervalToStringConverter timeIntervalToStringConverter = new TimeIntervalToStringConverter();
+					ZonedDateTimeToStringConverter zonedDateTimeToStringConverter = new ZonedDateTimeToStringConverter();
+					ZonedDateTime start = zonedDateTimeToStringConverter.convertFrom("01/06/2013 00:00:00");
+					ZonedDateTime end = zonedDateTimeToStringConverter.convertFrom("01/01/2018 00:00:00");
 					Duration divisionDuration = Duration.ofDays(30);
 					TimeDivisionController timeDivisionController = new TimeDivisionController(start, end,
 							divisionDuration);
@@ -52,7 +59,7 @@ public class Main {
 						List<TradePO> trades = tradesRetriever.retrieve(currency, timeInterval.getStart(),
 								timeInterval.getEnd(), false);
 						StringBuffer stringBuffer = new StringBuffer();
-						stringBuffer.append(timeIntervalToStringConverter.convertTo(timeInterval) + ": ");
+						stringBuffer.append(timeInterval + ": ");
 						if (trades != null) {
 							stringBuffer.append(trades.size());
 						} else {
@@ -76,7 +83,7 @@ public class Main {
 								} else {
 									if (tradeIdPO.getId() != (lastId + 1l)) {
 										System.out.println(currency + " " + tradeIdPO.getId() + ": "
-												+ localDateTimeToStringConverter.convertTo(tradePO.getDate()));
+												+ zonedDateTimeToStringConverter.convertTo(tradePO.getDate()));
 									}
 									lastId = tradeIdPO.getId();
 									while (exceptions.contains(lastId + 1)) {
@@ -93,6 +100,7 @@ public class Main {
 		}
 	}
 
+	@SuppressWarnings("unused")
 	private static void consultant() {
 		Consultant consultant = new Consultant();
 		consultant.startConsulting();

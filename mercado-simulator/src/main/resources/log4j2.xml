@@ -6,6 +6,21 @@
 				<Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
 			</PatternLayout>
 		</File>
+		<File name="FirstStrategyLogFile" fileName="src/main/resources/logs/mercado-simulator-first-strategy.log" append="false">
+			<PatternLayout>
+				<Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
+			</PatternLayout>
+		</File>
+		<File name="SecondStrategyLogFile" fileName="src/main/resources/logs/mercado-simulator-second-strategy.log" append="false">
+			<PatternLayout>
+				<Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
+			</PatternLayout>
+		</File>
+		<File name="ThirdStrategyLogFile" fileName="src/main/resources/logs/mercado-simulator-third-strategy.log" append="false">
+			<PatternLayout>
+				<Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
+			</PatternLayout>
+		</File>
 		<File name="HibernateLogFile"
 			fileName="src/main/resources/logs/mercado-simulator-hibernate.log">
 			<PatternLayout>
@@ -23,7 +38,12 @@
 		<Logger name="org.marceloleite.mercado.simulator" level="info" />
 		<Logger name="org.marceloleite.mercado.simulator.TemporalTickerVariation" level="info" />
 		<Logger name="org.marceloleite.mercado.simulator.House" level="debug" />
-		<Logger name="org.marceloleite.mercado.simulator.Simulator" level="debug" />
-		<Logger name="org.marceloleite.mercado.simulator.strategy.first.FirstStrategy" level="debug" />
+		<Logger name="org.marceloleite.mercado.simulator.Simulator" level="info" />
+		<Logger name="org.marceloleite.mercado.simulator.strategy.first.FirstStrategy" level="debug" additivity="false">
+			<AppenderRef ref="FirstStrategyLogFile" />
+			</Logger>
+		<Logger name="org.marceloleite.mercado.simulator.strategy.third.ThirdStrategy" level="debug" additivity="false">
+			<AppenderRef ref="ThirdStrategyLogFile" />
+			</Logger>
 	</Loggers>
 </Configuration>

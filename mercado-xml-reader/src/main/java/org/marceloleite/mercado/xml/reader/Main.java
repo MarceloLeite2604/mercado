@@ -1,7 +1,7 @@
 package org.marceloleite.mercado.xml.reader;
 
 import java.io.File;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 
 import javax.xml.bind.JAXBContext;
@@ -10,6 +10,7 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.commons.util.ZonedDateTimeUtils;
 import org.marceloleite.mercado.xml.adapter.XmlBalancesXmlAdapter;
 import org.marceloleite.mercado.xml.structures.XmlAccount;
 import org.marceloleite.mercado.xml.structures.XmlBalanceEntryList;
@@ -70,10 +71,10 @@ public class Main {
 
 	private static void createObjects() {
 		xmlCurrencyAmount = new XmlCurrencyAmount(Currency.BITCOIN, 0.123);
-		xmlDeposit = new XmlDeposit(LocalDateTime.now(), Currency.BITCOIN, 0.2236);
+		xmlDeposit = new XmlDeposit(ZonedDateTimeUtils.now(), Currency.BITCOIN, 0.2236);
 		xmlBalances = new XmlBalances();
 		xmlBalances.put(Currency.BITCOIN, 0.123);
-		xmlBuyOrder = new XmlBuyOrder(LocalDateTime.now(), Currency.BITCOIN, 0.0123, Currency.REAL);
+		xmlBuyOrder = new XmlBuyOrder(ZonedDateTimeUtils.now(), Currency.BITCOIN, 0.0123, Currency.REAL);
 		xmlAccount = new XmlAccount();
 		xmlAccount.setOwner("Marcelo");
 		xmlAccount.setXmlDeposits(Arrays.asList(xmlDeposit));

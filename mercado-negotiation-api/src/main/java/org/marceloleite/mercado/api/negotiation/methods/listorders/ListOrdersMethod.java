@@ -1,6 +1,6 @@
 package org.marceloleite.mercado.api.negotiation.methods.listorders;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import org.marceloleite.mercado.api.negotiation.methods.AbstractTapiMethod;
@@ -19,7 +19,7 @@ public class ListOrdersMethod extends AbstractTapiMethod<ListOrdersMethodRespons
 	}
 
 	public ListOrdersMethodResponse execute(CurrencyPair coinPair, OrderType orderType,
-			List<OrderStatus> orderStatusList, Boolean hasFills, Long fromId, Long toId, LocalDateTime toTimestamp, LocalDateTime fromTimeStamp) {
+			List<OrderStatus> orderStatusList, Boolean hasFills, Long fromId, Long toId, ZonedDateTime toTimestamp, ZonedDateTime fromTimeStamp) {
 		Long orderTypeValue = generateOrderTypeParameterValue(orderType);
 		String statusList = generateOrderStatusListParameterValue(orderStatusList);
 		return executeMethod(coinPair, orderTypeValue, statusList, hasFills, fromId, toId, toTimestamp, fromTimeStamp);

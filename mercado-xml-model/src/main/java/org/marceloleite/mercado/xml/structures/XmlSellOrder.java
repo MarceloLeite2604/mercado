@@ -1,6 +1,6 @@
 package org.marceloleite.mercado.xml.structures;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -8,12 +8,12 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.xml.adapter.CurrencyXmlAdapter;
-import org.marceloleite.mercado.xml.adapter.LocalDateTimeXmlAdapter;
+import org.marceloleite.mercado.xml.adapter.ZonedDateTimeXmlAdapter;
 
 @XmlRootElement(name = "sellOrder")
 public class XmlSellOrder {
 
-	private LocalDateTime time;
+	private ZonedDateTime time;
 
 	private Currency currencyToSell;
 
@@ -27,7 +27,7 @@ public class XmlSellOrder {
 		this(null, null, null, null, null);
 	}
 
-	private XmlSellOrder(LocalDateTime time, Currency currencyToSell, Double amountToSell, Currency currencyToReceive,
+	private XmlSellOrder(ZonedDateTime time, Currency currencyToSell, Double amountToSell, Currency currencyToReceive,
 			Double amountToReceive) {
 		super();
 		this.time = time;
@@ -37,20 +37,20 @@ public class XmlSellOrder {
 		this.amountToReceive = amountToReceive;
 	}
 
-	public XmlSellOrder(LocalDateTime time, Currency currencyToSell, Double amountToSell, Currency currencyToReceive) {
+	public XmlSellOrder(ZonedDateTime time, Currency currencyToSell, Double amountToSell, Currency currencyToReceive) {
 		this(time, currencyToSell, amountToSell, currencyToReceive, null);
 	}
 
-	public XmlSellOrder(LocalDateTime time, Currency currencyToSell, Currency currencyToReceive, Double amountToReceive) {
+	public XmlSellOrder(ZonedDateTime time, Currency currencyToSell, Currency currencyToReceive, Double amountToReceive) {
 		this(time, currencyToSell, null, currencyToReceive, amountToReceive);
 	}
 
-	@XmlJavaTypeAdapter(LocalDateTimeXmlAdapter.class)
-	public LocalDateTime getTime() {
+	@XmlJavaTypeAdapter(ZonedDateTimeXmlAdapter.class)
+	public ZonedDateTime getTime() {
 		return time;
 	}
 
-	public void setTime(LocalDateTime time) {
+	public void setTime(ZonedDateTime time) {
 		this.time = time;
 	}
 

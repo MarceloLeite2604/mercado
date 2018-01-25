@@ -1,10 +1,10 @@
 package org.marceloleite.mercado.negotiationapi.model.listsystemmessages;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 public class SystemMessage {
 	
-	private LocalDateTime time;
+	private ZonedDateTime time;
 	
 	private SystemMessageLevel systemMessageLevel;
 	
@@ -14,7 +14,7 @@ public class SystemMessage {
 	
 	
 
-	public SystemMessage(LocalDateTime time, SystemMessageLevel systemMessageLevel, long eventCode,
+	public SystemMessage(ZonedDateTime time, SystemMessageLevel systemMessageLevel, long eventCode,
 			String messageContent) {
 		super();
 		this.time = time;
@@ -27,11 +27,11 @@ public class SystemMessage {
 		this(null, null, 0l, null);
 	}
 
-	public LocalDateTime getTime() {
+	public ZonedDateTime getTime() {
 		return time;
 	}
 
-	public void setTime(LocalDateTime msgDate) {
+	public void setTime(ZonedDateTime msgDate) {
 		this.time = msgDate;
 	}
 

@@ -1,6 +1,7 @@
 package org.marceloleite.mercado.databaseretriever;
 
-import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import org.marceloleite.mercado.commons.Currency;
@@ -18,8 +19,8 @@ public class Main {
 
 	private static void tradesDatabaseRetriever() {
 		TradeDAO tradesDAO = new TradeDAO();
-		LocalDateTime end = LocalDateTime.of(2017, 01, 01, 00, 00);
-		LocalDateTime start = LocalDateTime.from(end).minusDays(60);
+		ZonedDateTime end = ZonedDateTime.of(2017, 01, 01, 0, 0, 0, 0, ZoneOffset.UTC);
+		ZonedDateTime start = ZonedDateTime.from(end).minusDays(60);
 		List<TradePO> trades = tradesDAO.retrieve(Currency.BITCOIN, start, end);
 		ObjectToJsonConverter objectToJsonConverter = new ObjectToJsonConverter();
 		System.out.println(objectToJsonConverter.convertTo(trades));

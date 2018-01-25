@@ -1,7 +1,7 @@
 package org.marceloleite.mercado.consultant.thread.property;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 import org.marceloleite.mercado.consultant.property.ConsultantProperty;
 import org.marceloleite.mercado.databasemodel.TradePO;
@@ -22,15 +22,15 @@ public class ForwardConsultantPropertiesRetriever extends AbstractConsultantThre
 	}
 
 	@Override
-	protected LocalDateTime retrieveEndTime() {
-		return retrieveLocalDateTimeProperty(ConsultantProperty.FORWARD_END_TIME,
+	protected ZonedDateTime retrieveEndTime() {
+		return retrieveZonedDateTimeProperty(ConsultantProperty.FORWARD_END_TIME,
 				AbstractConsultantThreadPropertiesRetriever.DEFAULT_START_TIME);
 	}
 
 	@Override
-	protected LocalDateTime retrieveStartTime() {
-		LocalDateTime startTime;
-		startTime = retrieveLocalDateTimeProperty(ConsultantProperty.FORWARD_START_TIME, null);
+	protected ZonedDateTime retrieveStartTime() {
+		ZonedDateTime startTime;
+		startTime = retrieveZonedDateTimeProperty(ConsultantProperty.FORWARD_START_TIME, null);
 
 		if (startTime == null) {
 			startTime = retrieveForwardStartTimeFromNewestTrade();
@@ -52,7 +52,7 @@ public class ForwardConsultantPropertiesRetriever extends AbstractConsultantThre
 		return retrieveDurationProperty(ConsultantProperty.FORWARD_TRADES_SITE_RETRIEVER_STEP_DURATION, null);
 	}
 
-	private LocalDateTime retrieveForwardStartTimeFromNewestTrade() {
+	private ZonedDateTime retrieveForwardStartTimeFromNewestTrade() {
 		TradePO newestTrade = getTradeDAO().retrieveNewestTrade();
 		if (newestTrade == null) {
 			return null;

@@ -1,9 +1,9 @@
 package org.marceloleite.mercado.api.negotiation.methods;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 import org.marceloleite.mercado.commons.util.converter.Converter;
-import org.marceloleite.mercado.commons.util.converter.LongToLocalDateTimeConverter;
+import org.marceloleite.mercado.commons.util.converter.LongToZonedDateTimeConverter;
 import org.marceloleite.mercado.converter.json.JsonToClassObjectConverter;
 import org.marceloleite.mercado.jsonmodel.api.negotiation.JsonTapiResponse;
 
@@ -13,7 +13,7 @@ public abstract class AbstractTapiResponse<T, T2> {
 
 	private String errorMessage;
 
-	private LocalDateTime timestamp;
+	private ZonedDateTime timestamp;
 
 	private String responseData;
 	
@@ -26,7 +26,7 @@ public abstract class AbstractTapiResponse<T, T2> {
 		this.statusCode = jsonTapiResponse.getStatusCode();
 		this.errorMessage = jsonTapiResponse.getErrorMessage();
 		long longTimestamp = Long.parseLong(jsonTapiResponse.getServerUnixTimestamp());
-		this.timestamp = new LongToLocalDateTimeConverter().convertTo(longTimestamp);
+		this.timestamp = new LongToZonedDateTimeConverter().convertTo(longTimestamp);
 		this.responseData = jsonTapiResponse.getResponseData();
 		this.jsonResponseDataClass = jsonResponseDataClass;
 		this.response = jsonTapiResponseConverter.convertTo(getJsonResponseData());
@@ -40,7 +40,7 @@ public abstract class AbstractTapiResponse<T, T2> {
 		return errorMessage;
 	}
 
-	public LocalDateTime getTimestamp() {
+	public ZonedDateTime getTimestamp() {
 		return timestamp;
 	}
 	

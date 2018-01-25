@@ -8,7 +8,7 @@ import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.util.DigitalCurrencyFormatter;
 import org.marceloleite.mercado.commons.util.PercentageFormatter;
-import org.marceloleite.mercado.commons.util.converter.LocalDateTimeToStringConverter;
+import org.marceloleite.mercado.commons.util.converter.ZonedDateTimeToStringConverter;
 import org.marceloleite.mercado.databasemodel.TemporalTickerPO;
 import org.marceloleite.mercado.simulator.Account;
 import org.marceloleite.mercado.simulator.House;
@@ -85,7 +85,7 @@ public class SecondStrategy implements Strategy {
 	PercentageFormatter percentageFormatter = new PercentageFormatter();
 
 	private void analyze() {
-		LocalDateTimeToStringConverter localDateTimeToStringConverter = new LocalDateTimeToStringConverter();
+		ZonedDateTimeToStringConverter zonedDateTimeToStringConverter = new ZonedDateTimeToStringConverter();
 		System.out.println("Current status: ");
 		System.out.println("               Time    Order variation     Buy/sell ratio     Last/first ratio\n");
 		for (int counter = 0; counter < temporalTickerPOCircularArray.getSize(); counter++) {
@@ -96,7 +96,7 @@ public class SecondStrategy implements Strategy {
 			Double buySellRatio = bosoCircularArray.get(counter);
 			Double lastFirstRatio = lastFirstRatioCircularArray.get(counter);
 			StringBuffer stringBuffer = new StringBuffer();
-			stringBuffer.append(localDateTimeToStringConverter
+			stringBuffer.append(zonedDateTimeToStringConverter
 					.convertTo(temporalTickerPOCircularArray.get(counter).getTemporalTickerId().getStart()) + "  | ");
 			stringBuffer.append(String.format("%15s", percentageFormatter.format(orderVariation)) + "  | ");
 			stringBuffer.append(String.format("%15s", digitalCurrencyFormatter.format(buySellRatio - 1)) + "  | ");

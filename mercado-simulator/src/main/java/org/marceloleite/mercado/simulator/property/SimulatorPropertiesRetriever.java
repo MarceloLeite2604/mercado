@@ -1,9 +1,9 @@
 package org.marceloleite.mercado.simulator.property;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
-import org.marceloleite.mercado.commons.util.converter.LocalDateTimeToStringConverter;
+import org.marceloleite.mercado.commons.util.converter.ZonedDateTimeToStringConverter;
 import org.marceloleite.mercado.properties.Property;
 import org.marceloleite.mercado.retriever.PropertyRetriever;
 
@@ -19,12 +19,12 @@ public class SimulatorPropertiesRetriever {
 		this.propertyRetriever = new PropertyRetriever();
 	}
 
-	public LocalDateTime retrieveStartTime() {
-		return retrieveLocalDateTimeProperty(SimulatorProperty.START_TIME);
+	public ZonedDateTime retrieveStartTime() {
+		return retrieveZonedDateTimeProperty(SimulatorProperty.START_TIME);
 	}
 
-	public LocalDateTime retrieveEndTime() {
-		return retrieveLocalDateTimeProperty(SimulatorProperty.END_TIME);
+	public ZonedDateTime retrieveEndTime() {
+		return retrieveZonedDateTimeProperty(SimulatorProperty.END_TIME);
 	}
 
 	public Duration retrieveStepDurationTime() {
@@ -40,10 +40,10 @@ public class SimulatorPropertiesRetriever {
 		}
 	}
 
-	private LocalDateTime retrieveLocalDateTimeProperty(Property property) {
+	private ZonedDateTime retrieveZonedDateTimeProperty(Property property) {
 		Property retrievedProperty = retrieveProperty(property);
-		LocalDateTimeToStringConverter localDateTimeToStringConverter = new LocalDateTimeToStringConverter(); 
-		return localDateTimeToStringConverter.convertFrom(retrievedProperty.getValue());
+		ZonedDateTimeToStringConverter zonedDateTimeToStringConverter = new ZonedDateTimeToStringConverter(); 
+		return zonedDateTimeToStringConverter.convertFrom(retrievedProperty.getValue());
 	}
 
 	private Property retrieveProperty(Property property) {

@@ -1,6 +1,6 @@
 package org.marceloleite.mercado.negotiationapi.model;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import org.marceloleite.mercado.commons.OrderType;
@@ -28,15 +28,15 @@ public class Order {
 
 	private double fee;
 
-	private LocalDateTime createdTimestamp;
+	private ZonedDateTime createdTimestamp;
 
-	private LocalDateTime updatedTimestamp;
+	private ZonedDateTime updatedTimestamp;
 
 	private List<Operation> operations;
 
 	public Order(long id, CurrencyPair currencyPair, OrderType orderType, OrderStatus orderStatus, boolean hasFills,
 			double quantity, double limitPrice, double executedQuantity, double executedPriceAverage, double fee,
-			LocalDateTime createdTimestamp, LocalDateTime updatedTimestamp, List<Operation> operations) {
+			ZonedDateTime createdTimestamp, ZonedDateTime updatedTimestamp, List<Operation> operations) {
 		super();
 		this.id = id;
 		this.currencyPair = currencyPair;
@@ -137,19 +137,19 @@ public class Order {
 		this.fee = fee;
 	}
 
-	public LocalDateTime getCreatedTimestamp() {
+	public ZonedDateTime getCreatedTimestamp() {
 		return createdTimestamp;
 	}
 
-	public void setCreatedTimestamp(LocalDateTime createdTimestamp) {
+	public void setCreatedTimestamp(ZonedDateTime createdTimestamp) {
 		this.createdTimestamp = createdTimestamp;
 	}
 
-	public LocalDateTime getUpdatedTimestamp() {
+	public ZonedDateTime getUpdatedTimestamp() {
 		return updatedTimestamp;
 	}
 
-	public void setUpdatedTimestamp(LocalDateTime updatedTimestamp) {
+	public void setUpdatedTimestamp(ZonedDateTime updatedTimestamp) {
 		this.updatedTimestamp = updatedTimestamp;
 	}
 

@@ -1,7 +1,7 @@
 package org.marceloleite.mercado.converter.json.api.negotiation;
 
 import org.marceloleite.mercado.commons.util.converter.Converter;
-import org.marceloleite.mercado.commons.util.converter.LongToLocalDateTimeConverter;
+import org.marceloleite.mercado.commons.util.converter.LongToZonedDateTimeConverter;
 import org.marceloleite.mercado.jsonmodel.api.data.JsonOperation;
 import org.marceloleite.mercado.negotiationapi.model.listorders.Operation;
 
@@ -15,7 +15,7 @@ public class JsonOperationToOperationConverter implements Converter<JsonOperatio
 		operation.setPrice(Double.parseDouble(jsonOperation.getPrice()));
 		operation.setFeeRate(Double.parseDouble(jsonOperation.getFeeRate()));
 		long longExecutedTimestamp = Long.parseLong(jsonOperation.getExecutedTimestamp());
-		operation.setExecutedTimestamp(new LongToLocalDateTimeConverter().convertTo(longExecutedTimestamp));
+		operation.setExecutedTimestamp(new LongToZonedDateTimeConverter().convertTo(longExecutedTimestamp));
 		return operation;
 	}
 

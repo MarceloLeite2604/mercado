@@ -1,7 +1,7 @@
 package org.marceloleite.mercado.databasemodel;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 import javax.persistence.Embeddable;
 
@@ -14,15 +14,15 @@ public class TemporalTickerIdPO implements Serializable {
 
 	private Currency currency;
 
-	private LocalDateTime start;
+	private ZonedDateTime start;
 
-	private LocalDateTime end;
+	private ZonedDateTime end;
 
 	public TemporalTickerIdPO() {
 		super();
 	}
 
-	public TemporalTickerIdPO(Currency currency, LocalDateTime start, LocalDateTime end) {
+	public TemporalTickerIdPO(Currency currency, ZonedDateTime start, ZonedDateTime end) {
 		super();
 		this.currency = currency;
 		this.start = start;
@@ -30,7 +30,7 @@ public class TemporalTickerIdPO implements Serializable {
 	}
 
 	public TemporalTickerIdPO(TemporalTickerIdPO id) {
-		this(id.getCurrency(), LocalDateTime.from(id.getStart()), LocalDateTime.from(id.getEnd()));
+		this(id.getCurrency(), ZonedDateTime.from(id.getStart()), ZonedDateTime.from(id.getEnd()));
 	}
 
 	public Currency getCurrency() {
@@ -41,19 +41,19 @@ public class TemporalTickerIdPO implements Serializable {
 		this.currency = currency;
 	}
 
-	public LocalDateTime getStart() {
+	public ZonedDateTime getStart() {
 		return start;
 	}
 
-	public void setStart(LocalDateTime start) {
+	public void setStart(ZonedDateTime start) {
 		this.start = start;
 	}
 
-	public LocalDateTime getEnd() {
+	public ZonedDateTime getEnd() {
 		return end;
 	}
 
-	public void setEnd(LocalDateTime end) {
+	public void setEnd(ZonedDateTime end) {
 		this.end = end;
 	}
 

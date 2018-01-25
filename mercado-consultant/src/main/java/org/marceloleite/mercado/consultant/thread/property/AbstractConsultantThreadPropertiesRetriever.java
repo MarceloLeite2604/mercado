@@ -1,9 +1,10 @@
 package org.marceloleite.mercado.consultant.thread.property;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 
-import org.marceloleite.mercado.commons.util.converter.LocalDateTimeToStringConverter;
+import org.marceloleite.mercado.commons.util.converter.ZonedDateTimeToStringConverter;
 import org.marceloleite.mercado.consultant.property.ConsultantProperty;
 import org.marceloleite.mercado.databaseretriever.persistence.dao.TradeDAO;
 import org.marceloleite.mercado.properties.Property;
@@ -11,9 +12,9 @@ import org.marceloleite.mercado.retriever.PropertyRetriever;
 
 public abstract class AbstractConsultantThreadPropertiesRetriever implements ConsultantThreadPropertiesRetriever {
 
-	protected static final LocalDateTime DEFAULT_START_TIME = LocalDateTime.of(2017, 01, 01, 0, 0);
+	protected static final ZonedDateTime DEFAULT_START_TIME = ZonedDateTime.of(2017, 01, 01, 0, 0, 0, 0, ZoneOffset.UTC);
 
-	protected static final LocalDateTime OLDEST_SIMULATION_TIME = LocalDateTime.of(2010, 01, 01, 0, 0);
+	protected static final ZonedDateTime OLDEST_SIMULATION_TIME = ZonedDateTime.of(2013, 06, 01, 0, 0, 0, 0, ZoneOffset.UTC);
 
 	protected static final Duration DEFAULT_TRADE_RETRIEVE_DURATION = Duration.ofSeconds(10);
 
@@ -35,8 +36,8 @@ public abstract class AbstractConsultantThreadPropertiesRetriever implements Con
 
 	@Override
 	public ConsultantThreadProperties retrieveProperties() {
-		LocalDateTime startTime = retrieveStartTime();
-		LocalDateTime endTime = retrieveEndTime();
+		ZonedDateTime startTime = retrieveStartTime();
+		ZonedDateTime endTime = retrieveEndTime();
 		Duration tradeRetrieveDuration = retrieveTradeRetrieveDuration();
 		Duration timeInterval = retrieveTimeInterval();
 		boolean databaseValuesIgnored = retrieveDatabaseValuesIgnored();
@@ -45,9 +46,9 @@ public abstract class AbstractConsultantThreadPropertiesRetriever implements Con
 				databaseValuesIgnored, tradesSiteRetrieverStepDuration);
 	}
 
-	protected abstract LocalDateTime retrieveStartTime();
+	protected abstract ZonedDateTime retrieveStartTime();
 
-	protected abstract LocalDateTime retrieveEndTime();
+	protected abstract ZonedDateTime retrieveEndTime();
 
 	protected abstract Duration retrieveTradeRetrieveDuration();
 
@@ -85,11 +86,11 @@ public abstract class AbstractConsultantThreadPropertiesRetriever implements Con
 		}
 	}
 
-	protected LocalDateTime retrieveLocalDateTimeProperty(ConsultantProperty consultantProperty,
-			LocalDateTime defaultValue) {
+	protected ZonedDateTime retrieveZonedDateTimeProperty(ConsultantProperty consultantProperty,
+			ZonedDateTime defaultValue) {
 		Property property = retrieveProperty(consultantProperty);
 		if (property.getValue() != null) {
-			return new LocalDateTimeToStringConverter().convertFrom(property.getValue());
+			return new ZonedDateTimeToStringConverter().convertFrom(property.getValue());
 		} else {
 			return defaultValue;
 		}

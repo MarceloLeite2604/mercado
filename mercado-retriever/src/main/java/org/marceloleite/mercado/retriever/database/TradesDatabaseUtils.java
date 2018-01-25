@@ -1,6 +1,6 @@
 package org.marceloleite.mercado.retriever.database;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
@@ -32,8 +32,8 @@ public class TradesDatabaseUtils {
 	}
 
 	private TimeInterval elaborateTimeIntervalAvailable() {
-		LocalDateTime minimumTimeRetrieved = obtainMinimumTimeRetrieved();
-		LocalDateTime maximumTimeRetrieved = obtainMaximumTimeRetrieved();
+		ZonedDateTime minimumTimeRetrieved = obtainMinimumTimeRetrieved();
+		ZonedDateTime maximumTimeRetrieved = obtainMaximumTimeRetrieved();
 
 		if (minimumTimeRetrieved != null && maximumTimeRetrieved != null) {
 			return new TimeInterval(minimumTimeRetrieved, maximumTimeRetrieved);
@@ -48,23 +48,23 @@ public class TradesDatabaseUtils {
 		}
 	}
 
-	private LocalDateTime obtainMaximumTimeRetrieved() {
-		return getQueryResultAsLocalDateTime(QUERY_MAXIMUM_DATE_RETRIEVED);
+	private ZonedDateTime obtainMaximumTimeRetrieved() {
+		return getQueryResultAsZonedDateTime(QUERY_MAXIMUM_DATE_RETRIEVED);
 	}
 
-	private LocalDateTime obtainMinimumTimeRetrieved() {
-		return getQueryResultAsLocalDateTime(QUERY_MINIMUM_DATE_RETRIEVED);
+	private ZonedDateTime obtainMinimumTimeRetrieved() {
+		return getQueryResultAsZonedDateTime(QUERY_MINIMUM_DATE_RETRIEVED);
 	}
 
-	private LocalDateTime getQueryResultAsLocalDateTime(String stringQuery) {
+	private ZonedDateTime getQueryResultAsZonedDateTime(String stringQuery) {
 		Query query = createQuery(stringQuery);
 		Object queryResult = query.getSingleResult();
-		LocalDateTime result;
+		ZonedDateTime result;
 		if (queryResult != null) {
-			if (queryResult instanceof LocalDateTime) {
-				result = (LocalDateTime) queryResult;
+			if (queryResult instanceof ZonedDateTime) {
+				result = (ZonedDateTime) queryResult;
 			} else {
-				throw new RuntimeException("Cannot convert query result to \"" + LocalDateTime.class.getName()
+				throw new RuntimeException("Cannot convert query result to \"" + ZonedDateTime.class.getName()
 						+ "\". Object is of type \"" + queryResult.getClass().getName() + "\".");
 			}
 			return result;

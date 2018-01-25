@@ -1,10 +1,10 @@
 package org.marceloleite.mercado.tickergenerator.property;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 import org.marceloleite.mercado.commons.TimeDivisionController;
-import org.marceloleite.mercado.commons.util.converter.LocalDateTimeToStringConverter;
+import org.marceloleite.mercado.commons.util.converter.ZonedDateTimeToStringConverter;
 import org.marceloleite.mercado.properties.Property;
 import org.marceloleite.mercado.properties.StandardProperty;
 import org.marceloleite.mercado.retriever.PropertyRetriever;
@@ -22,10 +22,10 @@ public class TickerGeneratorPropertiesRetriever {
 
 	public TimeDivisionController retrieveTimeDivisionController() {
 		StandardProperty startTimeProperty = retrieveProperty(TickerGeneratorProperty.START_TIME);
-		LocalDateTimeToStringConverter localDateTimeToStringConverter = new LocalDateTimeToStringConverter();
-		LocalDateTime startTime = localDateTimeToStringConverter.convertFrom(startTimeProperty.getValue());
+		ZonedDateTimeToStringConverter zonedDateTimeToStringConverter = new ZonedDateTimeToStringConverter();
+		ZonedDateTime startTime = zonedDateTimeToStringConverter.convertFrom(startTimeProperty.getValue());
 		StandardProperty endTimeProperty = retrieveProperty(TickerGeneratorProperty.END_TIME);
-		LocalDateTime endTime = localDateTimeToStringConverter.convertFrom(endTimeProperty.getValue());
+		ZonedDateTime endTime = zonedDateTimeToStringConverter.convertFrom(endTimeProperty.getValue());
 		StandardProperty stepDurationProperty = retrieveProperty(TickerGeneratorProperty.STEP_DURATION);
 		Duration stepDuration = Duration.ofSeconds(Long.parseLong(stepDurationProperty.getValue()));
 		return new TimeDivisionController(startTime, endTime, stepDuration);

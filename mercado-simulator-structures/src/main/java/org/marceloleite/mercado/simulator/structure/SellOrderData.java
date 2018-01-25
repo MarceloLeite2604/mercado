@@ -1,10 +1,10 @@
 package org.marceloleite.mercado.simulator.structure;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 public class SellOrderData {
 
-	private LocalDateTime time;
+	private ZonedDateTime time;
 
 	private CurrencyAmountData currencyAmountToSell;
 
@@ -14,18 +14,18 @@ public class SellOrderData {
 		this(null, null, null);
 	}
 
-	public SellOrderData(LocalDateTime time, CurrencyAmountData currencyAmountToSell, CurrencyAmountData currencyAmountToReceive) {
+	public SellOrderData(ZonedDateTime time, CurrencyAmountData currencyAmountToSell, CurrencyAmountData currencyAmountToReceive) {
 		super();
 		this.time = time;
 		this.currencyAmountToSell = currencyAmountToSell;
 		this.currencyAmountToReceive = currencyAmountToReceive;
 	}
 
-	public LocalDateTime getTime() {
+	public ZonedDateTime getTime() {
 		return time;
 	}
 
-	public void setTime(LocalDateTime time) {
+	public void setTime(ZonedDateTime time) {
 		this.time = time;
 	}
 

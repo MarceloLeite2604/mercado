@@ -1,13 +1,14 @@
 package org.marceloleite.mercado.consultant.thread;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.commons.Currency;
-import org.marceloleite.mercado.commons.util.converter.LocalDateTimeToStringConverter;
+import org.marceloleite.mercado.commons.util.ZonedDateTimeUtils;
+import org.marceloleite.mercado.commons.util.converter.ZonedDateTimeToStringConverter;
 import org.marceloleite.mercado.consultant.thread.property.BackwardConsultantPropertiesRetriever;
 import org.marceloleite.mercado.databasemodel.TradePO;
 import org.marceloleite.mercado.retriever.TradesRetriever;
@@ -16,9 +17,9 @@ public class BackwardConsultantThread extends AbstractConsultantThread {
 
 	private static final Logger LOGGER = LogManager.getLogger(BackwardConsultantThread.class);
 
-	private LocalDateTime lastExecution;
+	private ZonedDateTime lastExecution;
 
-	private LocalDateTime lastEndTimeRetrieved;
+	private ZonedDateTime lastEndTimeRetrieved;
 
 	public BackwardConsultantThread() {
 		super(new BackwardConsultantPropertiesRetriever());
@@ -31,13 +32,13 @@ public class BackwardConsultantThread extends AbstractConsultantThread {
 			tradesRetriever
 					.setTradesSiteRetrieverStepDuration(getConsultantProperties().getTradesSiteRetrieverStepDuration());
 		}
-		LocalDateTime start = getConsultantProperties().getStartTime();
+		ZonedDateTime start = getConsultantProperties().getStartTime();
 		while (!finished()) {
-			lastExecution = LocalDateTime.now();
-			LocalDateTime end = start.minus(getConsultantProperties().getTradeRetrieveDuration());
-			LocalDateTimeToStringConverter localDateTimeToStringConverter = new LocalDateTimeToStringConverter();
-			LOGGER.info("Retrieving trades from " + localDateTimeToStringConverter.convertTo(end) + " to "
-					+ localDateTimeToStringConverter.convertTo(start) + ".");
+			lastExecution = ZonedDateTimeUtils.now();
+			ZonedDateTime end = start.minus(getConsultantProperties().getTradeRetrieveDuration());
+			ZonedDateTimeToStringConverter zonedDateTimeToStringConverter = new ZonedDateTimeToStringConverter();
+			LOGGER.info("Retrieving trades from " + zonedDateTimeToStringConverter.convertTo(end) + " to "
+					+ zonedDateTimeToStringConverter.convertTo(start) + ".");
 			for (Currency currency : Currency.values()) {
 				/* TODO: Watch out with BGOLD. */
 				if (currency.isDigital() && currency != Currency.BGOLD) {
@@ -52,8 +53,8 @@ public class BackwardConsultantThread extends AbstractConsultantThread {
 					LOGGER.info(totalTrades + " trade(s) retrieved for " + currency + " currency.");
 				}
 			}
-			start = LocalDateTime.from(end);
-			lastEndTimeRetrieved = LocalDateTime.from(end);
+			start = ZonedDateTime.from(end);
+			lastEndTimeRetrieved = ZonedDateTime.from(end);
 			waitTime();
 		}
 	}
@@ -63,10 +64,10 @@ public class BackwardConsultantThread extends AbstractConsultantThread {
 	}
 
 	private void waitForTimeSlot() {
-		LocalDateTime now = LocalDateTime.now();
+		ZonedDateTime now = ZonedDateTimeUtils.now();
 		if (Duration.between(lastExecution, now).getSeconds() < getConsultantProperties().getTimeInterval()
 				.getSeconds()) {
-			LocalDateTime nextExecution = lastExecution.plus(getConsultantProperties().getTimeInterval());
+			ZonedDateTime nextExecution = lastExecution.plus(getConsultantProperties().getTimeInterval());
 			Duration waitTime = Duration.between(now, nextExecution);
 			threadSleep(waitTime);
 		}

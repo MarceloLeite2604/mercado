@@ -1,12 +1,13 @@
 package org.marceloleite.mercado.consultant.thread;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import org.jboss.logging.Logger;
 import org.marceloleite.mercado.commons.Currency;
-import org.marceloleite.mercado.commons.util.converter.LocalDateTimeToStringConverter;
+import org.marceloleite.mercado.commons.TimeInterval;
+import org.marceloleite.mercado.commons.util.ZonedDateTimeUtils;
 import org.marceloleite.mercado.consultant.thread.property.ForwardConsultantPropertiesRetriever;
 import org.marceloleite.mercado.databasemodel.TradePO;
 import org.marceloleite.mercado.retriever.TradesRetriever;
@@ -15,8 +16,6 @@ public class ForwardConsultantThread extends AbstractConsultantThread {
 
 	private static final Logger LOGGER = Logger.getLogger(ForwardConsultantThread.class);
 
-	private LocalDateTime lastExecution;
-
 	public ForwardConsultantThread() {
 		super(new ForwardConsultantPropertiesRetriever());
 	}
@@ -24,22 +23,17 @@ public class ForwardConsultantThread extends AbstractConsultantThread {
 	@Override
 	public void run() {
 		TradesRetriever tradesRetriever = new TradesRetriever();
-		LocalDateTime start = getConsultantProperties().getStartTime();
+		TimeInterval timeIntervalToRetrieve = null;
 		while (!finished()) {
-			lastExecution = LocalDateTime.now();
-			LocalDateTime end = start.plus(getConsultantProperties().getTradeRetrieveDuration());
-			if (end.isAfter(LocalDateTime.now())) {
-				end = LocalDateTime.now();
-				start = end.minus(getConsultantProperties().getTradeRetrieveDuration());
-			}
-			LocalDateTimeToStringConverter localDateTimeToStringConverter = new LocalDateTimeToStringConverter();
-			LOGGER.info("Retrieving trades from " + localDateTimeToStringConverter.convertTo(start) + " to "
-					+ localDateTimeToStringConverter.convertTo(end) + ".");
+			timeIntervalToRetrieve = calculateTimeIntervalToRetrieve(timeIntervalToRetrieve);
+			ZonedDateTime lastExecution = ZonedDateTimeUtils.now();
+			LOGGER.info("Retrieving trades from " + timeIntervalToRetrieve.toString() + ".");
 			for (Currency currency : Currency.values()) {
 				/* TODO: Watch out with BGOLD. */
 				if (currency.isDigital() && currency != Currency.BGOLD) {
 
-					List<TradePO> trades = tradesRetriever.retrieve(currency, start, end, getConsultantProperties().isDatabaseValuesIgnored());
+					List<TradePO> trades = tradesRetriever.retrieve(currency, timeIntervalToRetrieve,
+							getConsultantProperties().isDatabaseValuesIgnored());
 					int totalTrades;
 					if (trades != null) {
 						totalTrades = trades.size();
@@ -49,32 +43,47 @@ public class ForwardConsultantThread extends AbstractConsultantThread {
 					LOGGER.info(totalTrades + " trade(s) retrieved for " + currency + " currency.");
 				}
 			}
-			start = LocalDateTime.from(end);
-			waitTime();
+			waitTime(lastExecution, timeIntervalToRetrieve);
 		}
 	}
 
-	private void waitTime() {
-		waitForTimeSlot();
-		waitForNextExecution();
+	private TimeInterval calculateTimeIntervalToRetrieve(TimeInterval previousTimeIntervalRetrieved) {
+		ZonedDateTime start;
+		if (previousTimeIntervalRetrieved == null) {
+			start = getConsultantProperties().getStartTime();
+		} else {
+			start = ZonedDateTime.from(previousTimeIntervalRetrieved.getEnd());
+		}
+
+		ZonedDateTime end = start.plus(getConsultantProperties().getTradeRetrieveDuration());
+		ZonedDateTime now = ZonedDateTimeUtils.now();
+		if (end.isAfter(now)) {
+			end = now;
+		}
+		return new TimeInterval(start, end);
 	}
 
-	private void waitForTimeSlot() {
-		LocalDateTime now = LocalDateTime.now();
+	private void waitTime(ZonedDateTime lastExecution, TimeInterval previousTimeIntervalRetrieved) {
+		waitTimeInterval(lastExecution);
+		waitForTradeRetrieveDuration(previousTimeIntervalRetrieved);
+	}
+
+	private void waitTimeInterval(ZonedDateTime lastExecution) {
+		ZonedDateTime now = ZonedDateTimeUtils.now();
 		if (Duration.between(lastExecution, now).getSeconds() < getConsultantProperties().getTimeInterval()
 				.getSeconds()) {
-			LocalDateTime nextExecution = lastExecution.plus(getConsultantProperties().getTimeInterval());
+			ZonedDateTime nextExecution = lastExecution.plus(getConsultantProperties().getTimeInterval());
 			Duration waitTime = Duration.between(now, nextExecution);
 			threadSleep(waitTime);
 		}
 	}
 
-	private void waitForNextExecution() {
-		LocalDateTime nextExecution = lastExecution.plus(getConsultantProperties().getTimeInterval());
-		LocalDateTime now = LocalDateTime.now();
-		if (now.isBefore(nextExecution)) {
-			Duration duration = Duration.between(now, nextExecution);
-			threadSleep(duration);
+	private void waitForTradeRetrieveDuration(TimeInterval previousTimeIntervalRetrieved) {
+		ZonedDateTime nextEndTime = previousTimeIntervalRetrieved.getEnd()
+				.plus(getConsultantProperties().getTimeInterval());
+		ZonedDateTime now = ZonedDateTimeUtils.now();
+		if (now.isBefore(nextEndTime)) {
+			threadSleep(Duration.between(now, nextEndTime));
 		}
 	}
 

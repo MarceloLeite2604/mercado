@@ -1,6 +1,6 @@
 package org.marceloleite.mercado.negotiationapi.model.listorders;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 public class Operation {
 
@@ -12,9 +12,9 @@ public class Operation {
 
 	private double feeRate;
 
-	private LocalDateTime executedTimestamp;
+	private ZonedDateTime executedTimestamp;
 
-	public Operation(long id, double quantity, double price, double feeRate, LocalDateTime executedTimestamp) {
+	public Operation(long id, double quantity, double price, double feeRate, ZonedDateTime executedTimestamp) {
 		super();
 		this.id = id;
 		this.quantity = quantity;
@@ -59,11 +59,11 @@ public class Operation {
 		this.feeRate = feeRate;
 	}
 
-	public LocalDateTime getExecutedTimestamp() {
+	public ZonedDateTime getExecutedTimestamp() {
 		return executedTimestamp;
 	}
 
-	public void setExecutedTimestamp(LocalDateTime executedTimestamp) {
+	public void setExecutedTimestamp(ZonedDateTime executedTimestamp) {
 		this.executedTimestamp = executedTimestamp;
 	}
 }
