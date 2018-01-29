@@ -11,7 +11,9 @@ import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.databasemodel.Entity;
 import org.marceloleite.mercado.databasemodel.PersistenceObject;
 import org.marceloleite.mercado.databasemodel.TradePO;
+import org.marceloleite.mercado.databasemodel.TradeType;
 import org.marceloleite.mercado.databasemodel.converter.CurrencyAttributeConverter;
+import org.marceloleite.mercado.databasemodel.converter.TradeTypeAttributeConverter;
 
 public class TradeDAO extends AbstractDAO<TradePO> {
 
@@ -20,6 +22,10 @@ public class TradeDAO extends AbstractDAO<TradePO> {
 	private static final String END_PARAMETER = "end";
 
 	private static final String CURRENCY_PARAMETER = "currency";
+
+	private static final String TRADE_TYPE_PARAMETER = "tradeType";
+
+	private static final String DATE_PARAMETER = "date";
 
 	private static final String BETWEEN_TIME_INTERVAL_QUERY = "SELECT * FROM " + Entity.TRADE.getName()
 			+ " WHERE currency = :" + CURRENCY_PARAMETER + " AND date BETWEEN :" + START_PARAMETER + " AND :"
@@ -30,6 +36,18 @@ public class TradeDAO extends AbstractDAO<TradePO> {
 
 	private static final String OLDEST_TRADE_RETRIEVED = "SELECT * FROM " + Entity.TRADE.getName()
 			+ " WHERE date = ( SELECT min(date) FROM " + Entity.TRADE.getName() + ")";
+
+	private static final String PREVIOUS_TRADE = "SELECT * FROM " + Entity.TRADE.getName()
+			+ " WHERE id = (SELECT max(id) FROM " + Entity.TRADE.getName()
+			+ "  WHERE date = ( SELECT max(date) FROM " + Entity.TRADE.getName() + " WHERE tradeType = :"
+			+ TRADE_TYPE_PARAMETER + " AND currency = :" + CURRENCY_PARAMETER + " AND date <= :" + DATE_PARAMETER
+			+ ") ) AND currency = :" + CURRENCY_PARAMETER;
+
+	private static final String NEXT_TRADE = "SELECT * FROM " + Entity.TRADE.getName()
+			+ " WHERE id = (SELECT min(id) FROM " + Entity.TRADE.getName()
+			+ "  WHERE date = ( SELECT min(date) FROM " + Entity.TRADE.getName() + " WHERE tradeType = :"
+			+ TRADE_TYPE_PARAMETER + " AND currency = :" + CURRENCY_PARAMETER + " AND date >= :" + DATE_PARAMETER
+			+ ") ) AND currency = :" + CURRENCY_PARAMETER;
 
 	public List<TradePO> retrieve(Currency currency, ZonedDateTime start, ZonedDateTime end) {
 		createEntityManager();
@@ -54,6 +72,10 @@ public class TradeDAO extends AbstractDAO<TradePO> {
 	}
 
 	public TradePO castToTradePO(Object object) {
+
+		if (object == null) {
+			return (TradePO) null;
+		}
 
 		if (!(object instanceof TradePO)) {
 			new ClassCastExceptionThrower(getPOClass(), object).throwException();
@@ -85,4 +107,21 @@ public class TradeDAO extends AbstractDAO<TradePO> {
 		return (TradePO) persistenceObject;
 	}
 
+	public TradePO retrievePreviousTrade(Currency currency, TradeType tradeType, ZonedDateTime date) {
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put(TRADE_TYPE_PARAMETER, new TradeTypeAttributeConverter().convertToDatabaseColumn(tradeType));
+		parameters.put(CURRENCY_PARAMETER, new CurrencyAttributeConverter().convertToDatabaseColumn(currency));
+		parameters.put(DATE_PARAMETER, date);
+		PersistenceObject<?> queryResult = executeQueryForSingleResult(PREVIOUS_TRADE, parameters);
+		return castToTradePO(queryResult);
+	}
+
+	public TradePO retrieveNextTrade(Currency currency, TradeType tradeType, ZonedDateTime date) {
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put(TRADE_TYPE_PARAMETER, new TradeTypeAttributeConverter().convertToDatabaseColumn(tradeType));
+		parameters.put(CURRENCY_PARAMETER, new CurrencyAttributeConverter().convertToDatabaseColumn(currency));
+		parameters.put(DATE_PARAMETER, date);
+		PersistenceObject<?> queryResult = executeQueryForSingleResult(NEXT_TRADE, parameters);
+		return castToTradePO(queryResult);
+	}
 }

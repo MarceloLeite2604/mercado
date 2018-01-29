@@ -45,11 +45,11 @@ public class ThirdStrategy implements Strategy {
 
 	@Override
 	public void check(TimeInterval simulationTimeInterval, Account account, House house) {
-		TemporalTickerVariation temporalTickerVariation;
-		switch (status) {
-		case UNDEFINED:
-			temporalTickerVariation = house.getTemporalTickerVariations().get(currency);
-			if (temporalTickerVariation != null) {
+		TemporalTickerVariation temporalTickerVariation = generateTemporalTickerVariation(simulationTimeInterval,
+				house);
+		if (temporalTickerVariation != null) {
+			switch (status) {
+			case UNDEFINED:
 				if (temporalTickerVariation.getLastVariation() != Double.NaN
 						&& temporalTickerVariation.getLastVariation() > 0) {
 					LOGGER.debug(simulationTimeInterval + ": Last variation is "
@@ -57,11 +57,8 @@ public class ThirdStrategy implements Strategy {
 					updateBase(house);
 					createBuyOrder(simulationTimeInterval, account);
 				}
-			}
-			break;
-		case SAVED:
-			temporalTickerVariation = generateTemporalTickerVariation(simulationTimeInterval, house);
-			if (temporalTickerVariation != null) {
+				break;
+			case SAVED:
 				if (temporalTickerVariation.getLastVariation() != Double.NaN
 						&& temporalTickerVariation.getLastVariation() < 0) {
 					updateBase(house);
@@ -70,11 +67,8 @@ public class ThirdStrategy implements Strategy {
 					updateBase(house);
 					createBuyOrder(simulationTimeInterval, account);
 				}
-			}
-			break;
-		case APPLIED:
-			temporalTickerVariation = generateTemporalTickerVariation(simulationTimeInterval, house);
-			if (temporalTickerVariation != null) {
+				break;
+			case APPLIED:
 				if (temporalTickerVariation.getLastVariation() != Double.NaN
 						&& temporalTickerVariation.getLastVariation() > 0) {
 					updateBase(house);
@@ -83,10 +77,9 @@ public class ThirdStrategy implements Strategy {
 					updateBase(house);
 					createSellOrder(simulationTimeInterval, account, house);
 				}
+				break;
 			}
-			break;
 		}
-
 	}
 
 	private void updateBase(House house) {

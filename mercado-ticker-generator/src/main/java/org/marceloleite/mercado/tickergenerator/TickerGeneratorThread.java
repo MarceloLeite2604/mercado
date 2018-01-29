@@ -26,6 +26,8 @@ public class TickerGeneratorThread extends Thread {
 	private boolean ignoreTemporalTickersOnDatabase;
 	
 	private String threadName;
+	
+	private static final Duration TOLERANCE_TIME = Duration.ofMinutes(1);
 
 	public TickerGeneratorThread(ZonedDateTime startTime, ZonedDateTime endTime, Duration tickerGeneratorDuration,
 			Duration timeInterval, boolean ignoreTemporalTickersOnDatabase) {
@@ -55,7 +57,10 @@ public class TickerGeneratorThread extends Thread {
 				if (currency.isDigital() && currency != Currency.BGOLD) {
 					LOGGER.info("Retrieving temporal ticker to " + currency + " currency for period between "
 							+ timeInterval + ".");
-					temporalTickerRetriever.retrieve(currency, timeInterval, ignoreTemporalTickersOnDatabase);
+					synchronized (TickerGeneratorThread.class) {
+						temporalTickerRetriever.retrieve(currency, timeInterval, ignoreTemporalTickersOnDatabase);	
+					}
+					
 				}
 			}
 			waitTime(lastExecution, timeInterval);
@@ -102,7 +107,7 @@ public class TickerGeneratorThread extends Thread {
 	private void waitForTradeRetrieveDuration(TimeInterval previousTimeIntervalRetrieved) {
 		ZonedDateTime nextEndTime = previousTimeIntervalRetrieved.getEnd()
 				.plus(tickerGeneratorDuration);
-		ZonedDateTime now = ZonedDateTimeUtils.now();
+		ZonedDateTime now = ZonedDateTimeUtils.now().minus(TOLERANCE_TIME);
 		if (now.isBefore(nextEndTime)) {
 			threadSleep(Duration.between(now, nextEndTime));
 		}

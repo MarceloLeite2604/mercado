@@ -2,6 +2,7 @@ package org.marceloleite.mercado.databasemodel;
 
 import java.time.ZonedDateTime;
 
+import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -13,12 +14,14 @@ public class TradePO implements PersistenceObject<TradeIdPO> {
 	@EmbeddedId
 	private TradeIdPO tradeIdPO;
 
+	@Column(nullable = false)
 	private ZonedDateTime date;
 
 	private double price;
 
 	private double amount;
 
+	@Column(nullable = false)
 	@Enumerated(EnumType.STRING)
 	private TradeType tradeType;
 
