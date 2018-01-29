@@ -1,9 +1,13 @@
 package org.marceloleite.mercado.databasemodel;
 
+import java.time.Duration;
+
+import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 
 import org.marceloleite.mercado.commons.util.NonDigitalCurrencyFormatter;
+import org.marceloleite.mercado.commons.util.converter.DurationToStringConverter;
 
 @Entity(name = "TemporalTickers")
 public class TemporalTickerPO implements PersistenceObject<TemporalTickerIdPO> {
@@ -11,34 +15,58 @@ public class TemporalTickerPO implements PersistenceObject<TemporalTickerIdPO> {
 	@EmbeddedId
 	private TemporalTickerIdPO temporalTickerId;
 
+	@Column(nullable = false)
 	private long orders;
 
+	@Column(nullable = false)
 	private double high;
 
+	@Column(nullable = false)
 	private double average;
 
+	@Column(nullable = false)
 	private double low;
 
+	@Column(nullable = false)
 	private double vol;
 
+	@Column(nullable = false)
 	private double first;
 
+	@Column(nullable = false)
 	private double last;
 
+	@Column(nullable = false)
+	private double previousLast;
+
+	@Column(nullable = false)
 	private double buy;
 
+	@Column(nullable = false)
+	private double previousBuy;
+
+	@Column(nullable = false)
 	private double sell;
 
+	@Column(nullable = false)
+	private double previousSell;
+
+	@Column(nullable = false)
 	private long buyOrders;
 
+	@Column(nullable = false)
 	private long sellOrders;
+
+	@Column(nullable = false)
+	private Duration duration;
 
 	public TemporalTickerPO() {
 		super();
 	}
 
 	private TemporalTickerPO(TemporalTickerIdPO temporalTickerId, long orders, double high, double average, double low,
-			double vol, double first, double last, double buy, double sell, long buyOrders, long sellOrders) {
+			double vol, double first, double last, double previousLast, double buy, double previousBuy, double sell,
+			double previousSell, long buyOrders, long sellOrders, Duration duration) {
 		super();
 		this.temporalTickerId = temporalTickerId;
 		this.orders = orders;
@@ -50,15 +78,21 @@ public class TemporalTickerPO implements PersistenceObject<TemporalTickerIdPO> {
 		this.vol = vol;
 		this.first = first;
 		this.last = last;
+		this.previousLast = previousLast;
 		this.buy = buy;
+		this.previousBuy = previousBuy;
 		this.sell = sell;
+		this.previousSell = previousSell;
+		this.duration = duration;
 	}
 
 	public TemporalTickerPO(TemporalTickerPO temporalTickerPO) {
 		this(new TemporalTickerIdPO(temporalTickerPO.getId()), temporalTickerPO.getOrders(), temporalTickerPO.getHigh(),
 				temporalTickerPO.getAverage(), temporalTickerPO.getLow(), temporalTickerPO.getVol(),
-				temporalTickerPO.getFirst(), temporalTickerPO.getLast(), temporalTickerPO.getBuy(),
-				temporalTickerPO.getSell(), temporalTickerPO.getBuyOrders(), temporalTickerPO.getSellOrders());
+				temporalTickerPO.getFirst(), temporalTickerPO.getLast(), temporalTickerPO.getPreviousLast(),
+				temporalTickerPO.getBuy(), temporalTickerPO.getPreviousBuy(), temporalTickerPO.getSell(),
+				temporalTickerPO.getPreviousSell(), temporalTickerPO.getBuyOrders(), temporalTickerPO.getSellOrders(),
+				temporalTickerPO.getDuration());
 	}
 
 	public double getHigh() {
@@ -93,6 +127,14 @@ public class TemporalTickerPO implements PersistenceObject<TemporalTickerIdPO> {
 		this.last = last;
 	}
 
+	public double getPreviousLast() {
+		return previousLast;
+	}
+
+	public void setPreviousLast(double previousLast) {
+		this.previousLast = previousLast;
+	}
+
 	public double getBuy() {
 		return buy;
 	}
@@ -101,12 +143,28 @@ public class TemporalTickerPO implements PersistenceObject<TemporalTickerIdPO> {
 		this.buy = buy;
 	}
 
+	public double getPreviousBuy() {
+		return previousBuy;
+	}
+
+	public void setPreviousBuy(double lastBuy) {
+		this.previousBuy = lastBuy;
+	}
+
 	public double getSell() {
 		return sell;
 	}
 
 	public void setSell(double sell) {
 		this.sell = sell;
+	}
+
+	public double getPreviousSell() {
+		return previousSell;
+	}
+
+	public void setPreviousSell(double lastSell) {
+		this.previousSell = lastSell;
 	}
 
 	public long getOrders() {
@@ -157,6 +215,14 @@ public class TemporalTickerPO implements PersistenceObject<TemporalTickerIdPO> {
 		this.sellOrders = sellOrders;
 	}
 
+	public Duration getDuration() {
+		return duration;
+	}
+
+	public void setDuration(Duration duration) {
+		this.duration = duration;
+	}
+
 	@Override
 	public Class<?> getEntityClass() {
 		return TemporalTickerPO.class;
@@ -173,14 +239,20 @@ public class TemporalTickerPO implements PersistenceObject<TemporalTickerIdPO> {
 		NonDigitalCurrencyFormatter nonDigitalCurrencyFormatter = new NonDigitalCurrencyFormatter();
 		stringBuffer.append("[");
 		stringBuffer.append("Orders: " + orders);
-		stringBuffer.append(", Buy orders: " + buyOrders);
-		stringBuffer.append(", Sell orders: " + sellOrders);
-		stringBuffer.append(", High: " + nonDigitalCurrencyFormatter.format(high));
-		stringBuffer.append(", Average: " + nonDigitalCurrencyFormatter.format(average));
-		stringBuffer.append(", Low: " + nonDigitalCurrencyFormatter.format(low));
-		stringBuffer.append(", Vol: " + nonDigitalCurrencyFormatter.format(vol));
-		stringBuffer.append(", First: " + nonDigitalCurrencyFormatter.format(first));
-		stringBuffer.append(", Last: " + nonDigitalCurrencyFormatter.format(last));
+		stringBuffer.append(", buy orders: " + buyOrders);
+		stringBuffer.append(", sell orders: " + sellOrders);
+		stringBuffer.append(", high: " + nonDigitalCurrencyFormatter.format(high));
+		stringBuffer.append(", average: " + nonDigitalCurrencyFormatter.format(average));
+		stringBuffer.append(", low: " + nonDigitalCurrencyFormatter.format(low));
+		stringBuffer.append(", vol: " + nonDigitalCurrencyFormatter.format(vol));
+		stringBuffer.append(", first: " + nonDigitalCurrencyFormatter.format(first));
+		stringBuffer.append(", last: " + nonDigitalCurrencyFormatter.format(last));
+		stringBuffer.append(", previous last: " + nonDigitalCurrencyFormatter.format(previousLast));
+		stringBuffer.append(", buy: " + nonDigitalCurrencyFormatter.format(buy));
+		stringBuffer.append(", last buy: " + nonDigitalCurrencyFormatter.format(previousBuy));
+		stringBuffer.append(", sell: " + nonDigitalCurrencyFormatter.format(sell));
+		stringBuffer.append(", last sell: " + nonDigitalCurrencyFormatter.format(previousSell));
+		stringBuffer.append(", duration: " + new DurationToStringConverter().convertTo(duration));
 		stringBuffer.append("]");
 		return stringBuffer.toString();
 	}

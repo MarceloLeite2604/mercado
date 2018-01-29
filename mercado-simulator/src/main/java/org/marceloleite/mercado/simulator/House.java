@@ -147,8 +147,8 @@ public class House {
 	private void checkBuyOrders(TimeInterval currentTimeInterval, Account account) {
 		List<BuyOrder> buyOrders = account.getBuyOrdersTemporalController().retrieve(currentTimeInterval);
 		for (BuyOrder buyOrder : buyOrders) {
-			buyOrder.updateOrder(temporalTickers);
-			LOGGER.info("Executing " + buyOrder + " on \"" + account.getOwner() + "\" account.");
+			buyOrder.updateOrder(temporalTickers, currentTimeInterval);
+			LOGGER.info(currentTimeInterval + ": Executing " + buyOrder + " on \"" + account.getOwner() + "\" account.");
 			CurrencyAmount currencyAmountCommission = calculateComission(buyOrder);
 			LOGGER.debug("Commission amount is " + currencyAmountCommission + ".");
 			CurrencyAmount currencyAmountToDeposit = calculateDeposit(buyOrder, currencyAmountCommission);
@@ -163,7 +163,7 @@ public class House {
 	private void checkSellOrders(TimeInterval currentTimeInterval, Account account) {
 		List<SellOrder> sellOrders = account.getSellOrdersTemporalController().retrieve(currentTimeInterval);
 		for (SellOrder sellOrder : sellOrders) {
-			sellOrder.updateOrder(temporalTickers);
+			sellOrder.updateOrder(temporalTickers, currentTimeInterval);
 			LOGGER.info("Executing " + sellOrder + " on \"" + account.getOwner() + "\" account.");
 			CurrencyAmount currencyAmountCommission = calculateCommission(sellOrder);
 			CurrencyAmount currencyAmountToDeposit = calculateDeposit(sellOrder, currencyAmountCommission);

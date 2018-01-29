@@ -125,7 +125,6 @@ public abstract class AbstractDAO<E extends PersistenceObject<?>> implements Dat
 			}
 		}
 		List<? extends PersistenceObject<?>> result = query.getResultList();
-		// commitTransaction();
 		closeEntityManager();
 		return result;
 	}

@@ -14,7 +14,7 @@ public class OriginalStrategy implements Strategy {
 	private static final Logger LOGGER = LogManager.getLogger(OriginalStrategy.class);
 
 	private Currency currency;
-	
+
 	public OriginalStrategy(Currency currency) {
 		this.currency = currency;
 	}
@@ -29,14 +29,16 @@ public class OriginalStrategy implements Strategy {
 
 	@Override
 	public void check(TimeInterval simulationTimeInterval, Account account, House house) {
-		CurrencyAmount realAmount = account.getBalance().get(Currency.REAL);
-		if (realAmount.getAmount() > 0) {
-			CurrencyAmount currencyAmountToInvest = new CurrencyAmount(realAmount);
-			CurrencyAmount currencyAmountToBuy = new CurrencyAmount(currency, null);
-			BuyOrder buyOrder = new BuyOrder(simulationTimeInterval.getStart(), currencyAmountToBuy,
-					currencyAmountToInvest);
-			LOGGER.debug("Buy order created is " + buyOrder);
-			account.getBuyOrdersTemporalController().add(buyOrder);
+		if (house.getTemporalTickers().get(currency) != null) {
+			CurrencyAmount realAmount = account.getBalance().get(Currency.REAL);
+			if (realAmount.getAmount() > 0) {
+				CurrencyAmount currencyAmountToInvest = new CurrencyAmount(realAmount);
+				CurrencyAmount currencyAmountToBuy = new CurrencyAmount(currency, null);
+				BuyOrder buyOrder = new BuyOrder(simulationTimeInterval.getStart(), currencyAmountToBuy,
+						currencyAmountToInvest);
+				LOGGER.debug("Buy order created is " + buyOrder);
+				account.getBuyOrdersTemporalController().add(buyOrder);
+			}
 		}
 	}
 }
