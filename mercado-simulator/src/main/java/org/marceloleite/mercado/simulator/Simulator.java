@@ -75,8 +75,12 @@ public class Simulator {
 				if (temporalTickerPO != null) {
 					CurrencyAmount currencyAmount = balance.get(currency);
 					if (currencyAmount != null) {
+						double last = temporalTickerPO.getLast();
+						if ( last == 0.0) {
+							last = temporalTickerPO.getPreviousLast();
+						}
 						totalRealAmount.setAmount(totalRealAmount.getAmount()
-								+ (currencyAmount.getAmount() * temporalTickerPO.getAverage()));
+								+ (currencyAmount.getAmount() * last));
 					}
 				}
 			} else {

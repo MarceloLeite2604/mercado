@@ -1,14 +1,17 @@
 package org.marceloleite.mercado.databasemodel;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-@Entity(name = "Properties")
+@Entity(name = "PROPERTIES")
 public class PropertyPO implements PersistenceObject<String> {
 
 	@Id
+	@Column(name="NAME", nullable = false)
 	private String name;
 
+	@Column(name="VALUE", nullable = false)
 	private String value;
 
 	public PropertyPO(String name, String value) {

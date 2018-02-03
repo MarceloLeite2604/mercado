@@ -1,9 +1,9 @@
 package org.marceloleite.mercado.databasemodel;
 
 public enum Entity {
-	TRADE("Trades", TradePO.class),
-	TICKER("Tickers", TickerPO.class),
-	PROPERTY("Properties", PropertyPO.class);
+	TRADE("TRADES", TradePO.class),
+	TICKER("TICKERS", TickerPO.class),
+	PROPERTY("PROPERTIES", PropertyPO.class);
 	
 	private String name;
 	

@@ -2,6 +2,7 @@ package org.marceloleite.mercado.databasemodel;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 import org.marceloleite.mercado.commons.Currency;
@@ -11,8 +12,10 @@ public class TradeIdPO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	@Column(name="TRADES_ID", nullable = false)
 	private Long id;
-
+	
+	@Column(name="CURRENCY", nullable = false)
 	private Currency currency;
 
 	public TradeIdPO() {

@@ -3,6 +3,7 @@ package org.marceloleite.mercado.databasemodel;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 
+import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 import org.marceloleite.mercado.commons.Currency;
@@ -12,8 +13,10 @@ public class TickerIdPO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	@Column(name = "CURRENCY", nullable = false)
 	private Currency currency;
 
+	@Column(name = "TICKER_TIME", nullable = false)
 	private ZonedDateTime time;
 
 	public Currency getCurrency() {

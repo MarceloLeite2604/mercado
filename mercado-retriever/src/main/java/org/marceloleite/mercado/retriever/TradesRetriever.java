@@ -46,7 +46,6 @@ public class TradesRetriever {
 		if (!ignoreValuesFromDatabase) {
 			retrieveAllValuesFromDatabase(currency, start, end);
 		} else {
-			// retrieveUnavailableTradesOnDatabase(currency, start, end);
 			List<TradePO> tradesRetrievedFromSite = retrieveTradesFromSite(currency, start, end);
 			tradeDAO.merge(tradesRetrievedFromSite);
 		}
