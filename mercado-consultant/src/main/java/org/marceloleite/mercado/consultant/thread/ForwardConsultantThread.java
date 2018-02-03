@@ -25,6 +25,10 @@ public class ForwardConsultantThread extends AbstractConsultantThread {
 	public void run() {
 		Thread.currentThread().setName(THREAD_NAME);
 		TradesRetriever tradesRetriever = new TradesRetriever();
+		if (getConsultantProperties().getTradesSiteRetrieverStepDuration() != null) {
+			tradesRetriever
+					.setTradesSiteRetrieverStepDuration(getConsultantProperties().getTradesSiteRetrieverStepDuration());
+		}
 		TimeInterval timeIntervalToRetrieve = null;
 		while (!finished()) {
 			timeIntervalToRetrieve = calculateTimeIntervalToRetrieve(timeIntervalToRetrieve);

@@ -45,40 +45,48 @@ public class ThirdStrategy implements Strategy {
 
 	@Override
 	public void check(TimeInterval simulationTimeInterval, Account account, House house) {
+		setBaseIfNull(house.getTemporalTickers().get(currency));
 		TemporalTickerVariation temporalTickerVariation = generateTemporalTickerVariation(simulationTimeInterval,
 				house);
 		if (temporalTickerVariation != null) {
+			double lastVariation = temporalTickerVariation.getLastVariation();
 			switch (status) {
 			case UNDEFINED:
-				if (temporalTickerVariation.getLastVariation() != Double.NaN
-						&& temporalTickerVariation.getLastVariation() > 0) {
+				if (lastVariation != Double.NaN
+						&& lastVariation > 0) {
 					LOGGER.debug(simulationTimeInterval + ": Last variation is "
-							+ new PercentageFormatter().format(temporalTickerVariation.getLastVariation()));
+							+ new PercentageFormatter().format(lastVariation));
 					updateBase(house);
 					createBuyOrder(simulationTimeInterval, account);
 				}
 				break;
 			case SAVED:
-				if (temporalTickerVariation.getLastVariation() != Double.NaN
-						&& temporalTickerVariation.getLastVariation() < 0) {
+				if (lastVariation != Double.NaN
+						&& lastVariation < 0) {
 					updateBase(house);
-				} else if (temporalTickerVariation.getLastVariation() != Double.NaN
-						&& temporalTickerVariation.getLastVariation() >= GROWTH_PERCENTAGE_THRESHOLD) {
+				} else if (lastVariation != Double.NaN
+						&& lastVariation >= GROWTH_PERCENTAGE_THRESHOLD) {
 					updateBase(house);
 					createBuyOrder(simulationTimeInterval, account);
 				}
 				break;
 			case APPLIED:
-				if (temporalTickerVariation.getLastVariation() != Double.NaN
-						&& temporalTickerVariation.getLastVariation() > 0) {
+				if (lastVariation != Double.NaN
+						&& lastVariation > 0) {
 					updateBase(house);
-				} else if (temporalTickerVariation.getLastVariation() != Double.NaN
-						&& temporalTickerVariation.getLastVariation() <= SHRINK_PERCENTAGE_THRESHOLD) {
+				} else if (lastVariation != Double.NaN
+						&& lastVariation <= SHRINK_PERCENTAGE_THRESHOLD) {
 					updateBase(house);
 					createSellOrder(simulationTimeInterval, account, house);
 				}
 				break;
 			}
+		}
+	}
+
+	private void setBaseIfNull(TemporalTickerPO temporalTickerPO) {
+		if ( baseTemporalTickerPO == null) {
+			baseTemporalTickerPO = temporalTickerPO;
 		}
 	}
 
@@ -94,7 +102,7 @@ public class ThirdStrategy implements Strategy {
 		CurrencyAmount currencyAmountToRetrieve = new CurrencyAmount(Currency.REAL, null);
 		SellOrder sellOrder = new SellOrder(simulationTimeInterval.getStart(), currencyAmountToSell,
 				currencyAmountToRetrieve);
-		LOGGER.debug(new ZonedDateTimeToStringConverter().convertTo(simulationTimeInterval.getStart()) + ": Created "
+		LOGGER.info(new ZonedDateTimeToStringConverter().convertTo(simulationTimeInterval.getStart()) + ": Created "
 				+ sellOrder + ".");
 		account.getSellOrdersTemporalController().add(sellOrder);
 		status = Status.SAVED;
@@ -105,7 +113,7 @@ public class ThirdStrategy implements Strategy {
 		CurrencyAmount currencyAmountToBuy = new CurrencyAmount(currency, null);
 		BuyOrder buyOrder = new BuyOrder(simulationTimeInterval.getStart(), currencyAmountToBuy,
 				currencyAmountToInvest);
-		LOGGER.debug(new ZonedDateTimeToStringConverter().convertTo(simulationTimeInterval.getStart()) + ": Created "
+		LOGGER.info(new ZonedDateTimeToStringConverter().convertTo(simulationTimeInterval.getStart()) + ": Created "
 				+ buyOrder + ".");
 		account.getBuyOrdersTemporalController().add(buyOrder);
 		status = Status.APPLIED;

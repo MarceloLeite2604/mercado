@@ -40,7 +40,7 @@ public class TemporalTickerVariation {
 		this.firstVariation = Double.NaN;
 		this.lastVariation = Double.NaN;
 		this.currency = null;
-		
+
 		if (previousTemporalTickerPO == null) {
 			LOGGER.debug("Previous temporal ticker is null.");
 		} else if (currentTemporalTickerPO == null) {
@@ -59,8 +59,18 @@ public class TemporalTickerVariation {
 			this.volVariation = calculateVariation(previousTemporalTickerPO.getVol(), currentTemporalTickerPO.getVol());
 			this.firstVariation = calculateVariation(previousTemporalTickerPO.getFirst(),
 					currentTemporalTickerPO.getFirst());
-			this.lastVariation = calculateVariation(previousTemporalTickerPO.getLast(),
-					currentTemporalTickerPO.getLast());
+			
+			double previousLast = previousTemporalTickerPO.getLast();
+			if (previousTemporalTickerPO.getLast() == 0.0) {
+				previousLast = previousTemporalTickerPO.getPreviousLast();
+			}
+			
+			double currentLast = currentTemporalTickerPO.getLast();
+			if (currentTemporalTickerPO.getLast() == 0.0) {
+				currentLast = currentTemporalTickerPO.getPreviousLast();
+			}
+			
+			this.lastVariation = calculateVariation(previousLast, currentLast);
 			this.currency = previousTemporalTickerPO.getId().getCurrency();
 		}
 	}

@@ -22,7 +22,7 @@ public enum TradeType {
 
 	public static TradeType retrieve(String value) {
 		for (TradeType tradeType : values()) {
-			if (tradeType.getValue().equals(value)) {
+			if (tradeType.getValue().equals(value.toUpperCase())) {
 				return tradeType;
 			}
 		}

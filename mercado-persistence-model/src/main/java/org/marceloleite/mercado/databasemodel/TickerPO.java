@@ -1,24 +1,31 @@
 package org.marceloleite.mercado.databasemodel;
 
+import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 
-@Entity(name = "Tickers")
+@Entity(name = "TICKERS")
 public class TickerPO implements PersistenceObject<TickerIdPO> {
 
 	@EmbeddedId
 	private TickerIdPO tickerId;
 
+	@Column(name="HIGH", nullable=false)
 	private double high;
 
+	@Column(name="LOW", nullable=false)
 	private double low;
 
+	@Column(name="VOLUME", nullable=false)
 	private double vol;
 
+	@Column(name="LAST", nullable=false)
 	private double last;
 
+	@Column(name="BUY", nullable=false)
 	private double buy;
 
+	@Column(name="SELL", nullable=false)
 	private double sell;
 
 	public TickerPO() {

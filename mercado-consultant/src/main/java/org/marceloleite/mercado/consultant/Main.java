@@ -24,8 +24,8 @@ public class Main {
 
 	public static void main(String[] args) {
 
-		consultant();
-		// checkTrades();
+		// consultant();
+		checkTrades();
 		// zonedDateTime();
 	}
 
@@ -41,10 +41,13 @@ public class Main {
 
 		Map<Currency, List<Long>> currencyExceptions = new EnumMap<>(Currency.class);
 		currencyExceptions.put(Currency.BITCOIN, Arrays.asList(4926l));
+		TradesRetriever tradesRetriever = new TradesRetriever();
+		tradesRetriever.setTradesSiteRetrieverStepDuration(Duration.ofDays(1));
 		try {
-			long lastId = -1l;
 			for (Currency currency : Currency.values()) {
-				if (currency.isDigital()) {
+				long lastId = -1l;
+				/* TODO: Watch out with BGold. */
+				if (currency.isDigital() && currency != Currency.BGOLD) {
 					List<Long> exceptions = currencyExceptions.getOrDefault(currency, new ArrayList<>());
 					System.out.println("Checking " + currency + " currency.");
 					ZonedDateTimeToStringConverter zonedDateTimeToStringConverter = new ZonedDateTimeToStringConverter();
@@ -53,9 +56,9 @@ public class Main {
 					Duration divisionDuration = Duration.ofDays(30);
 					TimeDivisionController timeDivisionController = new TimeDivisionController(start, end,
 							divisionDuration);
+					
 					for (TimeInterval timeInterval : timeDivisionController.geTimeIntervals()) {
-						TradesRetriever tradesRetriever = new TradesRetriever();
-
+						
 						List<TradePO> trades = tradesRetriever.retrieve(currency, timeInterval.getStart(),
 								timeInterval.getEnd(), false);
 						StringBuffer stringBuffer = new StringBuffer();

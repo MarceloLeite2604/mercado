@@ -28,25 +28,25 @@ public class TradeDAO extends AbstractDAO<TradePO> {
 	private static final String DATE_PARAMETER = "date";
 
 	private static final String BETWEEN_TIME_INTERVAL_QUERY = "SELECT * FROM " + Entity.TRADE.getName()
-			+ " WHERE currency = :" + CURRENCY_PARAMETER + " AND date BETWEEN :" + START_PARAMETER + " AND :"
+			+ " WHERE currency = :" + CURRENCY_PARAMETER + " AND trade_date >= :" + START_PARAMETER + " AND trade_date < :"
 			+ END_PARAMETER;
 
 	private static final String NEWEST_TRADE_RETRIEVED = "SELECT * FROM " + Entity.TRADE.getName()
-			+ " WHERE date = ( SELECT max(date) FROM " + Entity.TRADE.getName() + ")";
+			+ " WHERE date = ( SELECT max(trade_date) FROM " + Entity.TRADE.getName() + ")";
 
 	private static final String OLDEST_TRADE_RETRIEVED = "SELECT * FROM " + Entity.TRADE.getName()
-			+ " WHERE date = ( SELECT min(date) FROM " + Entity.TRADE.getName() + ")";
+			+ " WHERE date = ( SELECT min(trade_date) FROM " + Entity.TRADE.getName() + ")";
 
 	private static final String PREVIOUS_TRADE = "SELECT * FROM " + Entity.TRADE.getName()
-			+ " WHERE id = (SELECT max(id) FROM " + Entity.TRADE.getName()
-			+ "  WHERE date = ( SELECT max(date) FROM " + Entity.TRADE.getName() + " WHERE tradeType = :"
-			+ TRADE_TYPE_PARAMETER + " AND currency = :" + CURRENCY_PARAMETER + " AND date <= :" + DATE_PARAMETER
+			+ " WHERE trades_id = (SELECT max(trades_id) FROM " + Entity.TRADE.getName()
+			+ "  WHERE trade_date = ( SELECT max(trade_date) FROM " + Entity.TRADE.getName() + " WHERE trade_type = :"
+			+ TRADE_TYPE_PARAMETER + " AND currency = :" + CURRENCY_PARAMETER + " AND trade_date <= :" + DATE_PARAMETER
 			+ ") ) AND currency = :" + CURRENCY_PARAMETER;
 
 	private static final String NEXT_TRADE = "SELECT * FROM " + Entity.TRADE.getName()
-			+ " WHERE id = (SELECT min(id) FROM " + Entity.TRADE.getName()
-			+ "  WHERE date = ( SELECT min(date) FROM " + Entity.TRADE.getName() + " WHERE tradeType = :"
-			+ TRADE_TYPE_PARAMETER + " AND currency = :" + CURRENCY_PARAMETER + " AND date >= :" + DATE_PARAMETER
+			+ " WHERE trades_id = (SELECT min(trades_id) FROM " + Entity.TRADE.getName()
+			+ "  WHERE trade_date = ( SELECT min(trade_date) FROM " + Entity.TRADE.getName() + " WHERE trade_type = :"
+			+ TRADE_TYPE_PARAMETER + " AND currency = :" + CURRENCY_PARAMETER + " AND trade_date >= :" + DATE_PARAMETER
 			+ ") ) AND currency = :" + CURRENCY_PARAMETER;
 
 	public List<TradePO> retrieve(Currency currency, ZonedDateTime start, ZonedDateTime end) {

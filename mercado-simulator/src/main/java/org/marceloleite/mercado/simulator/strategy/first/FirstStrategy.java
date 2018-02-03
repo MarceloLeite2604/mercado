@@ -60,11 +60,11 @@ public class FirstStrategy implements Strategy {
 	public void check(TimeInterval simulationTimeInterval, Account account, House house) {
 		setBase(account, house);
 		TemporalTickerVariation temporalTickerVariation = generateTemporalTickerVariation(simulationTimeInterval,
-				house);
+				house.getTemporalTickers().get(currency));
 
 		if (temporalTickerVariation != null) {
-			Double averageVariation = temporalTickerVariation.getAverageVariation();
-			if (averageVariation != null && averageVariation != Double.POSITIVE_INFINITY) {
+			Double lastVariation = temporalTickerVariation.getLastVariation();
+			if (lastVariation != null && lastVariation != Double.POSITIVE_INFINITY) {
 				checkGrowthPercentage(simulationTimeInterval, account, house, temporalTickerVariation);
 
 				checkShrinkPercentage(simulationTimeInterval, account, house, temporalTickerVariation);
@@ -74,8 +74,8 @@ public class FirstStrategy implements Strategy {
 
 	private void checkShrinkPercentage(TimeInterval simulationTimeInterval, Account account, House house,
 			TemporalTickerVariation temporalTickerVariation) {
-		Double averageVariation = temporalTickerVariation.getAverageVariation();
-		if (averageVariation <= SHRINK_PERCENTAGE_THRESHOLD) {
+		Double lastVariation = temporalTickerVariation.getLastVariation();
+		if (lastVariation <= SHRINK_PERCENTAGE_THRESHOLD) {
 			ZonedDateTimeToStringConverter zonedDateTimeToStringConverter = new ZonedDateTimeToStringConverter();
 			LOGGER.debug(zonedDateTimeToStringConverter.convertTo(simulationTimeInterval.getEnd())
 					+ ": Shrink threshold reached.");
@@ -103,8 +103,8 @@ public class FirstStrategy implements Strategy {
 	private void checkGrowthPercentage(TimeInterval simulationTimeInterval, Account account, House house,
 			TemporalTickerVariation temporalTickerVariation) {
 		ZonedDateTimeToStringConverter zonedDateTimeToStringConverter = new ZonedDateTimeToStringConverter();
-		Double averageVariation = temporalTickerVariation.getAverageVariation();
-		if (averageVariation >= GROWTH_PERCENTAGE_THRESHOLD) {
+		Double lastVariation = temporalTickerVariation.getLastVariation();
+		if (lastVariation >= GROWTH_PERCENTAGE_THRESHOLD) {
 			LOGGER.debug(zonedDateTimeToStringConverter.convertTo(simulationTimeInterval.getEnd())
 					+ ": Growth threshold reached.");
 			if (checkBalanceForBuyOrder(account)) {
@@ -207,13 +207,12 @@ public class FirstStrategy implements Strategy {
 		return result;
 	}
 
-	private TemporalTickerVariation generateTemporalTickerVariation(TimeInterval simulationTimeInterval, House house) {
+	private TemporalTickerVariation generateTemporalTickerVariation(TimeInterval simulationTimeInterval, TemporalTickerPO currentTemporalTickerPO) {
 		TemporalTickerVariation temporalTickerVariation = null;
-		TemporalTickerPO currentTemporalTickerPO = house.getTemporalTickers().get(currency);
 		if (currentTemporalTickerPO != null) {
 			temporalTickerVariation = new TemporalTickerVariation(baseTemporalTickerPO, currentTemporalTickerPO);
-			LOGGER.debug(simulationTimeInterval + ": Average variation is "
-					+ new PercentageFormatter().format(temporalTickerVariation.getAverageVariation()));
+			LOGGER.debug(simulationTimeInterval + ": Last variation is "
+					+ new PercentageFormatter().format(temporalTickerVariation.getLastVariation()));
 		} else {
 			LOGGER.debug("No ticker variation for period " + simulationTimeInterval + ".");
 		}

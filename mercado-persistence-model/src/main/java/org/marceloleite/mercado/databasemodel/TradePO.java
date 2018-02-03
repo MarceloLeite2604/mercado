@@ -8,20 +8,22 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 
-@Entity(name = "Trades")
+@Entity(name = "TRADES")
 public class TradePO implements PersistenceObject<TradeIdPO> {
 
 	@EmbeddedId
 	private TradeIdPO tradeIdPO;
 
-	@Column(nullable = false)
+	@Column(name="TRADE_DATE", nullable = false)
 	private ZonedDateTime date;
 
+	@Column(name="PRICE", nullable=false)
 	private double price;
 
+	@Column(name="AMOUNT", nullable=false)
 	private double amount;
 
-	@Column(nullable = false)
+	@Column(name="TRADE_TYPE", nullable = false)
 	@Enumerated(EnumType.STRING)
 	private TradeType tradeType;
 

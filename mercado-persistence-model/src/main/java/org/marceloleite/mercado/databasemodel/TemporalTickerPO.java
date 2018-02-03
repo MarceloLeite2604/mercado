@@ -9,55 +9,55 @@ import javax.persistence.Entity;
 import org.marceloleite.mercado.commons.util.NonDigitalCurrencyFormatter;
 import org.marceloleite.mercado.commons.util.converter.DurationToStringConverter;
 
-@Entity(name = "TemporalTickers")
+@Entity(name = "TEMPORAL_TICKERS")
 public class TemporalTickerPO implements PersistenceObject<TemporalTickerIdPO> {
 
 	@EmbeddedId
 	private TemporalTickerIdPO temporalTickerId;
 
-	@Column(nullable = false)
+	@Column(name="ORDERS", nullable = false)
 	private long orders;
 
-	@Column(nullable = false)
+	@Column(name="HIGH", nullable = false)
 	private double high;
 
-	@Column(nullable = false)
+	@Column(name="AVERAGE", nullable = false)
 	private double average;
 
-	@Column(nullable = false)
+	@Column(name="LOW", nullable = false)
 	private double low;
 
-	@Column(nullable = false)
+	@Column(name="VOLUME", nullable = false)
 	private double vol;
 
-	@Column(nullable = false)
+	@Column(name="FIRST", nullable = false)
 	private double first;
 
-	@Column(nullable = false)
+	@Column(name="LAST", nullable = false)
 	private double last;
 
-	@Column(nullable = false)
+	@Column(name="PREVIOUS_LAST", nullable = false)
 	private double previousLast;
 
-	@Column(nullable = false)
+	@Column(name="BUY", nullable = false)
 	private double buy;
 
-	@Column(nullable = false)
+	@Column(name="PREVIOUS_BUY", nullable = false)
 	private double previousBuy;
 
-	@Column(nullable = false)
+	@Column(name="SELL", nullable = false)
 	private double sell;
 
-	@Column(nullable = false)
+	@Column(name="PREVIOUS_SELL", nullable = false)
 	private double previousSell;
 
-	@Column(nullable = false)
+	@Column(name="BUY_ORDERS", nullable = false)
 	private long buyOrders;
 
-	@Column(nullable = false)
+	@Column(name="SELL_ORDERS", nullable = false)
 	private long sellOrders;
 
-	@Column(nullable = false)
+	@Column(name="DURATION", nullable = false)
 	private Duration duration;
 
 	public TemporalTickerPO() {
