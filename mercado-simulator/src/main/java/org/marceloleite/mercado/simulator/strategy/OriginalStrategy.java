@@ -7,7 +7,8 @@ import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.simulator.Account;
 import org.marceloleite.mercado.simulator.CurrencyAmount;
 import org.marceloleite.mercado.simulator.House;
-import org.marceloleite.mercado.simulator.order.BuyOrder;
+import org.marceloleite.mercado.simulator.order.BuyOrderBuilder;
+import org.marceloleite.mercado.simulator.order.BuyOrderBuilder.BuyOrder;
 
 public class OriginalStrategy implements Strategy {
 
@@ -34,8 +35,8 @@ public class OriginalStrategy implements Strategy {
 			if (realAmount.getAmount() > 0) {
 				CurrencyAmount currencyAmountToInvest = new CurrencyAmount(realAmount);
 				CurrencyAmount currencyAmountToBuy = new CurrencyAmount(currency, null);
-				BuyOrder buyOrder = new BuyOrder(simulationTimeInterval.getStart(), currencyAmountToBuy,
-						currencyAmountToInvest);
+				BuyOrder buyOrder = new BuyOrderBuilder().toExecuteOn(simulationTimeInterval.getStart())
+						.buying(currencyAmountToBuy).paying(currencyAmountToInvest).build();
 				LOGGER.debug("Buy order created is " + buyOrder);
 				account.getBuyOrdersTemporalController().add(buyOrder);
 			}

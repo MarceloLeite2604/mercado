@@ -123,12 +123,22 @@ public class TemporalTickerRetriever {
 					.mapToLong(tradePO -> tradePO.getTradeIdPO().getId()).max().orElse(0);
 			if (lastSellingTradeId != 0) {
 				buy = trades.get(lastSellingTradeId).getPrice();
+			} else {
+				TradePO previousBuyingTrade = new TradeDAO().retrievePreviousTrade(currency, TradeType.BUY, timeInterval.getStart());
+				if ( previousBuyingTrade != null) {
+					previousBuy = previousBuyingTrade.getPrice();
+				}
 			}
 
 			long lastBuyingTradeId = buyingTrades.entrySet().stream().map(Entry<Long, TradePO>::getValue)
 					.mapToLong(tradePO -> tradePO.getTradeIdPO().getId()).max().orElse(0);
 			if (lastBuyingTradeId != 0) {
 				sell = trades.get(lastBuyingTradeId).getPrice();
+			} else {
+				TradePO previousSellingTrade = new TradeDAO().retrievePreviousTrade(currency, TradeType.SELL, timeInterval.getStart());
+				if ( previousSellingTrade != null) {
+					previousSell = previousSellingTrade.getPrice();
+				}
 			}
 		} else {
 			TradeDAO tradeDAO = new TradeDAO();

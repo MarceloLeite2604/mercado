@@ -10,8 +10,9 @@ import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.simulator.converter.CurrencyAmountToStringConverter;
-import org.marceloleite.mercado.simulator.order.BuyOrder;
-import org.marceloleite.mercado.simulator.order.SellOrder;
+import org.marceloleite.mercado.simulator.order.BuyOrderBuilder;
+import org.marceloleite.mercado.simulator.order.BuyOrderBuilder.BuyOrder;
+import org.marceloleite.mercado.simulator.order.SellOrderBuilder.SellOrder;
 import org.marceloleite.mercado.simulator.strategy.Strategy;
 import org.marceloleite.mercado.simulator.structure.AccountData;
 import org.marceloleite.mercado.simulator.structure.BuyOrderData;
@@ -77,8 +78,12 @@ public class Account {
 
 	private TemporalController<BuyOrder> createBuyOrdersTemporalController(AccountData accountData) {
 		TemporalController<BuyOrder> buyOrders = new TemporalController<>();
-		for (BuyOrderData buyOrdersData : accountData.getBuyOrderDatas()) {
-			buyOrders.add(new BuyOrder(buyOrdersData));
+		BuyOrderBuilder buyOrderBuilder = new BuyOrderBuilder();
+		for (BuyOrderData buyOrderData : accountData.getBuyOrderDatas()) {
+			CurrencyAmount currencyAmountToBuy = new CurrencyAmount(buyOrderData.getCurrencyAmountToBuy());
+			CurrencyAmount currencyAmountToPay = new CurrencyAmount(buyOrderData.getCurrencyAmountToPay());
+			BuyOrder buyOrder = buyOrderBuilder.toExecuteOn(buyOrderData.getTime()).buying(currencyAmountToBuy).paying(currencyAmountToPay).build();
+			buyOrders.add(buyOrder);
 		}
 		return buyOrders;
 	}

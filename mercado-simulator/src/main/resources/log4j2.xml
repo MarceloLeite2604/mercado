@@ -7,6 +7,13 @@
 				<Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
 			</PatternLayout>
 		</File>
+		<File name="OriginalStrategyLogFile"
+			fileName="src/main/resources/logs/mercado-simulator-original-strategy.log"
+			append="false">
+			<PatternLayout>
+				<Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
+			</PatternLayout>
+		</File>
 		<File name="FirstStrategyLogFile"
 			fileName="src/main/resources/logs/mercado-simulator-first-strategy.log"
 			append="false">
@@ -49,12 +56,17 @@
 		<Logger name="org.marceloleite.mercado.simulator.Simulator"
 			level="info" />
 		<Logger
+			name="org.marceloleite.mercado.simulator.strategy.OriginalStrategy"
+			level="debug" additivity="false">
+			<AppenderRef ref="OriginalStrategyLogFile" />
+		</Logger>
+		<Logger
 			name="org.marceloleite.mercado.simulator.strategy.first"
 			level="debug" additivity="false">
 			<AppenderRef ref="FirstStrategyLogFile" />
 		</Logger>
 		<Logger
-			name="org.marceloleite.mercado.simulator.strategy.third.ThirdStrategy"
+			name="org.marceloleite.mercado.simulator.strategy.third"
 			level="debug" additivity="false">
 			<AppenderRef ref="ThirdStrategyLogFile" />
 		</Logger>

@@ -2,7 +2,7 @@ package org.marceloleite.mercado.simulator.converter;
 
 import org.marceloleite.mercado.commons.util.converter.Converter;
 import org.marceloleite.mercado.simulator.CurrencyAmount;
-import org.marceloleite.mercado.simulator.order.SellOrder;
+import org.marceloleite.mercado.simulator.order.SellOrderBuilder.SellOrder;
 
 public class OldSellOrderToStringConverter implements Converter<SellOrder, String> {
 

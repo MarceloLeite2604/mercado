@@ -12,8 +12,8 @@ import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.databasemodel.TemporalTickerPO;
 import org.marceloleite.mercado.retriever.TemporalTickerRetriever;
-import org.marceloleite.mercado.simulator.order.BuyOrder;
-import org.marceloleite.mercado.simulator.order.SellOrder;
+import org.marceloleite.mercado.simulator.order.BuyOrderBuilder.BuyOrder;
+import org.marceloleite.mercado.simulator.order.SellOrderBuilder.SellOrder;
 import org.marceloleite.mercado.simulator.strategy.Strategy;
 import org.marceloleite.mercado.simulator.structure.AccountData;
 import org.marceloleite.mercado.xml.reader.AccountsReader;
@@ -147,7 +147,7 @@ public class House {
 	private void checkBuyOrders(TimeInterval currentTimeInterval, Account account) {
 		List<BuyOrder> buyOrders = account.getBuyOrdersTemporalController().retrieve(currentTimeInterval);
 		for (BuyOrder buyOrder : buyOrders) {
-			buyOrder.updateOrder(temporalTickers, currentTimeInterval);
+			buyOrder.updateOrder(temporalTickers);
 			LOGGER.info(currentTimeInterval + ": Executing " + buyOrder + " on \"" + account.getOwner() + "\" account.");
 			CurrencyAmount currencyAmountCommission = calculateComission(buyOrder);
 			LOGGER.debug("Commission amount is " + currencyAmountCommission + ".");
@@ -163,7 +163,7 @@ public class House {
 	private void checkSellOrders(TimeInterval currentTimeInterval, Account account) {
 		List<SellOrder> sellOrders = account.getSellOrdersTemporalController().retrieve(currentTimeInterval);
 		for (SellOrder sellOrder : sellOrders) {
-			sellOrder.updateOrder(temporalTickers, currentTimeInterval);
+			sellOrder.updateOrder(temporalTickers);
 			LOGGER.info("Executing " + sellOrder + " on \"" + account.getOwner() + "\" account.");
 			CurrencyAmount currencyAmountCommission = calculateCommission(sellOrder);
 			CurrencyAmount currencyAmountToDeposit = calculateDeposit(sellOrder, currencyAmountCommission);
