@@ -7,6 +7,7 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.commons.TimeInterval;
 
 @Embeddable
 public class TemporalTickerIdPO implements Serializable {
@@ -58,6 +59,11 @@ public class TemporalTickerIdPO implements Serializable {
 
 	public void setEnd(ZonedDateTime end) {
 		this.end = end;
+	}
+	
+	@Override
+	public String toString() {
+		return new TimeInterval(start, end).toString();
 	}
 
 	@Override

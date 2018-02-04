@@ -3,6 +3,7 @@ package org.marceloleite.mercado.simulator.strategy.third;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.commons.OrderType;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.util.PercentageFormatter;
 import org.marceloleite.mercado.commons.util.converter.ZonedDateTimeToStringConverter;
@@ -11,8 +12,11 @@ import org.marceloleite.mercado.simulator.Account;
 import org.marceloleite.mercado.simulator.CurrencyAmount;
 import org.marceloleite.mercado.simulator.House;
 import org.marceloleite.mercado.simulator.TemporalTickerVariation;
-import org.marceloleite.mercado.simulator.order.BuyOrder;
-import org.marceloleite.mercado.simulator.order.SellOrder;
+import org.marceloleite.mercado.simulator.order.BuyOrderBuilder;
+import org.marceloleite.mercado.simulator.order.BuyOrderBuilder.BuyOrder;
+import org.marceloleite.mercado.simulator.order.MinimalAmounts;
+import org.marceloleite.mercado.simulator.order.SellOrderBuilder;
+import org.marceloleite.mercado.simulator.order.SellOrderBuilder.SellOrder;
 import org.marceloleite.mercado.simulator.strategy.Strategy;
 
 public class ThirdStrategy implements Strategy {
@@ -52,8 +56,7 @@ public class ThirdStrategy implements Strategy {
 			double lastVariation = temporalTickerVariation.getLastVariation();
 			switch (status) {
 			case UNDEFINED:
-				if (lastVariation != Double.NaN
-						&& lastVariation > 0) {
+				if (lastVariation != Double.NaN && lastVariation > 0) {
 					LOGGER.debug(simulationTimeInterval + ": Last variation is "
 							+ new PercentageFormatter().format(lastVariation));
 					updateBase(house);
@@ -61,21 +64,17 @@ public class ThirdStrategy implements Strategy {
 				}
 				break;
 			case SAVED:
-				if (lastVariation != Double.NaN
-						&& lastVariation < 0) {
+				if (lastVariation != Double.NaN && lastVariation < 0) {
 					updateBase(house);
-				} else if (lastVariation != Double.NaN
-						&& lastVariation >= GROWTH_PERCENTAGE_THRESHOLD) {
+				} else if (lastVariation != Double.NaN && lastVariation >= GROWTH_PERCENTAGE_THRESHOLD) {
 					updateBase(house);
 					createBuyOrder(simulationTimeInterval, account);
 				}
 				break;
 			case APPLIED:
-				if (lastVariation != Double.NaN
-						&& lastVariation > 0) {
+				if (lastVariation != Double.NaN && lastVariation > 0) {
 					updateBase(house);
-				} else if (lastVariation != Double.NaN
-						&& lastVariation <= SHRINK_PERCENTAGE_THRESHOLD) {
+				} else if (lastVariation != Double.NaN && lastVariation <= SHRINK_PERCENTAGE_THRESHOLD) {
 					updateBase(house);
 					createSellOrder(simulationTimeInterval, account, house);
 				}
@@ -85,7 +84,7 @@ public class ThirdStrategy implements Strategy {
 	}
 
 	private void setBaseIfNull(TemporalTickerPO temporalTickerPO) {
-		if ( baseTemporalTickerPO == null) {
+		if (baseTemporalTickerPO == null) {
 			baseTemporalTickerPO = temporalTickerPO;
 		}
 	}
@@ -98,43 +97,51 @@ public class ThirdStrategy implements Strategy {
 	}
 
 	private void createSellOrder(TimeInterval simulationTimeInterval, Account account, House house) {
-		CurrencyAmount currencyAmountToSell = new CurrencyAmount(account.getBalance().get(currency));
-		CurrencyAmount currencyAmountToRetrieve = new CurrencyAmount(Currency.REAL, null);
-		SellOrder sellOrder = new SellOrder(simulationTimeInterval.getStart(), currencyAmountToSell,
-				currencyAmountToRetrieve);
-		LOGGER.info(new ZonedDateTimeToStringConverter().convertTo(simulationTimeInterval.getStart()) + ": Created "
-				+ sellOrder + ".");
-		account.getSellOrdersTemporalController().add(sellOrder);
-		status = Status.SAVED;
+		CurrencyAmount currencyAmountToSell = calculateOrderAmount(OrderType.SELL, account);
+		if (currencyAmountToSell != null) {
+			CurrencyAmount currencyAmountToReceive = new CurrencyAmount(Currency.REAL, null);
+			SellOrder sellOrder = new SellOrderBuilder().toExecuteOn(simulationTimeInterval.getStart())
+					.selling(currencyAmountToSell).receiving(currencyAmountToReceive).build();
+			LOGGER.info(new ZonedDateTimeToStringConverter().convertTo(simulationTimeInterval.getStart()) + ": Created "
+					+ sellOrder + ".");
+			account.getSellOrdersTemporalController().add(sellOrder);
+			status = Status.SAVED;
+		}
 	}
 
 	private void createBuyOrder(TimeInterval simulationTimeInterval, Account account) {
-		CurrencyAmount currencyAmountToInvest = new CurrencyAmount(account.getBalance().get(Currency.REAL));
+		CurrencyAmount currencyAmountToPay = calculateOrderAmount(OrderType.BUY, account);
 		CurrencyAmount currencyAmountToBuy = new CurrencyAmount(currency, null);
-		BuyOrder buyOrder = new BuyOrder(simulationTimeInterval.getStart(), currencyAmountToBuy,
-				currencyAmountToInvest);
+		BuyOrder buyOrder = new BuyOrderBuilder().toExecuteOn(simulationTimeInterval.getStart())
+				.buying(currencyAmountToBuy).paying(currencyAmountToPay).build();
 		LOGGER.info(new ZonedDateTimeToStringConverter().convertTo(simulationTimeInterval.getStart()) + ": Created "
 				+ buyOrder + ".");
 		account.getBuyOrdersTemporalController().add(buyOrder);
 		status = Status.APPLIED;
 	}
 
-	private TemporalTickerVariation generateTemporalTickerVariation(TimeInterval simulationTimeInterval, House house) {
-		TemporalTickerVariation temporalTickerVariation = null;
-		TemporalTickerPO currentTemporalTickerPO = house.getTemporalTickers().get(currency);
-		if (currentTemporalTickerPO != null) {
-			temporalTickerVariation = new TemporalTickerVariation(baseTemporalTickerPO, currentTemporalTickerPO);
-			/*
-			 * TimeIntervalToStringConverter timeIntervalToStringConverter = new
-			 * TimeIntervalToStringConverter();
-			 * LOGGER.debug(timeIntervalToStringConverter.convertTo(simulationTimeInterval)
-			 * + ": Last variation is " + new
-			 * PercentageFormatter().format(temporalTickerVariation.getLastVariation()));
-			 */
-		} else {
-			LOGGER.debug("No ticker variation for period " + simulationTimeInterval + ".");
+	private CurrencyAmount calculateOrderAmount(OrderType orderType, Account account) {
+		Currency currency = (orderType == OrderType.SELL ? this.currency : Currency.REAL);
+		CurrencyAmount balance = account.getBalance().get(currency);
+		LOGGER.debug("Balance amount: " + balance + ".");
+
+		if (MinimalAmounts.isAmountLowerThanMinimal(balance)) {
+			LOGGER.debug("Current balance is lower thant the minimal order value. Aborting order.");
+			return null;
 		}
-		return temporalTickerVariation;
+
+		CurrencyAmount orderAmount = new CurrencyAmount(Currency.REAL, balance.getAmount());
+		LOGGER.debug("Order amount is " + orderAmount + ".");
+		return orderAmount;
+	}
+
+	private TemporalTickerVariation generateTemporalTickerVariation(TimeInterval simulationTimeInterval, House house) {
+		TemporalTickerPO currentTemporalTickerPO = house.getTemporalTickers().get(currency);
+		if (currentTemporalTickerPO == null) {
+			throw new RuntimeException("No temporal ticker for time interval " + simulationTimeInterval);
+		}
+
+		return new TemporalTickerVariation(baseTemporalTickerPO, currentTemporalTickerPO);
 	}
 
 	private enum Status {

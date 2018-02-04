@@ -6,14 +6,11 @@ import java.util.Map;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.databasemodel.TemporalTickerPO;
-import org.marceloleite.mercado.databasemodel.TradePO;
-import org.marceloleite.mercado.databasemodel.TradeType;
-import org.marceloleite.mercado.databaseretriever.persistence.dao.TradeDAO;
 import org.marceloleite.mercado.simulator.CurrencyAmount;
 import org.marceloleite.mercado.simulator.structure.SellOrderData;
 import org.marceloleite.mercado.simulator.temporalcontroller.AbstractTimedObject;
 
-public class SellOrder extends AbstractTimedObject {
+public class OldSellOrder extends AbstractTimedObject {
 
 	private ZonedDateTime time;
 
@@ -21,11 +18,11 @@ public class SellOrder extends AbstractTimedObject {
 
 	private CurrencyAmount currencyAmountToReceive;
 
-	public SellOrder() {
+	public OldSellOrder() {
 		this(null, null, null, null, null);
 	}
 
-	private SellOrder(ZonedDateTime time, Currency currencyToSell, Double amountToBuy, Currency currencyToReceive,
+	private OldSellOrder(ZonedDateTime time, Currency currencyToSell, Double amountToBuy, Currency currencyToReceive,
 			Double amountToReceive) {
 		super();
 		this.time = time;
@@ -42,20 +39,20 @@ public class SellOrder extends AbstractTimedObject {
 		this.currencyAmountToReceive = new CurrencyAmount(currencyToReceive, amountToReceive);
 	}
 
-	public SellOrder(ZonedDateTime time, Currency currencyToSell, Double amountToSell, Currency currencyToReceive) {
+	public OldSellOrder(ZonedDateTime time, Currency currencyToSell, Double amountToSell, Currency currencyToReceive) {
 		this(time, currencyToSell, amountToSell, currencyToReceive, null);
 	}
 
-	public SellOrder(ZonedDateTime time, Currency currencyToSell, Currency currencyToReceive, Double amountToReceive) {
+	public OldSellOrder(ZonedDateTime time, Currency currencyToSell, Currency currencyToReceive, Double amountToReceive) {
 		this(time, currencyToSell, null, currencyToReceive, amountToReceive);
 	}
 
-	public SellOrder(ZonedDateTime time, CurrencyAmount currencyAmountToSell, CurrencyAmount currencyAmountToReceive) {
+	public OldSellOrder(ZonedDateTime time, CurrencyAmount currencyAmountToSell, CurrencyAmount currencyAmountToReceive) {
 		this(time, currencyAmountToSell.getCurrency(), currencyAmountToSell.getAmount(),
 				currencyAmountToReceive.getCurrency(), currencyAmountToReceive.getAmount());
 	}
 
-	public SellOrder(SellOrderData sellOrderData) {
+	public OldSellOrder(SellOrderData sellOrderData) {
 		this(sellOrderData.getTime(), new CurrencyAmount(sellOrderData.getCurrencyAmountToSell()),
 				new CurrencyAmount(sellOrderData.getCurrencyAmountToReceive()));
 	}
@@ -99,28 +96,19 @@ public class SellOrder extends AbstractTimedObject {
 
 	private double retrieveSellingPrice(Map<Currency, TemporalTickerPO> temporalTickers,
 			TimeInterval currentTimeInterval) {
-		double buyingPrice;
 		Currency currency = currencyAmountToSell.getCurrency();
 		TemporalTickerPO temporalTickerPO = temporalTickers.get(currency);
-		if (temporalTickerPO != null) {
-			buyingPrice = temporalTickerPO.getBuy();
-		} else {
-			TradePO previousTrade = new TradeDAO().retrievePreviousTrade(currency, TradeType.SELL,
-					currentTimeInterval.getStart());
-			if (previousTrade != null) {
-				buyingPrice = previousTrade.getPrice();
-			} else {
-				TradePO nextTrade = new TradeDAO().retrieveNextTrade(currency, TradeType.SELL,
-						currentTimeInterval.getEnd());
-				if (nextTrade != null) {
-					buyingPrice = nextTrade.getPrice();
-				} else {
-					throw new RuntimeException(
-							"Could not retrieve a selling price for time interval " + currentTimeInterval);
-				}
-			}
+		if (temporalTickerPO == null) {
+			throw new RuntimeException(
+					"No temporal ticker while retrieving selling price for " + currency + " currency.");
 		}
-		return buyingPrice;
+
+		double sellingPrice = temporalTickerPO.getSell();
+		if (sellingPrice == 0.0) {
+			sellingPrice = temporalTickerPO.getPreviousSell();
+		}
+
+		return sellingPrice;
 	}
 
 	@Override

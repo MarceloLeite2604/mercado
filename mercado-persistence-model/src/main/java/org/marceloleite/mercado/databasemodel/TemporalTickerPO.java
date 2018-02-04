@@ -238,6 +238,7 @@ public class TemporalTickerPO implements PersistenceObject<TemporalTickerIdPO> {
 		StringBuffer stringBuffer = new StringBuffer();
 		NonDigitalCurrencyFormatter nonDigitalCurrencyFormatter = new NonDigitalCurrencyFormatter();
 		stringBuffer.append("[");
+		stringBuffer.append("ID: [" + temporalTickerId + "], ");
 		stringBuffer.append("Orders: " + orders);
 		stringBuffer.append(", buy orders: " + buyOrders);
 		stringBuffer.append(", sell orders: " + sellOrders);
