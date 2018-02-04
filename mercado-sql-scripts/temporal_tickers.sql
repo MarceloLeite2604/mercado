@@ -1,4 +1,3 @@
-
 CREATE TABLE temporal_tickers
 (
   currency            VARCHAR2(4 BYTE) NOT NULL,

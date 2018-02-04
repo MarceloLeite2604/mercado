@@ -38,13 +38,13 @@ public class TradeDAO extends AbstractDAO<TradePO> {
 			+ " WHERE date = ( SELECT min(trade_date) FROM " + Entity.TRADE.getName() + ")";
 
 	private static final String PREVIOUS_TRADE = "SELECT * FROM " + Entity.TRADE.getName()
-			+ " WHERE trades_id = (SELECT max(trades_id) FROM " + Entity.TRADE.getName()
+			+ " WHERE trade_id = (SELECT max(trade_id) FROM " + Entity.TRADE.getName()
 			+ "  WHERE trade_date = ( SELECT max(trade_date) FROM " + Entity.TRADE.getName() + " WHERE trade_type = :"
 			+ TRADE_TYPE_PARAMETER + " AND currency = :" + CURRENCY_PARAMETER + " AND trade_date <= :" + DATE_PARAMETER
 			+ ") ) AND currency = :" + CURRENCY_PARAMETER;
 
 	private static final String NEXT_TRADE = "SELECT * FROM " + Entity.TRADE.getName()
-			+ " WHERE trades_id = (SELECT min(trades_id) FROM " + Entity.TRADE.getName()
+			+ " WHERE trade_id = (SELECT min(trade_id) FROM " + Entity.TRADE.getName()
 			+ "  WHERE trade_date = ( SELECT min(trade_date) FROM " + Entity.TRADE.getName() + " WHERE trade_type = :"
 			+ TRADE_TYPE_PARAMETER + " AND currency = :" + CURRENCY_PARAMETER + " AND trade_date >= :" + DATE_PARAMETER
 			+ ") ) AND currency = :" + CURRENCY_PARAMETER;

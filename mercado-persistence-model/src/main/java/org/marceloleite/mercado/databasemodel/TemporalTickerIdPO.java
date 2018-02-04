@@ -14,6 +14,7 @@ public class TemporalTickerIdPO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
+	@Column(name="CURRENCY", nullable = false)
 	private Currency currency;
 
 	@Column(name="START_TIME", nullable = false)

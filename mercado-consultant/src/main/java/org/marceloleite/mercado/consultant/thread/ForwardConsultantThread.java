@@ -16,6 +16,7 @@ public class ForwardConsultantThread extends AbstractConsultantThread {
 
 	private static final Logger LOGGER = Logger.getLogger(ForwardConsultantThread.class);
 	private static final String THREAD_NAME = "Forward consultant thread";
+	private TimeInterval timeIntervalToRetrieve;
 
 	public ForwardConsultantThread() {
 		super(new ForwardConsultantPropertiesRetriever());
@@ -29,8 +30,8 @@ public class ForwardConsultantThread extends AbstractConsultantThread {
 			tradesRetriever
 					.setTradesSiteRetrieverStepDuration(getConsultantProperties().getTradesSiteRetrieverStepDuration());
 		}
-		TimeInterval timeIntervalToRetrieve = null;
-		while (!finished()) {
+		timeIntervalToRetrieve = null;
+		do {
 			timeIntervalToRetrieve = calculateTimeIntervalToRetrieve(timeIntervalToRetrieve);
 			ZonedDateTime lastExecution = ZonedDateTimeUtils.now();
 			LOGGER.info("Retrieving trades from " + timeIntervalToRetrieve.toString() + ".");
@@ -50,7 +51,7 @@ public class ForwardConsultantThread extends AbstractConsultantThread {
 				}
 			}
 			waitTime(lastExecution, timeIntervalToRetrieve);
-		}
+		} while (!finished());
 	}
 
 	private TimeInterval calculateTimeIntervalToRetrieve(TimeInterval previousTimeIntervalRetrieved) {
@@ -94,6 +95,15 @@ public class ForwardConsultantThread extends AbstractConsultantThread {
 	}
 
 	protected boolean finished() {
-		return false;
+		ZonedDateTime endTime = getConsultantProperties().getEndTime();
+		if (endTime == null) {
+			return false;
+		} else {
+			if (timeIntervalToRetrieve == null) {
+				return true;
+			} else {
+				return (timeIntervalToRetrieve.getStart().isAfter(endTime));
+			}
+		}
 	}
 }

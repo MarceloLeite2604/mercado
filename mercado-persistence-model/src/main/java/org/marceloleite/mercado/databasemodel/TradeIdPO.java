@@ -12,7 +12,7 @@ public class TradeIdPO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	@Column(name="TRADES_ID", nullable = false)
+	@Column(name="TRADE_ID", nullable = false)
 	private Long id;
 	
 	@Column(name="CURRENCY", nullable = false)

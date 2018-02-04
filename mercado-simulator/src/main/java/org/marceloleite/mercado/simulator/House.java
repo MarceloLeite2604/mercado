@@ -106,22 +106,23 @@ public class House {
 			/* TODO: Watch you with BGOLD. */
 			if (currency.isDigital() && currency != Currency.BGOLD) {
 				TemporalTickerPO temporalTickerPO;
-				/*try {*/
-					temporalTickerPO = temporalTickerRetriever.retrieve(currency, timeInterval, false);
-				/*} catch (NoTemporalTickerForPeriodException e) {
-					temporalTickerPO = null;
-				}*/
+				/* try { */
+				temporalTickerPO = temporalTickerRetriever.retrieve(currency, timeInterval, false);
+				/*
+				 * } catch (NoTemporalTickerForPeriodException e) { temporalTickerPO = null; }
+				 */
 				previousTemporalTicker = temporalTickers.get(currency);
 				TemporalTickerVariation temporalTickerVariation = null;
-				/*temporalTickers.put(currency, temporalTickerPO);*/
+				/* temporalTickers.put(currency, temporalTickerPO); */
 				if (temporalTickerPO != null) {
 					temporalTickers.put(currency, temporalTickerPO);
-					temporalTickerVariation = new TemporalTickerVariation(
-							previousTemporalTicker, temporalTickerPO);
-					/*TemporalTickerVariation temporalTickerVariation = new TemporalTickerVariation(
-							previousTemporalTicker, temporalTickerPO);
-					temporalTickerVariations.put(currency, temporalTickerVariation);*/
-				} 
+					temporalTickerVariation = new TemporalTickerVariation(previousTemporalTicker, temporalTickerPO);
+					/*
+					 * TemporalTickerVariation temporalTickerVariation = new
+					 * TemporalTickerVariation( previousTemporalTicker, temporalTickerPO);
+					 * temporalTickerVariations.put(currency, temporalTickerVariation);
+					 */
+				}
 				temporalTickerVariations.put(currency, temporalTickerVariation);
 			}
 		}
@@ -148,31 +149,50 @@ public class House {
 		List<BuyOrder> buyOrders = account.getBuyOrdersTemporalController().retrieve(currentTimeInterval);
 		for (BuyOrder buyOrder : buyOrders) {
 			buyOrder.updateOrder(temporalTickers);
-			LOGGER.info(currentTimeInterval + ": Executing " + buyOrder + " on \"" + account.getOwner() + "\" account.");
-			CurrencyAmount currencyAmountCommission = calculateComission(buyOrder);
-			LOGGER.debug("Commission amount is " + currencyAmountCommission + ".");
-			CurrencyAmount currencyAmountToDeposit = calculateDeposit(buyOrder, currencyAmountCommission);
-			LOGGER.debug("Amount to withdraw is " + buyOrder.getCurrencyAmountToPay() + ".");
-			depositComission(currencyAmountCommission, account);
-			account.getBalance().withdraw(buyOrder.getCurrencyAmountToPay());
-			LOGGER.debug("Amount to deposit is " + currencyAmountToDeposit + ".");
-			account.getBalance().deposit(currencyAmountToDeposit);
+			CurrencyAmount currencyAmountToPay = buyOrder.getCurrencyAmountToPay();
+			if (hasBalance(account, currencyAmountToPay)) {
+				LOGGER.info(currentTimeInterval + ": Executing " + buyOrder + " on \"" + account.getOwner()
+						+ "\" account.");
+				CurrencyAmount currencyAmountCommission = calculateComission(buyOrder);
+				LOGGER.debug("Commission amount is " + currencyAmountCommission + ".");
+				CurrencyAmount currencyAmountToDeposit = calculateDeposit(buyOrder, currencyAmountCommission);
+				LOGGER.debug("Amount to withdraw is " + currencyAmountToPay + ".");
+				depositComission(currencyAmountCommission, account);
+				account.getBalance().withdraw(currencyAmountToPay);
+				LOGGER.debug("Amount to deposit is " + currencyAmountToDeposit + ".");
+				account.getBalance().deposit(currencyAmountToDeposit);
+			} else {
+				LOGGER.info("Account \"" + account.getOwner() + "\" does not have enough "
+						+ currencyAmountToPay.getCurrency() + " balance to execute buy order. Cancelling.");
+			}
 		}
+	}
+
+	private boolean hasBalance(Account account, CurrencyAmount amountToHave) {
+		Currency currency = amountToHave.getCurrency();
+		CurrencyAmount balanceAmount = account.getBalance().get(currency);
+		return (balanceAmount.getAmount() >= amountToHave.getAmount());
 	}
 
 	private void checkSellOrders(TimeInterval currentTimeInterval, Account account) {
 		List<SellOrder> sellOrders = account.getSellOrdersTemporalController().retrieve(currentTimeInterval);
 		for (SellOrder sellOrder : sellOrders) {
 			sellOrder.updateOrder(temporalTickers);
-			LOGGER.info("Executing " + sellOrder + " on \"" + account.getOwner() + "\" account.");
-			CurrencyAmount currencyAmountCommission = calculateCommission(sellOrder);
-			CurrencyAmount currencyAmountToDeposit = calculateDeposit(sellOrder, currencyAmountCommission);
-			LOGGER.debug("Commission amount is " + currencyAmountCommission + ".");
-			depositComission(currencyAmountCommission, account);
-			LOGGER.debug("Amount to withdraw is " + sellOrder.getCurrencyAmountToSell() + ".");
-			account.getBalance().withdraw(sellOrder.getCurrencyAmountToSell());
-			LOGGER.debug("Amount to deposit is " + currencyAmountToDeposit + ".");
-			account.getBalance().deposit(currencyAmountToDeposit);
+			CurrencyAmount currencyAmountToSell = sellOrder.getCurrencyAmountToSell();
+			if (hasBalance(account, currencyAmountToSell)) {
+				LOGGER.info("Executing " + sellOrder + " on \"" + account.getOwner() + "\" account.");
+				CurrencyAmount currencyAmountCommission = calculateCommission(sellOrder);
+				CurrencyAmount currencyAmountToDeposit = calculateDeposit(sellOrder, currencyAmountCommission);
+				LOGGER.debug("Commission amount is " + currencyAmountCommission + ".");
+				depositComission(currencyAmountCommission, account);
+				LOGGER.debug("Amount to withdraw is " + currencyAmountToSell + ".");
+				account.getBalance().withdraw(currencyAmountToSell);
+				LOGGER.debug("Amount to deposit is " + currencyAmountToDeposit + ".");
+				account.getBalance().deposit(currencyAmountToDeposit);
+			} else {
+				LOGGER.info("Account \"" + account.getOwner() + "\" does not have enough "
+						+ currencyAmountToSell.getCurrency() + " balance to execute sell order. Cancelling.");
+			}
 		}
 	}
 

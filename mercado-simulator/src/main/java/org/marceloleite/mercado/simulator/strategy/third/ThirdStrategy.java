@@ -130,7 +130,7 @@ public class ThirdStrategy implements Strategy {
 			return null;
 		}
 
-		CurrencyAmount orderAmount = new CurrencyAmount(Currency.REAL, balance.getAmount());
+		CurrencyAmount orderAmount = new CurrencyAmount(currency, balance.getAmount());
 		LOGGER.debug("Order amount is " + orderAmount + ".");
 		return orderAmount;
 	}

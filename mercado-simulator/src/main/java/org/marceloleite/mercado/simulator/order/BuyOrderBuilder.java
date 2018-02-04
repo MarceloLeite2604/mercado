@@ -186,7 +186,6 @@ public class BuyOrderBuilder {
 						"No temporal ticker while retrieving buying price for " + currency + " currency.");
 			}
 
-			System.out.println("Temporal ticker: " + temporalTickerPO);
 			double buyingPrice = temporalTickerPO.getBuy();
 			if (buyingPrice == 0.0) {
 				buyingPrice = temporalTickerPO.getPreviousBuy();

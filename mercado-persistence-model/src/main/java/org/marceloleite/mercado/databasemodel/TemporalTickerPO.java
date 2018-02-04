@@ -18,25 +18,25 @@ public class TemporalTickerPO implements PersistenceObject<TemporalTickerIdPO> {
 	@Column(name="ORDERS", nullable = false)
 	private long orders;
 
-	@Column(name="HIGH", nullable = false)
+	@Column(name="HIGHEST_PRICE", nullable = false)
 	private double high;
 
-	@Column(name="AVERAGE", nullable = false)
+	@Column(name="AVERAGE_PRICE", nullable = false)
 	private double average;
 
-	@Column(name="LOW", nullable = false)
+	@Column(name="LOWEST_PRICE", nullable = false)
 	private double low;
 
-	@Column(name="VOLUME", nullable = false)
+	@Column(name="VOLUME_TRADED", nullable = false)
 	private double vol;
 
-	@Column(name="FIRST", nullable = false)
+	@Column(name="FIRST_PRICE", nullable = false)
 	private double first;
 
-	@Column(name="LAST", nullable = false)
+	@Column(name="LAST_PRICE", nullable = false)
 	private double last;
 
-	@Column(name="PREVIOUS_LAST", nullable = false)
+	@Column(name="PREVIOUS_LAST_PRICE", nullable = false)
 	private double previousLast;
 
 	@Column(name="BUY", nullable = false)
@@ -57,7 +57,7 @@ public class TemporalTickerPO implements PersistenceObject<TemporalTickerIdPO> {
 	@Column(name="SELL_ORDERS", nullable = false)
 	private long sellOrders;
 
-	@Column(name="DURATION", nullable = false)
+	@Column(name="TIME_DURATION", nullable = false)
 	private Duration duration;
 
 	public TemporalTickerPO() {
