@@ -1,11 +1,11 @@
 CREATE TABLE trades
 (
-    currency   VARCHAR2(255 )     NOT NULL, 
-	trades_id  NUMBER(19,0)       NOT NULL, 
-	amount     FLOAT(126)         NOT NULL, 
-	trade_date DATE               NOT NULL, 
-	price      FLOAT(126)         NOT NULL, 
-	trade_type VARCHAR2(255 BYTE) NOT NULL
+    currency   VARCHAR2(4 BYTE)         NOT NULL, 
+	trade_id   NUMBER(12,0)             NOT NULL, 
+	amount     FLOAT(126)               NOT NULL, 
+	trade_date TIMESTAMP WITH TIME ZONE NOT NULL, 
+	price      FLOAT(126)               NOT NULL, 
+	trade_type VARCHAR2(8 BYTE)         NOT NULL
 )
 PARTITION BY LIST (currency) 
 SUBPARTITION BY RANGE (trade_date)
@@ -80,7 +80,7 @@ SUBPARTITION BY RANGE (trade_date)
   )
 );
 
-ALTER TABLE trades ADD CONSTRAINT trades_pk PRIMARY KEY (currency, trades_id);
+ALTER TABLE trades ADD CONSTRAINT trades_pk PRIMARY KEY (currency, trade_id);
 
 CREATE INDEX trades_idx1 ON trades (currency, trade_date);
 
