@@ -1,24 +1,24 @@
 
 CREATE TABLE temporal_tickers
 (
-	currency            VARCHAR2(4 BYTE) NOT NULL,
-	start_time          TIMESTAMP        NOT NULL,
-	end_time            TIMESTAMP        NOT NULL,
-	orders              NUMBER(9,0)      NOT NULL,
-	buy_orders          NUMBER(9,0)      NOT NULL,
-	sell_orders         NUMBER(9,0)      NOT NULL,
-	buy                 FLOAT(126)       NOT NULL,
-	previous_buy        FLOAT(126)       NOT NULL,
-	sell                FLOAT(126)       NOT NULL,
-	previous_sell       FLOAT(126)       NOT NULL,
-	last_price          FLOAT(126)       NOT NULL,
-	previous_last_price FLOAT(126)       NOT NULL,
-	first_price         FLOAT(126)       NOT NULL,
-	highest_price       FLOAT(126)       NOT NULL,
-	lowest_price        FLOAT(126)       NOT NULL,
-	average_price       FLOAT(126)       NOT NULL,
-	time_duration       NUMBER(10,0)     NOT NULL,
-	volume_traded       FLOAT(126)       NOT NULL
+  currency            VARCHAR2(4 BYTE) NOT NULL,
+  start_time          TIMESTAMP        NOT NULL,
+  end_time            TIMESTAMP        NOT NULL,
+  orders              NUMBER(9,0)      NOT NULL,
+  buy_orders          NUMBER(9,0)      NOT NULL,
+  sell_orders         NUMBER(9,0)      NOT NULL,
+  buy                 FLOAT(126)       NOT NULL,
+  previous_buy        FLOAT(126)       NOT NULL,
+  sell                FLOAT(126)       NOT NULL,
+  previous_sell       FLOAT(126)       NOT NULL,
+  last_price          FLOAT(126)       NOT NULL,
+  previous_last_price FLOAT(126)       NOT NULL,
+  first_price         FLOAT(126)       NOT NULL,
+  highest_price       FLOAT(126)       NOT NULL,
+  lowest_price        FLOAT(126)       NOT NULL,
+  average_price       FLOAT(126)       NOT NULL,
+  time_duration       NUMBER(10,0)     NOT NULL,
+  volume_traded       FLOAT(126)       NOT NULL
 )
 PARTITION BY LIST (currency) 
 SUBPARTITION BY RANGE (start_time)
