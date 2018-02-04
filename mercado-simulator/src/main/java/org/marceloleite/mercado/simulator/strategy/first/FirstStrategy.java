@@ -89,12 +89,11 @@ public class FirstStrategy implements Strategy {
 	}
 
 	private void createSellOrder(TimeInterval simulationTimeInterval, Account account, House house) {
-		CurrencyAmount currencyAmountToSell = calculateOrderAmount(OrderType.SELL, account);
-		if (currencyAmountToSell != null) {
-			CurrencyAmount currencyAmountToReceive = new CurrencyAmount(Currency.REAL, null);
+		CurrencyAmount currencyAmountToReceive = calculateOrderAmount(OrderType.SELL, account);
+		if (currencyAmountToReceive != null) {
+			CurrencyAmount currencyAmountToSell = new CurrencyAmount(currency, null);
 			SellOrder sellOrder = new SellOrderBuilder().toExecuteOn(simulationTimeInterval.getStart())
-					.selling(currencyAmountToSell)
-					.receiving(currencyAmountToReceive).build();
+					.selling(currencyAmountToSell).receiving(currencyAmountToReceive).build();
 			LOGGER.debug("Created " + sellOrder + ".");
 			account.getSellOrdersTemporalController().add(sellOrder);
 		}
@@ -116,8 +115,10 @@ public class FirstStrategy implements Strategy {
 	}
 
 	private boolean hasBalance(Account account) {
-		Double balanceAmount = account.getBalance().get(Currency.REAL).getAmount();
-		return (balanceAmount > 0 && balanceAmount > MinimalAmounts.retrieveMinimalAmountFor(Currency.REAL));
+		CurrencyAmount currencyAmountBalance = account.getBalance().get(Currency.REAL);
+		Double balanceAmount = currencyAmountBalance.getAmount();
+		LOGGER.info("Balance amount: " + currencyAmountBalance);
+		return (balanceAmount > 0.0 && balanceAmount > MinimalAmounts.retrieveMinimalAmountFor(Currency.REAL));
 	}
 
 	private void createBuyOrder(TimeInterval simulationTimeInterval, Account account) {
@@ -143,25 +144,17 @@ public class FirstStrategy implements Strategy {
 	}
 
 	private CurrencyAmount calculateOrderAmount(OrderType orderType, Account account) {
-		Currency currency = (orderType == OrderType.SELL ? this.currency : Currency.REAL);
-		CurrencyAmount balance = account.getBalance().get(currency);
+		// Currency currency = (orderType == OrderType.SELL ? this.currency : Currency.REAL);
+		CurrencyAmount balance = account.getBalance().get(Currency.REAL);
 		LOGGER.debug("Balance amount: " + balance + ".");
 		double operationPercentage = calculateOperationPercentage(orderType);
-		LOGGER.debug("Operation percentage: " + new PercentageFormatter().format(operationPercentage) + ".");
 		double operationAmount = baseRealAmount.getAmount() * operationPercentage;
 		LOGGER.debug("Initial operation amount: " + new DigitalCurrencyFormatter().format(operationAmount) + ".");
 		Double minimalAmount = MinimalAmounts.retrieveMinimalAmountFor(currency);
 
-		if (operationAmount <= balance.getAmount() && operationAmount < minimalAmount) {
-			LOGGER.debug("Has balance for inital operation amount, but it is lower than the minimal order value.");
-			operationAmount = minimalAmount;
-		} else {
-			LOGGER.debug("No balance for initial operation amount.");
-			operationAmount = balance.getAmount();
-			if (operationAmount < minimalAmount) {
-				LOGGER.debug("No balance for minimal operation. Aborting order.");
-				return null;
-			}
+		if (operationAmount < minimalAmount) {
+			LOGGER.debug("No balance for minimal operation. Aborting order.");
+			return null;
 		}
 
 		CurrencyAmount orderAmount = new CurrencyAmount(Currency.REAL, operationAmount);
@@ -194,8 +187,10 @@ public class FirstStrategy implements Strategy {
 		TemporalTickerVariation temporalTickerVariation = null;
 		if (currentTemporalTickerPO != null) {
 			temporalTickerVariation = new TemporalTickerVariation(baseTemporalTickerPO, currentTemporalTickerPO);
-			LOGGER.debug(simulationTimeInterval + ": Last variation is "
-					+ new PercentageFormatter().format(temporalTickerVariation.getLastVariation()));
+			/*
+			 * LOGGER.debug(simulationTimeInterval + ": Last variation is " + new
+			 * PercentageFormatter().format(temporalTickerVariation.getLastVariation()));
+			 */
 		} else {
 			LOGGER.debug("No ticker variation for period " + simulationTimeInterval + ".");
 		}

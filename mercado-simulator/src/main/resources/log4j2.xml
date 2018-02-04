@@ -54,7 +54,7 @@
 			level="info" />
 		<Logger name="org.marceloleite.mercado.simulator.House" level="debug" />
 		<Logger name="org.marceloleite.mercado.simulator.Simulator"
-			level="info" />
+			level="debug" />
 		<Logger
 			name="org.marceloleite.mercado.simulator.strategy.OriginalStrategy"
 			level="debug" additivity="false">
