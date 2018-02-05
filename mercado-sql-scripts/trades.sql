@@ -1,11 +1,11 @@
 CREATE TABLE trades
 (
-  currency   VARCHAR2(4 BYTE) NOT NULL, 
-  trade_id   NUMBER(12,0)     NOT NULL, 
-  amount     FLOAT(126)       NOT NULL, 
-  trade_date TIMESTAMP        NOT NULL, 
-  price      FLOAT(126)       NOT NULL, 
-  trade_type VARCHAR2(8 BYTE) NOT NULL
+  currency   VARCHAR2(4 BYTE)                  NOT NULL, 
+  trade_id   NUMBER(12,0)                      NOT NULL, 
+  amount     FLOAT(126)                        NOT NULL, 
+  trade_date TIMESTAMP(0) WITH LOCAL TIME ZONE NOT NULL, 
+  price      FLOAT(126)                        NOT NULL, 
+  trade_type VARCHAR2(8 BYTE)                  NOT NULL
 )
 PARTITION BY LIST (currency) 
 SUBPARTITION BY RANGE (trade_date)

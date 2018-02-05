@@ -33,10 +33,10 @@ public class OriginalStrategy implements Strategy {
 		if (house.getTemporalTickers().get(currency) != null) {
 			CurrencyAmount realAmount = account.getBalance().get(Currency.REAL);
 			if (realAmount.getAmount() > 0) {
-				CurrencyAmount currencyAmountToInvest = new CurrencyAmount(realAmount);
+				CurrencyAmount currencyAmountToPay = new CurrencyAmount(realAmount);
 				CurrencyAmount currencyAmountToBuy = new CurrencyAmount(currency, null);
 				BuyOrder buyOrder = new BuyOrderBuilder().toExecuteOn(simulationTimeInterval.getStart())
-						.buying(currencyAmountToBuy).paying(currencyAmountToInvest).build();
+						.buying(currencyAmountToBuy).paying(currencyAmountToPay).build();
 				LOGGER.debug("Buy order created is " + buyOrder);
 				account.getBuyOrdersTemporalController().add(buyOrder);
 			}

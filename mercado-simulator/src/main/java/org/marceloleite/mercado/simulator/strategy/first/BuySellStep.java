@@ -26,18 +26,21 @@ public class BuySellStep {
 	}
 
 	public long updateStep(OrderType orderType) {
-		Long result = null;
-		switch (orderType) {
-		case BUY:
-			result = calculateNextBuyStep();
-			break;
-		case SELL:
-			result = calculateNextSellStep();
-			break;
-		}
+		Long result = calculateStep(orderType);
 		LOGGER.debug("Next step is: " + result + ".");
 		currentStep = result;
 		return currentStep;
+	}
+	
+	public long calculateStep(OrderType orderType) {
+		long result;
+		if ( orderType == OrderType.BUY) {
+			result = calculateNextBuyStep();
+		} else {
+			result = calculateNextSellStep();
+		}
+		
+		return result;
 	}
 
 	private long calculateNextBuyStep() {

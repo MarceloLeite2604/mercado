@@ -3,7 +3,8 @@ package org.marceloleite.mercado.databasemodel;
 public enum Entity {
 	TRADE("TRADES", TradePO.class),
 	TICKER("TICKERS", TickerPO.class),
-	PROPERTY("PROPERTIES", PropertyPO.class);
+	PROPERTY("PROPERTIES", PropertyPO.class),
+	TEMPORAL_TICKER("TEMPORAL_TICKERS", TemporalTickerPO.class);
 	
 	private String name;
 	

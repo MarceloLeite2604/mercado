@@ -124,6 +124,8 @@ public class BuyOrderBuilder {
 		private CurrencyAmount currencyAmountToBuy;
 
 		private CurrencyAmount currencyAmountToPay;
+				
+		private OrderStatus orderStatus;
 
 		private BuyOrder(ZonedDateTime time, Currency currencyToBuy, Double amountToBuy, Currency currencyToPay,
 				Double amountToPay) {
@@ -140,6 +142,7 @@ public class BuyOrderBuilder {
 			}
 			this.currencyAmountToBuy = new CurrencyAmount(currencyToBuy, amountToBuy);
 			this.currencyAmountToPay = new CurrencyAmount(currencyToPay, amountToPay);
+			this.orderStatus = OrderStatus.CREATED;
 		}
 
 		private BuyOrder(ZonedDateTime time, CurrencyAmount currencyAmountToBuy, CurrencyAmount currencyAmountToPay) {
@@ -163,6 +166,14 @@ public class BuyOrderBuilder {
 
 		public CurrencyAmount getCurrencyAmountToPay() {
 			return currencyAmountToPay;
+		}
+		
+		public OrderStatus getOrderStatus() {
+			return orderStatus;
+		}
+
+		public void setOrderStatus(OrderStatus orderStatus) {
+			this.orderStatus = orderStatus;
 		}
 
 		public void updateOrder(Map<Currency, TemporalTickerPO> temporalTickers) {
@@ -189,6 +200,9 @@ public class BuyOrderBuilder {
 			double buyingPrice = temporalTickerPO.getBuy();
 			if (buyingPrice == 0.0) {
 				buyingPrice = temporalTickerPO.getPreviousBuy();
+				if ( buyingPrice == 0.0) {
+					throw new RuntimeException("Buying price informed on period " + temporalTickerPO.getId() + " is zero.");
+				}
 			}
 			LOGGER.debug("Buying price is " + new DigitalCurrencyFormatter().format(buyingPrice));
 			return buyingPrice;
