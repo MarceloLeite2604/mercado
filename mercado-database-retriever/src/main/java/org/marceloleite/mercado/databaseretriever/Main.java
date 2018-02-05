@@ -17,6 +17,7 @@ public class Main {
 		EntityManagerController.getInstance().close();
 	}
 
+	@SuppressWarnings("unused")
 	private static void tradesDatabaseRetriever() {
 		TradeDAO tradesDAO = new TradeDAO();
 		ZonedDateTime end = ZonedDateTime.of(2017, 01, 01, 0, 0, 0, 0, ZoneOffset.UTC);

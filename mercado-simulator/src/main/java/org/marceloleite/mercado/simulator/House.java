@@ -5,6 +5,7 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,6 +14,8 @@ import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.databasemodel.TemporalTickerPO;
 import org.marceloleite.mercado.retriever.TemporalTickerRetriever;
 import org.marceloleite.mercado.simulator.order.BuyOrderBuilder.BuyOrder;
+import org.marceloleite.mercado.simulator.order.OrderExecutor;
+import org.marceloleite.mercado.simulator.order.OrderStatus;
 import org.marceloleite.mercado.simulator.order.SellOrderBuilder.SellOrder;
 import org.marceloleite.mercado.simulator.strategy.Strategy;
 import org.marceloleite.mercado.simulator.structure.AccountData;
@@ -20,6 +23,7 @@ import org.marceloleite.mercado.xml.reader.AccountsReader;
 
 public class House {
 
+	@SuppressWarnings("unused")
 	private static final Logger LOGGER = LogManager.getLogger(House.class);
 
 	private static final double DEFAULT_COMISSION_PERCENTAGE = 0.007;
@@ -106,22 +110,12 @@ public class House {
 			/* TODO: Watch you with BGOLD. */
 			if (currency.isDigital() && currency != Currency.BGOLD) {
 				TemporalTickerPO temporalTickerPO;
-				/* try { */
 				temporalTickerPO = temporalTickerRetriever.retrieve(currency, timeInterval, false);
-				/*
-				 * } catch (NoTemporalTickerForPeriodException e) { temporalTickerPO = null; }
-				 */
 				previousTemporalTicker = temporalTickers.get(currency);
 				TemporalTickerVariation temporalTickerVariation = null;
-				/* temporalTickers.put(currency, temporalTickerPO); */
 				if (temporalTickerPO != null) {
 					temporalTickers.put(currency, temporalTickerPO);
 					temporalTickerVariation = new TemporalTickerVariation(previousTemporalTicker, temporalTickerPO);
-					/*
-					 * TemporalTickerVariation temporalTickerVariation = new
-					 * TemporalTickerVariation( previousTemporalTicker, temporalTickerPO);
-					 * temporalTickerVariations.put(currency, temporalTickerVariation);
-					 */
 				}
 				temporalTickerVariations.put(currency, temporalTickerVariation);
 			}
@@ -147,82 +141,22 @@ public class House {
 
 	private void checkBuyOrders(TimeInterval currentTimeInterval, Account account) {
 		List<BuyOrder> buyOrders = account.getBuyOrdersTemporalController().retrieve(currentTimeInterval);
-		for (BuyOrder buyOrder : buyOrders) {
-			buyOrder.updateOrder(temporalTickers);
-			CurrencyAmount currencyAmountToPay = buyOrder.getCurrencyAmountToPay();
-			if (hasBalance(account, currencyAmountToPay)) {
-				LOGGER.info(currentTimeInterval + ": Executing " + buyOrder + " on \"" + account.getOwner()
-						+ "\" account.");
-				CurrencyAmount currencyAmountCommission = calculateComission(buyOrder);
-				LOGGER.debug("Commission amount is " + currencyAmountCommission + ".");
-				CurrencyAmount currencyAmountToDeposit = calculateDeposit(buyOrder, currencyAmountCommission);
-				LOGGER.debug("Amount to withdraw is " + currencyAmountToPay + ".");
-				depositComission(currencyAmountCommission, account);
-				account.getBalance().withdraw(currencyAmountToPay);
-				LOGGER.debug("Amount to deposit is " + currencyAmountToDeposit + ".");
-				account.getBalance().deposit(currencyAmountToDeposit);
-			} else {
-				LOGGER.info("Account \"" + account.getOwner() + "\" does not have enough "
-						+ currencyAmountToPay.getCurrency() + " balance to execute buy order. Cancelling.");
-			}
+		List<BuyOrder> buyOrdersCreated = buyOrders.stream()
+				.filter(buyOrder -> buyOrder.getOrderStatus() == OrderStatus.CREATED).collect(Collectors.toList());
+		if (buyOrdersCreated != null && buyOrdersCreated.size() > 0) {
+			OrderExecutor orderExecutor = new OrderExecutor();
+			buyOrdersCreated.forEach(buyOrder -> orderExecutor.executeBuyOrder(buyOrder, this, account));
 		}
-	}
-
-	private boolean hasBalance(Account account, CurrencyAmount amountToHave) {
-		Currency currency = amountToHave.getCurrency();
-		CurrencyAmount balanceAmount = account.getBalance().get(currency);
-		return (balanceAmount.getAmount() >= amountToHave.getAmount());
 	}
 
 	private void checkSellOrders(TimeInterval currentTimeInterval, Account account) {
 		List<SellOrder> sellOrders = account.getSellOrdersTemporalController().retrieve(currentTimeInterval);
-		for (SellOrder sellOrder : sellOrders) {
-			sellOrder.updateOrder(temporalTickers);
-			CurrencyAmount currencyAmountToSell = sellOrder.getCurrencyAmountToSell();
-			if (hasBalance(account, currencyAmountToSell)) {
-				LOGGER.info("Executing " + sellOrder + " on \"" + account.getOwner() + "\" account.");
-				CurrencyAmount currencyAmountCommission = calculateCommission(sellOrder);
-				CurrencyAmount currencyAmountToDeposit = calculateDeposit(sellOrder, currencyAmountCommission);
-				LOGGER.debug("Commission amount is " + currencyAmountCommission + ".");
-				depositComission(currencyAmountCommission, account);
-				LOGGER.debug("Amount to withdraw is " + currencyAmountToSell + ".");
-				account.getBalance().withdraw(currencyAmountToSell);
-				LOGGER.debug("Amount to deposit is " + currencyAmountToDeposit + ".");
-				account.getBalance().deposit(currencyAmountToDeposit);
-			} else {
-				LOGGER.info("Account \"" + account.getOwner() + "\" does not have enough "
-						+ currencyAmountToSell.getCurrency() + " balance to execute sell order. Cancelling.");
-			}
+		List<SellOrder> sellOrdersCreated = sellOrders.stream()
+				.filter(sellOrder -> sellOrder.getOrderStatus() == OrderStatus.CREATED).collect(Collectors.toList());
+		if (sellOrdersCreated != null && sellOrdersCreated.size() > 0) {
+			OrderExecutor orderExecutor = new OrderExecutor();
+			sellOrdersCreated.forEach(sellOrder -> orderExecutor.executeSellOrder(sellOrder, this, account));
 		}
 	}
 
-	private void depositComission(CurrencyAmount currencyAmountComission, Account account) {
-		Balance balance = comissionBalance.getOrDefault(account.getOwner(), new Balance());
-		balance.deposit(currencyAmountComission);
-		comissionBalance.put(account.getOwner(), balance);
-	}
-
-	private CurrencyAmount calculateDeposit(BuyOrder buyOrder, CurrencyAmount currencyAmountComission) {
-		CurrencyAmount currencyAmountToBuy = buyOrder.getCurrencyAmountToBuy();
-		double amountToDeposit = currencyAmountToBuy.getAmount() - currencyAmountComission.getAmount();
-		return new CurrencyAmount(currencyAmountToBuy.getCurrency(), amountToDeposit);
-	}
-
-	private CurrencyAmount calculateDeposit(SellOrder sellOrder, CurrencyAmount currencyAmountComission) {
-		CurrencyAmount currencyAmountToReceive = sellOrder.getCurrencyAmountToReceive();
-		double amountToDeposit = currencyAmountToReceive.getAmount() - currencyAmountComission.getAmount();
-		return new CurrencyAmount(currencyAmountToReceive.getCurrency(), amountToDeposit);
-	}
-
-	private CurrencyAmount calculateComission(BuyOrder buyOrder) {
-		CurrencyAmount currencyAmountToBuy = buyOrder.getCurrencyAmountToBuy();
-		double comissionAmount = currencyAmountToBuy.getAmount() * comissionPercentage;
-		return new CurrencyAmount(currencyAmountToBuy.getCurrency(), comissionAmount);
-	}
-
-	private CurrencyAmount calculateCommission(SellOrder sellOrder) {
-		CurrencyAmount currencyAmountToReceive = sellOrder.getCurrencyAmountToReceive();
-		double comissionAmount = currencyAmountToReceive.getAmount() * comissionPercentage;
-		return new CurrencyAmount(currencyAmountToReceive.getCurrency(), comissionAmount);
-	}
 }

@@ -16,7 +16,7 @@ public class SellOrderBuilder {
 
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = LogManager.getLogger(SellOrderBuilder.class);
-	
+
 	private ZonedDateTime time;
 
 	private Currency currencyToSell;
@@ -95,7 +95,7 @@ public class SellOrderBuilder {
 		if (time == null) {
 			throw new RuntimeException("Execution time for operation was not informed.");
 		}
-		
+
 		if (currencyToSell == null) {
 			throw new RuntimeException("Currency to sell was not informed.");
 		}
@@ -120,6 +120,8 @@ public class SellOrderBuilder {
 
 		private CurrencyAmount currencyAmountToReceive;
 
+		private OrderStatus orderStatus;
+
 		private SellOrder(ZonedDateTime time, Currency currencyToSell, Double amountToBuy, Currency currencyToReceive,
 				Double amountToReceive) {
 			super();
@@ -135,6 +137,7 @@ public class SellOrderBuilder {
 			}
 			this.currencyAmountToSell = new CurrencyAmount(currencyToSell, amountToBuy);
 			this.currencyAmountToReceive = new CurrencyAmount(currencyToReceive, amountToReceive);
+			this.orderStatus = OrderStatus.CREATED;
 		}
 
 		private SellOrder(ZonedDateTime time, CurrencyAmount currencyAmountToSell,
@@ -160,6 +163,14 @@ public class SellOrderBuilder {
 		public CurrencyAmount getCurrencyAmountToReceive() {
 			return currencyAmountToReceive;
 		}
+		
+		public OrderStatus getOrderStatus() {
+			return orderStatus;
+		}
+
+		public void setOrderStatus(OrderStatus orderStatus) {
+			this.orderStatus = orderStatus;
+		}
 
 		public void updateOrder(Map<Currency, TemporalTickerPO> temporalTickers) {
 			double sellingPrice = retrieveSellingPrice(temporalTickers);
@@ -184,6 +195,10 @@ public class SellOrderBuilder {
 			double sellingPrice = temporalTickerPO.getSell();
 			if (sellingPrice == 0.0) {
 				sellingPrice = temporalTickerPO.getPreviousSell();
+				if (sellingPrice == 0.0) {
+					throw new RuntimeException(
+							"Selling price informed on period " + temporalTickerPO.getId() + " is zero.");
+				}
 			}
 			LOGGER.debug("Selling price is " + new DigitalCurrencyFormatter().format(sellingPrice));
 			return sellingPrice;

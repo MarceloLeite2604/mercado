@@ -20,6 +20,8 @@ import org.marceloleite.mercado.simulator.TemporalTickerVariation;
 import org.marceloleite.mercado.simulator.order.BuyOrderBuilder;
 import org.marceloleite.mercado.simulator.order.BuyOrderBuilder.BuyOrder;
 import org.marceloleite.mercado.simulator.order.MinimalAmounts;
+import org.marceloleite.mercado.simulator.order.OrderExecutor;
+import org.marceloleite.mercado.simulator.order.OrderStatus;
 import org.marceloleite.mercado.simulator.order.SellOrderBuilder;
 import org.marceloleite.mercado.simulator.order.SellOrderBuilder.SellOrder;
 import org.marceloleite.mercado.simulator.strategy.Strategy;
@@ -95,7 +97,40 @@ public class FirstStrategy implements Strategy {
 			SellOrder sellOrder = new SellOrderBuilder().toExecuteOn(simulationTimeInterval.getStart())
 					.selling(currencyAmountToSell).receiving(currencyAmountToReceive).build();
 			LOGGER.debug("Created " + sellOrder + ".");
-			account.getSellOrdersTemporalController().add(sellOrder);
+			executeSellOrder(sellOrder, account, house);
+			// account.getSellOrdersTemporalController().add(sellOrder);
+		}
+	}
+
+	private void executeSellOrder(SellOrder sellOrder, Account account, House house) {
+		new OrderExecutor().executeSellOrder(sellOrder, house, account);
+
+		switch (sellOrder.getOrderStatus()) {
+		case CREATED:
+			throw new RuntimeException("Requested " + sellOrder + " execution, but its status returned as \""
+					+ OrderStatus.CREATED + "\".");
+		case EXECUTED:
+			buySellStep.updateStep(OrderType.SELL);
+			break;
+		case CANCELLED:
+			LOGGER.info(sellOrder + " cancelled.");
+			break;
+		}
+	}
+	
+	private void executeBuyOrder(BuyOrder buyOrder, Account account, House house) {
+		new OrderExecutor().executeBuyOrder(buyOrder, house, account);
+
+		switch (buyOrder.getOrderStatus()) {
+		case CREATED:
+			throw new RuntimeException("Requested " + buyOrder + " execution, but its status returned as \""
+					+ OrderStatus.CREATED + "\".");
+		case EXECUTED:
+			buySellStep.updateStep(OrderType.BUY);
+			break;
+		case CANCELLED:
+			LOGGER.info(buyOrder + " cancelled.");
+			break;
 		}
 	}
 
@@ -108,7 +143,7 @@ public class FirstStrategy implements Strategy {
 					+ ": Growth threshold reached.");
 			if (hasBalance(account)) {
 				LOGGER.debug("Has balance for buy order.");
-				createBuyOrder(simulationTimeInterval, account);
+				createBuyOrder(simulationTimeInterval, house, account);
 				updateBaseTemporalTickerPO(house.getTemporalTickers().get(currency));
 			}
 		}
@@ -117,18 +152,19 @@ public class FirstStrategy implements Strategy {
 	private boolean hasBalance(Account account) {
 		CurrencyAmount currencyAmountBalance = account.getBalance().get(Currency.REAL);
 		Double balanceAmount = currencyAmountBalance.getAmount();
-		LOGGER.info("Balance amount: " + currencyAmountBalance);
+		LOGGER.debug("Balance amount: " + currencyAmountBalance);
 		return (balanceAmount > 0.0 && balanceAmount > MinimalAmounts.retrieveMinimalAmountFor(Currency.REAL));
 	}
 
-	private void createBuyOrder(TimeInterval simulationTimeInterval, Account account) {
+	private void createBuyOrder(TimeInterval simulationTimeInterval, House house, Account account) {
 		CurrencyAmount currencyAmountToPay = calculateOrderAmount(OrderType.BUY, account);
 		if (currencyAmountToPay != null) {
 			CurrencyAmount currencyAmountToBuy = new CurrencyAmount(currency, null);
 			BuyOrder buyOrder = new BuyOrderBuilder().toExecuteOn(simulationTimeInterval.getStart())
 					.buying(currencyAmountToBuy).paying(currencyAmountToPay).build();
 			LOGGER.debug("Buy order created is " + buyOrder);
-			account.getBuyOrdersTemporalController().add(buyOrder);
+			//account.getBuyOrdersTemporalController().add(buyOrder);
+			executeBuyOrder(buyOrder, account, house);
 		}
 	}
 
@@ -144,14 +180,20 @@ public class FirstStrategy implements Strategy {
 	}
 
 	private CurrencyAmount calculateOrderAmount(OrderType orderType, Account account) {
-		// Currency currency = (orderType == OrderType.SELL ? this.currency : Currency.REAL);
+		/*Currency balanceCurrency = (orderType == OrderType.SELL ? this.currency :
+		Currency.REAL);*/
 		CurrencyAmount balance = account.getBalance().get(Currency.REAL);
+		double balanceAmount = balance.getAmount();
 		LOGGER.debug("Balance amount: " + balance + ".");
 		double operationPercentage = calculateOperationPercentage(orderType);
 		double operationAmount = baseRealAmount.getAmount() * operationPercentage;
 		LOGGER.debug("Initial operation amount: " + new DigitalCurrencyFormatter().format(operationAmount) + ".");
 		Double minimalAmount = MinimalAmounts.retrieveMinimalAmountFor(currency);
 
+		if ( orderType == OrderType.BUY && operationAmount > balanceAmount) {
+			operationAmount = balanceAmount;
+		}
+		
 		if (operationAmount < minimalAmount) {
 			LOGGER.debug("No balance for minimal operation. Aborting order.");
 			return null;
@@ -172,7 +214,7 @@ public class FirstStrategy implements Strategy {
 
 	private double calculateOperationPercentage(OrderType orderType) {
 		double result;
-		long checkStep = buySellStep.updateStep(orderType);
+		long checkStep = buySellStep.calculateStep(orderType);
 		if (checkStep > 0) {
 			result = (double) checkStep / (double) TOTAL_BUY_STEPS;
 		} else {

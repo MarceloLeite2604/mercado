@@ -1,12 +1,16 @@
 package org.marceloleite.mercado.retriever;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.commons.TimeDivisionController;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.databasemodel.TemporalTickerIdPO;
 import org.marceloleite.mercado.databasemodel.TemporalTickerPO;
@@ -124,8 +128,9 @@ public class TemporalTickerRetriever {
 			if (lastSellingTradeId != 0) {
 				buy = trades.get(lastSellingTradeId).getPrice();
 			} else {
-				TradePO previousBuyingTrade = new TradeDAO().retrievePreviousTrade(currency, TradeType.BUY, timeInterval.getStart());
-				if ( previousBuyingTrade != null) {
+				TradePO previousBuyingTrade = new TradeDAO().retrievePreviousTrade(currency, TradeType.SELL,
+						timeInterval.getStart());
+				if (previousBuyingTrade != null) {
 					previousBuy = previousBuyingTrade.getPrice();
 				}
 			}
@@ -135,31 +140,32 @@ public class TemporalTickerRetriever {
 			if (lastBuyingTradeId != 0) {
 				sell = trades.get(lastBuyingTradeId).getPrice();
 			} else {
-				TradePO previousSellingTrade = new TradeDAO().retrievePreviousTrade(currency, TradeType.SELL, timeInterval.getStart());
-				if ( previousSellingTrade != null) {
+				TradePO previousSellingTrade = new TradeDAO().retrievePreviousTrade(currency, TradeType.BUY,
+						timeInterval.getStart());
+				if (previousSellingTrade != null) {
 					previousSell = previousSellingTrade.getPrice();
 				}
 			}
 		} else {
 			TradeDAO tradeDAO = new TradeDAO();
-			TradePO previousBuyingTrade = tradeDAO.retrievePreviousTrade(currency, TradeType.BUY,
+			TradePO previousBuyingTrade = tradeDAO.retrievePreviousTrade(currency, TradeType.SELL,
 					timeInterval.getStart());
 			if (previousBuyingTrade != null) {
 				previousBuy = previousBuyingTrade.getPrice();
 			}
-			TradePO previousSellingTrade = tradeDAO.retrievePreviousTrade(currency, TradeType.SELL,
+			TradePO previousSellingTrade = tradeDAO.retrievePreviousTrade(currency, TradeType.BUY,
 					timeInterval.getStart());
 			if (previousSellingTrade != null) {
 				previousSell = previousSellingTrade.getPrice();
 			}
-			
-			if ( previousSellingTrade == null) {
-				if ( previousBuyingTrade != null ) {
+
+			if (previousSellingTrade == null) {
+				if (previousBuyingTrade != null) {
 					previousLast = previousBuyingTrade.getPrice();
 				}
 			} else {
-				if ( previousBuyingTrade != null ) {
-					if ( previousBuyingTrade.getId().getId() > previousSellingTrade.getId().getId() ) {
+				if (previousBuyingTrade != null) {
+					if (previousBuyingTrade.getId().getId() > previousSellingTrade.getId().getId()) {
 						previousLast = previousBuyingTrade.getPrice();
 					} else {
 						previousLast = previousSellingTrade.getPrice();
@@ -192,4 +198,44 @@ public class TemporalTickerRetriever {
 
 		return temporalTickerPO;
 	}
+
+	public List<TemporalTickerPO> bulkRetrieve(Currency currency, TimeDivisionController timeDivisionController) {
+		List<TemporalTickerPO> temporalTickerPOs = temporalTickerDAO.bulkRetrieve(currency, timeDivisionController);
+		temporalTickerPOs = retrieveTemporalTickersNotFoundOnBulk(temporalTickerPOs, currency, timeDivisionController);
+		return sortTemporalTickers(temporalTickerPOs);
+	}
+
+	private List<TemporalTickerPO> retrieveTemporalTickersNotFoundOnBulk(List<TemporalTickerPO> temporalTickerPOs,
+			Currency currency, TimeDivisionController timeDivisionController) {
+		List<TemporalTickerIdPO> temporalTickerIdPOsFromBulk = temporalTickerPOs.stream().map(TemporalTickerPO::getId)
+				.collect(Collectors.toList());
+		TemporalTickerIdPO temporalTickerIdPOtoCheck;
+		for (TimeInterval timeInterval : timeDivisionController.geTimeIntervals()) {
+			temporalTickerIdPOtoCheck = new TemporalTickerIdPO(currency, timeInterval.getStart(),
+					timeInterval.getEnd());
+			if (!temporalTickerIdPOsFromBulk.contains(temporalTickerIdPOtoCheck)) {
+				System.out.println("Does not contain.");
+				TemporalTickerPO temporalTickerPOretrieved = retrieve(currency, timeInterval, IGNORE_DATABASE_VALUES);
+				temporalTickerPOs.add(temporalTickerPOretrieved);
+			}
+		}
+		return temporalTickerPOs;
+	}
+
+	private List<TemporalTickerPO> sortTemporalTickers(List<TemporalTickerPO> temporalTickerPOs) {
+		Collections.sort(temporalTickerPOs, new Comparator<TemporalTickerPO>() {
+
+			public int compare(TemporalTickerPO firstObject, TemporalTickerPO secondObject) {
+				if (firstObject.getId().getStart().isBefore(secondObject.getId().getStart())) {
+					return -1;
+				} else if (firstObject.getId().getStart().isAfter(secondObject.getId().getStart())) {
+					return 1;
+				} else {
+					return 0;
+				}
+			}
+		});
+		return temporalTickerPOs;
+	}
+
 }
