@@ -5,7 +5,7 @@ import java.time.ZonedDateTime;
 
 import org.marceloleite.mercado.commons.util.converter.ZonedDateTimeToStringConverter;
 
-public class TimeInterval {
+public class TimeInterval implements Comparable<TimeInterval> {
 
 	private ZonedDateTime start;
 
@@ -62,5 +62,47 @@ public class TimeInterval {
 	public String toString() {
 		ZonedDateTimeToStringConverter zonedDateTimeToStringConverter = new ZonedDateTimeToStringConverter();
 		return zonedDateTimeToStringConverter.convertTo(start) + " to " + zonedDateTimeToStringConverter.convertTo(end);
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((end == null) ? 0 : end.hashCode());
+		result = prime * result + ((start == null) ? 0 : start.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		TimeInterval other = (TimeInterval) obj;
+		if (end == null) {
+			if (other.end != null)
+				return false;
+		} else if (!end.equals(other.end))
+			return false;
+		if (start == null) {
+			if (other.start != null)
+				return false;
+		} else if (!start.equals(other.start))
+			return false;
+		return true;
+	}
+
+	@Override
+	public int compareTo(TimeInterval other) {
+		if ( start.isBefore(other.getStart())) {
+			return -1;
+		} else if (start.isAfter(other.getStart())) {
+			return 1;
+		} else {
+			return 0;
+		}
 	}
 }

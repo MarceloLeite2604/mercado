@@ -12,6 +12,7 @@ public class SimulatorPropertiesRetriever {
 	private static final boolean IGNORE_DATABASE_VALUES = true;
 
 	private static final Duration DEFAULT_STEP_TIME = Duration.ofSeconds(30);
+	private static final Duration DEFAULT_RETRIEVING_TIME = Duration.ofSeconds(600);
 
 	private PropertyRetriever propertyRetriever;
 
@@ -29,6 +30,10 @@ public class SimulatorPropertiesRetriever {
 
 	public Duration retrieveStepDurationTime() {
 		return retrieveDurationProperty(SimulatorProperty.STEP_DURATION, DEFAULT_STEP_TIME);
+	}
+	
+	public Duration retrieveRetrievingDurationTime() {
+		return retrieveDurationProperty(SimulatorProperty.RETRIEVING_DURATION, DEFAULT_RETRIEVING_TIME);
 	}
 
 	private Duration retrieveDurationProperty(Property property, Duration defaultValue) {
@@ -49,4 +54,5 @@ public class SimulatorPropertiesRetriever {
 	private Property retrieveProperty(Property property) {
 		return propertyRetriever.retrieve(property, IGNORE_DATABASE_VALUES);
 	}
+	
 }

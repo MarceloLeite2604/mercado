@@ -7,7 +7,8 @@ public enum SimulatorProperty implements Property {
 	HOUSE_TRADE_PERCENTAGE("simulator.house.tradePercentage", true),
 	START_TIME("simulator.startTime", true),
 	END_TIME("simulator.endTime", true),
-	STEP_DURATION("simulator.stepDuration", true);
+	STEP_DURATION("simulator.stepDuration", true),
+	RETRIEVING_DURATION("simulator.retrievingDuration", true);
 
 	private String name;
 	

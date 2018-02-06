@@ -2,6 +2,11 @@ package org.marceloleite.mercado.simulator;
 
 import java.time.Duration;
 import java.time.ZonedDateTime;
+import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -19,6 +24,8 @@ public class Simulator {
 
 	private TimeDivisionController timeDivisionController;
 
+	private Duration stepDuration;
+
 	public Simulator() {
 		this.house = new House();
 	}
@@ -27,8 +34,9 @@ public class Simulator {
 		SimulatorPropertiesRetriever simulatorPropertiesRetriever = new SimulatorPropertiesRetriever();
 		ZonedDateTime startTime = simulatorPropertiesRetriever.retrieveStartTime();
 		ZonedDateTime endTime = simulatorPropertiesRetriever.retrieveEndTime();
-		Duration stepTime = simulatorPropertiesRetriever.retrieveStepDurationTime();
-		timeDivisionController = new TimeDivisionController(startTime, endTime, stepTime);
+		this.stepDuration = simulatorPropertiesRetriever.retrieveStepDurationTime();
+		Duration retrievingDuration = simulatorPropertiesRetriever.retrieveRetrievingDurationTime();
+		timeDivisionController = new TimeDivisionController(startTime, endTime, retrievingDuration);
 		this.house = new House();
 	}
 
@@ -40,10 +48,35 @@ public class Simulator {
 
 		logAccountsBalance(false);
 
-		for (TimeInterval timeInterval : timeDivisionController.geTimeIntervals()) {
-			logSimulationStep(timeInterval);
-			house.executeTemporalEvents(timeInterval);
+		ExecutorService executor = Executors.newFixedThreadPool(2);
+		boolean firstExecution = true;
+		Future<Map<TimeInterval, Map<Currency, TemporalTickerPO>>> future;
+		HouseSimulationThread houseSimulationThread = null;
+		Map<TimeInterval, Map<Currency, TemporalTickerPO>> temporalTickersPOByTimeInterval = null;
+		for (TimeInterval stepTimeInterval : timeDivisionController.geTimeIntervals()) {
+			logSimulationStep(stepTimeInterval);
+			try {
+				TimeDivisionController timeDivisionController = new TimeDivisionController(stepTimeInterval,
+						stepDuration);
+				future = executor.submit(new TemporalTickerRetrieverCallable(timeDivisionController));
+				if (firstExecution) {
+					temporalTickersPOByTimeInterval = future.get();
+				} else {
+					houseSimulationThread.join();
+					temporalTickersPOByTimeInterval = future.get();
+				}
+				houseSimulationThread = new HouseSimulationThread(house, temporalTickersPOByTimeInterval);
+				executor.execute(houseSimulationThread);
+			} catch (InterruptedException | ExecutionException exception) {
+				throw new RuntimeException(exception);
+			}
 		}
+		executor.shutdown();
+
+		/*
+		 * for (TimeInterval timeInterval : timeDivisionController.geTimeIntervals()) {
+		 * logSimulationStep(timeInterval); house.executeTemporalEvents(timeInterval); }
+		 */
 
 		logAccountsBalance(true);
 
@@ -76,11 +109,10 @@ public class Simulator {
 					CurrencyAmount currencyAmount = balance.get(currency);
 					if (currencyAmount != null) {
 						double last = temporalTickerPO.getLast();
-						if ( last == 0.0) {
+						if (last == 0.0) {
 							last = temporalTickerPO.getPreviousLast();
 						}
-						totalRealAmount.setAmount(totalRealAmount.getAmount()
-								+ (currencyAmount.getAmount() * last));
+						totalRealAmount.setAmount(totalRealAmount.getAmount() + (currencyAmount.getAmount() * last));
 					}
 				}
 			} else {
@@ -93,11 +125,11 @@ public class Simulator {
 		LOGGER.info("\tTotal in " + Currency.REAL + ": " + totalRealAmount);
 	}
 
-	private void logSimulationStep(TimeInterval timeInterval) {
-		LOGGER.debug("Advancing to step time " + timeInterval + ".");
-	}
-
 	private void logSimulationStart() {
 		LOGGER.info("Starting simulation from " + timeDivisionController + ".");
+	}
+	
+	private void logSimulationStep(TimeInterval timeInterval) {
+		LOGGER.debug("Advancing to step time " + timeInterval + ".");
 	}
 }
