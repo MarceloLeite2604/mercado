@@ -2,9 +2,11 @@ package org.marceloleite.mercado.retriever;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
@@ -205,6 +207,40 @@ public class TemporalTickerRetriever {
 		return sortTemporalTickers(temporalTickerPOs);
 	}
 
+	public Map<TimeInterval, Map<Currency, TemporalTickerPO>> bulkRetrieve(
+			TimeDivisionController timeDivisionController) {
+		Map<Currency, List<TemporalTickerPO>> temporalTickerPOsByCurrency = new EnumMap<>(Currency.class);
+		for (Currency currency : Currency.values()) {
+			if (currency.isDigital()) {
+				List<TemporalTickerPO> temporalTickerPOs = temporalTickerDAO.bulkRetrieve(currency,
+						timeDivisionController);
+				temporalTickerPOs = retrieveTemporalTickersNotFoundOnBulk(temporalTickerPOs, currency,
+						timeDivisionController);
+				temporalTickerPOsByCurrency.put(currency, temporalTickerPOs);
+			}
+		}
+
+		return elaborateTemporalTickerPOsByTimeInterval(temporalTickerPOsByCurrency);
+	}
+
+	private Map<TimeInterval, Map<Currency, TemporalTickerPO>> elaborateTemporalTickerPOsByTimeInterval(
+			Map<Currency, List<TemporalTickerPO>> temporalTickerPOsByCurrency) {
+		Map<TimeInterval, Map<Currency, TemporalTickerPO>> result = new TreeMap<>();
+		for (Currency currency : temporalTickerPOsByCurrency.keySet()) {
+			List<TemporalTickerPO> temporalTickerPOs = temporalTickerPOsByCurrency.get(currency);
+			for (TemporalTickerPO temporalTickerPO : temporalTickerPOs) {
+				TemporalTickerIdPO temporalTickerIdPO = temporalTickerPO.getId();
+				TimeInterval timeInterval = new TimeInterval(temporalTickerIdPO.getStart(),
+						temporalTickerIdPO.getEnd());
+				Map<Currency, TemporalTickerPO> temporalTickerPOByCurrency = result.getOrDefault(timeInterval,
+						new EnumMap<>(Currency.class));
+				temporalTickerPOByCurrency.put(temporalTickerIdPO.getCurrency(), temporalTickerPO);
+				result.put(timeInterval, temporalTickerPOByCurrency);
+			}
+		}
+		return result;
+	}
+
 	private List<TemporalTickerPO> retrieveTemporalTickersNotFoundOnBulk(List<TemporalTickerPO> temporalTickerPOs,
 			Currency currency, TimeDivisionController timeDivisionController) {
 		List<TemporalTickerIdPO> temporalTickerIdPOsFromBulk = temporalTickerPOs.stream().map(TemporalTickerPO::getId)
@@ -214,7 +250,6 @@ public class TemporalTickerRetriever {
 			temporalTickerIdPOtoCheck = new TemporalTickerIdPO(currency, timeInterval.getStart(),
 					timeInterval.getEnd());
 			if (!temporalTickerIdPOsFromBulk.contains(temporalTickerIdPOtoCheck)) {
-				System.out.println("Does not contain.");
 				TemporalTickerPO temporalTickerPOretrieved = retrieve(currency, timeInterval, IGNORE_DATABASE_VALUES);
 				temporalTickerPOs.add(temporalTickerPOretrieved);
 			}

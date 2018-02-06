@@ -2,11 +2,12 @@ package org.marceloleite.mercado.databasemodel.converter;
 
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
+
+import org.marceloleite.mercado.commons.util.ZonedDateTimeUtils;
 
 @Converter(autoApply = true)
 public class ZonedDateTimeAttributeConverter implements AttributeConverter<ZonedDateTime, Timestamp> {
@@ -26,7 +27,7 @@ public class ZonedDateTimeAttributeConverter implements AttributeConverter<Zoned
 			return null;
 		} else {
 			Instant instant = timestamp.toInstant();
-			return ZonedDateTime.ofInstant(instant, ZoneOffset.UTC);
+			return ZonedDateTime.ofInstant(instant, ZonedDateTimeUtils.DEFAULT_ZONE_ID);
 		}
 	}
 }

@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.commons.TimeDivisionController;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.databasemodel.TemporalTickerPO;
 import org.marceloleite.mercado.retriever.TemporalTickerRetriever;
@@ -107,10 +108,27 @@ public class House {
 	public void updateTemporalTickers(TimeInterval timeInterval) {
 		TemporalTickerPO previousTemporalTicker;
 		for (Currency currency : Currency.values()) {
-			/* TODO: Watch you with BGOLD. */
+			/* TODO: Watch out with BGOLD. */
 			if (currency.isDigital() && currency != Currency.BGOLD) {
 				TemporalTickerPO temporalTickerPO;
 				temporalTickerPO = temporalTickerRetriever.retrieve(currency, timeInterval, false);
+				previousTemporalTicker = temporalTickers.get(currency);
+				TemporalTickerVariation temporalTickerVariation = null;
+				if (temporalTickerPO != null) {
+					temporalTickers.put(currency, temporalTickerPO);
+					temporalTickerVariation = new TemporalTickerVariation(previousTemporalTicker, temporalTickerPO);
+				}
+				temporalTickerVariations.put(currency, temporalTickerVariation);
+			}
+		}
+	}
+
+	private void updateTemporalTickers(Map<Currency, TemporalTickerPO> temporalTickerPOsByCurrency) {
+		TemporalTickerPO previousTemporalTicker;
+		for (Currency currency : Currency.values()) {
+			/* TODO: Watch you with BGOLD. */
+			if (currency.isDigital() && currency != Currency.BGOLD) {
+				TemporalTickerPO temporalTickerPO = temporalTickerPOsByCurrency.get(currency);
 				previousTemporalTicker = temporalTickers.get(currency);
 				TemporalTickerVariation temporalTickerVariation = null;
 				if (temporalTickerPO != null) {
@@ -129,6 +147,37 @@ public class House {
 			checkStrategies(currentTimeInterval, account);
 			checkBuyOrders(currentTimeInterval, account);
 			checkSellOrders(currentTimeInterval, account);
+		}
+	}
+
+	public void executeTemporalEvents(TimeDivisionController timeDivisionController) {
+		Map<TimeInterval, Map<Currency, TemporalTickerPO>> temporalTickerPOsByTimeInterval = temporalTickerRetriever
+				.bulkRetrieve(timeDivisionController);
+		for (TimeInterval timeInterval : temporalTickerPOsByTimeInterval.keySet()) {
+			Map<Currency, TemporalTickerPO> temporalTickerPOsByCurrency = temporalTickerPOsByTimeInterval
+					.get(timeInterval);
+			updateTemporalTickers(temporalTickerPOsByCurrency);
+			for (Account account : accounts) {
+				account.checkTimedEvents(timeInterval);
+				checkStrategies(timeInterval, account);
+				checkBuyOrders(timeInterval, account);
+				checkSellOrders(timeInterval, account);
+			}
+		}
+	}
+
+	public void executeTemporalEvents(
+			Map<TimeInterval, Map<Currency, TemporalTickerPO>> temporalTickersPOByTimeInterval) {
+		for (TimeInterval timeInterval : temporalTickersPOByTimeInterval.keySet()) {
+			Map<Currency, TemporalTickerPO> temporalTickerPOsByCurrency = temporalTickersPOByTimeInterval
+					.get(timeInterval);
+			updateTemporalTickers(temporalTickerPOsByCurrency);
+			for (Account account : accounts) {
+				account.checkTimedEvents(timeInterval);
+				checkStrategies(timeInterval, account);
+				checkBuyOrders(timeInterval, account);
+				checkSellOrders(timeInterval, account);
+			}
 		}
 	}
 
@@ -158,5 +207,4 @@ public class House {
 			sellOrdersCreated.forEach(sellOrder -> orderExecutor.executeSellOrder(sellOrder, this, account));
 		}
 	}
-
 }
