@@ -111,13 +111,15 @@ public class ThirdStrategy implements Strategy {
 
 	private void createBuyOrder(TimeInterval simulationTimeInterval, Account account) {
 		CurrencyAmount currencyAmountToPay = calculateOrderAmount(OrderType.BUY, account);
-		CurrencyAmount currencyAmountToBuy = new CurrencyAmount(currency, null);
-		BuyOrder buyOrder = new BuyOrderBuilder().toExecuteOn(simulationTimeInterval.getStart())
-				.buying(currencyAmountToBuy).paying(currencyAmountToPay).build();
-		LOGGER.info(new ZonedDateTimeToStringConverter().convertTo(simulationTimeInterval.getStart()) + ": Created "
-				+ buyOrder + ".");
-		account.getBuyOrdersTemporalController().add(buyOrder);
-		status = Status.APPLIED;
+		if (currencyAmountToPay != null) {
+			CurrencyAmount currencyAmountToBuy = new CurrencyAmount(currency, null);
+			BuyOrder buyOrder = new BuyOrderBuilder().toExecuteOn(simulationTimeInterval.getStart())
+					.buying(currencyAmountToBuy).paying(currencyAmountToPay).build();
+			LOGGER.info(new ZonedDateTimeToStringConverter().convertTo(simulationTimeInterval.getStart()) + ": Created "
+					+ buyOrder + ".");
+			account.getBuyOrdersTemporalController().add(buyOrder);
+			status = Status.APPLIED;
+		}
 	}
 
 	private CurrencyAmount calculateOrderAmount(OrderType orderType, Account account) {

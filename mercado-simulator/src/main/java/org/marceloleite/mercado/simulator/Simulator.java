@@ -7,6 +7,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.Semaphore;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -49,38 +50,41 @@ public class Simulator {
 		logAccountsBalance(false);
 
 		ExecutorService executor = Executors.newFixedThreadPool(2);
-		boolean firstExecution = true;
-		Future<Map<TimeInterval, Map<Currency, TemporalTickerPO>>> future;
-		HouseSimulationThread houseSimulationThread = null;
-		Map<TimeInterval, Map<Currency, TemporalTickerPO>> temporalTickersPOByTimeInterval = null;
-		for (TimeInterval stepTimeInterval : timeDivisionController.geTimeIntervals()) {
-			logSimulationStep(stepTimeInterval);
-			try {
+		try {
+
+			boolean firstExecution = true;
+			Future<Map<TimeInterval, Map<Currency, TemporalTickerPO>>> future;
+			Semaphore semaphore = new Semaphore(1);
+			semaphore.acquire();
+			HouseSimulationThread houseSimulationThread = new HouseSimulationThread(house, semaphore);
+			executor.execute(houseSimulationThread);
+
+			Map<TimeInterval, Map<Currency, TemporalTickerPO>> temporalTickersPOByTimeInterval = null;
+			for (TimeInterval stepTimeInterval : timeDivisionController.geTimeIntervals()) {
+				logSimulationStep(stepTimeInterval);
 				TimeDivisionController timeDivisionController = new TimeDivisionController(stepTimeInterval,
 						stepDuration);
 				future = executor.submit(new TemporalTickerRetrieverCallable(timeDivisionController));
 				if (firstExecution) {
 					temporalTickersPOByTimeInterval = future.get();
+					houseSimulationThread.setTemporalTickersPOByTimeInterval(temporalTickersPOByTimeInterval);
+					semaphore.release();
 				} else {
-					houseSimulationThread.join();
+					semaphore.acquire();
+					houseSimulationThread.setTemporalTickersPOByTimeInterval(temporalTickersPOByTimeInterval);
+					semaphore.release();
+					;
 					temporalTickersPOByTimeInterval = future.get();
 				}
-				houseSimulationThread = new HouseSimulationThread(house, temporalTickersPOByTimeInterval);
-				executor.execute(houseSimulationThread);
-			} catch (InterruptedException | ExecutionException exception) {
-				throw new RuntimeException(exception);
 			}
+			houseSimulationThread.setFinished(true);
+			logAccountsBalance(true);
+			LOGGER.info("Simulation finished.");
+		} catch (InterruptedException | ExecutionException exception) {
+			throw new RuntimeException(exception);
+		} finally {
+			executor.shutdown();
 		}
-		executor.shutdown();
-
-		/*
-		 * for (TimeInterval timeInterval : timeDivisionController.geTimeIntervals()) {
-		 * logSimulationStep(timeInterval); house.executeTemporalEvents(timeInterval); }
-		 */
-
-		logAccountsBalance(true);
-
-		LOGGER.info("Simulation finished.");
 	}
 
 	private void logAccountsBalance(boolean printTotalWorth) {
@@ -128,7 +132,7 @@ public class Simulator {
 	private void logSimulationStart() {
 		LOGGER.info("Starting simulation from " + timeDivisionController + ".");
 	}
-	
+
 	private void logSimulationStep(TimeInterval timeInterval) {
 		LOGGER.debug("Advancing to step time " + timeInterval + ".");
 	}
