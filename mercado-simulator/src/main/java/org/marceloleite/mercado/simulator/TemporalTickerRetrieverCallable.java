@@ -11,10 +11,12 @@ import org.marceloleite.mercado.retriever.TemporalTickerRetriever;
 
 public class TemporalTickerRetrieverCallable implements Callable<Map<TimeInterval, Map<Currency, TemporalTickerPO>>> {
 	
+	private static final String THREAD_NAME = "TempTick Retriever";
 	
 	private TimeDivisionController timeDivisionController;
 	
 	public TemporalTickerRetrieverCallable(TimeDivisionController timeDivisionController) {
+		Thread.currentThread().setName(THREAD_NAME);
 		this.timeDivisionController = timeDivisionController;
 	}
 
