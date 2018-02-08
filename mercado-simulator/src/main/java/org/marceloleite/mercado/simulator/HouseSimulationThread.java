@@ -1,6 +1,8 @@
 package org.marceloleite.mercado.simulator;
 
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 import java.util.concurrent.Semaphore;
 
 import org.apache.logging.log4j.LogManager;
@@ -17,21 +19,26 @@ public class HouseSimulationThread extends Thread {
 	private static final String THREAD_NAME = "House Simulation";
 
 	private House house;
-	private Map<TimeInterval, Map<Currency, TemporalTickerPO>> temporalTickersPOByTimeInterval;
+	private TreeMap<TimeInterval, Map<Currency, TemporalTickerPO>> temporalTickersPOByTimeInterval;
 	private Boolean finished;
-	private Semaphore semaphore;
+	private Semaphore updateSemaphore;
+	private Semaphore runSimulationSemaphore;
 
-	public HouseSimulationThread(House house, Semaphore semaphore) {
+	public HouseSimulationThread(House house, Semaphore updateSemaphore, Semaphore runSimulationSemaphore) {
 		super();
 		this.house = house;
 		this.temporalTickersPOByTimeInterval = null;
 		this.finished = false;
-		this.semaphore = semaphore;
+		this.updateSemaphore = updateSemaphore;
+		this.runSimulationSemaphore = runSimulationSemaphore;
 	}
 
 	public void setTemporalTickersPOByTimeInterval(
-			Map<TimeInterval, Map<Currency, TemporalTickerPO>> temporalTickersPOByTimeInterval) {
+			TreeMap<TimeInterval, Map<Currency, TemporalTickerPO>> temporalTickersPOByTimeInterval) {
 		this.temporalTickersPOByTimeInterval = temporalTickersPOByTimeInterval;
+		Set<TimeInterval> keySet = temporalTickersPOByTimeInterval.keySet();
+		
+		LOGGER.info("From: "+keySet.toArray()[0] + " to: " + keySet.toArray()[keySet.size()-1]);
 	}
 
 	@Override
@@ -43,13 +50,17 @@ public class HouseSimulationThread extends Thread {
 			if (!isFinished()) {
 				house.executeTemporalEvents(temporalTickersPOByTimeInterval);
 			}
-			semaphore.release();
+			/*LOGGER.info("Releasing udpate semaphore.");*/
+			updateSemaphore.release();
+			/*LOGGER.info("Semaphore update released.");*/
 		}
 	}
 
 	private void aquireSemaphore() {
 		try {
-			semaphore.acquire();
+			/*LOGGER.info("Acquiring run simulation semaphore.");*/
+			runSimulationSemaphore.acquire();
+			/*LOGGER.info("Run simulatiom semaphore acquired.");*/
 		} catch (InterruptedException exception) {
 			throw new RuntimeException(exception);
 		}

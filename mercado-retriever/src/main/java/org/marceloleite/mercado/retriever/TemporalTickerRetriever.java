@@ -207,7 +207,7 @@ public class TemporalTickerRetriever {
 		return sortTemporalTickers(temporalTickerPOs);
 	}
 
-	public Map<TimeInterval, Map<Currency, TemporalTickerPO>> bulkRetrieve(
+	public TreeMap<TimeInterval, Map<Currency, TemporalTickerPO>> bulkRetrieve(
 			TimeDivisionController timeDivisionController) {
 		Map<Currency, List<TemporalTickerPO>> temporalTickerPOsByCurrency = new EnumMap<>(Currency.class);
 		for (Currency currency : Currency.values()) {
@@ -223,9 +223,9 @@ public class TemporalTickerRetriever {
 		return elaborateTemporalTickerPOsByTimeInterval(temporalTickerPOsByCurrency);
 	}
 
-	private Map<TimeInterval, Map<Currency, TemporalTickerPO>> elaborateTemporalTickerPOsByTimeInterval(
+	private TreeMap<TimeInterval, Map<Currency, TemporalTickerPO>> elaborateTemporalTickerPOsByTimeInterval(
 			Map<Currency, List<TemporalTickerPO>> temporalTickerPOsByCurrency) {
-		Map<TimeInterval, Map<Currency, TemporalTickerPO>> result = new TreeMap<>();
+		TreeMap<TimeInterval, Map<Currency, TemporalTickerPO>> result = new TreeMap<>();
 		for (Currency currency : temporalTickerPOsByCurrency.keySet()) {
 			List<TemporalTickerPO> temporalTickerPOs = temporalTickerPOsByCurrency.get(currency);
 			for (TemporalTickerPO temporalTickerPO : temporalTickerPOs) {

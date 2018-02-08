@@ -3,6 +3,7 @@ package org.marceloleite.mercado.simulator;
 import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -52,32 +53,24 @@ public class Simulator {
 		ExecutorService executor = Executors.newFixedThreadPool(2);
 		try {
 
-			boolean firstExecution = true;
-			Future<Map<TimeInterval, Map<Currency, TemporalTickerPO>>> future;
-			Semaphore semaphore = new Semaphore(1);
-			semaphore.acquire();
-			HouseSimulationThread houseSimulationThread = new HouseSimulationThread(house, semaphore);
+			Future<TreeMap<TimeInterval, Map<Currency, TemporalTickerPO>>> future;
+			Semaphore updateHouseThreadSemaphore = new Semaphore(1);
+			Semaphore runSimulationSemaphore = new Semaphore(0);
+			HouseSimulationThread houseSimulationThread = new HouseSimulationThread(house, updateHouseThreadSemaphore, runSimulationSemaphore);
 			executor.execute(houseSimulationThread);
 
-			Map<TimeInterval, Map<Currency, TemporalTickerPO>> temporalTickersPOByTimeInterval = null;
+			TreeMap<TimeInterval, Map<Currency, TemporalTickerPO>> temporalTickersPOByTimeInterval = null;
 			for (TimeInterval stepTimeInterval : timeDivisionController.geTimeIntervals()) {
 				logSimulationStep(stepTimeInterval);
 				TimeDivisionController timeDivisionController = new TimeDivisionController(stepTimeInterval,
 						stepDuration);
 				future = executor.submit(new TemporalTickerRetrieverCallable(timeDivisionController));
-				if (firstExecution) {
-					temporalTickersPOByTimeInterval = future.get();
-					houseSimulationThread.setTemporalTickersPOByTimeInterval(temporalTickersPOByTimeInterval);
-					semaphore.release();
-				} else {
-					semaphore.acquire();
-					houseSimulationThread.setTemporalTickersPOByTimeInterval(temporalTickersPOByTimeInterval);
-					semaphore.release();
-					;
-					temporalTickersPOByTimeInterval = future.get();
-				}
+				
+				temporalTickersPOByTimeInterval = future.get();
+				updateHouseThread(houseSimulationThread, temporalTickersPOByTimeInterval, updateHouseThreadSemaphore, runSimulationSemaphore);
+				
 			}
-			houseSimulationThread.setFinished(true);
+			finishExecution(houseSimulationThread, updateHouseThreadSemaphore, runSimulationSemaphore);
 			logAccountsBalance(true);
 			LOGGER.info("Simulation finished.");
 		} catch (InterruptedException | ExecutionException exception) {
@@ -85,6 +78,32 @@ public class Simulator {
 		} finally {
 			executor.shutdown();
 		}
+	}
+
+	private void finishExecution(HouseSimulationThread houseSimulationThread, Semaphore updateHouseThreadSemaphore, Semaphore runSimulationSemaphore) {
+		try {
+		updateHouseThreadSemaphore.acquire();
+		houseSimulationThread.setFinished(true);
+		runSimulationSemaphore.release();
+		} catch (InterruptedException exception) {
+			throw new RuntimeException(exception);
+		}
+	}
+
+	private void updateHouseThread(HouseSimulationThread houseSimulationThread,
+			TreeMap<TimeInterval, Map<Currency, TemporalTickerPO>> temporalTickersPOByTimeInterval, Semaphore updateHouseThreadSemaphore, Semaphore runSimulationSemaphore) {
+		/*LOGGER.info("Requesting udpate thread semaphore.");*/
+		try {
+			updateHouseThreadSemaphore.acquire();
+			/*LOGGER.info("Update thread semaphore acquired.");*/
+			houseSimulationThread.setTemporalTickersPOByTimeInterval(temporalTickersPOByTimeInterval);
+			/*LOGGER.info("Releasing run simulation semaphore.");*/
+			runSimulationSemaphore.release();
+			/*LOGGER.info("Run simulation semaphore released.");*/
+			
+		} catch (InterruptedException exception) {
+			throw new RuntimeException(exception);
+		}		
 	}
 
 	private void logAccountsBalance(boolean printTotalWorth) {
