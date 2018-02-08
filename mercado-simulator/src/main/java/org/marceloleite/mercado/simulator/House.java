@@ -5,12 +5,13 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.commons.Currency;
-import org.marceloleite.mercado.commons.TimeDivisionController;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.databasemodel.TemporalTickerPO;
 import org.marceloleite.mercado.retriever.TemporalTickerRetriever;
@@ -150,27 +151,11 @@ public class House {
 		}
 	}
 
-	public void executeTemporalEvents(TimeDivisionController timeDivisionController) {
-		Map<TimeInterval, Map<Currency, TemporalTickerPO>> temporalTickerPOsByTimeInterval = temporalTickerRetriever
-				.bulkRetrieve(timeDivisionController);
-		for (TimeInterval timeInterval : temporalTickerPOsByTimeInterval.keySet()) {
-			Map<Currency, TemporalTickerPO> temporalTickerPOsByCurrency = temporalTickerPOsByTimeInterval
-					.get(timeInterval);
-			updateTemporalTickers(temporalTickerPOsByCurrency);
-			for (Account account : accounts) {
-				account.checkTimedEvents(timeInterval);
-				checkStrategies(timeInterval, account);
-				checkBuyOrders(timeInterval, account);
-				checkSellOrders(timeInterval, account);
-			}
-		}
-	}
-
 	public void executeTemporalEvents(
-			Map<TimeInterval, Map<Currency, TemporalTickerPO>> temporalTickersPOByTimeInterval) {
-		for (TimeInterval timeInterval : temporalTickersPOByTimeInterval.keySet()) {
-			Map<Currency, TemporalTickerPO> temporalTickerPOsByCurrency = temporalTickersPOByTimeInterval
-					.get(timeInterval);
+			TreeMap<TimeInterval, Map<Currency, TemporalTickerPO>> temporalTickersPOByTimeInterval) {
+		for (Entry<TimeInterval, Map<Currency, TemporalTickerPO>> entry : temporalTickersPOByTimeInterval.entrySet()) {
+			TimeInterval timeInterval = entry.getKey();
+			Map<Currency, TemporalTickerPO> temporalTickerPOsByCurrency = entry.getValue();
 			updateTemporalTickers(temporalTickerPOsByCurrency);
 			for (Account account : accounts) {
 				account.checkTimedEvents(timeInterval);
