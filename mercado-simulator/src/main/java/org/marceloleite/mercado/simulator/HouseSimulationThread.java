@@ -9,6 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
+import org.marceloleite.mercado.database.data.structure.TemporalTickerDataModel;
 import org.marceloleite.mercado.databasemodel.TemporalTickerPO;
 
 public class HouseSimulationThread extends Thread {
@@ -19,7 +20,7 @@ public class HouseSimulationThread extends Thread {
 	private static final String THREAD_NAME = "House Simulation";
 
 	private House house;
-	private TreeMap<TimeInterval, Map<Currency, TemporalTickerPO>> temporalTickersPOByTimeInterval;
+	private TreeMap<TimeInterval, Map<Currency, TemporalTickerDataModel>> temporalTickersDataModelsByTimeInterval;
 	private Boolean finished;
 	private Semaphore updateSemaphore;
 	private Semaphore runSimulationSemaphore;
@@ -27,16 +28,16 @@ public class HouseSimulationThread extends Thread {
 	public HouseSimulationThread(House house, Semaphore updateSemaphore, Semaphore runSimulationSemaphore) {
 		super();
 		this.house = house;
-		this.temporalTickersPOByTimeInterval = null;
+		this.temporalTickersDataModelsByTimeInterval = null;
 		this.finished = false;
 		this.updateSemaphore = updateSemaphore;
 		this.runSimulationSemaphore = runSimulationSemaphore;
 	}
 
 	public void setTemporalTickersPOByTimeInterval(
-			TreeMap<TimeInterval, Map<Currency, TemporalTickerPO>> temporalTickersPOByTimeInterval) {
-		this.temporalTickersPOByTimeInterval = temporalTickersPOByTimeInterval;
-		Set<TimeInterval> keySet = temporalTickersPOByTimeInterval.keySet();
+			TreeMap<TimeInterval, Map<Currency, TemporalTickerDataModel>> temporalTickersDataModelsByTimeInterval) {
+		this.temporalTickersDataModelsByTimeInterval = temporalTickersDataModelsByTimeInterval;
+		Set<TimeInterval> keySet = temporalTickersDataModelsByTimeInterval.keySet();
 		
 		LOGGER.info("From: "+keySet.toArray()[0] + " to: " + keySet.toArray()[keySet.size()-1]);
 	}
@@ -48,7 +49,7 @@ public class HouseSimulationThread extends Thread {
 		while (!isFinished()) {
 			aquireSemaphore();
 			if (!isFinished()) {
-				house.executeTemporalEvents(temporalTickersPOByTimeInterval);
+				house.executeTemporalEvents(temporalTickersDataModelsByTimeInterval);
 			}
 			updateSemaphore.release();
 		}

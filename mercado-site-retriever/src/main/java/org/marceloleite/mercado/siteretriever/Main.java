@@ -7,9 +7,9 @@ import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.util.ZonedDateTimeUtils;
 import org.marceloleite.mercado.commons.util.converter.ObjectToJsonConverter;
+import org.marceloleite.mercado.database.data.structure.TradeDataModel;
 import org.marceloleite.mercado.jsonmodel.api.data.JsonOrderbook;
 import org.marceloleite.mercado.jsonmodel.api.data.JsonTicker;
-import org.marceloleite.mercado.jsonmodel.api.data.JsonTrade;
 import org.marceloleite.mercado.siteretriever.trades.TradesSiteRetriever;
 
 public class Main {
@@ -37,9 +37,9 @@ public class Main {
 		ZonedDateTime to = ZonedDateTimeUtils.now();
 		ZonedDateTime from = ZonedDateTime.from(to).minusDays(1);
 		TimeInterval timeInterval = new TimeInterval(from, to);
-		Map<Long, JsonTrade> jsonTrades = new TradesSiteRetriever(Currency.BITCOIN).retrieve(timeInterval);
+		Map<Long, TradeDataModel> tradesDataModel = new TradesSiteRetriever(Currency.BITCOIN).retrieve(timeInterval);
 		ObjectToJsonConverter objectToJsonConverter = new ObjectToJsonConverter();
-		System.out.println(jsonTrades.size());
-		System.out.println(objectToJsonConverter.convertTo(jsonTrades));
+		System.out.println(tradesDataModel.size());
+		System.out.println(objectToJsonConverter.convertTo(tradesDataModel));
 	}
 }

@@ -19,7 +19,7 @@ public class StrategyPOToStrategyDataModelConverter implements Converter<Strateg
 		StrategyDataModel strategyDataModel = new StrategyDataModel();
 		strategyDataModel.getParameters().addAll(createStrategyParameterDataModelList(strategyPO));
 		strategyDataModel.getVariables().addAll(createStrategyVariableDataModelList(strategyPO));
-		strategyDataModel.setName(strategyPO.getName());
+		strategyDataModel.setName(strategyPO.getStrategyIdPO().getName());
 		strategyDataModel.setClassName(strategyPO.getClassName());
 
 		return strategyDataModel;
@@ -32,7 +32,6 @@ public class StrategyPOToStrategyDataModelConverter implements Converter<Strateg
 		strategyIdPO.setAccountOwner(strategyDataModel.getAccountDataModel().getOwner());
 		strategyIdPO.setName(strategyDataModel.getName());
 		strategyPO.setStrategyIdPO(strategyIdPO);
-		strategyPO.setName(strategyDataModel.getName());
 		strategyPO.setClassName(strategyDataModel.getClassName());
 		
 		strategyPO.setStrategyParameterPOs(createStrategyParameterPOList(strategyDataModel));

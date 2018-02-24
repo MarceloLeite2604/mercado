@@ -8,10 +8,10 @@ import java.util.Map;
 
 import org.marceloleite.mercado.commons.ClassCastExceptionThrower;
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.commons.TradeType;
 import org.marceloleite.mercado.databasemodel.Entity;
 import org.marceloleite.mercado.databasemodel.PersistenceObject;
 import org.marceloleite.mercado.databasemodel.TradePO;
-import org.marceloleite.mercado.databasemodel.TradeType;
 import org.marceloleite.mercado.databasemodel.converter.CurrencyAttributeConverter;
 import org.marceloleite.mercado.databasemodel.converter.TradeTypeAttributeConverter;
 

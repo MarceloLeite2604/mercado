@@ -6,9 +6,9 @@ import java.util.stream.Collectors;
 
 import org.marceloleite.mercado.commons.TradeType;
 import org.marceloleite.mercado.commons.interfaces.Filter;
-import org.marceloleite.mercado.databasemodel.TradePO;
+import org.marceloleite.mercado.database.data.structure.TradeDataModel;
 
-public class TradeTypeFilter implements Filter<Map<Long, TradePO>> {
+public class TradeTypeFilter implements Filter<Map<Long, TradeDataModel>> {
 
 	private TradeType type;
 
@@ -18,10 +18,10 @@ public class TradeTypeFilter implements Filter<Map<Long, TradePO>> {
 	}
 
 	@Override
-	public Map<Long, TradePO> filter(Map<Long, TradePO> trades) {
+	public Map<Long, TradeDataModel> filter(Map<Long, TradeDataModel> trades) {
 		return trades.entrySet().stream().filter(entry -> type.equals(entry.getValue().getTradeType()))
-				.map(Entry<Long, TradePO>::getValue)
-				.collect(Collectors.toConcurrentMap(tradePO -> tradePO.getTradeIdPO().getId(), trade -> trade, (oldTrade, newTrade) -> newTrade));
+				.map(Entry<Long, TradeDataModel>::getValue).collect(Collectors.toConcurrentMap(
+						tradeDataModel -> tradeDataModel.getId(), trade -> trade, (oldTrade, newTrade) -> newTrade));
 	}
 
 }

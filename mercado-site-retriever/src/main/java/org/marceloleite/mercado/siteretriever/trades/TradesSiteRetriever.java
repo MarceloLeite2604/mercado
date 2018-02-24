@@ -14,7 +14,7 @@ import java.util.concurrent.Future;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeDivisionController;
 import org.marceloleite.mercado.commons.TimeInterval;
-import org.marceloleite.mercado.jsonmodel.api.data.JsonTrade;
+import org.marceloleite.mercado.database.data.structure.TradeDataModel;
 import org.marceloleite.mercado.siteretriever.AbstractSiteRetriever;
 
 public class TradesSiteRetriever extends AbstractSiteRetriever {
@@ -38,8 +38,8 @@ public class TradesSiteRetriever extends AbstractSiteRetriever {
 		this.stepDuration = stepDuration;
 	}
 
-	public Map<Long, JsonTrade> retrieve(TimeInterval timeInterval) {
-		Set<Future<Map<Long, JsonTrade>>> futureSet = new HashSet<>();
+	public Map<Long, TradeDataModel> retrieve(TimeInterval timeInterval) {
+		Set<Future<Map<Long, TradeDataModel>>> futureSet = new HashSet<>();
 		
 		checkArguments(timeInterval);
 		
@@ -47,17 +47,17 @@ public class TradesSiteRetriever extends AbstractSiteRetriever {
 
 		TimeDivisionController timeDivisionController = new TimeDivisionController(timeInterval, stepDuration);
 		for (TimeInterval timeIntervalDivision : timeDivisionController.geTimeIntervals()) {
-			Callable<Map<Long, JsonTrade>> partialTradesSiteRetrieverCallable = new PartialTradesSiteRetrieverCallable(currency, timeIntervalDivision);
+			Callable<Map<Long, TradeDataModel>> partialTradesSiteRetrieverCallable = new PartialTradesSiteRetrieverCallable(currency, timeIntervalDivision);
 			futureSet.add(executorService.submit(partialTradesSiteRetrieverCallable));
 		}
 
-		Map<Long, JsonTrade> trades = new ConcurrentHashMap<>();
-		for (Future<Map<Long, JsonTrade>> future : futureSet) {
+		Map<Long, TradeDataModel> trades = new ConcurrentHashMap<>();
+		for (Future<Map<Long, TradeDataModel>> future : futureSet) {
 			try {
-				Map<Long, JsonTrade> jsonTrades = future.get();
+				Map<Long, TradeDataModel> jsonTrades = future.get();
 				trades.putAll(jsonTrades);
-			} catch (InterruptedException | ExecutionException e) {
-				e.printStackTrace();
+			} catch (InterruptedException | ExecutionException exception) {
+				exception.printStackTrace();
 			}
 		}
 

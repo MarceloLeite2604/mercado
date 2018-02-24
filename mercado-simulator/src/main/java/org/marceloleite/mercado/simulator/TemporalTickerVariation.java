@@ -3,7 +3,7 @@ package org.marceloleite.mercado.simulator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.commons.Currency;
-import org.marceloleite.mercado.databasemodel.TemporalTickerPO;
+import org.marceloleite.mercado.database.data.structure.TemporalTickerDataModel;
 import org.marceloleite.mercado.simulator.strategy.second.VariationCalculator;
 
 public class TemporalTickerVariation {
@@ -30,8 +30,8 @@ public class TemporalTickerVariation {
 
 	private Double sellVariation;
 
-	public TemporalTickerVariation(TemporalTickerPO previousTemporalTickerPO,
-			TemporalTickerPO currentTemporalTickerPO) {
+	public TemporalTickerVariation(TemporalTickerDataModel previousTemporalTicker,
+			TemporalTickerDataModel currentTemporalTicker) {
 		this.orderVariation = Double.NaN;
 		this.highVariation = Double.NaN;
 		this.averageVariation = Double.NaN;
@@ -41,37 +41,37 @@ public class TemporalTickerVariation {
 		this.lastVariation = Double.NaN;
 		this.currency = null;
 
-		if (previousTemporalTickerPO == null) {
+		if (previousTemporalTicker == null) {
 			LOGGER.debug("Previous temporal ticker is null.");
-		} else if (currentTemporalTickerPO == null) {
+		} else if (currentTemporalTicker == null) {
 			LOGGER.debug("Current temporal ticker is null.");
 
 		} else {
-			LOGGER.debug("Previous temporal ticker: " + previousTemporalTickerPO);
-			LOGGER.debug("Current temporal ticker: " + currentTemporalTickerPO);
-			this.orderVariation = calculateVariation(previousTemporalTickerPO.getOrders(),
-					currentTemporalTickerPO.getOrders());
-			this.highVariation = calculateVariation(previousTemporalTickerPO.getHigh(),
-					currentTemporalTickerPO.getHigh());
-			this.averageVariation = calculateVariation(previousTemporalTickerPO.getAverage(),
-					currentTemporalTickerPO.getAverage());
-			this.lowVariation = calculateVariation(previousTemporalTickerPO.getLow(), currentTemporalTickerPO.getLow());
-			this.volVariation = calculateVariation(previousTemporalTickerPO.getVol(), currentTemporalTickerPO.getVol());
-			this.firstVariation = calculateVariation(previousTemporalTickerPO.getFirst(),
-					currentTemporalTickerPO.getFirst());
+			LOGGER.debug("Previous temporal ticker: " + previousTemporalTicker);
+			LOGGER.debug("Current temporal ticker: " + currentTemporalTicker);
+			this.orderVariation = calculateVariation(previousTemporalTicker.getOrders(),
+					currentTemporalTicker.getOrders());
+			this.highVariation = calculateVariation(previousTemporalTicker.getHighestPrice(),
+					currentTemporalTicker.getHighestPrice());
+			this.averageVariation = calculateVariation(previousTemporalTicker.getAveragePrice(),
+					currentTemporalTicker.getAveragePrice());
+			this.lowVariation = calculateVariation(previousTemporalTicker.getLowestPrice(), currentTemporalTicker.getLowestPrice());
+			this.volVariation = calculateVariation(previousTemporalTicker.getVolumeTrades(), currentTemporalTicker.getVolumeTrades());
+			this.firstVariation = calculateVariation(previousTemporalTicker.getFirstPrice(),
+					currentTemporalTicker.getFirstPrice());
 			
-			double previousLast = previousTemporalTickerPO.getLast();
-			if (previousTemporalTickerPO.getLast() == 0.0) {
-				previousLast = previousTemporalTickerPO.getPreviousLast();
+			double previousLast = previousTemporalTicker.getLastPrice();
+			if (previousTemporalTicker.getLastPrice() == 0.0) {
+				previousLast = previousTemporalTicker.getPreviousLastPrice();
 			}
 			
-			double currentLast = currentTemporalTickerPO.getLast();
-			if (currentTemporalTickerPO.getLast() == 0.0) {
-				currentLast = currentTemporalTickerPO.getPreviousLast();
+			double currentLast = currentTemporalTicker.getLastPrice();
+			if (currentTemporalTicker.getLastPrice() == 0.0) {
+				currentLast = currentTemporalTicker.getPreviousLastPrice();
 			}
 			
 			this.lastVariation = calculateVariation(previousLast, currentLast);
-			this.currency = previousTemporalTickerPO.getId().getCurrency();
+			this.currency = previousTemporalTicker.getCurrency();
 		}
 	}
 

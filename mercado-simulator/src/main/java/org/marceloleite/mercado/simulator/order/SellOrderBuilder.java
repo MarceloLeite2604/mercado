@@ -6,8 +6,9 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.util.DigitalCurrencyFormatter;
-import org.marceloleite.mercado.databasemodel.TemporalTickerPO;
+import org.marceloleite.mercado.database.data.structure.TemporalTickerDataModel;
 import org.marceloleite.mercado.simulator.CurrencyAmount;
 import org.marceloleite.mercado.simulator.data.SellOrderData;
 import org.marceloleite.mercado.simulator.temporalcontroller.AbstractTimedObject;
@@ -163,7 +164,7 @@ public class SellOrderBuilder {
 		public CurrencyAmount getCurrencyAmountToReceive() {
 			return currencyAmountToReceive;
 		}
-		
+
 		public OrderStatus getOrderStatus() {
 			return orderStatus;
 		}
@@ -172,7 +173,7 @@ public class SellOrderBuilder {
 			this.orderStatus = orderStatus;
 		}
 
-		public void updateOrder(Map<Currency, TemporalTickerPO> temporalTickers) {
+		public void updateOrder(Map<Currency, TemporalTickerDataModel> temporalTickers) {
 			double sellingPrice = retrieveSellingPrice(temporalTickers);
 			if (currencyAmountToSell.getAmount() == null) {
 				Double amountToSell = currencyAmountToReceive.getAmount() / sellingPrice;
@@ -184,20 +185,21 @@ public class SellOrderBuilder {
 			}
 		}
 
-		private double retrieveSellingPrice(Map<Currency, TemporalTickerPO> temporalTickers) {
+		private double retrieveSellingPrice(Map<Currency, TemporalTickerDataModel> temporalTickers) {
 			Currency currency = currencyAmountToSell.getCurrency();
-			TemporalTickerPO temporalTickerPO = temporalTickers.get(currency);
-			if (temporalTickerPO == null) {
+			TemporalTickerDataModel temporalTickerDataModel = temporalTickers.get(currency);
+			if (temporalTickerDataModel == null) {
 				throw new RuntimeException(
 						"No temporal ticker while retrieving selling price for " + currency + " currency.");
 			}
 
-			double sellingPrice = temporalTickerPO.getSell();
+			double sellingPrice = temporalTickerDataModel.getSell();
 			if (sellingPrice == 0.0) {
-				sellingPrice = temporalTickerPO.getPreviousSell();
+				sellingPrice = temporalTickerDataModel.getPreviousSell();
 				if (sellingPrice == 0.0) {
-					throw new RuntimeException(
-							"Selling price informed on period " + temporalTickerPO.getId() + " is zero.");
+					TimeInterval timeInterval = new TimeInterval(temporalTickerDataModel.getStart(),
+							temporalTickerDataModel.getEnd());
+					throw new RuntimeException("Selling price informed on period " + timeInterval + " is zero.");
 				}
 			}
 			LOGGER.debug("Selling price is " + new DigitalCurrencyFormatter().format(sellingPrice));

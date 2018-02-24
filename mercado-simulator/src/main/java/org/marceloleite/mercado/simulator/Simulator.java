@@ -15,7 +15,7 @@ import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeDivisionController;
 import org.marceloleite.mercado.commons.TimeInterval;
-import org.marceloleite.mercado.databasemodel.TemporalTickerPO;
+import org.marceloleite.mercado.database.data.structure.TemporalTickerDataModel;
 import org.marceloleite.mercado.simulator.property.SimulatorPropertiesRetriever;
 
 public class Simulator {
@@ -53,21 +53,21 @@ public class Simulator {
 		ExecutorService executor = Executors.newFixedThreadPool(2);
 		try {
 
-			Future<TreeMap<TimeInterval, Map<Currency, TemporalTickerPO>>> future;
+			Future<TreeMap<TimeInterval, Map<Currency, TemporalTickerDataModel>>> future;
 			Semaphore updateHouseThreadSemaphore = new Semaphore(1);
 			Semaphore runSimulationSemaphore = new Semaphore(0);
 			HouseSimulationThread houseSimulationThread = new HouseSimulationThread(house, updateHouseThreadSemaphore, runSimulationSemaphore);
 			executor.execute(houseSimulationThread);
 
-			TreeMap<TimeInterval, Map<Currency, TemporalTickerPO>> temporalTickersPOByTimeInterval = null;
+			TreeMap<TimeInterval, Map<Currency, TemporalTickerDataModel>> temporalTickersDataModelByTimeInterval = null;
 			for (TimeInterval stepTimeInterval : timeDivisionController.geTimeIntervals()) {
 				logSimulationStep(stepTimeInterval);
 				TimeDivisionController timeDivisionController = new TimeDivisionController(stepTimeInterval,
 						stepDuration);
 				future = executor.submit(new TemporalTickerRetrieverCallable(timeDivisionController));
 				
-				temporalTickersPOByTimeInterval = future.get();
-				updateHouseThread(houseSimulationThread, temporalTickersPOByTimeInterval, updateHouseThreadSemaphore, runSimulationSemaphore);
+				temporalTickersDataModelByTimeInterval = future.get();
+				updateHouseThread(houseSimulationThread, temporalTickersDataModelByTimeInterval, updateHouseThreadSemaphore, runSimulationSemaphore);
 				
 			}
 			finishExecution(houseSimulationThread, updateHouseThreadSemaphore, runSimulationSemaphore);
@@ -91,10 +91,10 @@ public class Simulator {
 	}
 
 	private void updateHouseThread(HouseSimulationThread houseSimulationThread,
-			TreeMap<TimeInterval, Map<Currency, TemporalTickerPO>> temporalTickersPOByTimeInterval, Semaphore updateHouseThreadSemaphore, Semaphore runSimulationSemaphore) {
+			TreeMap<TimeInterval, Map<Currency, TemporalTickerDataModel>> temporalTickersDataModelsByTimeInterval, Semaphore updateHouseThreadSemaphore, Semaphore runSimulationSemaphore) {
 		try {
 			updateHouseThreadSemaphore.acquire();
-			houseSimulationThread.setTemporalTickersPOByTimeInterval(temporalTickersPOByTimeInterval);
+			houseSimulationThread.setTemporalTickersPOByTimeInterval(temporalTickersDataModelsByTimeInterval);
 			runSimulationSemaphore.release();
 		} catch (InterruptedException exception) {
 			throw new RuntimeException(exception);
@@ -122,13 +122,13 @@ public class Simulator {
 
 		for (Currency currency : Currency.values()) {
 			if (currency.isDigital()) {
-				TemporalTickerPO temporalTickerPO = house.getTemporalTickers().get(currency);
-				if (temporalTickerPO != null) {
+				TemporalTickerDataModel temporalTickerDataModel = house.getTemporalTickers().get(currency);
+				if (temporalTickerDataModel != null) {
 					CurrencyAmount currencyAmount = balance.get(currency);
 					if (currencyAmount != null) {
-						double last = temporalTickerPO.getLast();
+						double last = temporalTickerDataModel.getLastPrice();
 						if (last == 0.0) {
-							last = temporalTickerPO.getPreviousLast();
+							last = temporalTickerDataModel.getPreviousLastPrice();
 						}
 						totalRealAmount.setAmount(totalRealAmount.getAmount() + (currencyAmount.getAmount() * last));
 					}

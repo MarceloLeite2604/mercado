@@ -10,7 +10,7 @@ import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.util.DigitalCurrencyFormatter;
 import org.marceloleite.mercado.commons.util.PercentageFormatter;
 import org.marceloleite.mercado.commons.util.converter.ZonedDateTimeToStringConverter;
-import org.marceloleite.mercado.databasemodel.TemporalTickerPO;
+import org.marceloleite.mercado.database.data.structure.TemporalTickerDataModel;
 import org.marceloleite.mercado.simulator.Account;
 import org.marceloleite.mercado.simulator.Balance;
 import org.marceloleite.mercado.simulator.CurrencyAmount;
@@ -42,7 +42,7 @@ public class FirstStrategy implements Strategy {
 
 	private BuySellStep buySellStep;
 
-	private TemporalTickerPO baseTemporalTickerPO;
+	private TemporalTickerDataModel baseTemporalTickerDataModel;
 
 	private CurrencyAmount baseRealAmount;
 
@@ -85,7 +85,7 @@ public class FirstStrategy implements Strategy {
 			if (hasBalance(account)) {
 				LOGGER.debug("Has balance for sell order.");
 				createSellOrder(simulationTimeInterval, account, house);
-				updateBaseTemporalTickerPO(house.getTemporalTickers().get(currency));
+				updateBaseTemporalTicker(house.getTemporalTickers().get(currency));
 			}
 		}
 	}
@@ -144,7 +144,7 @@ public class FirstStrategy implements Strategy {
 			if (hasBalance(account)) {
 				LOGGER.debug("Has balance for buy order.");
 				createBuyOrder(simulationTimeInterval, house, account);
-				updateBaseTemporalTickerPO(house.getTemporalTickers().get(currency));
+				updateBaseTemporalTicker(house.getTemporalTickers().get(currency));
 			}
 		}
 	}
@@ -173,9 +173,9 @@ public class FirstStrategy implements Strategy {
 		setBaseTemporalTickers(house.getTemporalTickers());
 	}
 
-	private void setBaseTemporalTickers(Map<Currency, TemporalTickerPO> temporalTickers) {
-		if (baseTemporalTickerPO == null) {
-			baseTemporalTickerPO = temporalTickers.get(currency);
+	private void setBaseTemporalTickers(Map<Currency, TemporalTickerDataModel> temporalTickers) {
+		if (baseTemporalTickerDataModel == null) {
+			baseTemporalTickerDataModel = temporalTickers.get(currency);
 		}
 	}
 
@@ -225,10 +225,10 @@ public class FirstStrategy implements Strategy {
 	}
 
 	private TemporalTickerVariation generateTemporalTickerVariation(TimeInterval simulationTimeInterval,
-			TemporalTickerPO currentTemporalTickerPO) {
+			TemporalTickerDataModel currentTemporalTickerDataModel) {
 		TemporalTickerVariation temporalTickerVariation = null;
-		if (currentTemporalTickerPO != null) {
-			temporalTickerVariation = new TemporalTickerVariation(baseTemporalTickerPO, currentTemporalTickerPO);
+		if (currentTemporalTickerDataModel != null) {
+			temporalTickerVariation = new TemporalTickerVariation(baseTemporalTickerDataModel, currentTemporalTickerDataModel);
 			/*
 			 * LOGGER.debug(simulationTimeInterval + ": Last variation is " + new
 			 * PercentageFormatter().format(temporalTickerVariation.getLastVariation()));
@@ -239,9 +239,9 @@ public class FirstStrategy implements Strategy {
 		return temporalTickerVariation;
 	}
 
-	private void updateBaseTemporalTickerPO(TemporalTickerPO temporalTickerPO) {
+	private void updateBaseTemporalTicker(TemporalTickerDataModel temporalTickerDataModel) {
 		LOGGER.debug("Updating base temporal ticker.");
-		this.baseTemporalTickerPO = new TemporalTickerPO(temporalTickerPO);
+		this.baseTemporalTickerDataModel = new TemporalTickerDataModel(temporalTickerDataModel);
 	}
 
 }

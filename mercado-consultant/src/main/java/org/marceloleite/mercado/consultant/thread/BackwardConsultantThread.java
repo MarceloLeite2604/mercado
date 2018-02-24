@@ -10,7 +10,7 @@ import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.util.ZonedDateTimeUtils;
 import org.marceloleite.mercado.commons.util.converter.ZonedDateTimeToStringConverter;
 import org.marceloleite.mercado.consultant.thread.property.BackwardConsultantPropertiesRetriever;
-import org.marceloleite.mercado.databasemodel.TradePO;
+import org.marceloleite.mercado.database.data.structure.TradeDataModel;
 import org.marceloleite.mercado.retriever.TradesRetriever;
 
 public class BackwardConsultantThread extends AbstractConsultantThread {
@@ -45,7 +45,7 @@ public class BackwardConsultantThread extends AbstractConsultantThread {
 			for (Currency currency : Currency.values()) {
 				/* TODO: Watch out with BGOLD. */
 				if (currency.isDigital() && currency != Currency.BGOLD) {
-					List<TradePO> trades = tradesRetriever.retrieve(currency, end, start,
+					List<TradeDataModel> trades = tradesRetriever.retrieve(currency, end, start,
 							getConsultantProperties().isDatabaseValuesIgnored());
 					int totalTrades;
 					if (trades != null) {

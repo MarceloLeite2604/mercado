@@ -9,7 +9,7 @@ import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.util.DigitalCurrencyFormatter;
 import org.marceloleite.mercado.commons.util.PercentageFormatter;
 import org.marceloleite.mercado.commons.util.converter.ZonedDateTimeToStringConverter;
-import org.marceloleite.mercado.databasemodel.TemporalTickerPO;
+import org.marceloleite.mercado.database.data.structure.TemporalTickerDataModel;
 import org.marceloleite.mercado.simulator.Account;
 import org.marceloleite.mercado.simulator.House;
 import org.marceloleite.mercado.simulator.TemporalTickerVariation;
@@ -25,7 +25,7 @@ public class SecondStrategy implements Strategy {
 
 	private CircularArray<TemporalTickerVariation> temporalTickerVariationCircularArray;
 
-	private CircularArray<TemporalTickerPO> temporalTickerPOCircularArray;
+	private CircularArray<TemporalTickerDataModel> temporalTickerDataModelCircularArray;
 
 	/* B.O.S.O (Buy order sell order) - Ratio between buy and sell orders */ 
 	private CircularArray<Double> bosoCircularArray;
@@ -36,7 +36,7 @@ public class SecondStrategy implements Strategy {
 	public SecondStrategy(Currency currency) {
 		this.currency = currency;
 		this.temporalTickerVariationCircularArray = new CircularArray<>(TOTAL_TIME_INTERVAL_TO_ANALYZE);
-		this.temporalTickerPOCircularArray = new CircularArray<>(TOTAL_TIME_INTERVAL_TO_ANALYZE + 1);
+		this.temporalTickerDataModelCircularArray = new CircularArray<>(TOTAL_TIME_INTERVAL_TO_ANALYZE + 1);
 		this.bosoCircularArray = new CircularArray<>(TOTAL_TIME_INTERVAL_TO_ANALYZE + 1);
 		this.bosoVariationCircularArray = new CircularArray<>(TOTAL_TIME_INTERVAL_TO_ANALYZE);
 		this.lastFirstRatioCircularArray = new CircularArray<>(TOTAL_TIME_INTERVAL_TO_ANALYZE + 1);
@@ -54,30 +54,30 @@ public class SecondStrategy implements Strategy {
 	}
 
 	private void updateCircularArrays(House house) {
-		TemporalTickerPO lastTemporalTickerPO = temporalTickerPOCircularArray.last();
-		TemporalTickerPO currentTemporalTickerPO = house.getTemporalTickers().get(currency);
-		bosoCircularArray.add(calulateBuySellRatio(currentTemporalTickerPO));
-		if (lastTemporalTickerPO != null) {
-			TemporalTickerVariation temporalTickerVariation = new TemporalTickerVariation(lastTemporalTickerPO,
-					currentTemporalTickerPO);
+		TemporalTickerDataModel lastTemporalTickerDataModel = temporalTickerDataModelCircularArray.last();
+		TemporalTickerDataModel currentTemporalTickerDataModel = house.getTemporalTickers().get(currency);
+		bosoCircularArray.add(calulateBuySellRatio(currentTemporalTickerDataModel));
+		if (lastTemporalTickerDataModel != null) {
+			TemporalTickerVariation temporalTickerVariation = new TemporalTickerVariation(lastTemporalTickerDataModel,
+					currentTemporalTickerDataModel);
 			// new VariationCalculator().calculate(firstValue, bosoCircularArray.ge)
 			temporalTickerVariationCircularArray.add(temporalTickerVariation);
 			
 			// bosoVariationCircularArray.add();
 		}
-		temporalTickerPOCircularArray.add(currentTemporalTickerPO);
-		lastFirstRatioCircularArray.add(calculateLastFirstRatio(currentTemporalTickerPO));
+		temporalTickerDataModelCircularArray.add(currentTemporalTickerDataModel);
+		lastFirstRatioCircularArray.add(calculateLastFirstRatio(currentTemporalTickerDataModel));
 	}
 
-	private Double calculateLastFirstRatio(TemporalTickerPO currentTemporalTickerPO) {
-		double first = currentTemporalTickerPO.getFirst();
-		double last = currentTemporalTickerPO.getLast();
+	private Double calculateLastFirstRatio(TemporalTickerDataModel currentTemporalTickerDataModel) {
+		double first = currentTemporalTickerDataModel.getFirstPrice();
+		double last = currentTemporalTickerDataModel.getLastPrice();
 		return new RatioCalculator().calculate(last, first);
 	}
 
-	private double calulateBuySellRatio(TemporalTickerPO temporalTickerPO) {
-		long buyOrders = temporalTickerPO.getBuyOrders();
-		long sellOrders = temporalTickerPO.getSellOrders();
+	private double calulateBuySellRatio(TemporalTickerDataModel temporalTickerDataModel) {
+		long buyOrders = temporalTickerDataModel.getBuyOrders();
+		long sellOrders = temporalTickerDataModel.getSellOrders();
 		return new RatioCalculator().calculate(buyOrders, sellOrders);
 	}
 
@@ -88,7 +88,7 @@ public class SecondStrategy implements Strategy {
 		ZonedDateTimeToStringConverter zonedDateTimeToStringConverter = new ZonedDateTimeToStringConverter();
 		System.out.println("Current status: ");
 		System.out.println("               Time    Order variation     Buy/sell ratio     Last/first ratio\n");
-		for (int counter = 0; counter < temporalTickerPOCircularArray.getSize(); counter++) {
+		for (int counter = 0; counter < temporalTickerDataModelCircularArray.getSize(); counter++) {
 			double orderVariation = 0.0;
 			if ( counter > 0 ) {
 				orderVariation = temporalTickerVariationCircularArray.get(counter-1).getOrderVariation();
@@ -97,7 +97,7 @@ public class SecondStrategy implements Strategy {
 			Double lastFirstRatio = lastFirstRatioCircularArray.get(counter);
 			StringBuffer stringBuffer = new StringBuffer();
 			stringBuffer.append(zonedDateTimeToStringConverter
-					.convertTo(temporalTickerPOCircularArray.get(counter).getTemporalTickerId().getStart()) + "  | ");
+					.convertTo(temporalTickerDataModelCircularArray.get(counter).getStart()) + "  | ");
 			stringBuffer.append(String.format("%15s", percentageFormatter.format(orderVariation)) + "  | ");
 			stringBuffer.append(String.format("%15s", digitalCurrencyFormatter.format(buySellRatio - 1)) + "  | ");
 			stringBuffer.append(String.format("%7s", digitalCurrencyFormatter.format(lastFirstRatio - 1)) + "  ");

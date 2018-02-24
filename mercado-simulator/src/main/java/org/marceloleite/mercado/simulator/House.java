@@ -13,10 +13,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
+import org.marceloleite.mercado.database.data.structure.TemporalTickerDataModel;
 import org.marceloleite.mercado.databasemodel.TemporalTickerPO;
 import org.marceloleite.mercado.retriever.TemporalTickerRetriever;
-import org.marceloleite.mercado.simulator.order.BuyOrderBuilder.BuyOrder;
 import org.marceloleite.mercado.simulator.data.AccountData;
+import org.marceloleite.mercado.simulator.order.BuyOrderBuilder.BuyOrder;
 import org.marceloleite.mercado.simulator.order.OrderExecutor;
 import org.marceloleite.mercado.simulator.order.OrderStatus;
 import org.marceloleite.mercado.simulator.order.SellOrderBuilder.SellOrder;
@@ -36,14 +37,14 @@ public class House {
 
 	private double comissionPercentage;
 
-	private Map<Currency, TemporalTickerPO> temporalTickers;
+	private Map<Currency, TemporalTickerDataModel> temporalTickers;
 
 	private Map<Currency, TemporalTickerVariation> temporalTickerVariations;
 
 	private TemporalTickerRetriever temporalTickerRetriever;
 
 	private House(List<Account> accounts, Map<String, Balance> comissionBalance, double comissionPercentage,
-			Map<Currency, TemporalTickerPO> temporalTickers,
+			Map<Currency, TemporalTickerDataModel> temporalTickers,
 			Map<Currency, TemporalTickerVariation> temporalTickerVariations,
 			TemporalTickerRetriever temporalTickerRetriever) {
 		this.accounts = accounts;
@@ -77,7 +78,7 @@ public class House {
 		return new HashMap<>(comissionBalance);
 	}
 
-	public Map<Currency, TemporalTickerPO> getTemporalTickers() {
+	public Map<Currency, TemporalTickerDataModel> getTemporalTickers() {
 		return new EnumMap<>(temporalTickers);
 	}
 
@@ -107,34 +108,34 @@ public class House {
 	}
 
 	public void updateTemporalTickers(TimeInterval timeInterval) {
-		TemporalTickerPO previousTemporalTicker;
+		TemporalTickerDataModel previousTemporalTicker;
 		for (Currency currency : Currency.values()) {
 			/* TODO: Watch out with BGOLD. */
 			if (currency.isDigital() && currency != Currency.BGOLD) {
-				TemporalTickerPO temporalTickerPO;
-				temporalTickerPO = temporalTickerRetriever.retrieve(currency, timeInterval, false);
+				TemporalTickerDataModel temporalTickerDataModel;
+				temporalTickerDataModel = temporalTickerRetriever.retrieve(currency, timeInterval, false);
 				previousTemporalTicker = temporalTickers.get(currency);
 				TemporalTickerVariation temporalTickerVariation = null;
-				if (temporalTickerPO != null) {
-					temporalTickers.put(currency, temporalTickerPO);
-					temporalTickerVariation = new TemporalTickerVariation(previousTemporalTicker, temporalTickerPO);
+				if (temporalTickerDataModel != null) {
+					temporalTickers.put(currency, temporalTickerDataModel);
+					temporalTickerVariation = new TemporalTickerVariation(previousTemporalTicker, temporalTickerDataModel);
 				}
 				temporalTickerVariations.put(currency, temporalTickerVariation);
 			}
 		}
 	}
 
-	private void updateTemporalTickers(Map<Currency, TemporalTickerPO> temporalTickerPOsByCurrency) {
-		TemporalTickerPO previousTemporalTicker;
+	private void updateTemporalTickers(Map<Currency, TemporalTickerDataModel> temporalTickerDataModelsByCurrency) {
+		TemporalTickerDataModel previousTemporalTicker;
 		for (Currency currency : Currency.values()) {
 			/* TODO: Watch you with BGOLD. */
 			if (currency.isDigital() && currency != Currency.BGOLD) {
-				TemporalTickerPO temporalTickerPO = temporalTickerPOsByCurrency.get(currency);
+				TemporalTickerDataModel temporalTickerDataModel = temporalTickerDataModelsByCurrency.get(currency);
 				previousTemporalTicker = temporalTickers.get(currency);
 				TemporalTickerVariation temporalTickerVariation = null;
-				if (temporalTickerPO != null) {
-					temporalTickers.put(currency, temporalTickerPO);
-					temporalTickerVariation = new TemporalTickerVariation(previousTemporalTicker, temporalTickerPO);
+				if (temporalTickerDataModel != null) {
+					temporalTickers.put(currency, temporalTickerDataModel);
+					temporalTickerVariation = new TemporalTickerVariation(previousTemporalTicker, temporalTickerDataModel);
 				}
 				temporalTickerVariations.put(currency, temporalTickerVariation);
 			}
@@ -152,10 +153,10 @@ public class House {
 	}
 
 	public void executeTemporalEvents(
-			TreeMap<TimeInterval, Map<Currency, TemporalTickerPO>> temporalTickersPOByTimeInterval) {
-		for (Entry<TimeInterval, Map<Currency, TemporalTickerPO>> entry : temporalTickersPOByTimeInterval.entrySet()) {
+			TreeMap<TimeInterval, Map<Currency, TemporalTickerDataModel>> temporalTickersDataModelsByTimeInterval) {
+		for (Entry<TimeInterval, Map<Currency, TemporalTickerDataModel>> entry : temporalTickersDataModelsByTimeInterval.entrySet()) {
 			TimeInterval timeInterval = entry.getKey();
-			Map<Currency, TemporalTickerPO> temporalTickerPOsByCurrency = entry.getValue();
+			Map<Currency, TemporalTickerDataModel> temporalTickerPOsByCurrency = entry.getValue();
 			updateTemporalTickers(temporalTickerPOsByCurrency);
 			for (Account account : accounts) {
 				account.checkTimedEvents(timeInterval);
