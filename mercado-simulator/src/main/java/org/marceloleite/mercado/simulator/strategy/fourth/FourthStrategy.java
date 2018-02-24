@@ -7,10 +7,10 @@ import org.marceloleite.mercado.commons.OrderType;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.util.PercentageFormatter;
 import org.marceloleite.mercado.commons.util.converter.ZonedDateTimeToStringConverter;
-import org.marceloleite.mercado.database.data.structure.TemporalTickerDataModel;
 import org.marceloleite.mercado.simulator.Account;
 import org.marceloleite.mercado.simulator.CurrencyAmount;
 import org.marceloleite.mercado.simulator.House;
+import org.marceloleite.mercado.simulator.TemporalTicker;
 import org.marceloleite.mercado.simulator.TemporalTickerVariation;
 import org.marceloleite.mercado.simulator.order.BuyOrderBuilder;
 import org.marceloleite.mercado.simulator.order.BuyOrderBuilder.BuyOrder;
@@ -32,11 +32,11 @@ public class FourthStrategy implements Strategy {
 
 	private Currency currency;
 
-	private TemporalTickerDataModel baseTemporalTickerDataModel;
+	private TemporalTicker baseTemporalTicker;
 
 	private Status status;
 	
-	private CircularArray<TemporalTickerDataModel> circularArray;
+	private CircularArray<TemporalTicker> circularArray;
 
 	public FourthStrategy(Currency currency) {
 		this.currency = currency;
@@ -89,11 +89,11 @@ public class FourthStrategy implements Strategy {
 		}
 	}
 
-	private TemporalTickerVariation generateTemporalTickerVariation(TimeInterval simulationTimeInterval, TemporalTickerDataModel temporalTickerDataModel) {
-		if (temporalTickerDataModel == null) {
+	private TemporalTickerVariation generateTemporalTickerVariation(TimeInterval simulationTimeInterval, TemporalTicker temporalTicker) {
+		if (temporalTicker == null) {
 			throw new RuntimeException("No temporal ticker for time interval " + simulationTimeInterval);
 		}
-		circularArray.add(temporalTickerDataModel);
+		circularArray.add(temporalTicker);
 		if ( circularArray.getSize() == CIRCULAR_ARRAY_SIZE ) {
 			return new TemporalTickerVariation(circularArray.first(), circularArray.last());
 		} else {
@@ -101,16 +101,16 @@ public class FourthStrategy implements Strategy {
 		}
 	}
 
-	private void setBaseIfNull(TemporalTickerDataModel temporalTickerDataModel) {
-		if (baseTemporalTickerDataModel == null) {
-			baseTemporalTickerDataModel = temporalTickerDataModel;
+	private void setBaseIfNull(TemporalTicker temporalTicker) {
+		if (baseTemporalTicker == null) {
+			baseTemporalTicker = temporalTicker;
 		}
 	}
 
 	private void updateBase(House house) {
-		TemporalTickerDataModel temporalTickerDataModel = house.getTemporalTickers().get(currency);
-		if (temporalTickerDataModel != null) {
-			baseTemporalTickerDataModel = temporalTickerDataModel;
+		TemporalTicker temporalTicker = house.getTemporalTickers().get(currency);
+		if (temporalTicker != null) {
+			baseTemporalTicker = temporalTicker;
 		}
 	}
 

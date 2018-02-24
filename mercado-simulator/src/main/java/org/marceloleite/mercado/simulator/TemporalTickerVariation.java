@@ -3,7 +3,6 @@ package org.marceloleite.mercado.simulator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.commons.Currency;
-import org.marceloleite.mercado.database.data.structure.TemporalTickerDataModel;
 import org.marceloleite.mercado.simulator.strategy.second.VariationCalculator;
 
 public class TemporalTickerVariation {
@@ -30,8 +29,8 @@ public class TemporalTickerVariation {
 
 	private Double sellVariation;
 
-	public TemporalTickerVariation(TemporalTickerDataModel previousTemporalTicker,
-			TemporalTickerDataModel currentTemporalTicker) {
+	public TemporalTickerVariation(TemporalTicker previousTemporalTicker,
+			TemporalTicker currentTemporalTicker) {
 		this.orderVariation = Double.NaN;
 		this.highVariation = Double.NaN;
 		this.averageVariation = Double.NaN;

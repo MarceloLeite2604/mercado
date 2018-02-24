@@ -9,7 +9,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
-import org.marceloleite.mercado.database.data.structure.TemporalTickerDataModel;
 import org.marceloleite.mercado.databasemodel.TemporalTickerPO;
 
 public class HouseSimulationThread extends Thread {
@@ -20,7 +19,7 @@ public class HouseSimulationThread extends Thread {
 	private static final String THREAD_NAME = "House Simulation";
 
 	private House house;
-	private TreeMap<TimeInterval, Map<Currency, TemporalTickerDataModel>> temporalTickersDataModelsByTimeInterval;
+	private TreeMap<TimeInterval, Map<Currency, TemporalTicker>> temporalTickersDataModelsByTimeInterval;
 	private Boolean finished;
 	private Semaphore updateSemaphore;
 	private Semaphore runSimulationSemaphore;
@@ -35,7 +34,7 @@ public class HouseSimulationThread extends Thread {
 	}
 
 	public void setTemporalTickersPOByTimeInterval(
-			TreeMap<TimeInterval, Map<Currency, TemporalTickerDataModel>> temporalTickersDataModelsByTimeInterval) {
+			TreeMap<TimeInterval, Map<Currency, TemporalTicker>> temporalTickersDataModelsByTimeInterval) {
 		this.temporalTickersDataModelsByTimeInterval = temporalTickersDataModelsByTimeInterval;
 		Set<TimeInterval> keySet = temporalTickersDataModelsByTimeInterval.keySet();
 		
