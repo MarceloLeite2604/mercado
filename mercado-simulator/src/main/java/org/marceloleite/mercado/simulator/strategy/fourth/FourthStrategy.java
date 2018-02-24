@@ -7,7 +7,7 @@ import org.marceloleite.mercado.commons.OrderType;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.util.PercentageFormatter;
 import org.marceloleite.mercado.commons.util.converter.ZonedDateTimeToStringConverter;
-import org.marceloleite.mercado.databasemodel.TemporalTickerPO;
+import org.marceloleite.mercado.database.data.structure.TemporalTickerDataModel;
 import org.marceloleite.mercado.simulator.Account;
 import org.marceloleite.mercado.simulator.CurrencyAmount;
 import org.marceloleite.mercado.simulator.House;
@@ -32,11 +32,11 @@ public class FourthStrategy implements Strategy {
 
 	private Currency currency;
 
-	private TemporalTickerPO baseTemporalTickerPO;
+	private TemporalTickerDataModel baseTemporalTickerDataModel;
 
 	private Status status;
 	
-	private CircularArray<TemporalTickerPO> circularArray;
+	private CircularArray<TemporalTickerDataModel> circularArray;
 
 	public FourthStrategy(Currency currency) {
 		this.currency = currency;
@@ -89,11 +89,11 @@ public class FourthStrategy implements Strategy {
 		}
 	}
 
-	private TemporalTickerVariation generateTemporalTickerVariation(TimeInterval simulationTimeInterval, TemporalTickerPO temporalTickerPO) {
-		if (temporalTickerPO == null) {
+	private TemporalTickerVariation generateTemporalTickerVariation(TimeInterval simulationTimeInterval, TemporalTickerDataModel temporalTickerDataModel) {
+		if (temporalTickerDataModel == null) {
 			throw new RuntimeException("No temporal ticker for time interval " + simulationTimeInterval);
 		}
-		circularArray.add(temporalTickerPO);
+		circularArray.add(temporalTickerDataModel);
 		if ( circularArray.getSize() == CIRCULAR_ARRAY_SIZE ) {
 			return new TemporalTickerVariation(circularArray.first(), circularArray.last());
 		} else {
@@ -101,16 +101,16 @@ public class FourthStrategy implements Strategy {
 		}
 	}
 
-	private void setBaseIfNull(TemporalTickerPO temporalTickerPO) {
-		if (baseTemporalTickerPO == null) {
-			baseTemporalTickerPO = temporalTickerPO;
+	private void setBaseIfNull(TemporalTickerDataModel temporalTickerDataModel) {
+		if (baseTemporalTickerDataModel == null) {
+			baseTemporalTickerDataModel = temporalTickerDataModel;
 		}
 	}
 
 	private void updateBase(House house) {
-		TemporalTickerPO temporalTickerPO = house.getTemporalTickers().get(currency);
-		if (temporalTickerPO != null) {
-			baseTemporalTickerPO = temporalTickerPO;
+		TemporalTickerDataModel temporalTickerDataModel = house.getTemporalTickers().get(currency);
+		if (temporalTickerDataModel != null) {
+			baseTemporalTickerDataModel = temporalTickerDataModel;
 		}
 	}
 

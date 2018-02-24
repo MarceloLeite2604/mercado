@@ -4,16 +4,11 @@ import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 
-import org.marceloleite.mercado.commons.Currency;
-
 @Entity(name = "BALANCES")
 public class BalancePO implements PersistenceObject<BalanceIdPO> {
 
 	@EmbeddedId
 	private BalanceIdPO balanceIdPO;
-
-	@Column(name = "CURRENCY", nullable = false)
-	private Currency currency;
 
 	@Column(name = "AMOUNT", nullable = false)
 	private Double amount;
@@ -34,14 +29,6 @@ public class BalancePO implements PersistenceObject<BalanceIdPO> {
 
 	public void setBalanceIdPO(BalanceIdPO balanceIdPO) {
 		this.balanceIdPO = balanceIdPO;
-	}
-
-	public Currency getCurrency() {
-		return currency;
-	}
-
-	public void setCurrency(Currency currency) {
-		this.currency = currency;
 	}
 
 	public Double getAmount() {

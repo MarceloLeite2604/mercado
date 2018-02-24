@@ -18,6 +18,22 @@ public class BalanceIdPO implements Serializable {
 	@Column(name = "CURRENCY", nullable = false)
 	private Currency currency;
 
+	public String getAccountOwner() {
+		return accountOwner;
+	}
+
+	public void setAccountOwner(String accountOwner) {
+		this.accountOwner = accountOwner;
+	}
+
+	public Currency getCurrency() {
+		return currency;
+	}
+
+	public void setCurrency(Currency currency) {
+		this.currency = currency;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

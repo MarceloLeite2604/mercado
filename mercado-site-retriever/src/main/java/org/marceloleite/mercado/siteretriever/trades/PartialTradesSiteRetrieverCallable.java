@@ -6,11 +6,11 @@ import java.util.concurrent.Callable;
 
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
-import org.marceloleite.mercado.jsonmodel.api.data.JsonTrade;
+import org.marceloleite.mercado.converter.datamodel.ListToMapTradeDataModelConverter;
+import org.marceloleite.mercado.database.data.structure.TradeDataModel;
 import org.marceloleite.mercado.siteretriever.util.checker.MaxTradesReachedCheck;
-import org.marceloleite.mercado.siteretriever.util.converter.ListToMapJsonTradeConverter;
 
-class PartialTradesSiteRetrieverCallable implements Callable<Map<Long, JsonTrade>> {
+class PartialTradesSiteRetrieverCallable implements Callable<Map<Long, TradeDataModel>> {
 
 	private Currency currency;
 
@@ -24,19 +24,19 @@ class PartialTradesSiteRetrieverCallable implements Callable<Map<Long, JsonTrade
 	}
 
 	@Override
-	public Map<Long, JsonTrade> call() throws Exception {
-		List<JsonTrade> jsonTrades = new PartialTradesSiteRetriever(currency).retrieve(timeInterval);
-		Map<Long, JsonTrade> result;
-		if (new MaxTradesReachedCheck().check(jsonTrades)) {
+	public Map<Long, TradeDataModel> call() throws Exception {
+		List<TradeDataModel> tradeDataModels = new PartialTradesSiteRetriever(currency).retrieve(timeInterval);
+		Map<Long, TradeDataModel> result;
+		if (new MaxTradesReachedCheck().check(tradeDataModels)) {
 			System.err.println("Warning: Maximum trades exceeded from " + timeInterval + ". Splitting execution.");
 			result = splitExecution();
 		} else {
-			result = new ListToMapJsonTradeConverter().convertTo(jsonTrades);
+			result = new ListToMapTradeDataModelConverter().convertTo(tradeDataModels);
 		}
 		return result;
 	}
 
-	public Map<Long, JsonTrade> splitExecution() {
+	public Map<Long, TradeDataModel> splitExecution() {
 		TradesSiteRetriever tradesRetriever = new TradesSiteRetriever(currency, timeInterval.getDuration().dividedBy(2));
 		return tradesRetriever.retrieve(timeInterval);
 	}

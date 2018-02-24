@@ -15,8 +15,7 @@ import org.marceloleite.mercado.commons.TimeDivisionController;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.util.ZonedDateTimeUtils;
 import org.marceloleite.mercado.commons.util.converter.ZonedDateTimeToStringConverter;
-import org.marceloleite.mercado.databasemodel.TradeIdPO;
-import org.marceloleite.mercado.databasemodel.TradePO;
+import org.marceloleite.mercado.database.data.structure.TradeDataModel;
 import org.marceloleite.mercado.databaseretriever.persistence.EntityManagerController;
 import org.marceloleite.mercado.retriever.TradesRetriever;
 
@@ -59,7 +58,7 @@ public class Main {
 					
 					for (TimeInterval timeInterval : timeDivisionController.geTimeIntervals()) {
 						
-						List<TradePO> trades = tradesRetriever.retrieve(currency, timeInterval.getStart(),
+						List<TradeDataModel> trades = tradesRetriever.retrieve(currency, timeInterval.getStart(),
 								timeInterval.getEnd(), false);
 						StringBuffer stringBuffer = new StringBuffer();
 						stringBuffer.append(timeInterval + ": ");
@@ -71,24 +70,23 @@ public class Main {
 						stringBuffer.append(" trade(s).");
 						System.out.println(stringBuffer.toString());
 						if (trades != null && trades.size() > 0) {
-							trades = trades.stream().sorted(new Comparator<TradePO>() {
+							trades = trades.stream().sorted(new Comparator<TradeDataModel>() {
 
 								@Override
-								public int compare(TradePO tradePO1, TradePO tradePO2) {
-									return (tradePO1.getId().getId().compareTo(tradePO2.getId().getId()));
+								public int compare(TradeDataModel tradeDataModel1, TradeDataModel tradeDataModel2) {
+									return (tradeDataModel1.getId().compareTo(tradeDataModel2.getId()));
 								}
 							}).collect(Collectors.toList());
 							for (int tradesCounter = 0; tradesCounter < trades.size(); tradesCounter++) {
-								TradePO tradePO = trades.get(tradesCounter);
-								TradeIdPO tradeIdPO = tradePO.getId();
+								TradeDataModel tradeDataModel = trades.get(tradesCounter);
 								if (lastId == -1l) {
-									lastId = tradeIdPO.getId();
+									lastId = tradeDataModel.getId();
 								} else {
-									if (tradeIdPO.getId() != (lastId + 1l)) {
-										System.out.println(currency + " " + tradeIdPO.getId() + ": "
-												+ zonedDateTimeToStringConverter.convertTo(tradePO.getDate()));
+									if (tradeDataModel.getId() != (lastId + 1l)) {
+										System.out.println(currency + " " + tradeDataModel.getId() + ": "
+												+ zonedDateTimeToStringConverter.convertTo(tradeDataModel.getDate()));
 									}
-									lastId = tradeIdPO.getId();
+									lastId = tradeDataModel.getId();
 									while (exceptions.contains(lastId + 1)) {
 										lastId++;
 									}

@@ -6,8 +6,9 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.util.DigitalCurrencyFormatter;
-import org.marceloleite.mercado.databasemodel.TemporalTickerPO;
+import org.marceloleite.mercado.database.data.structure.TemporalTickerDataModel;
 import org.marceloleite.mercado.simulator.CurrencyAmount;
 import org.marceloleite.mercado.simulator.data.BuyOrderData;
 import org.marceloleite.mercado.simulator.temporalcontroller.AbstractTimedObject;
@@ -16,7 +17,7 @@ public class BuyOrderBuilder {
 
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = LogManager.getLogger(BuyOrderBuilder.class);
-	
+
 	private ZonedDateTime time;
 
 	private Currency currencyToBuy;
@@ -100,7 +101,7 @@ public class BuyOrderBuilder {
 		if (time == null) {
 			throw new RuntimeException("Execution time for operation was not informed.");
 		}
-		
+
 		if (currencyToBuy == null) {
 			throw new RuntimeException("Currency to buy was not informed.");
 		}
@@ -124,7 +125,7 @@ public class BuyOrderBuilder {
 		private CurrencyAmount currencyAmountToBuy;
 
 		private CurrencyAmount currencyAmountToPay;
-				
+
 		private OrderStatus orderStatus;
 
 		private BuyOrder(ZonedDateTime time, Currency currencyToBuy, Double amountToBuy, Currency currencyToPay,
@@ -167,7 +168,7 @@ public class BuyOrderBuilder {
 		public CurrencyAmount getCurrencyAmountToPay() {
 			return currencyAmountToPay;
 		}
-		
+
 		public OrderStatus getOrderStatus() {
 			return orderStatus;
 		}
@@ -176,7 +177,7 @@ public class BuyOrderBuilder {
 			this.orderStatus = orderStatus;
 		}
 
-		public void updateOrder(Map<Currency, TemporalTickerPO> temporalTickers) {
+		public void updateOrder(Map<Currency, TemporalTickerDataModel> temporalTickers) {
 			double buyingPrice;
 			buyingPrice = retrieveBuyingPrice(temporalTickers);
 			if (currencyAmountToBuy.getAmount() == null) {
@@ -189,19 +190,21 @@ public class BuyOrderBuilder {
 			}
 		}
 
-		private double retrieveBuyingPrice(Map<Currency, TemporalTickerPO> temporalTickers) {
+		private double retrieveBuyingPrice(Map<Currency, TemporalTickerDataModel> temporalTickers) {
 			Currency currency = currencyAmountToBuy.getCurrency();
-			TemporalTickerPO temporalTickerPO = temporalTickers.get(currency);
-			if (temporalTickerPO == null) {
+			TemporalTickerDataModel temporalTickerDataModel = temporalTickers.get(currency);
+			if (temporalTickerDataModel == null) {
 				throw new RuntimeException(
 						"No temporal ticker while retrieving buying price for " + currency + " currency.");
 			}
 
-			double buyingPrice = temporalTickerPO.getBuy();
+			double buyingPrice = temporalTickerDataModel.getBuy();
 			if (buyingPrice == 0.0) {
-				buyingPrice = temporalTickerPO.getPreviousBuy();
-				if ( buyingPrice == 0.0) {
-					throw new RuntimeException("Buying price informed on period " + temporalTickerPO.getId() + " is zero.");
+				buyingPrice = temporalTickerDataModel.getPreviousBuy();
+				if (buyingPrice == 0.0) {
+					TimeInterval timeInterval = new TimeInterval(temporalTickerDataModel.getStart(),
+							temporalTickerDataModel.getEnd());
+					throw new RuntimeException("Buying price informed on period " + timeInterval + " is zero.");
 				}
 			}
 			LOGGER.debug("Buying price is " + new DigitalCurrencyFormatter().format(buyingPrice));

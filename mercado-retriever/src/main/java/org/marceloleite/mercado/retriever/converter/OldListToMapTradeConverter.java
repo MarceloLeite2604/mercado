@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
 import org.marceloleite.mercado.commons.util.converter.Converter;
 import org.marceloleite.mercado.databasemodel.TradePO;
 
-public class ListToMapTradeConverter implements Converter<List<TradePO>, Map<Long, TradePO>> {
+public class OldListToMapTradeConverter implements Converter<List<TradePO>, Map<Long, TradePO>> {
 
 	@Override
 	public Map<Long, TradePO> convertTo(List<TradePO> trades) {

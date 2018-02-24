@@ -13,9 +13,6 @@ public class StrategyPO implements PersistenceObject<StrategyIdPO> {
 	@EmbeddedId
 	private StrategyIdPO strategyIdPO;
 
-	@Column(name = "STRATEGY_NAME")
-	private String name;
-
 	@Column(name = "STRATEGY_CLASS")
 	private String className;
 
@@ -24,14 +21,6 @@ public class StrategyPO implements PersistenceObject<StrategyIdPO> {
 
 	@OneToMany
 	private List<StrategyVariablePO> strategyVariablePOs;
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
 
 	public String getClassName() {
 		return className;

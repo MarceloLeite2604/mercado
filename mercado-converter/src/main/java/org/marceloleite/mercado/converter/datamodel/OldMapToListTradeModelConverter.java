@@ -1,14 +1,15 @@
-package org.marceloleite.mercado.converter.json.api.data;
+package org.marceloleite.mercado.converter.datamodel;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.marceloleite.mercado.commons.util.converter.Converter;
+import org.marceloleite.mercado.converter.json.api.data.TradeConverter;
 import org.marceloleite.mercado.databasemodel.TradePO;
 import org.marceloleite.mercado.jsonmodel.api.data.JsonTrade;
 
-public class MapJsonTradeToListTradeConverter implements Converter<Map<Long, JsonTrade>, List<TradePO>> {
+public class OldMapToListTradeModelConverter implements Converter<Map<Long, JsonTrade>, List<TradePO>> {
 
 	@Override
 	public List<TradePO> convertTo(Map<Long, JsonTrade> jsonTrades) {

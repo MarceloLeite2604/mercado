@@ -28,6 +28,7 @@ public class TemporalTickerPOToTemporalTickerDataModelConverter implements Conve
 		temporalTickerDataModel.setLowestPrice(temporalTickerPO.getLow());
 		temporalTickerDataModel.setAveragePrice(temporalTickerPO.getAverage());
 		temporalTickerDataModel.setTimeDuration(temporalTickerPO.getDuration());
+		temporalTickerDataModel.setVolumeTrades(temporalTickerPO.getVol());
 		return temporalTickerDataModel;
 	}
 
