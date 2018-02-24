@@ -2,6 +2,8 @@ package org.marceloleite.mercado.databasemodel;
 
 import java.time.LocalDateTime;
 
+import org.marceloleite.mercado.commons.TradeType;
+
 
 public class OldTradePO implements PersistenceObject<TradeIdPO> {
 

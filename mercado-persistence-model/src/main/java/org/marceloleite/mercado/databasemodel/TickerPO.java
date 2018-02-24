@@ -8,7 +8,7 @@ import javax.persistence.Entity;
 public class TickerPO implements PersistenceObject<TickerIdPO> {
 
 	@EmbeddedId
-	private TickerIdPO tickerId;
+	private TickerIdPO tickerIdPO;
 
 	@Column(name="HIGH", nullable=false)
 	private double high;
@@ -32,7 +32,7 @@ public class TickerPO implements PersistenceObject<TickerIdPO> {
 		super();
 	}
 
-	public TickerPO(double high, double low, double vol, double last, double buy, double sell, TickerIdPO tickerId) {
+	public TickerPO(double high, double low, double vol, double last, double buy, double sell, TickerIdPO tickerIdPO) {
 		super();
 		this.high = high;
 		this.low = low;
@@ -40,7 +40,7 @@ public class TickerPO implements PersistenceObject<TickerIdPO> {
 		this.last = last;
 		this.buy = buy;
 		this.sell = sell;
-		this.tickerId = tickerId;
+		this.tickerIdPO = tickerIdPO;
 	}
 
 	public double getHigh() {
@@ -91,12 +91,12 @@ public class TickerPO implements PersistenceObject<TickerIdPO> {
 		this.sell = sell;
 	}
 
-	public TickerIdPO getTickerId() {
-		return tickerId;
+	public TickerIdPO getTickerIdPO() {
+		return tickerIdPO;
 	}
 
-	public void setTickerId(TickerIdPO tickerId) {
-		this.tickerId = tickerId;
+	public void setTickerIdPO(TickerIdPO tickerIdPO) {
+		this.tickerIdPO = tickerIdPO;
 	}
 
 	@Override
@@ -106,6 +106,6 @@ public class TickerPO implements PersistenceObject<TickerIdPO> {
 
 	@Override
 	public TickerIdPO getId() {
-		return tickerId;
+		return tickerIdPO;
 	}
 }
