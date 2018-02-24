@@ -24,7 +24,7 @@ public class TickerConverter implements Converter<JsonTicker, TickerPO> {
 		ticker.setLast(jsonTickerValues.getLast());
 		ticker.setBuy(jsonTickerValues.getBuy());
 		ticker.setSell(jsonTickerValues.getSell());
-		ticker.setTickerId(tickerId);
+		ticker.setTickerIdPO(tickerId);
 		
 		return ticker;
 	}

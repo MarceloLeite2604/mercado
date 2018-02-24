@@ -4,9 +4,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
+import org.marceloleite.mercado.commons.TradeType;
 import org.marceloleite.mercado.commons.interfaces.Filter;
 import org.marceloleite.mercado.databasemodel.TradePO;
-import org.marceloleite.mercado.databasemodel.TradeType;
 
 public class TradeTypeFilter implements Filter<Map<Long, TradePO>> {
 

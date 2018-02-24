@@ -3,7 +3,7 @@ package org.marceloleite.mercado.databasemodel.converter;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
-import org.marceloleite.mercado.databasemodel.TradeType;
+import org.marceloleite.mercado.commons.TradeType;
 
 @Converter(autoApply = true)
 public class TradeTypeAttributeConverter implements AttributeConverter<TradeType, String> {

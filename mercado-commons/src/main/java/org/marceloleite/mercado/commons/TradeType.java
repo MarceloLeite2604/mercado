@@ -1,4 +1,4 @@
-package org.marceloleite.mercado.databasemodel;
+package org.marceloleite.mercado.commons;
 
 public enum TradeType {
 

@@ -8,6 +8,8 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 
+import org.marceloleite.mercado.commons.TradeType;
+
 @Entity(name = "TRADES")
 public class TradePO implements PersistenceObject<TradeIdPO> {
 
