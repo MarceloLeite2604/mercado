@@ -11,9 +11,9 @@ import org.marceloleite.mercado.commons.TimeDivisionController;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.util.ZonedDateTimeUtils;
 import org.marceloleite.mercado.commons.util.converter.ZonedDateTimeToStringConverter;
-import org.marceloleite.mercado.database.data.structure.TemporalTickerDataModel;
-import org.marceloleite.mercado.database.data.structure.TradeDataModel;
 import org.marceloleite.mercado.databaseretriever.persistence.EntityManagerController;
+import org.marceloleite.mercado.simulator.TemporalTicker;
+import org.marceloleite.mercado.simulator.Trade;
 
 public class Main {
 
@@ -35,16 +35,16 @@ public class Main {
 			Duration duration = Duration.ofSeconds(60);
 			TimeDivisionController timeDivisionController = new TimeDivisionController(start, end, duration);
 			TemporalTickerRetriever temporalTickerRetriever = new TemporalTickerRetriever();
-			Map<TimeInterval, Map<Currency, TemporalTickerDataModel>> temporalTickerPOsByTimeInterval = temporalTickerRetriever.bulkRetrieve(timeDivisionController);
-			for (Entry<TimeInterval, Map<Currency, TemporalTickerDataModel>> temporalTickerDataModelsForTimeInterval : temporalTickerPOsByTimeInterval.entrySet()) {
-				TimeInterval timeInterval = temporalTickerDataModelsForTimeInterval.getKey();
-				Map<Currency, TemporalTickerDataModel> temporalTickerPOByCurrency = temporalTickerDataModelsForTimeInterval.getValue();
+			Map<TimeInterval, Map<Currency, TemporalTicker>> temporalTickersByTimeInterval = temporalTickerRetriever.bulkRetrieve(timeDivisionController);
+			for (Entry<TimeInterval, Map<Currency, TemporalTicker>> temporalTickersForTimeInterval : temporalTickersByTimeInterval.entrySet()) {
+				TimeInterval timeInterval = temporalTickersForTimeInterval.getKey();
+				Map<Currency, TemporalTicker> temporalTickerPOByCurrency = temporalTickersForTimeInterval.getValue();
 				
 				System.out.println(timeInterval);
-				for (Entry<Currency, TemporalTickerDataModel> temporalTickerDataModelsForCurrency : temporalTickerPOByCurrency.entrySet()) {
-					Currency currency = temporalTickerDataModelsForCurrency.getKey();
-					TemporalTickerDataModel temporalTickerDataModel = temporalTickerDataModelsForCurrency.getValue();
-					System.out.println("\t" + currency + ": " + temporalTickerDataModel.getLastPrice());
+				for (Entry<Currency, TemporalTicker> temporalTickersForCurrency : temporalTickerPOByCurrency.entrySet()) {
+					Currency currency = temporalTickersForCurrency.getKey();
+					TemporalTicker temporalTicker = temporalTickersForCurrency.getValue();
+					System.out.println("\t" + currency + ": " + temporalTicker.getLastPrice());
 				}
 			}
 		} finally {
@@ -58,7 +58,7 @@ public class Main {
 			ZonedDateTime end = ZonedDateTimeUtils.now();
 			ZonedDateTime start = end.minus(Duration.ofSeconds(30));
 			TradesRetriever tradesRetriever = new TradesRetriever();
-			List<TradeDataModel> trades = tradesRetriever.retrieve(Currency.BITCOIN, start, end, false);
+			List<Trade> trades = tradesRetriever.retrieve(Currency.BITCOIN, start, end, false);
 			if (trades.size() > 0) {
 				System.out.println(trades.get(trades.size() - 1).getPrice());
 			}

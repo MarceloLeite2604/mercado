@@ -7,10 +7,10 @@ import org.marceloleite.mercado.commons.OrderType;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.util.PercentageFormatter;
 import org.marceloleite.mercado.commons.util.converter.ZonedDateTimeToStringConverter;
-import org.marceloleite.mercado.database.data.structure.TemporalTickerDataModel;
 import org.marceloleite.mercado.simulator.Account;
 import org.marceloleite.mercado.simulator.CurrencyAmount;
 import org.marceloleite.mercado.simulator.House;
+import org.marceloleite.mercado.simulator.TemporalTicker;
 import org.marceloleite.mercado.simulator.TemporalTickerVariation;
 import org.marceloleite.mercado.simulator.order.BuyOrderBuilder;
 import org.marceloleite.mercado.simulator.order.BuyOrderBuilder.BuyOrder;
@@ -29,7 +29,7 @@ public class ThirdStrategy implements Strategy {
 
 	private Currency currency;
 
-	private TemporalTickerDataModel baseTemporalTickerDataModel;
+	private TemporalTicker baseTemporalTicker;
 
 	private Status status;
 
@@ -83,16 +83,16 @@ public class ThirdStrategy implements Strategy {
 		}
 	}
 
-	private void setBaseIfNull(TemporalTickerDataModel temporalTickerDataModel) {
-		if (baseTemporalTickerDataModel == null) {
-			baseTemporalTickerDataModel = temporalTickerDataModel;
+	private void setBaseIfNull(TemporalTicker temporalTicker) {
+		if (baseTemporalTicker == null) {
+			baseTemporalTicker = temporalTicker;
 		}
 	}
 
 	private void updateBase(House house) {
-		TemporalTickerDataModel temporalTickerDataModel = house.getTemporalTickers().get(currency);
-		if (temporalTickerDataModel != null) {
-			baseTemporalTickerDataModel = temporalTickerDataModel;
+		TemporalTicker temporalTicker = house.getTemporalTickers().get(currency);
+		if (temporalTicker != null) {
+			baseTemporalTicker = temporalTicker;
 		}
 	}
 
@@ -138,12 +138,12 @@ public class ThirdStrategy implements Strategy {
 	}
 
 	private TemporalTickerVariation generateTemporalTickerVariation(TimeInterval simulationTimeInterval, House house) {
-		TemporalTickerDataModel currentTemporalTickerDataModel = house.getTemporalTickers().get(currency);
-		if (currentTemporalTickerDataModel == null) {
+		TemporalTicker currentTemporalTicker = house.getTemporalTickers().get(currency);
+		if (currentTemporalTicker == null) {
 			throw new RuntimeException("No temporal ticker for time interval " + simulationTimeInterval);
 		}
 
-		return new TemporalTickerVariation(baseTemporalTickerDataModel, currentTemporalTickerDataModel);
+		return new TemporalTickerVariation(baseTemporalTicker, currentTemporalTicker);
 	}
 
 	private enum Status {

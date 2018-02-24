@@ -8,8 +8,8 @@ import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.util.DigitalCurrencyFormatter;
-import org.marceloleite.mercado.database.data.structure.TemporalTickerDataModel;
 import org.marceloleite.mercado.simulator.CurrencyAmount;
+import org.marceloleite.mercado.simulator.TemporalTicker;
 import org.marceloleite.mercado.simulator.data.BuyOrderData;
 import org.marceloleite.mercado.simulator.temporalcontroller.AbstractTimedObject;
 
@@ -177,7 +177,7 @@ public class BuyOrderBuilder {
 			this.orderStatus = orderStatus;
 		}
 
-		public void updateOrder(Map<Currency, TemporalTickerDataModel> temporalTickers) {
+		public void updateOrder(Map<Currency, TemporalTicker> temporalTickers) {
 			double buyingPrice;
 			buyingPrice = retrieveBuyingPrice(temporalTickers);
 			if (currencyAmountToBuy.getAmount() == null) {
@@ -190,20 +190,20 @@ public class BuyOrderBuilder {
 			}
 		}
 
-		private double retrieveBuyingPrice(Map<Currency, TemporalTickerDataModel> temporalTickers) {
+		private double retrieveBuyingPrice(Map<Currency, TemporalTicker> temporalTickers) {
 			Currency currency = currencyAmountToBuy.getCurrency();
-			TemporalTickerDataModel temporalTickerDataModel = temporalTickers.get(currency);
-			if (temporalTickerDataModel == null) {
+			TemporalTicker temporalTicker = temporalTickers.get(currency);
+			if (temporalTicker == null) {
 				throw new RuntimeException(
 						"No temporal ticker while retrieving buying price for " + currency + " currency.");
 			}
 
-			double buyingPrice = temporalTickerDataModel.getBuy();
+			double buyingPrice = temporalTicker.getBuy();
 			if (buyingPrice == 0.0) {
-				buyingPrice = temporalTickerDataModel.getPreviousBuy();
+				buyingPrice = temporalTicker.getPreviousBuy();
 				if (buyingPrice == 0.0) {
-					TimeInterval timeInterval = new TimeInterval(temporalTickerDataModel.getStart(),
-							temporalTickerDataModel.getEnd());
+					TimeInterval timeInterval = new TimeInterval(temporalTicker.getStart(),
+							temporalTicker.getEnd());
 					throw new RuntimeException("Buying price informed on period " + timeInterval + " is zero.");
 				}
 			}

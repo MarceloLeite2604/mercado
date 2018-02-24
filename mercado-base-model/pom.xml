@@ -3,11 +3,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.marceloleite</groupId>
-	<artifactId>mercado-simulator-structures</artifactId>
+	<artifactId>mercado-base-model</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>mercado-simulator-structures</name>
+	<name>mercado-base-model</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>

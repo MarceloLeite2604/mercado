@@ -7,10 +7,9 @@ import java.util.concurrent.Callable;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeDivisionController;
 import org.marceloleite.mercado.commons.TimeInterval;
-import org.marceloleite.mercado.database.data.structure.TemporalTickerDataModel;
 import org.marceloleite.mercado.retriever.TemporalTickerRetriever;
 
-public class TemporalTickerRetrieverCallable implements Callable<TreeMap<TimeInterval, Map<Currency, TemporalTickerDataModel>>> {
+public class TemporalTickerRetrieverCallable implements Callable<TreeMap<TimeInterval, Map<Currency, TemporalTicker>>> {
 	
 	private TimeDivisionController timeDivisionController;
 	
@@ -19,7 +18,7 @@ public class TemporalTickerRetrieverCallable implements Callable<TreeMap<TimeInt
 	}
 
 	@Override
-	public TreeMap<TimeInterval, Map<Currency, TemporalTickerDataModel>> call() throws Exception {
+	public TreeMap<TimeInterval, Map<Currency, TemporalTicker>> call() throws Exception {
 		return new TemporalTickerRetriever().bulkRetrieve(timeDivisionController);
 	}
 

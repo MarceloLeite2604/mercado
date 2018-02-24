@@ -8,8 +8,8 @@ import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.util.DigitalCurrencyFormatter;
-import org.marceloleite.mercado.database.data.structure.TemporalTickerDataModel;
 import org.marceloleite.mercado.simulator.CurrencyAmount;
+import org.marceloleite.mercado.simulator.TemporalTicker;
 import org.marceloleite.mercado.simulator.data.SellOrderData;
 import org.marceloleite.mercado.simulator.temporalcontroller.AbstractTimedObject;
 
@@ -173,7 +173,7 @@ public class SellOrderBuilder {
 			this.orderStatus = orderStatus;
 		}
 
-		public void updateOrder(Map<Currency, TemporalTickerDataModel> temporalTickers) {
+		public void updateOrder(Map<Currency, TemporalTicker> temporalTickers) {
 			double sellingPrice = retrieveSellingPrice(temporalTickers);
 			if (currencyAmountToSell.getAmount() == null) {
 				Double amountToSell = currencyAmountToReceive.getAmount() / sellingPrice;
@@ -185,20 +185,20 @@ public class SellOrderBuilder {
 			}
 		}
 
-		private double retrieveSellingPrice(Map<Currency, TemporalTickerDataModel> temporalTickers) {
+		private double retrieveSellingPrice(Map<Currency, TemporalTicker> temporalTickers) {
 			Currency currency = currencyAmountToSell.getCurrency();
-			TemporalTickerDataModel temporalTickerDataModel = temporalTickers.get(currency);
-			if (temporalTickerDataModel == null) {
+			TemporalTicker temporalTicker = temporalTickers.get(currency);
+			if (temporalTicker == null) {
 				throw new RuntimeException(
 						"No temporal ticker while retrieving selling price for " + currency + " currency.");
 			}
 
-			double sellingPrice = temporalTickerDataModel.getSell();
+			double sellingPrice = temporalTicker.getSell();
 			if (sellingPrice == 0.0) {
-				sellingPrice = temporalTickerDataModel.getPreviousSell();
+				sellingPrice = temporalTicker.getPreviousSell();
 				if (sellingPrice == 0.0) {
-					TimeInterval timeInterval = new TimeInterval(temporalTickerDataModel.getStart(),
-							temporalTickerDataModel.getEnd());
+					TimeInterval timeInterval = new TimeInterval(temporalTicker.getStart(),
+							temporalTicker.getEnd());
 					throw new RuntimeException("Selling price informed on period " + timeInterval + " is zero.");
 				}
 			}

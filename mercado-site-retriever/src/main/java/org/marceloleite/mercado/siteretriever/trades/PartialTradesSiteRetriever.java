@@ -9,9 +9,9 @@ import javax.ws.rs.core.MediaType;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.util.EpochSecondsToZonedDateTimeConveter;
-import org.marceloleite.mercado.converter.json.api.data.ListJsonTradeToListTradeDataModelConverter;
-import org.marceloleite.mercado.database.data.structure.TradeDataModel;
+import org.marceloleite.mercado.converter.json.api.data.ListJsonTradeToListTradeConverter;
 import org.marceloleite.mercado.jsonmodel.api.data.JsonTrade;
+import org.marceloleite.mercado.simulator.Trade;
 import org.marceloleite.mercado.siteretriever.AbstractSiteRetriever;
 
 class PartialTradesSiteRetriever extends AbstractSiteRetriever {
@@ -26,7 +26,7 @@ class PartialTradesSiteRetriever extends AbstractSiteRetriever {
 
 	private static final String METHOD = "trades";
 
-	public List<TradeDataModel> retrieve(TimeInterval timeInterval) {
+	public List<Trade> retrieve(TimeInterval timeInterval) {
 
 		checkArguments(timeInterval);
 
@@ -50,8 +50,8 @@ class PartialTradesSiteRetriever extends AbstractSiteRetriever {
 			}
 		}
 		jsonTrades.stream().forEach(jsonTrade -> jsonTrade.setCurrency(currency));
-		List<TradeDataModel> tradeDataModels = new ListJsonTradeToListTradeDataModelConverter().convertTo(jsonTrades);
-		return tradeDataModels;
+		List<Trade> trades = new ListJsonTradeToListTradeConverter().convertTo(jsonTrades);
+		return trades;
 	}
 
 	private void checkArguments(TimeInterval timeInterval) {
