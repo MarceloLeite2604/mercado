@@ -7,8 +7,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.marceloleite.mercado.commons.Currency;
-import org.marceloleite.mercado.xml.adapter.CurrencyXmlAdapter;
-import org.marceloleite.mercado.xml.adapter.ZonedDateTimeXmlAdapter;
+import org.marceloleite.mercado.xml.adapters.CurrencyXmlAdapter;
+import org.marceloleite.mercado.xml.adapters.ZonedDateTimeXmlAdapter;
 
 @XmlRootElement(name="buyOrder")
 public class XmlBuyOrder {

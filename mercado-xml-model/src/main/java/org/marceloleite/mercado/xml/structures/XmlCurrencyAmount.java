@@ -6,7 +6,7 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.marceloleite.mercado.commons.Currency;
-import org.marceloleite.mercado.xml.adapter.CurrencyXmlAdapter;
+import org.marceloleite.mercado.xml.adapters.CurrencyXmlAdapter;
 
 @XmlRootElement(name="currencyAmount")
 @XmlType(propOrder= {"currency", "amount"})

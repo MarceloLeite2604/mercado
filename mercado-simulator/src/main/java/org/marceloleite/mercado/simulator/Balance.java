@@ -6,8 +6,8 @@ import java.util.Optional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.commons.Currency;
-import org.marceloleite.mercado.simulator.structure.BalanceData;
-import org.marceloleite.mercado.simulator.structure.CurrencyAmountData;
+import org.marceloleite.mercado.simulator.data.BalanceData;
+import org.marceloleite.mercado.simulator.data.CurrencyAmountData;
 
 public class Balance extends EnumMap<Currency, CurrencyAmount> {
 

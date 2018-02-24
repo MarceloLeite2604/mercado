@@ -8,7 +8,7 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import org.marceloleite.mercado.xml.adapter.XmlBalancesXmlAdapter;
+import org.marceloleite.mercado.xml.adapters.XmlBalancesXmlAdapter;
 
 @XmlRootElement(name="account")
 public class XmlAccount {

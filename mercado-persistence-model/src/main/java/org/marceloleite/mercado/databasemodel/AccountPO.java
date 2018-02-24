@@ -1,8 +1,11 @@
 package org.marceloleite.mercado.databasemodel;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 
 @Entity(name="ACCOUNTS")
 public class AccountPO implements PersistenceObject<String> {
@@ -10,6 +13,12 @@ public class AccountPO implements PersistenceObject<String> {
 	@Id
 	@Column(name="OWNER", nullable = false)
 	private String owner;
+	
+	@OneToMany
+	private List<BalancePO> balancePOs;
+	
+	@OneToMany
+	private List<StrategyPO> strategyPOs;
 
 	public String getOwner() {
 		return owner;

@@ -10,14 +10,14 @@ import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.simulator.converter.CurrencyAmountToStringConverter;
+import org.marceloleite.mercado.simulator.data.AccountData;
+import org.marceloleite.mercado.simulator.data.BuyOrderData;
+import org.marceloleite.mercado.simulator.data.DepositData;
+import org.marceloleite.mercado.simulator.data.SellOrderData;
 import org.marceloleite.mercado.simulator.order.BuyOrderBuilder;
 import org.marceloleite.mercado.simulator.order.BuyOrderBuilder.BuyOrder;
 import org.marceloleite.mercado.simulator.order.SellOrderBuilder.SellOrder;
 import org.marceloleite.mercado.simulator.strategy.Strategy;
-import org.marceloleite.mercado.simulator.structure.AccountData;
-import org.marceloleite.mercado.simulator.structure.BuyOrderData;
-import org.marceloleite.mercado.simulator.structure.DepositData;
-import org.marceloleite.mercado.simulator.structure.SellOrderData;
 import org.marceloleite.mercado.simulator.temporalcontroller.TemporalController;
 
 public class Account {

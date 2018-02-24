@@ -1,4 +1,4 @@
-package org.marceloleite.mercado.simulator.structure;
+package org.marceloleite.mercado.simulator.data;
 
 import java.util.EnumMap;
 

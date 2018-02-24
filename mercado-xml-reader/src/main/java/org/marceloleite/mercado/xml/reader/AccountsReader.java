@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.marceloleite.mercado.converter.xml.AccountDataXmlConverter;
-import org.marceloleite.mercado.simulator.structure.AccountData;
+import org.marceloleite.mercado.simulator.data.AccountData;
 import org.marceloleite.mercado.xml.structures.XmlAccount;
 
 public class AccountsReader {

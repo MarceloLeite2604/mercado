@@ -1,4 +1,4 @@
-package org.marceloleite.mercado.xml.adapter;
+package org.marceloleite.mercado.xml.adapters;
 
 import java.time.ZonedDateTime;
 

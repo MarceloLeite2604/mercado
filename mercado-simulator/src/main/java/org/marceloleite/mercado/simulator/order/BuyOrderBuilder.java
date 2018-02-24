@@ -9,7 +9,7 @@ import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.util.DigitalCurrencyFormatter;
 import org.marceloleite.mercado.databasemodel.TemporalTickerPO;
 import org.marceloleite.mercado.simulator.CurrencyAmount;
-import org.marceloleite.mercado.simulator.structure.BuyOrderData;
+import org.marceloleite.mercado.simulator.data.BuyOrderData;
 import org.marceloleite.mercado.simulator.temporalcontroller.AbstractTimedObject;
 
 public class BuyOrderBuilder {
