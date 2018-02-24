@@ -1,4 +1,4 @@
-package org.marceloleite.mercado.simulator.structure;
+package org.marceloleite.mercado.simulator.data;
 
 import javax.xml.bind.annotation.XmlElement;
 

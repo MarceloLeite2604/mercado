@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.marceloleite.mercado.commons.Currency;
-import org.marceloleite.mercado.simulator.structure.AccountData;
-import org.marceloleite.mercado.simulator.structure.BalanceData;
-import org.marceloleite.mercado.simulator.structure.BuyOrderData;
-import org.marceloleite.mercado.simulator.structure.DepositData;
-import org.marceloleite.mercado.simulator.structure.SellOrderData;
+import org.marceloleite.mercado.simulator.data.AccountData;
+import org.marceloleite.mercado.simulator.data.BalanceData;
+import org.marceloleite.mercado.simulator.data.BuyOrderData;
+import org.marceloleite.mercado.simulator.data.DepositData;
+import org.marceloleite.mercado.simulator.data.SellOrderData;
 import org.marceloleite.mercado.xml.structures.XmlAccount;
 import org.marceloleite.mercado.xml.structures.XmlBalances;
 import org.marceloleite.mercado.xml.structures.XmlBuyOrder;

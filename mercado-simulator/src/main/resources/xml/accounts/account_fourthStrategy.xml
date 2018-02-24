@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<account>
+	<owner>FourthStrategy</owner>
+	<balances>
+		<balance>
+			<currency>BRL</currency>
+			<amount>1000</amount>
+		</balance>
+	</balances>
+	<deposits />
+	<strategies>
+		<strategy>
+			<currency>BTC</currency>
+			<classes>
+				<class>org.marceloleite.mercado.simulator.strategy.fourth.FourthStrategy
+				</class>
+			</classes>
+		</strategy>
+	</strategies>
+</account>

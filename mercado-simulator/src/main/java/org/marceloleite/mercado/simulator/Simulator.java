@@ -92,15 +92,10 @@ public class Simulator {
 
 	private void updateHouseThread(HouseSimulationThread houseSimulationThread,
 			TreeMap<TimeInterval, Map<Currency, TemporalTickerPO>> temporalTickersPOByTimeInterval, Semaphore updateHouseThreadSemaphore, Semaphore runSimulationSemaphore) {
-		/*LOGGER.info("Requesting udpate thread semaphore.");*/
 		try {
 			updateHouseThreadSemaphore.acquire();
-			/*LOGGER.info("Update thread semaphore acquired.");*/
 			houseSimulationThread.setTemporalTickersPOByTimeInterval(temporalTickersPOByTimeInterval);
-			/*LOGGER.info("Releasing run simulation semaphore.");*/
 			runSimulationSemaphore.release();
-			/*LOGGER.info("Run simulation semaphore released.");*/
-			
 		} catch (InterruptedException exception) {
 			throw new RuntimeException(exception);
 		}		

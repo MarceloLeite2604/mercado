@@ -2,7 +2,7 @@ package org.marceloleite.mercado.simulator;
 
 import java.time.ZonedDateTime;
 
-import org.marceloleite.mercado.simulator.structure.DepositData;
+import org.marceloleite.mercado.simulator.data.DepositData;
 import org.marceloleite.mercado.simulator.temporalcontroller.AbstractTimedObject;
 
 public class Deposit extends AbstractTimedObject {

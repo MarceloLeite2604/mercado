@@ -1,7 +1,7 @@
 package org.marceloleite.mercado.converter.xml;
 
 import org.marceloleite.mercado.commons.Currency;
-import org.marceloleite.mercado.simulator.structure.CurrencyAmountData;
+import org.marceloleite.mercado.simulator.data.CurrencyAmountData;
 import org.marceloleite.mercado.xml.structures.XmlCurrencyAmount;
 
 public class CurrencyAmountXmlConverter implements XmlConverter<XmlCurrencyAmount, CurrencyAmountData> {

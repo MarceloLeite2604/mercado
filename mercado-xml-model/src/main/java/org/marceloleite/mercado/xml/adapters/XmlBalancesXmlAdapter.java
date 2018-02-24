@@ -1,10 +1,10 @@
-package org.marceloleite.mercado.xml.adapter;
+package org.marceloleite.mercado.xml.adapters;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 import org.marceloleite.mercado.commons.Currency;
-import org.marceloleite.mercado.xml.structures.XmlBalances;
 import org.marceloleite.mercado.xml.structures.XmlBalanceEntryList;
+import org.marceloleite.mercado.xml.structures.XmlBalances;
 import org.marceloleite.mercado.xml.structures.XmlCurrencyAmount;
 
 public class XmlBalancesXmlAdapter extends XmlAdapter<XmlBalanceEntryList, XmlBalances> {

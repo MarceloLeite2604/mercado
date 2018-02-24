@@ -50,17 +50,13 @@ public class HouseSimulationThread extends Thread {
 			if (!isFinished()) {
 				house.executeTemporalEvents(temporalTickersPOByTimeInterval);
 			}
-			/*LOGGER.info("Releasing udpate semaphore.");*/
 			updateSemaphore.release();
-			/*LOGGER.info("Semaphore update released.");*/
 		}
 	}
 
 	private void aquireSemaphore() {
 		try {
-			/*LOGGER.info("Acquiring run simulation semaphore.");*/
 			runSimulationSemaphore.acquire();
-			/*LOGGER.info("Run simulatiom semaphore acquired.");*/
 		} catch (InterruptedException exception) {
 			throw new RuntimeException(exception);
 		}
