@@ -11,10 +11,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import org.marceloleite.mercado.base.model.Trade;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeDivisionController;
 import org.marceloleite.mercado.commons.TimeInterval;
-import org.marceloleite.mercado.simulator.Trade;
 import org.marceloleite.mercado.siteretriever.AbstractSiteRetriever;
 
 public class TradesSiteRetriever extends AbstractSiteRetriever {

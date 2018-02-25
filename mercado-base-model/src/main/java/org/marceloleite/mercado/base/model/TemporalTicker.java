@@ -1,4 +1,4 @@
-package org.marceloleite.mercado.simulator;
+package org.marceloleite.mercado.base.model;
 
 import java.time.Duration;
 import java.time.ZonedDateTime;

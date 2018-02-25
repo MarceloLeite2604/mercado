@@ -11,10 +11,11 @@ import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.marceloleite.mercado.base.model.TemporalTicker;
+import org.marceloleite.mercado.base.model.data.AccountData;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.retriever.TemporalTickerRetriever;
-import org.marceloleite.mercado.simulator.data.AccountData;
 import org.marceloleite.mercado.simulator.order.BuyOrderBuilder.BuyOrder;
 import org.marceloleite.mercado.simulator.order.OrderExecutor;
 import org.marceloleite.mercado.simulator.order.OrderStatus;

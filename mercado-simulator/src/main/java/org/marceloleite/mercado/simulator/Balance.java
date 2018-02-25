@@ -1,13 +1,13 @@
 package org.marceloleite.mercado.simulator;
 
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Optional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.marceloleite.mercado.base.model.data.BalanceData;
 import org.marceloleite.mercado.commons.Currency;
-import org.marceloleite.mercado.simulator.data.BalanceData;
-import org.marceloleite.mercado.simulator.data.CurrencyAmountData;
 
 public class Balance extends EnumMap<Currency, CurrencyAmount> {
 
@@ -19,11 +19,12 @@ public class Balance extends EnumMap<Currency, CurrencyAmount> {
 		super(Currency.class);
 	}
 
-	public Balance(BalanceData balanceData) {
+	public Balance(List<BalanceData> balanceDatas) {
 		super(Currency.class);
 
-		for (CurrencyAmountData currencyAmount : balanceData.values()) {
-			put(currencyAmount.getCurrency(), new CurrencyAmount(currencyAmount));
+		for (BalanceData balanceData : balanceDatas) {
+			CurrencyAmount currencyAmount = new CurrencyAmount(balanceData.getCurrency(), balanceData.getAmount());
+			put(balanceData.getCurrency(), currencyAmount);
 		}
 	}
 

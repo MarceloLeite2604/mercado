@@ -3,14 +3,14 @@ package org.marceloleite.mercado.retriever;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.marceloleite.mercado.base.model.TemporalTicker;
+import org.marceloleite.mercado.base.model.Trade;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.TradeType;
 import org.marceloleite.mercado.databasemodel.TradePO;
 import org.marceloleite.mercado.databaseretriever.persistence.dao.TradeDAO;
 import org.marceloleite.mercado.retriever.filter.TradeTypeFilter;
-import org.marceloleite.mercado.simulator.TemporalTicker;
-import org.marceloleite.mercado.simulator.Trade;
 
 public class TemporalTickerCreator {
 	

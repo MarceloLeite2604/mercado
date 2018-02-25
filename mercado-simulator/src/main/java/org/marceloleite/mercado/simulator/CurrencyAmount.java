@@ -1,9 +1,9 @@
 package org.marceloleite.mercado.simulator;
 
+import org.marceloleite.mercado.base.model.data.CurrencyAmountData;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.util.DigitalCurrencyFormatter;
 import org.marceloleite.mercado.commons.util.NonDigitalCurrencyFormatter;
-import org.marceloleite.mercado.simulator.data.CurrencyAmountData;
 
 public class CurrencyAmount {
 

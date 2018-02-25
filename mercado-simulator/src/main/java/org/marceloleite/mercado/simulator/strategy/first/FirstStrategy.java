@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.marceloleite.mercado.base.model.TemporalTicker;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.OrderType;
 import org.marceloleite.mercado.commons.TimeInterval;
@@ -15,7 +16,6 @@ import org.marceloleite.mercado.simulator.Balance;
 import org.marceloleite.mercado.simulator.CurrencyAmount;
 import org.marceloleite.mercado.simulator.House;
 import org.marceloleite.mercado.simulator.MathUtils;
-import org.marceloleite.mercado.simulator.TemporalTicker;
 import org.marceloleite.mercado.simulator.TemporalTickerVariation;
 import org.marceloleite.mercado.simulator.order.BuyOrderBuilder;
 import org.marceloleite.mercado.simulator.order.BuyOrderBuilder.BuyOrder;

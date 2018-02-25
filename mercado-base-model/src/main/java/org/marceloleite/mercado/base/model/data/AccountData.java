@@ -1,15 +1,12 @@
-package org.marceloleite.mercado.simulator.data;
+package org.marceloleite.mercado.base.model.data;
 
 import java.util.List;
-import java.util.Map;
-
-import org.marceloleite.mercado.commons.Currency;
 
 public class AccountData {
 
 	private String owner;
 
-	private BalanceData balanceData;
+	private List<BalanceData> balanceDatas;
 
 	private List<DepositData> depositDatas;
 
@@ -17,18 +14,18 @@ public class AccountData {
 
 	private List<SellOrderData> sellOrderDatas;
 
-	private Map<Currency, List<String>> currenciesStrategies;
+	private List<StrategyData> strategyDatas;
 
-	public AccountData(String owner, BalanceData balanceData, List<DepositData> depositsData,
+	public AccountData(String owner, List<BalanceData> balanceDatas, List<DepositData> depositsData,
 			List<BuyOrderData> buyOrdersData, List<SellOrderData> sellOrdersData,
-			Map<Currency, List<String>> currenciesStrategies) {
+			List<StrategyData> strategyDatas) {
 		super();
 		this.owner = owner;
-		this.balanceData = balanceData;
+		this.balanceDatas = balanceDatas;
 		this.depositDatas = depositsData;
 		this.buyOrderDatas = buyOrdersData;
 		this.sellOrderDatas = sellOrdersData;
-		this.currenciesStrategies = currenciesStrategies;
+		this.strategyDatas = strategyDatas;
 	}
 
 	public AccountData() {
@@ -43,12 +40,12 @@ public class AccountData {
 		this.owner = owner;
 	}
 
-	public BalanceData getBalanceData() {
-		return balanceData;
+	public List<BalanceData> getBalanceDatas() {
+		return balanceDatas;
 	}
 
-	public void setBalanceData(BalanceData balanceData) {
-		this.balanceData = balanceData;
+	public void setBalanceDatas(List<BalanceData> balanceDatas) {
+		this.balanceDatas = balanceDatas;
 	}
 
 	public List<DepositData> getDepositDatas() {
@@ -75,11 +72,11 @@ public class AccountData {
 		this.sellOrderDatas = sellOrderDatas;
 	}
 
-	public Map<Currency, List<String>> getCurrenciesStrategies() {
-		return currenciesStrategies;
+	public List<StrategyData> getStrategyDatas() {
+		return strategyDatas;
 	}
 
-	public void setCurrenciesStrategies(Map<Currency, List<String>> currenciesStrategies) {
-		this.currenciesStrategies = currenciesStrategies;
+	public void setStrategyDatas(List<StrategyData> strategyDatas) {
+		this.strategyDatas = strategyDatas;
 	}
 }

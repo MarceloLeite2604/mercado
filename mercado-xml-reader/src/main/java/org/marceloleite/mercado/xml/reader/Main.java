@@ -1,7 +1,6 @@
 package org.marceloleite.mercado.xml.reader;
 
 import java.io.File;
-import java.time.ZonedDateTime;
 import java.util.Arrays;
 
 import javax.xml.bind.JAXBContext;

@@ -12,6 +12,7 @@ import java.util.concurrent.Semaphore;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.marceloleite.mercado.base.model.TemporalTicker;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeDivisionController;
 import org.marceloleite.mercado.commons.TimeInterval;

@@ -3,13 +3,13 @@ package org.marceloleite.mercado.siteretriever;
 import java.time.ZonedDateTime;
 import java.util.Map;
 
+import org.marceloleite.mercado.base.model.Trade;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.util.ZonedDateTimeUtils;
 import org.marceloleite.mercado.commons.util.converter.ObjectToJsonConverter;
 import org.marceloleite.mercado.jsonmodel.api.data.JsonOrderbook;
 import org.marceloleite.mercado.jsonmodel.api.data.JsonTicker;
-import org.marceloleite.mercado.simulator.Trade;
 import org.marceloleite.mercado.siteretriever.trades.TradesSiteRetriever;
 
 public class Main {

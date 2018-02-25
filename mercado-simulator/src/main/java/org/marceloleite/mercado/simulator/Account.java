@@ -7,13 +7,15 @@ import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.marceloleite.mercado.base.model.data.AccountData;
+import org.marceloleite.mercado.base.model.data.BuyOrderData;
+import org.marceloleite.mercado.base.model.data.DepositData;
+import org.marceloleite.mercado.base.model.data.SellOrderData;
+import org.marceloleite.mercado.base.model.data.StrategyClassData;
+import org.marceloleite.mercado.base.model.data.StrategyData;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.simulator.converter.CurrencyAmountToStringConverter;
-import org.marceloleite.mercado.simulator.data.AccountData;
-import org.marceloleite.mercado.simulator.data.BuyOrderData;
-import org.marceloleite.mercado.simulator.data.DepositData;
-import org.marceloleite.mercado.simulator.data.SellOrderData;
 import org.marceloleite.mercado.simulator.order.BuyOrderBuilder;
 import org.marceloleite.mercado.simulator.order.BuyOrderBuilder.BuyOrder;
 import org.marceloleite.mercado.simulator.order.SellOrderBuilder.SellOrder;
@@ -52,7 +54,7 @@ public class Account {
 	public Account(AccountData accountData) {
 		super();
 		this.owner = accountData.getOwner();
-		this.balance = new Balance(accountData.getBalanceData());
+		this.balance = new Balance(accountData.getBalanceDatas());
 		this.depositsTemporalController = createDepositsTemporalController(accountData);
 		this.buyOrdersTemporalController = createBuyOrdersTemporalController(accountData);
 		this.sellOrdersTemporalController = createSellOrdersTemporalController(accountData);
@@ -82,7 +84,8 @@ public class Account {
 		for (BuyOrderData buyOrderData : accountData.getBuyOrderDatas()) {
 			CurrencyAmount currencyAmountToBuy = new CurrencyAmount(buyOrderData.getCurrencyAmountToBuy());
 			CurrencyAmount currencyAmountToPay = new CurrencyAmount(buyOrderData.getCurrencyAmountToPay());
-			BuyOrder buyOrder = buyOrderBuilder.toExecuteOn(buyOrderData.getTime()).buying(currencyAmountToBuy).paying(currencyAmountToPay).build();
+			BuyOrder buyOrder = buyOrderBuilder.toExecuteOn(buyOrderData.getTime()).buying(currencyAmountToBuy)
+					.paying(currencyAmountToPay).build();
 			buyOrders.add(buyOrder);
 		}
 		return buyOrders;
@@ -96,22 +99,22 @@ public class Account {
 
 		return sellOrders;
 	}
-	
+
 	private Map<Currency, List<Strategy>> createCurrenciesStrategies(AccountData accountData) {
-		Map<Currency, List<String>> currenciesStrategyClassnames = accountData.getCurrenciesStrategies();
 		Map<Currency, List<Strategy>> currenciesStrategies = new EnumMap<Currency, List<Strategy>>(Currency.class);
 		StrategyLoader strategyLoader = new StrategyLoader();
-		if (currenciesStrategyClassnames != null && !currenciesStrategyClassnames.isEmpty()) {
-			for (Currency currency : currenciesStrategyClassnames.keySet()) {
-				List<String> strategiesClassNames = currenciesStrategyClassnames.get(currency);
-				if ( strategiesClassNames != null && !strategiesClassNames.isEmpty()) {
-					List<Strategy> strategies = new ArrayList<>();
-					for (String strategyClassName : strategiesClassNames) {
-						Strategy strategy = strategyLoader.load(strategyClassName.trim(), currency);
-						strategies.add(strategy);
-					}
-					currenciesStrategies.put(currency, strategies);
+
+		List<StrategyData> strategyDatas = accountData.getStrategyDatas();
+		if (strategyDatas != null && !strategyDatas.isEmpty()) {
+			for (StrategyData strategyData : strategyDatas) {
+				List<Strategy> strategies = new ArrayList<>();
+				List<StrategyClassData> strategyClassDatas = strategyData.getStrategyClassDatas();
+				Currency currency = strategyData.getCurrency();
+				for (StrategyClassData strategyClassData : strategyClassDatas) {
+					Strategy strategy = strategyLoader.load(strategyClassData.getClassName().trim(), currency);
+					strategies.add(strategy);
 				}
+				currenciesStrategies.put(currency, strategies);
 			}
 		}
 		return currenciesStrategies;

@@ -3,6 +3,9 @@ package org.marceloleite.mercado.databasemodel;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
+import javax.persistence.ManyToOne;
 
 @Entity(name="STRATEGIES_PARAMETERS")
 public class StrategyParameterPO implements PersistenceObject<StrategyParameterIdPO>{
@@ -10,8 +13,13 @@ public class StrategyParameterPO implements PersistenceObject<StrategyParameterI
 	@EmbeddedId
 	private StrategyParameterIdPO strategyParameterIdPO;
 	
-	@Column(name="PARAMETER_VALUE")
+	@Column(name="VALUE")
 	private String value;
+	
+	@ManyToOne
+	@JoinColumns({ @JoinColumn(name = "STRA_ACCO_OWNER", referencedColumnName = "ACCO_OWNER"),
+			@JoinColumn(name = "STRA_CURRENCY", referencedColumnName = "CURRENCY") })
+	private StrategyPO strategyPO;
 
 	@Override
 	public Class<?> getEntityClass() {

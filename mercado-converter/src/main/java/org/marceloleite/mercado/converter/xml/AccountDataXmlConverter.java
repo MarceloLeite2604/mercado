@@ -1,16 +1,14 @@
 package org.marceloleite.mercado.converter.xml;
 
 import java.util.ArrayList;
-import java.util.EnumMap;
 import java.util.List;
-import java.util.Map;
 
-import org.marceloleite.mercado.commons.Currency;
-import org.marceloleite.mercado.simulator.data.AccountData;
-import org.marceloleite.mercado.simulator.data.BalanceData;
-import org.marceloleite.mercado.simulator.data.BuyOrderData;
-import org.marceloleite.mercado.simulator.data.DepositData;
-import org.marceloleite.mercado.simulator.data.SellOrderData;
+import org.marceloleite.mercado.base.model.data.AccountData;
+import org.marceloleite.mercado.base.model.data.BalanceData;
+import org.marceloleite.mercado.base.model.data.BuyOrderData;
+import org.marceloleite.mercado.base.model.data.DepositData;
+import org.marceloleite.mercado.base.model.data.SellOrderData;
+import org.marceloleite.mercado.base.model.data.StrategyData;
 import org.marceloleite.mercado.xml.structures.XmlAccount;
 import org.marceloleite.mercado.xml.structures.XmlBalances;
 import org.marceloleite.mercado.xml.structures.XmlBuyOrder;
@@ -29,7 +27,7 @@ public class AccountDataXmlConverter implements XmlConverter<XmlAccount, Account
 	public AccountData convertToObject(XmlAccount xmlAccount) {
 		String owner = xmlAccount.getOwner();
 		XmlBalances xmlBalances = xmlAccount.getXmlBalances();
-		BalanceData balanceData = new BalanceXmlConverter().convertToObject(xmlBalances);
+		List<BalanceData> balanceDatas = new BalanceXmlConverter().convertToObject(xmlBalances);
 		List<XmlBuyOrder> xmlBuyOrders = xmlAccount.getXmlBuyOrders();
 		List<BuyOrderData> buyOrdersData = createBuyOrders(xmlBuyOrders);
 		List<XmlSellOrder> xmlSellOrders = xmlAccount.getXmlSellOrders();
@@ -37,19 +35,20 @@ public class AccountDataXmlConverter implements XmlConverter<XmlAccount, Account
 		List<XmlDeposit> xmlDeposits = xmlAccount.getXmlDeposits();
 		List<DepositData> depositsData = createDeposits(xmlDeposits);
 		List<XmlStrategy> xmlStrategies = xmlAccount.getXmlStrategies();
-		Map<Currency, List<String>> currenciesStrategies = createCurrenciesStrategies(xmlStrategies);
+		List<StrategyData> strategyDatas = createCurrenciesStrategies(xmlStrategies);
 
-		AccountData account = new AccountData(owner, balanceData, depositsData, buyOrdersData, sellOrdersData, currenciesStrategies);
+		AccountData account = new AccountData(owner, balanceDatas, depositsData, buyOrdersData, sellOrdersData, strategyDatas);
 		return account;
 	}
 
-	private Map<Currency, List<String>> createCurrenciesStrategies(List<XmlStrategy> xmlStrategies) {
-		Map<Currency, List<String>> currenciesStrategies = new EnumMap<Currency, List<String>>(Currency.class);
+	private List<StrategyData> createCurrenciesStrategies(List<XmlStrategy> xmlStrategies) {
+		StrategyDataXmlConverter strategyDataXmlConverter = new StrategyDataXmlConverter();
+		List<StrategyData> strategyDatas = new ArrayList<>();
 		for (XmlStrategy xmlStrategy : xmlStrategies) {
-			Currency currency = xmlStrategy.getCurrency();
-			currenciesStrategies.put(currency, xmlStrategy.getClassNames());
+			StrategyData strategyData = strategyDataXmlConverter.convertToObject(xmlStrategy);
+			strategyDatas.add(strategyData);
 		}
-		return currenciesStrategies;
+		return strategyDatas;
 	}
 
 	private List<SellOrderData> createSellOrders(List<XmlSellOrder> xmlSellOrders) {

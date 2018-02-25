@@ -3,11 +3,11 @@ package org.marceloleite.mercado.simulator.order;
 import java.time.ZonedDateTime;
 import java.util.Map;
 
+import org.marceloleite.mercado.base.model.data.SellOrderData;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.databasemodel.TemporalTickerPO;
 import org.marceloleite.mercado.simulator.CurrencyAmount;
-import org.marceloleite.mercado.simulator.data.SellOrderData;
 import org.marceloleite.mercado.simulator.temporalcontroller.AbstractTimedObject;
 
 public class OldSellOrder extends AbstractTimedObject {

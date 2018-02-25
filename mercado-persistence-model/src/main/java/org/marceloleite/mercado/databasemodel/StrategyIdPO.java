@@ -5,16 +5,18 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
+import org.marceloleite.mercado.commons.Currency;
+
 @Embeddable
 public class StrategyIdPO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	@Column(name = "ACCOUNT_OWNER", nullable = false)
+	@Column(name = "ACCO_OWNER", nullable = false)
 	private String accountOwner;
 
-	@Column(name = "STRATEGY_NAME", nullable = false)
-	private String name;
+	@Column(name = "CURRENCY", nullable = false)
+	private Currency currency;
 
 	public String getAccountOwner() {
 		return accountOwner;
@@ -24,12 +26,12 @@ public class StrategyIdPO implements Serializable {
 		this.accountOwner = accountOwner;
 	}
 
-	public String getName() {
-		return name;
+	public Currency getCurrency() {
+		return currency;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setCurrency(Currency currency) {
+		this.currency = currency;
 	}
 
 	@Override
@@ -37,7 +39,7 @@ public class StrategyIdPO implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((accountOwner == null) ? 0 : accountOwner.hashCode());
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((currency == null) ? 0 : currency.hashCode());
 		return result;
 	}
 
@@ -55,10 +57,10 @@ public class StrategyIdPO implements Serializable {
 				return false;
 		} else if (!accountOwner.equals(other.accountOwner))
 			return false;
-		if (name == null) {
-			if (other.name != null)
+		if (currency == null) {
+			if (other.currency != null)
 				return false;
-		} else if (!name.equals(other.name))
+		} else if (!currency.equals(other.currency))
 			return false;
 		return true;
 	}

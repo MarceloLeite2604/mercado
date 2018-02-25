@@ -1,15 +1,15 @@
 package org.marceloleite.mercado.converter.entity;
 
+import org.marceloleite.mercado.base.model.Ticker;
 import org.marceloleite.mercado.commons.util.converter.Converter;
-import org.marceloleite.mercado.database.data.structure.TickerDataModel;
 import org.marceloleite.mercado.databasemodel.TickerIdPO;
 import org.marceloleite.mercado.databasemodel.TickerPO;
 
-public class TickerPOToTickerDataModelConverter implements Converter<TickerPO, TickerDataModel>{
+public class TickerPOToTickerDataModelConverter implements Converter<TickerPO, Ticker>{
 
 	@Override
-	public TickerDataModel convertTo(TickerPO tickerPO) {
-		TickerDataModel tickerDataModel = new TickerDataModel();
+	public Ticker convertTo(TickerPO tickerPO) {
+		Ticker tickerDataModel = new Ticker();
 		TickerIdPO tickerIdPO = tickerPO.getTickerIdPO();
 		tickerDataModel.setCurrency(tickerIdPO.getCurrency());
 		tickerDataModel.setTime(tickerIdPO.getTime());
@@ -23,7 +23,7 @@ public class TickerPOToTickerDataModelConverter implements Converter<TickerPO, T
 	}
 
 	@Override
-	public TickerPO convertFrom(TickerDataModel tickerDataModel) {
+	public TickerPO convertFrom(Ticker tickerDataModel) {
 		TickerPO tickerPO = new TickerPO();
 		TickerIdPO tickerIdPO = new TickerIdPO();
 		tickerIdPO.setCurrency(tickerDataModel.getCurrency());
