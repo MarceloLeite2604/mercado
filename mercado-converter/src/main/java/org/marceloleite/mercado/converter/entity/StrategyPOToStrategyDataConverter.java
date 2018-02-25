@@ -8,12 +8,12 @@ import org.marceloleite.mercado.base.model.data.StrategyData;
 import org.marceloleite.mercado.base.model.data.StrategyParameterData;
 import org.marceloleite.mercado.base.model.data.StrategyVariableData;
 import org.marceloleite.mercado.commons.util.converter.Converter;
-import org.marceloleite.mercado.databasemodel.StrategyClassIdPO;
-import org.marceloleite.mercado.databasemodel.StrategyClassPO;
-import org.marceloleite.mercado.databasemodel.StrategyIdPO;
-import org.marceloleite.mercado.databasemodel.StrategyPO;
-import org.marceloleite.mercado.databasemodel.StrategyParameterPO;
-import org.marceloleite.mercado.databasemodel.StrategyVariablePO;
+import org.marceloleite.mercado.databaseretriever.persistence.objects.StrategyClassIdPO;
+import org.marceloleite.mercado.databaseretriever.persistence.objects.StrategyClassPO;
+import org.marceloleite.mercado.databaseretriever.persistence.objects.StrategyIdPO;
+import org.marceloleite.mercado.databaseretriever.persistence.objects.StrategyPO;
+import org.marceloleite.mercado.databaseretriever.persistence.objects.StrategyParameterPO;
+import org.marceloleite.mercado.databaseretriever.persistence.objects.StrategyVariablePO;
 
 public class StrategyPOToStrategyDataConverter implements Converter<StrategyPO, StrategyData> {
 
@@ -26,7 +26,7 @@ public class StrategyPOToStrategyDataConverter implements Converter<StrategyPO, 
 		strategyData.setStrategyVariableDatas(strategyVariableDatas);
 		List<StrategyClassData> strategyClassDatas = createStrategyClassDatas(strategyPO);
 		strategyData.setStrategyClassDatas(strategyClassDatas);
-		strategyData.setCurrency(strategyPO.getCurrency());
+		strategyData.setCurrency(strategyPO.getStrategyIdPO().getCurrency());
 		return strategyData;
 	}
 

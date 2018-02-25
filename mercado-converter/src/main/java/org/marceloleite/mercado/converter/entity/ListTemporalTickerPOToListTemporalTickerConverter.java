@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.marceloleite.mercado.base.model.TemporalTicker;
 import org.marceloleite.mercado.commons.util.converter.Converter;
-import org.marceloleite.mercado.databasemodel.TemporalTickerPO;
+import org.marceloleite.mercado.databaseretriever.persistence.objects.TemporalTickerPO;
 
 public class ListTemporalTickerPOToListTemporalTickerConverter implements Converter<List<TemporalTickerPO>, List<TemporalTicker>>{
 

@@ -9,8 +9,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Query;
 
-import org.marceloleite.mercado.databasemodel.PersistenceObject;
 import org.marceloleite.mercado.databaseretriever.persistence.EntityManagerController;
+import org.marceloleite.mercado.databaseretriever.persistence.objects.PersistenceObject;
 import org.marceloleite.mercado.databaseretriever.util.JpaOperation;
 
 public abstract class AbstractDAO<E extends PersistenceObject<?>> implements DataAccessObject<E> {

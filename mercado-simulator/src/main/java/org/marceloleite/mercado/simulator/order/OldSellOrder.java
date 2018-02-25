@@ -6,7 +6,7 @@ import java.util.Map;
 import org.marceloleite.mercado.base.model.data.SellOrderData;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
-import org.marceloleite.mercado.databasemodel.TemporalTickerPO;
+import org.marceloleite.mercado.databaseretriever.persistence.objects.TemporalTickerPO;
 import org.marceloleite.mercado.simulator.CurrencyAmount;
 import org.marceloleite.mercado.simulator.temporalcontroller.AbstractTimedObject;
 

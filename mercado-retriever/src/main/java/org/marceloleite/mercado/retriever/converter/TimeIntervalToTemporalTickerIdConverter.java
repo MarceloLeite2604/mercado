@@ -2,7 +2,7 @@ package org.marceloleite.mercado.retriever.converter;
 
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.util.converter.Converter;
-import org.marceloleite.mercado.databasemodel.TemporalTickerIdPO;
+import org.marceloleite.mercado.databaseretriever.persistence.objects.TemporalTickerIdPO;
 
 public class TimeIntervalToTemporalTickerIdConverter implements Converter<TimeInterval, TemporalTickerIdPO> {
 

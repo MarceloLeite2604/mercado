@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.marceloleite.mercado.commons.ClassCastExceptionThrower;
-import org.marceloleite.mercado.databasemodel.Entity;
-import org.marceloleite.mercado.databasemodel.PersistenceObject;
-import org.marceloleite.mercado.databasemodel.PropertyPO;
+import org.marceloleite.mercado.databaseretriever.persistence.objects.Entity;
+import org.marceloleite.mercado.databaseretriever.persistence.objects.PersistenceObject;
+import org.marceloleite.mercado.databaseretriever.persistence.objects.PropertyPO;
 
 public class PropertyDAO extends AbstractDAO<PropertyPO> {
 

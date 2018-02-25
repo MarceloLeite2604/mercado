@@ -2,7 +2,7 @@ package org.marceloleite.mercado.retriever.temporalticker;
 
 import java.util.Comparator;
 
-import org.marceloleite.mercado.databasemodel.TemporalTickerPO;
+import org.marceloleite.mercado.databaseretriever.persistence.objects.TemporalTickerPO;
 
 public class TemporalTickersComparator implements Comparator<TemporalTickerPO> {
 

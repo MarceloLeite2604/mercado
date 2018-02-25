@@ -6,8 +6,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
 import org.marceloleite.mercado.commons.TimeInterval;
-import org.marceloleite.mercado.databasemodel.Entity;
 import org.marceloleite.mercado.databaseretriever.persistence.EntityManagerController;
+import org.marceloleite.mercado.databaseretriever.persistence.objects.Entity;
 
 public class TradesDatabaseUtils {
 

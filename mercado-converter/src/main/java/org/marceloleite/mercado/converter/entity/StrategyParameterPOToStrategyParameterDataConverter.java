@@ -3,8 +3,8 @@ package org.marceloleite.mercado.converter.entity;
 import org.marceloleite.mercado.base.model.data.StrategyData;
 import org.marceloleite.mercado.base.model.data.StrategyParameterData;
 import org.marceloleite.mercado.commons.util.converter.Converter;
-import org.marceloleite.mercado.databasemodel.StrategyParameterIdPO;
-import org.marceloleite.mercado.databasemodel.StrategyParameterPO;
+import org.marceloleite.mercado.databaseretriever.persistence.objects.StrategyParameterIdPO;
+import org.marceloleite.mercado.databaseretriever.persistence.objects.StrategyParameterPO;
 
 public class StrategyParameterPOToStrategyParameterDataConverter
 		implements Converter<StrategyParameterPO, StrategyParameterData> {

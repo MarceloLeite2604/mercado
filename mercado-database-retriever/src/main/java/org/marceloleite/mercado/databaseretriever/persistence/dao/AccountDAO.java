@@ -1,8 +1,8 @@
 package org.marceloleite.mercado.databaseretriever.persistence.dao;
 
 import org.marceloleite.mercado.commons.ClassCastExceptionThrower;
-import org.marceloleite.mercado.databasemodel.AccountPO;
-import org.marceloleite.mercado.databasemodel.PersistenceObject;
+import org.marceloleite.mercado.databaseretriever.persistence.objects.AccountPO;
+import org.marceloleite.mercado.databaseretriever.persistence.objects.PersistenceObject;
 
 public class AccountDAO extends AbstractDAO<AccountPO> {
 

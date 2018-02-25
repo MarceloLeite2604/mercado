@@ -2,8 +2,8 @@ package org.marceloleite.mercado.converter.entity;
 
 import org.marceloleite.mercado.base.model.Ticker;
 import org.marceloleite.mercado.commons.util.converter.Converter;
-import org.marceloleite.mercado.databasemodel.TickerIdPO;
-import org.marceloleite.mercado.databasemodel.TickerPO;
+import org.marceloleite.mercado.databaseretriever.persistence.objects.TickerIdPO;
+import org.marceloleite.mercado.databaseretriever.persistence.objects.TickerPO;
 
 public class TickerPOToTickerDataModelConverter implements Converter<TickerPO, Ticker>{
 

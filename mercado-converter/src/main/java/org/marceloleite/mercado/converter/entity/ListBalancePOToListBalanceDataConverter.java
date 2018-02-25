@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.marceloleite.mercado.base.model.data.BalanceData;
 import org.marceloleite.mercado.commons.util.converter.Converter;
-import org.marceloleite.mercado.databasemodel.BalancePO;
+import org.marceloleite.mercado.databaseretriever.persistence.objects.BalancePO;
 
 public class ListBalancePOToListBalanceDataConverter implements Converter<List<BalancePO>, List<BalanceData>>{
 

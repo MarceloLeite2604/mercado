@@ -2,8 +2,8 @@ package org.marceloleite.mercado.converter.json.api.data;
 
 import java.util.List;
 
+import org.marceloleite.mercado.base.model.Offer;
 import org.marceloleite.mercado.commons.util.converter.Converter;
-import org.marceloleite.mercado.databasemodel.Offer;
 
 public class OfferConverter implements Converter<List<Double>, Offer> {
 

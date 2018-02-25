@@ -2,7 +2,7 @@ package org.marceloleite.mercado.retriever;
 
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.converter.json.api.data.TickerConverter;
-import org.marceloleite.mercado.databasemodel.TickerPO;
+import org.marceloleite.mercado.databaseretriever.persistence.objects.TickerPO;
 import org.marceloleite.mercado.jsonmodel.api.data.JsonTicker;
 import org.marceloleite.mercado.siteretriever.TickerSiteRetriever;
 
