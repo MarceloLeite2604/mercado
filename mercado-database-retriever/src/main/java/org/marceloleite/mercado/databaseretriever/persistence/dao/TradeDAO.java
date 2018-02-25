@@ -9,11 +9,11 @@ import java.util.Map;
 import org.marceloleite.mercado.commons.ClassCastExceptionThrower;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TradeType;
-import org.marceloleite.mercado.databasemodel.Entity;
-import org.marceloleite.mercado.databasemodel.PersistenceObject;
-import org.marceloleite.mercado.databasemodel.TradePO;
-import org.marceloleite.mercado.databasemodel.converter.CurrencyAttributeConverter;
-import org.marceloleite.mercado.databasemodel.converter.TradeTypeAttributeConverter;
+import org.marceloleite.mercado.databaseretriever.persistence.converters.CurrencyAttributeConverter;
+import org.marceloleite.mercado.databaseretriever.persistence.converters.TradeTypeAttributeConverter;
+import org.marceloleite.mercado.databaseretriever.persistence.objects.Entity;
+import org.marceloleite.mercado.databaseretriever.persistence.objects.PersistenceObject;
+import org.marceloleite.mercado.databaseretriever.persistence.objects.TradePO;
 
 public class TradeDAO extends AbstractDAO<TradePO> {
 

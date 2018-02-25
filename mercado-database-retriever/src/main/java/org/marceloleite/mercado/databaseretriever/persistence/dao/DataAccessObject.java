@@ -2,7 +2,7 @@ package org.marceloleite.mercado.databaseretriever.persistence.dao;
 
 import java.util.List;
 
-import org.marceloleite.mercado.databasemodel.PersistenceObject;
+import org.marceloleite.mercado.databaseretriever.persistence.objects.PersistenceObject;
 
 public interface DataAccessObject<E extends PersistenceObject<?>> {
 

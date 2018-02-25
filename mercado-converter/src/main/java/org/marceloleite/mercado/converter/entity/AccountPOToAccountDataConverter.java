@@ -6,9 +6,9 @@ import org.marceloleite.mercado.base.model.data.AccountData;
 import org.marceloleite.mercado.base.model.data.BalanceData;
 import org.marceloleite.mercado.base.model.data.StrategyData;
 import org.marceloleite.mercado.commons.util.converter.Converter;
-import org.marceloleite.mercado.databasemodel.AccountPO;
-import org.marceloleite.mercado.databasemodel.BalancePO;
-import org.marceloleite.mercado.databasemodel.StrategyPO;
+import org.marceloleite.mercado.databaseretriever.persistence.objects.AccountPO;
+import org.marceloleite.mercado.databaseretriever.persistence.objects.BalancePO;
+import org.marceloleite.mercado.databaseretriever.persistence.objects.StrategyPO;
 
 public class AccountPOToAccountDataConverter implements Converter<AccountPO, AccountData> {
 

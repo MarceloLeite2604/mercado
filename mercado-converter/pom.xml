@@ -29,12 +29,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.marceloleite</groupId>
-			<artifactId>mercado-xml-model</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.marceloleite</groupId>
-			<artifactId>mercado-persistence-model</artifactId>
+			<artifactId>mercado-database-retriever</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>

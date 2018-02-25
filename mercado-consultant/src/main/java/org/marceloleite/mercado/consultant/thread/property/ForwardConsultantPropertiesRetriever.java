@@ -4,7 +4,7 @@ import java.time.Duration;
 import java.time.ZonedDateTime;
 
 import org.marceloleite.mercado.consultant.property.ConsultantProperty;
-import org.marceloleite.mercado.databasemodel.TradePO;
+import org.marceloleite.mercado.databaseretriever.persistence.objects.TradePO;
 
 public class ForwardConsultantPropertiesRetriever extends AbstractConsultantThreadPropertiesRetriever {
 

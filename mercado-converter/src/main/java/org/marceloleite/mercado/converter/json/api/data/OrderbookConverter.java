@@ -3,9 +3,9 @@ package org.marceloleite.mercado.converter.json.api.data;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.marceloleite.mercado.base.model.Offer;
+import org.marceloleite.mercado.base.model.Orderbook;
 import org.marceloleite.mercado.commons.util.converter.Converter;
-import org.marceloleite.mercado.databasemodel.Offer;
-import org.marceloleite.mercado.databasemodel.Orderbook;
 import org.marceloleite.mercado.jsonmodel.api.data.JsonOrderbook;
 
 public class OrderbookConverter implements Converter<JsonOrderbook, Orderbook> {

@@ -2,8 +2,8 @@ package org.marceloleite.mercado.converter.entity;
 
 import org.marceloleite.mercado.base.model.data.BalanceData;
 import org.marceloleite.mercado.commons.util.converter.Converter;
-import org.marceloleite.mercado.databasemodel.BalanceIdPO;
-import org.marceloleite.mercado.databasemodel.BalancePO;
+import org.marceloleite.mercado.databaseretriever.persistence.objects.BalanceIdPO;
+import org.marceloleite.mercado.databaseretriever.persistence.objects.BalancePO;
 
 public class BalancePOToBalanceDataConverter implements Converter<BalancePO, BalanceData>{
 

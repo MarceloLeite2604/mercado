@@ -1,7 +1,7 @@
 package org.marceloleite.mercado.api.negotiation.util;
 
-import org.marceloleite.mercado.databasemodel.PropertyPO;
 import org.marceloleite.mercado.databaseretriever.persistence.dao.PropertyDAO;
+import org.marceloleite.mercado.databaseretriever.persistence.objects.PropertyPO;
 
 public class NonceGenerator {
 

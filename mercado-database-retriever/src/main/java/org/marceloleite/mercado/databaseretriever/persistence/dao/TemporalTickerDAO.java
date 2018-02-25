@@ -8,10 +8,10 @@ import java.util.Map;
 import org.marceloleite.mercado.commons.ClassCastExceptionThrower;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeDivisionController;
-import org.marceloleite.mercado.databasemodel.Entity;
-import org.marceloleite.mercado.databasemodel.PersistenceObject;
-import org.marceloleite.mercado.databasemodel.TemporalTickerPO;
-import org.marceloleite.mercado.databasemodel.converter.CurrencyAttributeConverter;
+import org.marceloleite.mercado.databaseretriever.persistence.converters.CurrencyAttributeConverter;
+import org.marceloleite.mercado.databaseretriever.persistence.objects.Entity;
+import org.marceloleite.mercado.databaseretriever.persistence.objects.PersistenceObject;
+import org.marceloleite.mercado.databaseretriever.persistence.objects.TemporalTickerPO;
 
 public class TemporalTickerDAO extends AbstractDAO<TemporalTickerPO> {
 

@@ -17,9 +17,9 @@ import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.converter.datamodel.ListToMapTradeConverter;
 import org.marceloleite.mercado.converter.entity.ListTemporalTickerPOToListTemporalTickerConverter;
 import org.marceloleite.mercado.converter.entity.TemporalTickerPOToTemporalTickerConverter;
-import org.marceloleite.mercado.databasemodel.TemporalTickerIdPO;
-import org.marceloleite.mercado.databasemodel.TemporalTickerPO;
 import org.marceloleite.mercado.databaseretriever.persistence.dao.TemporalTickerDAO;
+import org.marceloleite.mercado.databaseretriever.persistence.objects.TemporalTickerIdPO;
+import org.marceloleite.mercado.databaseretriever.persistence.objects.TemporalTickerPO;
 
 public class TemporalTickerRetriever {
 
