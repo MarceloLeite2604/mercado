@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.marceloleite.mercado.base.model.Trade;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.converter.datamodel.ListToMapTradeConverter;
@@ -14,7 +15,6 @@ import org.marceloleite.mercado.converter.entity.ListTradePOToListTradeConverter
 import org.marceloleite.mercado.databasemodel.TradePO;
 import org.marceloleite.mercado.databaseretriever.persistence.dao.TradeDAO;
 import org.marceloleite.mercado.retriever.database.TradesDatabaseUtils;
-import org.marceloleite.mercado.simulator.Trade;
 import org.marceloleite.mercado.siteretriever.trades.TradesSiteRetriever;
 
 public class TradesRetriever {

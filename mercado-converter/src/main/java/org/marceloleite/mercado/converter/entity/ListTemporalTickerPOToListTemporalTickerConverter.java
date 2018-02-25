@@ -3,9 +3,9 @@ package org.marceloleite.mercado.converter.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.marceloleite.mercado.base.model.TemporalTicker;
 import org.marceloleite.mercado.commons.util.converter.Converter;
 import org.marceloleite.mercado.databasemodel.TemporalTickerPO;
-import org.marceloleite.mercado.simulator.TemporalTicker;
 
 public class ListTemporalTickerPOToListTemporalTickerConverter implements Converter<List<TemporalTickerPO>, List<TemporalTicker>>{
 

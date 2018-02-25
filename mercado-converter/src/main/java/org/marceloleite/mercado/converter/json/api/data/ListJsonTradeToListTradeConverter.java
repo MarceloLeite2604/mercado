@@ -3,9 +3,9 @@ package org.marceloleite.mercado.converter.json.api.data;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.marceloleite.mercado.base.model.Trade;
 import org.marceloleite.mercado.commons.util.converter.Converter;
 import org.marceloleite.mercado.jsonmodel.api.data.JsonTrade;
-import org.marceloleite.mercado.simulator.Trade;
 
 public class ListJsonTradeToListTradeConverter implements Converter<List<JsonTrade>, List<Trade>> {
 

@@ -1,12 +1,11 @@
-package org.marceloleite.mercado.simulator.old;
+package org.marceloleite.mercado.base.model;
 
 import java.time.ZonedDateTime;
 
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TradeType;
-import org.marceloleite.mercado.simulator.Trade;
 
-public class OldTrade {
+public class Trade {
 
 	private Currency currency;
 
@@ -19,21 +18,6 @@ public class OldTrade {
 	private Double price;
 
 	private TradeType tradeType;
-
-	public OldTrade(Currency currency, Long id, Double amount, ZonedDateTime date, Double price, TradeType tradeType) {
-		super();
-		this.currency = currency;
-		this.id = id;
-		this.amount = amount;
-		this.date = date;
-		this.price = price;
-		this.tradeType = tradeType;
-	}
-
-	public OldTrade(Trade trade) {
-		this(trade.getCurrency(), trade.getId(), trade.getAmount(), trade.getDate(),
-				trade.getPrice(), trade.getTradeType());
-	}
 
 	public Currency getCurrency() {
 		return currency;

@@ -2,8 +2,8 @@ package org.marceloleite.mercado.siteretriever.util.checker;
 
 import java.util.List;
 
+import org.marceloleite.mercado.base.model.Trade;
 import org.marceloleite.mercado.commons.interfaces.Check;
-import org.marceloleite.mercado.simulator.Trade;
 
 public class MaxTradesReachedCheck implements Check<List<Trade>>{
 	

@@ -5,27 +5,53 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
+import org.marceloleite.mercado.commons.Currency;
+
 @Embeddable
 public class StrategyVariableIdPO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	@Column(name = "ACCOUNT_OWNER", nullable = false)
+	@Column(name = "STRA_ACCO_OWNER", nullable = false)
 	private String accountOwner;
 
-	@Column(name = "STRATEGY_NAME", nullable = false)
-	private String strategyName;
+	@Column(name = "STRA_CURRENCY", nullable = false)
+	private Currency strategyCurrency;
 
-	@Column(name = "VARIABLE_NAME", nullable = false)
-	private String variableName;
+	@Column(name = "NAME", nullable = false)
+	private String name;
+
+	public String getAccountOwner() {
+		return accountOwner;
+	}
+
+	public void setAccountOwner(String accountOwner) {
+		this.accountOwner = accountOwner;
+	}
+
+	public Currency getStrategyCurrency() {
+		return strategyCurrency;
+	}
+
+	public void setStrategyCurrency(Currency strategyCurrency) {
+		this.strategyCurrency = strategyCurrency;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((accountOwner == null) ? 0 : accountOwner.hashCode());
-		result = prime * result + ((variableName == null) ? 0 : variableName.hashCode());
-		result = prime * result + ((strategyName == null) ? 0 : strategyName.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((strategyCurrency == null) ? 0 : strategyCurrency.hashCode());
 		return result;
 	}
 
@@ -43,40 +69,13 @@ public class StrategyVariableIdPO implements Serializable {
 				return false;
 		} else if (!accountOwner.equals(other.accountOwner))
 			return false;
-		if (variableName == null) {
-			if (other.variableName != null)
+		if (name == null) {
+			if (other.name != null)
 				return false;
-		} else if (!variableName.equals(other.variableName))
+		} else if (!name.equals(other.name))
 			return false;
-		if (strategyName == null) {
-			if (other.strategyName != null)
-				return false;
-		} else if (!strategyName.equals(other.strategyName))
+		if (strategyCurrency != other.strategyCurrency)
 			return false;
 		return true;
-	}
-
-	public String getAccountOwner() {
-		return accountOwner;
-	}
-
-	public void setAccountOwner(String accountOwner) {
-		this.accountOwner = accountOwner;
-	}
-
-	public String getStrategyName() {
-		return strategyName;
-	}
-
-	public void setStrategyName(String strategyName) {
-		this.strategyName = strategyName;
-	}
-
-	public String getVariableName() {
-		return variableName;
-	}
-
-	public void setVariableName(String variableName) {
-		this.variableName = variableName;
 	}
 }

@@ -12,7 +12,7 @@ public class BalanceIdPO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	@Column(name = "ACCOUNT_OWNER", nullable = false)
+	@Column(name = "ACCO_OWNER", nullable = false)
 	private String accountOwner;
 
 	@Column(name = "CURRENCY", nullable = false)

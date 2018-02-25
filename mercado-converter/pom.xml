@@ -34,11 +34,6 @@
 		</dependency>
 		<dependency>
 			<groupId>org.marceloleite</groupId>
-			<artifactId>mercado-database-data-model</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.marceloleite</groupId>
 			<artifactId>mercado-persistence-model</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>

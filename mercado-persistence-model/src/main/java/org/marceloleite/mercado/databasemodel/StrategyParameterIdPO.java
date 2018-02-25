@@ -5,19 +5,21 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
+import org.marceloleite.mercado.commons.Currency;
+
 @Embeddable
 public class StrategyParameterIdPO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	@Column(name = "ACCOUNT_NAME", nullable = false)
+	@Column(name = "STRA_ACCO_OWNER", nullable = false)
 	private String accountOwner;
 
-	@Column(name = "STRATEGY_NAME", nullable = false)
-	private String strategyName;
+	@Column(name = "STRA_CURRENCY", nullable = false)
+	private Currency strategyCurrency;
 
-	@Column(name = "PARAMETER_NAME", nullable = false)
-	private String parameterName;
+	@Column(name = "NAME", nullable = false)
+	private String name;
 
 	public String getAccountOwner() {
 		return accountOwner;
@@ -27,20 +29,20 @@ public class StrategyParameterIdPO implements Serializable {
 		this.accountOwner = accountOwner;
 	}
 
-	public String getStrategyName() {
-		return strategyName;
+	public Currency getStrategyCurrency() {
+		return strategyCurrency;
 	}
 
-	public void setStrategyName(String strategyName) {
-		this.strategyName = strategyName;
+	public void setStrategyCurrency(Currency strategyCurrency) {
+		this.strategyCurrency = strategyCurrency;
 	}
 
-	public String getParameterName() {
-		return parameterName;
+	public String getName() {
+		return name;
 	}
 
-	public void setParameterName(String parameterName) {
-		this.parameterName = parameterName;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	@Override
@@ -48,8 +50,8 @@ public class StrategyParameterIdPO implements Serializable {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((accountOwner == null) ? 0 : accountOwner.hashCode());
-		result = prime * result + ((parameterName == null) ? 0 : parameterName.hashCode());
-		result = prime * result + ((strategyName == null) ? 0 : strategyName.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((strategyCurrency == null) ? 0 : strategyCurrency.hashCode());
 		return result;
 	}
 
@@ -67,15 +69,12 @@ public class StrategyParameterIdPO implements Serializable {
 				return false;
 		} else if (!accountOwner.equals(other.accountOwner))
 			return false;
-		if (parameterName == null) {
-			if (other.parameterName != null)
+		if (name == null) {
+			if (other.name != null)
 				return false;
-		} else if (!parameterName.equals(other.parameterName))
+		} else if (!name.equals(other.name))
 			return false;
-		if (strategyName == null) {
-			if (other.strategyName != null)
-				return false;
-		} else if (!strategyName.equals(other.strategyName))
+		if (strategyCurrency != other.strategyCurrency)
 			return false;
 		return true;
 	}

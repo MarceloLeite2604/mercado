@@ -3,6 +3,8 @@ package org.marceloleite.mercado.databasemodel;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity(name = "BALANCES")
 public class BalancePO implements PersistenceObject<BalanceIdPO> {
@@ -10,18 +12,12 @@ public class BalancePO implements PersistenceObject<BalanceIdPO> {
 	@EmbeddedId
 	private BalanceIdPO balanceIdPO;
 
+	@ManyToOne
+	@JoinColumn(name = "ACCO_OWNER")
+	private AccountPO accountPO;
+
 	@Column(name = "AMOUNT", nullable = false)
 	private Double amount;
-
-	@Override
-	public Class<?> getEntityClass() {
-		return BalancePO.class;
-	}
-
-	@Override
-	public BalanceIdPO getId() {
-		return balanceIdPO;
-	}
 
 	public BalanceIdPO getBalanceIdPO() {
 		return balanceIdPO;
@@ -38,4 +34,23 @@ public class BalancePO implements PersistenceObject<BalanceIdPO> {
 	public void setAmount(Double amount) {
 		this.amount = amount;
 	}
+
+	public AccountPO getAccountPO() {
+		return accountPO;
+	}
+
+	public void setAccountPO(AccountPO accountPO) {
+		this.accountPO = accountPO;
+	}
+
+	@Override
+	public Class<?> getEntityClass() {
+		return BalancePO.class;
+	}
+
+	@Override
+	public BalanceIdPO getId() {
+		return balanceIdPO;
+	}
+
 }

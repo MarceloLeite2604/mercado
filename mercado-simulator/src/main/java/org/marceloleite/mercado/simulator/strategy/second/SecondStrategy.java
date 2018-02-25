@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.marceloleite.mercado.base.model.TemporalTicker;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.util.DigitalCurrencyFormatter;
@@ -11,12 +12,12 @@ import org.marceloleite.mercado.commons.util.PercentageFormatter;
 import org.marceloleite.mercado.commons.util.converter.ZonedDateTimeToStringConverter;
 import org.marceloleite.mercado.simulator.Account;
 import org.marceloleite.mercado.simulator.House;
-import org.marceloleite.mercado.simulator.TemporalTicker;
 import org.marceloleite.mercado.simulator.TemporalTickerVariation;
 import org.marceloleite.mercado.simulator.strategy.Strategy;
 
 public class SecondStrategy implements Strategy {
 
+	@SuppressWarnings("unused")
 	private static final Logger LOGGER = LogManager.getLogger(SecondStrategy.class);
 
 	private static final int TOTAL_TIME_INTERVAL_TO_ANALYZE = 10;
@@ -29,7 +30,7 @@ public class SecondStrategy implements Strategy {
 
 	/* B.O.S.O (Buy order sell order) - Ratio between buy and sell orders */ 
 	private CircularArray<Double> bosoCircularArray;
-	private CircularArray<Double> bosoVariationCircularArray;
+	// private CircularArray<Double> bosoVariationCircularArray;
 	
 	private CircularArray<Double> lastFirstRatioCircularArray;
 
@@ -38,7 +39,7 @@ public class SecondStrategy implements Strategy {
 		this.temporalTickerVariationCircularArray = new CircularArray<>(TOTAL_TIME_INTERVAL_TO_ANALYZE);
 		this.temporalTickerCircularArray = new CircularArray<>(TOTAL_TIME_INTERVAL_TO_ANALYZE + 1);
 		this.bosoCircularArray = new CircularArray<>(TOTAL_TIME_INTERVAL_TO_ANALYZE + 1);
-		this.bosoVariationCircularArray = new CircularArray<>(TOTAL_TIME_INTERVAL_TO_ANALYZE);
+		// this.bosoVariationCircularArray = new CircularArray<>(TOTAL_TIME_INTERVAL_TO_ANALYZE);
 		this.lastFirstRatioCircularArray = new CircularArray<>(TOTAL_TIME_INTERVAL_TO_ANALYZE + 1);
 	}
 

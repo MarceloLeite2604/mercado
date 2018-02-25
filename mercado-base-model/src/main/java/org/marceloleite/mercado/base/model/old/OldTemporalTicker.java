@@ -1,10 +1,10 @@
-package org.marceloleite.mercado.simulator.old;
+package org.marceloleite.mercado.base.model.old;
 
 import java.time.Duration;
 import java.time.ZonedDateTime;
 
+import org.marceloleite.mercado.base.model.TemporalTicker;
 import org.marceloleite.mercado.commons.Currency;
-import org.marceloleite.mercado.simulator.TemporalTicker;
 
 public class OldTemporalTicker {
 
