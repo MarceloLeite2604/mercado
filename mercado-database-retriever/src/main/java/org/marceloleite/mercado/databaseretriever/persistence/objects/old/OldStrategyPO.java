@@ -11,71 +11,71 @@ import javax.persistence.OneToMany;
 import org.marceloleite.mercado.databaseretriever.persistence.objects.PersistenceObject;
 
 @Entity(name = "STRATEGIES")
-public class OldStrategyPO implements PersistenceObject<StrategyIdPO> {
+public class OldStrategyPO implements PersistenceObject<OldStrategyIdPO> {
 
 	@EmbeddedId
-	private StrategyIdPO strategyIdPO;
+	private OldStrategyIdPO strategyIdPO;
 
 	@ManyToOne
 	@JoinColumn(name = "ACCO_OWNER", insertable = false, updatable = false)
-	private AccountPO accountPO;
+	private OldAccountPO accountPO;
 
-	@OneToMany(mappedBy="strategyClassPO")
-	private List<ClassParameterPO> strategyParameterPOs;
+	// @OneToMany(mappedBy="strategyClassPO")
+	private List<OldClassParameterPO> strategyParameterPOs;
 
-	@OneToMany(mappedBy="strategyPO")
-	private List<StrategyVariablePO> strategyVariablePOs;
+	// @OneToMany(mappedBy="strategyPO")
+	private List<OldStrategyVariablePO> strategyVariablePOs;
 
-	@OneToMany(mappedBy="strategyPO")
-	private List<StrategyClassPO> stratrategyClassPOs;
+	// @OneToMany(mappedBy="strategyPO")
+	private List<OldStrategyClassPO> stratrategyClassPOs;
 
-	public StrategyIdPO getStrategyIdPO() {
+	public OldStrategyIdPO getStrategyIdPO() {
 		return strategyIdPO;
 	}
 
-	public void setStrategyIdPO(StrategyIdPO strategyIdPO) {
+	public void setStrategyIdPO(OldStrategyIdPO strategyIdPO) {
 		this.strategyIdPO = strategyIdPO;
 	}
 
-	public List<ClassParameterPO> getStrategyParameterPOs() {
+	public List<OldClassParameterPO> getStrategyParameterPOs() {
 		return strategyParameterPOs;
 	}
 
-	public void setStrategyParameterPOs(List<ClassParameterPO> strategyPropertyPOs) {
+	public void setStrategyParameterPOs(List<OldClassParameterPO> strategyPropertyPOs) {
 		this.strategyParameterPOs = strategyPropertyPOs;
 	}
 
-	public List<StrategyVariablePO> getStrategyVariablePOs() {
+	public List<OldStrategyVariablePO> getStrategyVariablePOs() {
 		return strategyVariablePOs;
 	}
 
-	public void setStrategyVariablePOs(List<StrategyVariablePO> strategyVariablePOs) {
+	public void setStrategyVariablePOs(List<OldStrategyVariablePO> strategyVariablePOs) {
 		this.strategyVariablePOs = strategyVariablePOs;
 	}
 
-	public List<StrategyClassPO> getStratrategyClassPOs() {
+	public List<OldStrategyClassPO> getStratrategyClassPOs() {
 		return stratrategyClassPOs;
 	}
 
-	public void setStratrategyClassPOs(List<StrategyClassPO> stratrategyClassPOs) {
+	public void setStratrategyClassPOs(List<OldStrategyClassPO> stratrategyClassPOs) {
 		this.stratrategyClassPOs = stratrategyClassPOs;
 	}
 
-	public AccountPO getAccountPO() {
+	public OldAccountPO getAccountPO() {
 		return accountPO;
 	}
 
-	public void setAccountPO(AccountPO account) {
+	public void setAccountPO(OldAccountPO account) {
 		this.accountPO = account;
 	}
 
 	@Override
 	public Class<?> getEntityClass() {
-		return StrategyPO.class;
+		return OldStrategyPO.class;
 	}
 
 	@Override
-	public StrategyIdPO getId() {
+	public OldStrategyIdPO getId() {
 		return strategyIdPO;
 	}
 }

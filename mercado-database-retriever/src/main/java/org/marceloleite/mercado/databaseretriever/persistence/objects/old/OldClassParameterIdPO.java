@@ -66,7 +66,7 @@ public class OldClassParameterIdPO implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		ClassParameterIdPO other = (ClassParameterIdPO) obj;
+		OldClassParameterIdPO other = (OldClassParameterIdPO) obj;
 		if (accountOwner == null) {
 			if (other.accountOwner != null)
 				return false;

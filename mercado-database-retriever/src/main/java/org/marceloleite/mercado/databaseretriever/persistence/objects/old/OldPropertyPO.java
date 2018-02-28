@@ -43,7 +43,7 @@ public class OldPropertyPO implements PersistenceObject<String> {
 
 	@Override
 	public Class<?> getEntityClass() {
-		return PropertyPO.class;
+		return OldPropertyPO.class;
 	}
 
 	@Override

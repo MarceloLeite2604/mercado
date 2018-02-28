@@ -7,10 +7,10 @@ import javax.persistence.Entity;
 import org.marceloleite.mercado.databaseretriever.persistence.objects.PersistenceObject;
 
 @Entity(name = "TICKERS")
-public class OldTickerPO implements PersistenceObject<TickerIdPO> {
+public class OldTickerPO implements PersistenceObject<OldTickerIdPO> {
 
 	@EmbeddedId
-	private TickerIdPO tickerIdPO;
+	private OldTickerIdPO tickerIdPO;
 
 	@Column(name="HIGH", nullable=false)
 	private double high;
@@ -34,7 +34,7 @@ public class OldTickerPO implements PersistenceObject<TickerIdPO> {
 		super();
 	}
 
-	public OldTickerPO(double high, double low, double vol, double last, double buy, double sell, TickerIdPO tickerIdPO) {
+	public OldTickerPO(double high, double low, double vol, double last, double buy, double sell, OldTickerIdPO tickerIdPO) {
 		super();
 		this.high = high;
 		this.low = low;
@@ -93,21 +93,21 @@ public class OldTickerPO implements PersistenceObject<TickerIdPO> {
 		this.sell = sell;
 	}
 
-	public TickerIdPO getTickerIdPO() {
+	public OldTickerIdPO getTickerIdPO() {
 		return tickerIdPO;
 	}
 
-	public void setTickerIdPO(TickerIdPO tickerIdPO) {
+	public void setTickerIdPO(OldTickerIdPO tickerIdPO) {
 		this.tickerIdPO = tickerIdPO;
 	}
 
 	@Override
 	public Class<?> getEntityClass() {
-		return TickerPO.class;
+		return OldTickerPO.class;
 	}
 
 	@Override
-	public TickerIdPO getId() {
+	public OldTickerIdPO getId() {
 		return tickerIdPO;
 	}
 }

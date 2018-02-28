@@ -17,10 +17,10 @@ public class OldAccountPO implements PersistenceObject<String> {
 	private String owner;
 	
 	@OneToMany(mappedBy="accountPO")
-	private List<BalancePO> balancePOs;
+	private List<OldBalancePO> balancePOs;
 	
 	@OneToMany(mappedBy="accountPO")
-	private List<StrategyPO> strategyPOs;
+	private List<OldStrategyPO> strategyPOs;
 
 	public String getOwner() {
 		return owner;
@@ -32,7 +32,7 @@ public class OldAccountPO implements PersistenceObject<String> {
 
 	@Override
 	public Class<?> getEntityClass() {
-		return AccountPO.class;
+		return OldAccountPO.class;
 	}
 
 	@Override
@@ -40,19 +40,19 @@ public class OldAccountPO implements PersistenceObject<String> {
 		return owner;
 	}
 
-	public List<BalancePO> getBalancePOs() {
+	public List<OldBalancePO> getBalancePOs() {
 		return balancePOs;
 	}
 
-	public void setBalancePOs(List<BalancePO> balancePOs) {
+	public void setBalancePOs(List<OldBalancePO> balancePOs) {
 		this.balancePOs = balancePOs;
 	}
 
-	public List<StrategyPO> getStrategyPOs() {
+	public List<OldStrategyPO> getStrategyPOs() {
 		return strategyPOs;
 	}
 
-	public void setStrategyPOs(List<StrategyPO> strategyPOs) {
+	public void setStrategyPOs(List<OldStrategyPO> strategyPOs) {
 		this.strategyPOs = strategyPOs;
 	}
 }

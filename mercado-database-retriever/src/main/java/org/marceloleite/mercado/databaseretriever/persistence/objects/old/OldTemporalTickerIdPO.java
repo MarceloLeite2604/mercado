@@ -34,7 +34,7 @@ public class OldTemporalTickerIdPO implements Serializable {
 		this.end = end;
 	}
 
-	public OldTemporalTickerIdPO(TemporalTickerIdPO id) {
+	public OldTemporalTickerIdPO(OldTemporalTickerIdPO id) {
 		this(id.getCurrency(), ZonedDateTime.from(id.getStart()), ZonedDateTime.from(id.getEnd()));
 	}
 
@@ -84,7 +84,7 @@ public class OldTemporalTickerIdPO implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		TemporalTickerIdPO other = (TemporalTickerIdPO) obj;
+		OldTemporalTickerIdPO other = (OldTemporalTickerIdPO) obj;
 		if (end == null) {
 			if (other.end != null)
 				return false;

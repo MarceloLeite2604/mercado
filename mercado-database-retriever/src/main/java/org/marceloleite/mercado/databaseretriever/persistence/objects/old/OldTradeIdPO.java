@@ -61,7 +61,7 @@ public class OldTradeIdPO implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		TradeIdPO other = (TradeIdPO) obj;
+		OldTradeIdPO other = (OldTradeIdPO) obj;
 		if (currency != other.currency)
 			return false;
 		if (id == null) {

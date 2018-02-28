@@ -9,11 +9,11 @@ import javax.persistence.ManyToOne;
 
 import org.marceloleite.mercado.databaseretriever.persistence.objects.PersistenceObject;
 
-@Entity(name = "CLASSES_PARAMETERS")
-public class OldClassParameterPO implements PersistenceObject<ClassParameterIdPO> {
+// @Entity(name = "CLASSES_PARAMETERS")
+public class OldClassParameterPO implements PersistenceObject<OldClassParameterIdPO> {
 
 	@EmbeddedId
-	private ClassParameterIdPO strategyParameterIdPO;
+	private OldClassParameterIdPO strategyParameterIdPO;
 
 	@Column(name = "VALUE")
 	private String value;
@@ -23,23 +23,23 @@ public class OldClassParameterPO implements PersistenceObject<ClassParameterIdPO
 			@JoinColumn(name = "STCL_STRA_ACCO_OWNER", referencedColumnName = "STRA_ACCO_OWNER", insertable = false, updatable = false),
 			@JoinColumn(name = "STCL_STRA_CURRENCY", referencedColumnName = "STRA_CURRENCY", insertable = false, updatable = false),
 			@JoinColumn(name = "STCL_CLASS_NAME", referencedColumnName = "CLASS_NAME", insertable = false, updatable = false)})
-	private StrategyClassPO strategyClassPO;
+	private OldStrategyClassPO strategyClassPO;
 
 	@Override
 	public Class<?> getEntityClass() {
-		return ClassParameterPO.class;
+		return OldClassParameterPO.class;
 	}
 
 	@Override
-	public ClassParameterIdPO getId() {
+	public OldClassParameterIdPO getId() {
 		return strategyParameterIdPO;
 	}
 
-	public ClassParameterIdPO getStrategyParameterIdPO() {
+	public OldClassParameterIdPO getStrategyParameterIdPO() {
 		return strategyParameterIdPO;
 	}
 
-	public void setStrategyParameterIdPO(ClassParameterIdPO strategyParameterIdPO) {
+	public void setStrategyParameterIdPO(OldClassParameterIdPO strategyParameterIdPO) {
 		this.strategyParameterIdPO = strategyParameterIdPO;
 	}
 
@@ -51,11 +51,11 @@ public class OldClassParameterPO implements PersistenceObject<ClassParameterIdPO
 		this.value = value;
 	}
 
-	public StrategyClassPO getStrategyClassPO() {
+	public OldStrategyClassPO getStrategyClassPO() {
 		return strategyClassPO;
 	}
 
-	public void setStrategyClassPO(StrategyClassPO strategyClassPO) {
+	public void setStrategyClassPO(OldStrategyClassPO strategyClassPO) {
 		this.strategyClassPO = strategyClassPO;
 	}
 }
