@@ -1,0 +1,38 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev12c class="oracle.dbtools.crest.model.design.storage.oracle.v12c.TableProxyOraclev12c" name="STRATEGIES" directorySegmentName="seg_0" id="964BEE0F-DE43-FB07-DF5A-64BCFFD86287">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:36:23 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+<logging>YES</logging>
+<partitionedRowMovement>DISABLE</partitionedRowMovement>
+<temporaryChanged>false</temporaryChanged>
+<accessDriverType>oracle_loader</accessDriverType>
+<rejectLimit></rejectLimit>
+<columnProxies itemClass="oracle.dbtools.crest.model.design.storage.oracle.v12c.ColumnProxyOraclev12c">
+<ColumnProxy name="CURRENCY" id="6516108B-9CA4-C10B-3607-36DC184D3FBB">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:36:23 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="ACCO_OWNER" id="B4B7919E-33FF-F5B5-FE94-E2B4797F5834">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:36:23 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+</ColumnProxy>
+</columnProxies>
+<foreignKeys>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="STRA_ACCO_FK" id="E785A722-E78F-2A35-9112-E8998B9C51F2">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:36:23 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+</ForeignKey>
+</foreignKeys>
+<primaryKeys>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="STRA_PK" id="A91544AF-5F6E-55BD-01CA-85DC7C6D849C">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:36:23 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+<indexSort>SORTED</indexSort>
+</PrimaryKey>
+</primaryKeys>
+</TableProxyOraclev12c>

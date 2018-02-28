@@ -1,0 +1,119 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="664D8346-0786-3719-9C57-C659C1C0AADD" name="TICKERS">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:01:43 UTC</createdTime>
+<generatorID>BFC9B013-4014-2BD0-B83F-586AAB9BA148</generatorID>
+<ownerDesignName>mercado</ownerDesignName>
+<abbreviation>TICK</abbreviation>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="CURRENCY" id="5493F956-5673-B0A0-7183-D7D7D0536B45">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:01:43 UTC</createdTime>
+<generatorID>FC7DDFA9-F3FA-05B7-62F4-C53013F8FC31</generatorID>
+<ownerDesignName>mercado</ownerDesignName>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>EE73E7A5-75C0-513C-08D9-98E102E9D0D5</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="TICKER_TIME" id="EB91B7D5-930E-8A57-6E85-359B1859AEB4">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:01:43 UTC</createdTime>
+<generatorID>F0C9E9AC-2503-872A-D14F-9878F408571E</generatorID>
+<ownerDesignName>mercado</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT047</logicalDatatype>
+<dataTypePrecision>0</dataTypePrecision>
+<ownDataTypeParameters>,0,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="BUY" id="1AEE98A5-6DBF-3938-7DE5-4B9B51B8BC73">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:01:43 UTC</createdTime>
+<generatorID>875E11CD-ED13-0CC3-1329-2880EC04EBC9</generatorID>
+<ownerDesignName>mercado</ownerDesignName>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>EE73E7A5-75C0-513C-08D9-98E102E9D0D5</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="HIGH" id="9861EEED-5261-4C22-D505-8EE00CA048A9">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:01:43 UTC</createdTime>
+<generatorID>4F7B1003-1401-4378-FA4F-7C1634663AA2</generatorID>
+<ownerDesignName>mercado</ownerDesignName>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>EE73E7A5-75C0-513C-08D9-98E102E9D0D5</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="LAST" id="047028C9-39A3-AD34-372A-28F53F344D9E">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:01:43 UTC</createdTime>
+<generatorID>BBC91F43-A9E4-4C80-BB0C-193EF5FD637E</generatorID>
+<ownerDesignName>mercado</ownerDesignName>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>EE73E7A5-75C0-513C-08D9-98E102E9D0D5</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="LOW" id="AFDD50C7-C924-C8F9-B75A-7D2AE8BB267F">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:01:43 UTC</createdTime>
+<generatorID>0A5AB831-B4F4-D685-C45F-99E84BFEAF5C</generatorID>
+<ownerDesignName>mercado</ownerDesignName>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>EE73E7A5-75C0-513C-08D9-98E102E9D0D5</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="SELL" id="22777DC3-1243-6CDE-9DDE-FEB2156194E9">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:01:43 UTC</createdTime>
+<generatorID>AF56A3EE-C150-5348-D406-1AD26D31DDE7</generatorID>
+<ownerDesignName>mercado</ownerDesignName>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>EE73E7A5-75C0-513C-08D9-98E102E9D0D5</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="VOLUME" id="2F27E9D4-8DA5-B6FF-31C8-F9F9D100B2DA">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:01:43 UTC</createdTime>
+<generatorID>DD955AEB-8868-93D4-9665-29EFB9BD8F19</generatorID>
+<ownerDesignName>mercado</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>20</dataTypePrecision>
+<dataTypeScale>8</dataTypeScale>
+<ownDataTypeParameters>,20,8</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="C10A1E6B-05B5-B35D-840D-57D4717B2B78" name="TICK_PK">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:01:43 UTC</createdTime>
+<generatorID>0F50FB48-5137-F024-C726-5AE76782AFE3</generatorID>
+<ownerDesignName>mercado</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="5493F956-5673-B0A0-7183-D7D7D0536B45"/>
+<colUsage columnID="EB91B7D5-930E-8A57-6E85-359B1859AEB4"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

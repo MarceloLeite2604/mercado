@@ -1,0 +1,116 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev12c class="oracle.dbtools.crest.model.design.storage.oracle.v12c.TableProxyOraclev12c" name="TEMPORAL_TICKERS" directorySegmentName="seg_0" id="D5367265-C1EF-26D2-C14D-13265E3B3528">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:36:23 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+<logging>YES</logging>
+<partitionedRowMovement>DISABLE</partitionedRowMovement>
+<segment>3CFAE22D-AC48-8F25-C5CE-7FB8EC5EF7CD</segment>
+<tableSpace>6341C9FC-4976-C9D6-31F5-4082C3208943</tableSpace>
+<temporaryChanged>false</temporaryChanged>
+<accessDriverType>oracle_loader</accessDriverType>
+<rejectLimit></rejectLimit>
+<columnProxies itemClass="oracle.dbtools.crest.model.design.storage.oracle.v12c.ColumnProxyOraclev12c">
+<ColumnProxy name="FIRST_PRICE" id="0262F3E5-1255-4FC8-8915-17E420AC54B8">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:36:23 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="LAST_PRICE" id="0DF91A39-9D7A-F55A-E50C-C08D9DA65DDB">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:36:23 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="CURRENCY" id="10906703-8679-B406-9602-7F166B3F7FE2">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:36:23 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="ORDERS" id="17267EB9-BDB8-6EEE-019E-690275C3A889">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:36:23 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="TIME_DURATION" id="53FCBB0C-FE81-BD55-DE1A-590EA55F71E7">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:36:23 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="BUY_ORDERS" id="54EB09F9-452A-0E49-E0F4-9C648C13B306">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:36:23 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="START_TIME" id="5C6BE802-96FA-7CAE-1825-419B13A1639C">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:36:23 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="END_TIME" id="6F1FFD5C-0D3E-840C-A0DE-10CD151DDBF0">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:36:23 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="AVERAGE_PRICE" id="74A76D1F-3145-C782-A4E8-8155A82809E6">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:36:23 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="SELL" id="7A63A58D-CED1-F8D3-D644-013586ECD594">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:36:23 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="PREVIOUS_LAST_PRICE" id="7E23CD7D-120D-2C3E-A861-E417392A4FC0">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:36:23 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="SELL_ORDERS" id="8C8F2D5E-3D70-CB57-B538-255915CECEDE">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:36:23 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="BUY" id="92A895AF-4B52-70C6-D3D3-4F4B43076535">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:36:23 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="VALUME_TRADED" id="9A5162A3-34A8-3B42-993F-C254A97AACCB">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:36:23 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="LOWEST_PRICE" id="BD876018-F3E4-7130-94CC-C1B54DEE603B">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:36:23 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="PREVIOUS_BUY" id="BE706862-696C-50A2-342B-0CE67E6C0AEF">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:36:23 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="HIGHEST_PRICE" id="D15AD5EE-1EC7-15AF-F974-BD36E97D6DF5">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:36:23 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="PREVIOUS_SELL" id="FA5DF3CE-2A07-13BE-6B3A-EDA9C1D54F2A">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:36:23 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+</ColumnProxy>
+</columnProxies>
+<primaryKeys>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="TETI_PK" id="A1B3BB0D-7D63-96FE-C129-9F2DE8B41E7B">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:36:23 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+<segment>2F05DDEE-A29D-D09E-F440-ED431AB29944</segment>
+<tableSpace>6341C9FC-4976-C9D6-31F5-4082C3208943</tableSpace>
+<indexSegment>2F05DDEE-A29D-D09E-F440-ED431AB29944</indexSegment>
+<indexSort>SORTED</indexSort>
+</PrimaryKey>
+</primaryKeys>
+</TableProxyOraclev12c>

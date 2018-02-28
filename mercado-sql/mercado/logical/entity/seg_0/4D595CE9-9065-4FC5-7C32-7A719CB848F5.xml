@@ -1,0 +1,64 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="4D595CE9-9065-4FC5-7C32-7A719CB848F5" name="PROPERTIES">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 15:14:54 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+<engineerTo>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<preferredAbbreviation>PROPERTIES</preferredAbbreviation>
+<shortName>PROP</shortName>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="NAME" id="07D7A9D3-0808-CB98-6B06-DB963AF12203">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 15:15:14 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+<engineerTo>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>128 CHAR</dataTypeSize>
+<ownDataTypeParameters>128 CHAR,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="VALUE" id="D4B548ED-1570-EC28-0855-8A047884F0AB">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 15:15:14 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+<engineerTo>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>4096 CHAR</dataTypeSize>
+<ownDataTypeParameters>4096 CHAR,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="A14ACE6C-C40E-AA9D-71EC-C01C38EAC525" name="PROP_PK">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 15:16:19 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
+<engineerTo>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="false"/>
+</engineerTo>
+<pk>true</pk>
+<newElementsIDs>07D7A9D3-0808-CB98-6B06-DB963AF12203</newElementsIDs>
+<usedAttributes>
+<attributeRef>07D7A9D3-0808-CB98-6B06-DB963AF12203</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

@@ -1,0 +1,17 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="E9EEA672-2543-7456-53AF-BBA1B839A916" containerWithKeyObject="AA236866-0B22-EBB3-D55C-A74A9C8FC01F" localFKIndex="7E2C0F1D-2CD1-DE7B-ED48-42E7A6EE87A6" name="CLASS_STRA_FK">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:01:43 UTC</createdTime>
+<generatorID>59B70BE0-B59C-3606-8F57-E1891013F57A</generatorID>
+<ownerDesignName>mercado</ownerDesignName>
+<referredTableLongName>STRATEGIES</referredTableLongName>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>964BEE0F-DE43-FB07-DF5A-64BCFFD86287</referredTableID>
+<keyObject>A91544AF-5F6E-55BD-01CA-85DC7C6D849C</keyObject>
+<referredKeyID>A91544AF-5F6E-55BD-01CA-85DC7C6D849C</referredKeyID>
+<mandatory>true</mandatory>
+<refColNames>ACCO_OWNER,CURRENCY</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>

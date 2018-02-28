@@ -1,0 +1,17 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<FKIndexAssociation class="oracle.dbtools.crest.model.design.relational.FKIndexAssociation" directorySegmentName="seg_0" id="1496FE3F-F2BE-5581-CDA9-E15DA882C404" containerWithKeyObject="534CB361-098D-D979-4ECE-31485B81BC71" localFKIndex="29BFE3CD-EA22-25E4-EBC5-683F9B974213" name="BALA_ACCO_FK">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:01:43 UTC</createdTime>
+<generatorID>C6D1EF01-7B38-E6D6-DE03-9E272320C1A3</generatorID>
+<ownerDesignName>mercado</ownerDesignName>
+<referredTableLongName>ACCOUNTS</referredTableLongName>
+<deleteRule>NO ACTION</deleteRule>
+<referredTableID>1609E95F-C7A6-788D-B5AA-F3FCFD8273A7</referredTableID>
+<keyObject>A33C29B2-4E02-36D2-E176-327DDA0C482A</keyObject>
+<referredKeyID>A33C29B2-4E02-36D2-E176-327DDA0C482A</referredKeyID>
+<mandatory>true</mandatory>
+<refColNames>OWNER</refColNames>
+<transferable>true</transferable>
+<rely>false</rely>
+<columnDependencyConstraintGenerateInDDL>true</columnDependencyConstraintGenerateInDDL>
+</FKIndexAssociation>
