@@ -1,42 +1,56 @@
 package org.marceloleite.mercado.databaseretriever.persistence.objects;
 
-import javax.persistence.Column;
+import java.io.Serializable;
+import java.math.BigDecimal;
+
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 
-@Entity(name = "BALANCES")
-public class BalancePO implements PersistenceObject<BalanceIdPO> {
+/**
+ * The persistent class for the BALANCES database table.
+ * 
+ */
+@Entity
+@Table(name = "BALANCES")
+@NamedQuery(name = "BalancePO.findAll", query = "SELECT b FROM BalancePO b")
+public class BalancePO implements Serializable, PersistenceObject<BalanceIdPO> {
+	private static final long serialVersionUID = 1L;
 
 	@EmbeddedId
-	private BalanceIdPO balanceIdPO;
+	private BalanceIdPO id;
 
+	private BigDecimal amount;
+
+	// bi-directional many-to-one association to AccountPO
 	@ManyToOne
-	@JoinColumn(name = "ACCO_OWNER", insertable = false, updatable = false)
+	@JoinColumn(name = "ACCO_OWNER")
 	private AccountPO accountPO;
 
-	@Column(name = "AMOUNT", nullable = false)
-	private Double amount;
-
-	public BalanceIdPO getBalanceIdPO() {
-		return balanceIdPO;
+	public BalancePO() {
 	}
 
-	public void setBalanceIdPO(BalanceIdPO balanceIdPO) {
-		this.balanceIdPO = balanceIdPO;
+	public BalanceIdPO getId() {
+		return this.id;
 	}
 
-	public Double getAmount() {
-		return amount;
+	public void setId(BalanceIdPO id) {
+		this.id = id;
 	}
 
-	public void setAmount(Double amount) {
+	public BigDecimal getAmount() {
+		return this.amount;
+	}
+
+	public void setAmount(BigDecimal amount) {
 		this.amount = amount;
 	}
 
 	public AccountPO getAccountPO() {
-		return accountPO;
+		return this.accountPO;
 	}
 
 	public void setAccountPO(AccountPO accountPO) {
@@ -46,11 +60,6 @@ public class BalancePO implements PersistenceObject<BalanceIdPO> {
 	@Override
 	public Class<?> getEntityClass() {
 		return BalancePO.class;
-	}
-
-	@Override
-	public BalanceIdPO getId() {
-		return balanceIdPO;
 	}
 
 }

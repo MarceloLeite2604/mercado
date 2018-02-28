@@ -6,7 +6,7 @@ import java.time.ZonedDateTime;
 
 import org.marceloleite.mercado.commons.util.converter.ZonedDateTimeToStringConverter;
 import org.marceloleite.mercado.consultant.property.ConsultantProperty;
-import org.marceloleite.mercado.databaseretriever.persistence.dao.TradeDAO;
+import org.marceloleite.mercado.databaseretriever.persistence.daos.TradeDAO;
 import org.marceloleite.mercado.properties.Property;
 import org.marceloleite.mercado.retriever.PropertyRetriever;
 

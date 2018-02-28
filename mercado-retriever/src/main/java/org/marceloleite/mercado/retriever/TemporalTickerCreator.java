@@ -8,7 +8,7 @@ import org.marceloleite.mercado.base.model.Trade;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.TradeType;
-import org.marceloleite.mercado.databaseretriever.persistence.dao.TradeDAO;
+import org.marceloleite.mercado.databaseretriever.persistence.daos.TradeDAO;
 import org.marceloleite.mercado.databaseretriever.persistence.objects.TradePO;
 import org.marceloleite.mercado.retriever.filter.TradeTypeFilter;
 
@@ -108,7 +108,7 @@ public class TemporalTickerCreator {
 				}
 			} else {
 				if (previousBuyingTrade != null) {
-					if (previousBuyingTrade.getId().getId() > previousSellingTrade.getId().getId()) {
+					if (previousBuyingTrade.getId().getTradeId() > previousSellingTrade.getId().getTradeId()) {
 						previousLast = previousBuyingTrade.getPrice();
 					} else {
 						previousLast = previousSellingTrade.getPrice();

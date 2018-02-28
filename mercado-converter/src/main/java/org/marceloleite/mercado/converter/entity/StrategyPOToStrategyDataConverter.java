@@ -3,30 +3,22 @@ package org.marceloleite.mercado.converter.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.marceloleite.mercado.base.model.data.StrategyClassData;
+import org.marceloleite.mercado.base.model.data.ClassData;
 import org.marceloleite.mercado.base.model.data.StrategyData;
-import org.marceloleite.mercado.base.model.data.StrategyParameterData;
-import org.marceloleite.mercado.base.model.data.StrategyVariableData;
 import org.marceloleite.mercado.commons.util.converter.Converter;
-import org.marceloleite.mercado.databaseretriever.persistence.objects.StrategyClassIdPO;
-import org.marceloleite.mercado.databaseretriever.persistence.objects.StrategyClassPO;
+import org.marceloleite.mercado.databaseretriever.persistence.objects.ClassIdPO;
+import org.marceloleite.mercado.databaseretriever.persistence.objects.ClassPO;
 import org.marceloleite.mercado.databaseretriever.persistence.objects.StrategyIdPO;
 import org.marceloleite.mercado.databaseretriever.persistence.objects.StrategyPO;
-import org.marceloleite.mercado.databaseretriever.persistence.objects.StrategyParameterPO;
-import org.marceloleite.mercado.databaseretriever.persistence.objects.StrategyVariablePO;
 
 public class StrategyPOToStrategyDataConverter implements Converter<StrategyPO, StrategyData> {
 
 	@Override
 	public StrategyData convertTo(StrategyPO strategyPO) {
 		StrategyData strategyData = new StrategyData();
-		List<StrategyParameterData> strategyParameterDatas = createStrategyParameterDatas(strategyPO);
-		strategyData.setStrategyParameterDatas(strategyParameterDatas);
-		List<StrategyVariableData> strategyVariableDatas = createStrategyVariableDatas(strategyPO);
-		strategyData.setStrategyVariableDatas(strategyVariableDatas);
-		List<StrategyClassData> strategyClassDatas = createStrategyClassDatas(strategyPO);
+		List<ClassData> strategyClassDatas = createStrategyClassDatas(strategyPO);
 		strategyData.setStrategyClassDatas(strategyClassDatas);
-		strategyData.setCurrency(strategyPO.getStrategyIdPO().getCurrency());
+		strategyData.setCurrency(strategyPO.getId().getCurrency());
 		return strategyData;
 	}
 
@@ -34,102 +26,42 @@ public class StrategyPOToStrategyDataConverter implements Converter<StrategyPO, 
 	public StrategyPO convertFrom(StrategyData strategyData) {
 		StrategyPO strategyPO = new StrategyPO();
 		StrategyIdPO strategyIdPO = new StrategyIdPO();
-		strategyIdPO.setAccountOwner(strategyData.getAccountData().getOwner());
-		strategyPO.setStrategyIdPO(strategyIdPO);
-		strategyPO.setStratrategyClassPOs(createStrategyClassPOs(strategyData));
-		strategyPO.setStrategyParameterPOs(createStrategyParameterPOList(strategyData));
-		strategyPO.setStrategyVariablePOs(createStrategyVariablePOList(strategyData));
-
+		strategyIdPO.setAccoOwner(strategyData.getAccountData().getOwner());
+		strategyPO.setId(strategyIdPO);
+		strategyPO.setClassPOs(createClassPOs(strategyData));
 		return strategyPO;
 	}
 
-	private List<StrategyVariablePO> createStrategyVariablePOList(StrategyData strategyData) {
-		List<StrategyVariableData> strategyVariableDatas = strategyData.getStrategyVariableDatas();
-		StrategyVariablePOToStrategyVariableDataConverter strategyVariablePOToStrategyVariableDataConverter = new StrategyVariablePOToStrategyVariableDataConverter();
-		List<StrategyVariablePO> strategyVariablePOs = new ArrayList<>();
-		if (strategyVariableDatas != null && !strategyVariableDatas.isEmpty()) {
-			for (StrategyVariableData strategyVariableData : strategyVariableDatas) {
-				StrategyVariablePO strategyVariablePO = strategyVariablePOToStrategyVariableDataConverter
-						.convertFrom(strategyVariableData);
-				strategyVariablePOs.add(strategyVariablePO);
+	private List<ClassPO> createClassPOs(StrategyData strategyData) {
+		List<ClassData> classDatas = strategyData.getStrategyClassDatas();
+		List<ClassPO> classPOs = new ArrayList<>();
+
+		if (classDatas != null && !classDatas.isEmpty()) {
+			for (ClassData classData : classDatas) {
+				ClassPO classPO = new ClassPO();
+				ClassIdPO classIdPO = new ClassIdPO();
+				classIdPO.setStraAccoOwner(strategyData.getAccountData().getOwner());
+				classIdPO.setStraCurrency(strategyData.getCurrency());
+				classIdPO.setName(classData.getClassName());
+				classPO.setId(classIdPO);
+				classPOs.add(classPO);
 			}
 		}
-		return strategyVariablePOs;
+		return classPOs;
 	}
 
-	private List<StrategyParameterPO> createStrategyParameterPOList(StrategyData strategyData) {
-		List<StrategyParameterData> strategyParameterDatas = strategyData.getStrategyParameterDatas();
-		StrategyParameterPOToStrategyParameterDataConverter strategyPropertyPOToStrategyPropertyDataConverter = new StrategyParameterPOToStrategyParameterDataConverter();
-		List<StrategyParameterPO> strategyParameterPOs = new ArrayList<>();
-		if (strategyParameterDatas != null && !strategyParameterDatas.isEmpty()) {
-			for (StrategyParameterData strategyParameterData : strategyParameterDatas) {
-				StrategyParameterPO strategyParameterPO = strategyPropertyPOToStrategyPropertyDataConverter
-						.convertFrom(strategyParameterData);
-				strategyParameterPOs.add(strategyParameterPO);
+	private List<ClassData> createStrategyClassDatas(StrategyPO strategyPO) {
+		List<ClassPO> classPOs = strategyPO.getClassPOs();
+		List<ClassData> classDatas = new ArrayList<>();
+
+		if (classPOs != null && !classPOs.isEmpty()) {
+			for (ClassPO classPO : classPOs) {
+				ClassData classData = new ClassData();
+				classData.setClassName(classPO.getId().getName());
+				classDatas.add(classData);
 			}
 		}
-		return strategyParameterPOs;
-	}
-	
-	private List<StrategyClassPO> createStrategyClassPOs(StrategyData strategyData) {
-		List<StrategyClassData> stratrategyClassDatas = strategyData.getStrategyClassDatas();
-		List<StrategyClassPO> strategyClassPOs = new ArrayList<>();
-
-		if (stratrategyClassDatas != null && !stratrategyClassDatas.isEmpty()) {
-			for (StrategyClassData strategyClassData : stratrategyClassDatas) {
-				StrategyClassPO strategyClassPO = new StrategyClassPO();
-				StrategyClassIdPO strategyClassIdPO = new StrategyClassIdPO();
-				strategyClassIdPO.setAccountOwner(strategyData.getAccountData().getOwner());
-				strategyClassIdPO.setClassName(strategyClassData.getClassName());
-				strategyClassPO.setStrategyClassIdPO(strategyClassIdPO);
-				strategyClassPOs.add(strategyClassPO);
-			}
-		}
-		return strategyClassPOs;
-	}
-
-	private List<StrategyClassData> createStrategyClassDatas(StrategyPO strategyPO) {
-		List<StrategyClassPO> stratrategyClassPOs = strategyPO.getStratrategyClassPOs();
-		List<StrategyClassData> strategyClassDatas = new ArrayList<>();
-
-		if (stratrategyClassPOs != null && !stratrategyClassPOs.isEmpty()) {
-			for (StrategyClassPO strategyClassPO : stratrategyClassPOs) {
-				StrategyClassData strategyClassData = new StrategyClassData();
-				strategyClassData.setClassName(strategyClassPO.getId().getClassName());
-				strategyClassDatas.add(strategyClassData);
-			}
-		}
-		return strategyClassDatas;
-	}
-
-	private List<StrategyVariableData> createStrategyVariableDatas(StrategyPO strategyPO) {
-		List<StrategyVariablePO> strategyVariablePOs = strategyPO.getStrategyVariablePOs();
-
-		List<StrategyVariableData> strategyVariableDatas = new ArrayList<>();
-
-		if (strategyVariablePOs != null && !strategyVariablePOs.isEmpty()) {
-			for (StrategyVariablePO strategyVariablePO : strategyVariablePOs) {
-				StrategyVariableData strategyVariableData = new StrategyVariableData();
-				strategyVariableData.setValue(strategyVariablePO.getValue());
-				strategyVariableDatas.add(strategyVariableData);
-			}
-		}
-		return strategyVariableDatas;
-	}
-
-	private List<StrategyParameterData> createStrategyParameterDatas(StrategyPO strategyPO) {
-		List<StrategyParameterPO> strategyPropertyPOs = strategyPO.getStrategyParameterPOs();
-
-		List<StrategyParameterData> strategyParameterDatas = new ArrayList<>();
-
-		if (strategyPropertyPOs != null && !strategyPropertyPOs.isEmpty()) {
-			for (StrategyParameterPO strategyParameterPO : strategyPropertyPOs) {
-				StrategyParameterData strategyParameterData = new StrategyParameterData();
-				strategyParameterData.setValue(strategyParameterPO.getValue());
-				strategyParameterDatas.add(strategyParameterData);
-			}
-		}
-		return strategyParameterDatas;
+		return classDatas;
 	}
 
 }

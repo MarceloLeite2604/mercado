@@ -17,7 +17,7 @@ import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.converter.datamodel.ListToMapTradeConverter;
 import org.marceloleite.mercado.converter.entity.ListTemporalTickerPOToListTemporalTickerConverter;
 import org.marceloleite.mercado.converter.entity.TemporalTickerPOToTemporalTickerConverter;
-import org.marceloleite.mercado.databaseretriever.persistence.dao.TemporalTickerDAO;
+import org.marceloleite.mercado.databaseretriever.persistence.daos.TemporalTickerDAO;
 import org.marceloleite.mercado.databaseretriever.persistence.objects.TemporalTickerIdPO;
 import org.marceloleite.mercado.databaseretriever.persistence.objects.TemporalTickerPO;
 
@@ -50,10 +50,10 @@ public class TemporalTickerRetriever {
 
 			TemporalTickerIdPO temporalTickerIdPO = new TemporalTickerIdPO();
 			temporalTickerIdPO.setCurrency(currency);
-			temporalTickerIdPO.setStart(timeInterval.getStart());
-			temporalTickerIdPO.setEnd(timeInterval.getEnd());
+			temporalTickerIdPO.setStartTime(timeInterval.getStart());
+			temporalTickerIdPO.setEndTime(timeInterval.getEnd());
 			TemporalTickerPO temporalTickerPOForEnquirement = new TemporalTickerPO();
-			temporalTickerPOForEnquirement.setTemporalTickerIdPO(temporalTickerIdPO);
+			temporalTickerPOForEnquirement.setId(temporalTickerIdPO);
 			temporalTickerPO = temporalTickerDAO.findById(temporalTickerPOForEnquirement);
 
 		}

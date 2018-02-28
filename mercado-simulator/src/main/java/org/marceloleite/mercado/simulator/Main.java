@@ -6,7 +6,7 @@ import java.time.ZonedDateTime;
 import org.marceloleite.mercado.commons.TimeDivisionController;
 import org.marceloleite.mercado.commons.util.ZonedDateTimeUtils;
 import org.marceloleite.mercado.databaseretriever.persistence.EntityManagerController;
-import org.marceloleite.mercado.simulator.strategy.second.CircularArray;
+import org.marceloleite.mercado.simulator.strategies.second.CircularArray;
 
 public class Main {
 

@@ -11,7 +11,7 @@ public class ListTradePOToListTradeConverter implements Converter<List<TradePO>,
 
 	@Override
 	public List<Trade> convertTo(List<TradePO> tradePOs) {
-		TradePOToTrade tradePOToTrade = new TradePOToTrade();
+		TradePOToTradeConverter tradePOToTrade = new TradePOToTradeConverter();
 		List<Trade> trades = new ArrayList<>();
 		for (TradePO tradePO : tradePOs) {
 			trades.add(tradePOToTrade.convertTo(tradePO));
@@ -21,7 +21,7 @@ public class ListTradePOToListTradeConverter implements Converter<List<TradePO>,
 
 	@Override
 	public List<TradePO> convertFrom(List<Trade> trades) {
-		TradePOToTrade tradePOToTrade = new TradePOToTrade();
+		TradePOToTradeConverter tradePOToTrade = new TradePOToTradeConverter();
 		List<TradePO> tradePOs = new ArrayList<>();
 		for (Trade trade : trades) {
 			tradePOs.add(tradePOToTrade.convertFrom(trade));

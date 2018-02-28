@@ -7,58 +7,54 @@ import javax.persistence.Embeddable;
 
 import org.marceloleite.mercado.commons.Currency;
 
+/**
+ * The primary key class for the BALANCES database table.
+ * 
+ */
 @Embeddable
 public class BalanceIdPO implements Serializable {
-
+	//default serial version id, required for serializable classes.
 	private static final long serialVersionUID = 1L;
 
-	@Column(name = "ACCO_OWNER", insertable=false, updatable=false)
-	private String accountOwner;
+	@Column(name="ACCO_OWNER", insertable=false, updatable=false)
+	private String accoOwner;
 
-	@Column(name = "CURRENCY")
 	private Currency currency;
 
-	public String getAccountOwner() {
-		return accountOwner;
+	public BalanceIdPO() {
 	}
-
-	public void setAccountOwner(String accountOwner) {
-		this.accountOwner = accountOwner;
+	public String getAccoOwner() {
+		return this.accoOwner;
 	}
-
+	public void setAccoOwner(String accoOwner) {
+		this.accoOwner = accoOwner;
+	}
 	public Currency getCurrency() {
-		return currency;
+		return this.currency;
 	}
-
 	public void setCurrency(Currency currency) {
 		this.currency = currency;
 	}
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((accountOwner == null) ? 0 : accountOwner.hashCode());
-		result = prime * result + ((currency == null) ? 0 : currency.hashCode());
-		return result;
+	public boolean equals(Object other) {
+		if (this == other) {
+			return true;
+		}
+		if (!(other instanceof BalanceIdPO)) {
+			return false;
+		}
+		BalanceIdPO castOther = (BalanceIdPO)other;
+		return 
+			this.accoOwner.equals(castOther.accoOwner)
+			&& this.currency.equals(castOther.currency);
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		BalanceIdPO other = (BalanceIdPO) obj;
-		if (accountOwner == null) {
-			if (other.accountOwner != null)
-				return false;
-		} else if (!accountOwner.equals(other.accountOwner))
-			return false;
-		if (currency != other.currency)
-			return false;
-		return true;
+	public int hashCode() {
+		final int prime = 31;
+		int hash = 17;
+		hash = hash * prime + this.accoOwner.hashCode();
+		hash = hash * prime + this.currency.hashCode();
+		
+		return hash;
 	}
 }

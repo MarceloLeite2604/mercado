@@ -7,7 +7,7 @@ import java.util.List;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.util.converter.ObjectToJsonConverter;
 import org.marceloleite.mercado.databaseretriever.persistence.EntityManagerController;
-import org.marceloleite.mercado.databaseretriever.persistence.dao.TradeDAO;
+import org.marceloleite.mercado.databaseretriever.persistence.daos.TradeDAO;
 import org.marceloleite.mercado.databaseretriever.persistence.objects.TradePO;
 
 public class Main {

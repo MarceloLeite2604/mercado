@@ -1,31 +1,89 @@
 package org.marceloleite.mercado.databaseretriever.persistence.objects;
 
+import java.io.Serializable;
 import java.util.List;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 
-@Entity(name="ACCOUNTS")
-public class AccountPO implements PersistenceObject<String> {
+
+/**
+ * The persistent class for the ACCOUNTS database table.
+ * 
+ */
+@Entity
+@Table(name="ACCOUNTS")
+@NamedQuery(name="AccountPO.findAll", query="SELECT a FROM AccountPO a")
+public class AccountPO implements Serializable, PersistenceObject<String> {
+	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name="OWNER", nullable = false)
 	private String owner;
-	
+
+	//bi-directional many-to-one association to BalancePO
 	@OneToMany(mappedBy="accountPO")
 	private List<BalancePO> balancePOs;
-	
-	@OneToMany(mappedBy="accountPO")
+
+	//bi-directional many-to-one association to StrategyPO
+	@OneToMany(mappedBy="account")
 	private List<StrategyPO> strategyPOs;
 
+	public AccountPO() {
+	}
+
 	public String getOwner() {
-		return owner;
+		return this.owner;
 	}
 
 	public void setOwner(String owner) {
 		this.owner = owner;
+	}
+
+	public List<BalancePO> getBalancePOs() {
+		return this.balancePOs;
+	}
+
+	public void setBalancePOs(List<BalancePO> balances) {
+		this.balancePOs = balances;
+	}
+
+	public BalancePO addBalance(BalancePO balance) {
+		getBalancePOs().add(balance);
+		balance.setAccountPO(this);
+
+		return balance;
+	}
+
+	public BalancePO removeBalance(BalancePO balance) {
+		getBalancePOs().remove(balance);
+		balance.setAccountPO(null);
+
+		return balance;
+	}
+
+	public List<StrategyPO> getStrategyPOs() {
+		return this.strategyPOs;
+	}
+
+	public void setStrategyPOs(List<StrategyPO> strategies) {
+		this.strategyPOs = strategies;
+	}
+
+	public StrategyPO addStrategy(StrategyPO strategy) {
+		getStrategyPOs().add(strategy);
+		strategy.setAccount(this);
+
+		return strategy;
+	}
+
+	public StrategyPO removeStrategy(StrategyPO strategy) {
+		getStrategyPOs().remove(strategy);
+		strategy.setAccount(null);
+
+		return strategy;
 	}
 
 	@Override
@@ -38,19 +96,4 @@ public class AccountPO implements PersistenceObject<String> {
 		return owner;
 	}
 
-	public List<BalancePO> getBalancePOs() {
-		return balancePOs;
-	}
-
-	public void setBalancePOs(List<BalancePO> balancePOs) {
-		this.balancePOs = balancePOs;
-	}
-
-	public List<StrategyPO> getStrategyPOs() {
-		return strategyPOs;
-	}
-
-	public void setStrategyPOs(List<StrategyPO> strategyPOs) {
-		this.strategyPOs = strategyPOs;
-	}
 }

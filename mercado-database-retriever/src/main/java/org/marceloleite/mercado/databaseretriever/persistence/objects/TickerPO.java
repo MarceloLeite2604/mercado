@@ -1,102 +1,96 @@
 package org.marceloleite.mercado.databaseretriever.persistence.objects;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 
-@Entity(name = "TICKERS")
-public class TickerPO implements PersistenceObject<TickerIdPO> {
+/**
+ * The persistent class for the TICKERS database table.
+ * 
+ */
+@Entity
+@Table(name="TICKERS")
+@NamedQuery(name="TickerPO.findAll", query="SELECT t FROM TickerPO t")
+public class TickerPO implements Serializable, PersistenceObject<TickerIdPO> {
+	private static final long serialVersionUID = 1L;
 
 	@EmbeddedId
-	private TickerIdPO tickerIdPO;
+	private TickerIdPO id;
 
-	@Column(name="HIGH", nullable=false)
-	private double high;
-
-	@Column(name="LOW", nullable=false)
-	private double low;
-
-	@Column(name="VOLUME", nullable=false)
-	private double vol;
-
-	@Column(name="LAST", nullable=false)
-	private double last;
-
-	@Column(name="BUY", nullable=false)
 	private double buy;
 
-	@Column(name="SELL", nullable=false)
+	private double high;
+
+	@Column(name="\"LAST\"")
+	private double last;
+
+	private double low;
+
 	private double sell;
 
+	private double volume;
+
 	public TickerPO() {
-		super();
 	}
 
-	public TickerPO(double high, double low, double vol, double last, double buy, double sell, TickerIdPO tickerIdPO) {
-		super();
-		this.high = high;
-		this.low = low;
-		this.vol = vol;
-		this.last = last;
-		this.buy = buy;
-		this.sell = sell;
-		this.tickerIdPO = tickerIdPO;
+	public TickerIdPO getId() {
+		return this.id;
 	}
 
-	public double getHigh() {
-		return high;
-	}
-
-	public void setHigh(double high) {
-		this.high = high;
-	}
-
-	public double getLow() {
-		return low;
-	}
-
-	public void setLow(double low) {
-		this.low = low;
-	}
-
-	public double getVol() {
-		return vol;
-	}
-
-	public void setVol(double vol) {
-		this.vol = vol;
-	}
-
-	public double getLast() {
-		return last;
-	}
-
-	public void setLast(double last) {
-		this.last = last;
+	public void setId(TickerIdPO id) {
+		this.id = id;
 	}
 
 	public double getBuy() {
-		return buy;
+		return this.buy;
 	}
 
 	public void setBuy(double buy) {
 		this.buy = buy;
 	}
 
+	public double getHigh() {
+		return this.high;
+	}
+
+	public void setHigh(double high) {
+		this.high = high;
+	}
+
+	public double getLast() {
+		return this.last;
+	}
+
+	public void setLast(double last) {
+		this.last = last;
+	}
+
+	public double getLow() {
+		return this.low;
+	}
+
+	public void setLow(double low) {
+		this.low = low;
+	}
+
 	public double getSell() {
-		return sell;
+		return this.sell;
 	}
 
 	public void setSell(double sell) {
 		this.sell = sell;
 	}
 
-	public TickerIdPO getTickerIdPO() {
-		return tickerIdPO;
+	public double getVolume() {
+		return this.volume;
 	}
 
-	public void setTickerIdPO(TickerIdPO tickerIdPO) {
-		this.tickerIdPO = tickerIdPO;
+	public void setVolume(double volume) {
+		this.volume = volume;
 	}
 
 	@Override
@@ -104,8 +98,4 @@ public class TickerPO implements PersistenceObject<TickerIdPO> {
 		return TickerPO.class;
 	}
 
-	@Override
-	public TickerIdPO getId() {
-		return tickerIdPO;
-	}
 }
