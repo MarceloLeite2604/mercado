@@ -8,40 +8,40 @@ import javax.persistence.ManyToOne;
 
 import org.marceloleite.mercado.databaseretriever.persistence.objects.PersistenceObject;
 
-@Entity(name = "STRATEGIES_CLASSES")
-public class OldStrategyClassPO implements PersistenceObject<StrategyClassIdPO> {
+// @Entity(name = "STRATEGIES_CLASSES")
+public class OldStrategyClassPO implements PersistenceObject<OldStrategyClassIdPO> {
 
 	@EmbeddedId
-	private StrategyClassIdPO strategyClassIdPO;
+	private OldStrategyClassIdPO strategyClassIdPO;
 
 	@ManyToOne
 	@JoinColumns({ @JoinColumn(name = "STRA_ACCO_OWNER", referencedColumnName = "ACCO_OWNER", insertable = false, updatable = false),
 			@JoinColumn(name = "STRA_CURRENCY", referencedColumnName = "CURRENCY", insertable = false, updatable = false) })
-	private StrategyPO strategyPO;
+	private OldStrategyPO strategyPO;
 
-	public StrategyClassIdPO getStrategyClassIdPO() {
+	public OldStrategyClassIdPO getStrategyClassIdPO() {
 		return strategyClassIdPO;
 	}
 
-	public void setStrategyClassIdPO(StrategyClassIdPO strategyClassIdPO) {
+	public void setStrategyClassIdPO(OldStrategyClassIdPO strategyClassIdPO) {
 		this.strategyClassIdPO = strategyClassIdPO;
 	}
 
-	public StrategyPO getStrategyPO() {
+	public OldStrategyPO getStrategyPO() {
 		return strategyPO;
 	}
 
-	public void setStrategyPO(StrategyPO strategyPO) {
+	public void setStrategyPO(OldStrategyPO strategyPO) {
 		this.strategyPO = strategyPO;
 	}
 
 	@Override
 	public Class<?> getEntityClass() {
-		return StrategyClassPO.class;
+		return OldStrategyClassPO.class;
 	}
 
 	@Override
-	public StrategyClassIdPO getId() {
+	public OldStrategyClassIdPO getId() {
 		return strategyClassIdPO;
 	}
 }

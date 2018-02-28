@@ -63,7 +63,7 @@ public class OldStrategyClassIdPO implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		StrategyClassIdPO other = (StrategyClassIdPO) obj;
+		OldStrategyClassIdPO other = (OldStrategyClassIdPO) obj;
 		if (accountOwner == null) {
 			if (other.accountOwner != null)
 				return false;

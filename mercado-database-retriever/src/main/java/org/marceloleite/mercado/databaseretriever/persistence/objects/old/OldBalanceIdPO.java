@@ -51,7 +51,7 @@ public class OldBalanceIdPO implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		BalanceIdPO other = (BalanceIdPO) obj;
+		OldBalanceIdPO other = (OldBalanceIdPO) obj;
 		if (accountOwner == null) {
 			if (other.accountOwner != null)
 				return false;

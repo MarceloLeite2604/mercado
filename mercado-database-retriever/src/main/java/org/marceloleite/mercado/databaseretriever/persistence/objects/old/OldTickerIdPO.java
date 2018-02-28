@@ -52,7 +52,7 @@ public class OldTickerIdPO implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		TickerIdPO other = (TickerIdPO) obj;
+		OldTickerIdPO other = (OldTickerIdPO) obj;
 		if (currency == null) {
 			if (other.currency != null)
 				return false;

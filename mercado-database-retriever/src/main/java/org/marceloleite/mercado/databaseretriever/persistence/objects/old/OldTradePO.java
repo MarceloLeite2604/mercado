@@ -12,10 +12,10 @@ import org.marceloleite.mercado.commons.TradeType;
 import org.marceloleite.mercado.databaseretriever.persistence.objects.PersistenceObject;
 
 @Entity(name = "TRADES")
-public class OldTradePO implements PersistenceObject<TradeIdPO> {
+public class OldTradePO implements PersistenceObject<OldTradeIdPO> {
 
 	@EmbeddedId
-	private TradeIdPO tradeIdPO;
+	private OldTradeIdPO tradeIdPO;
 
 	@Column(name="TRADE_DATE", nullable = false)
 	private ZonedDateTime date;
@@ -34,15 +34,15 @@ public class OldTradePO implements PersistenceObject<TradeIdPO> {
 	}
 
 	@Override
-	public TradeIdPO getId() {
+	public OldTradeIdPO getId() {
 		return tradeIdPO;
 	}
 	
-	public TradeIdPO getTradeIdPO() {
+	public OldTradeIdPO getTradeIdPO() {
 		return this.tradeIdPO;
 	}
 
-	public void setTradeIdPO(TradeIdPO tradeIdPO) {
+	public void setTradeIdPO(OldTradeIdPO tradeIdPO) {
 		this.tradeIdPO = tradeIdPO;
 	}
 
@@ -80,6 +80,6 @@ public class OldTradePO implements PersistenceObject<TradeIdPO> {
 
 	@Override
 	public Class<?> getEntityClass() {
-		return TradePO.class;
+		return OldTradePO.class;
 	}
 }

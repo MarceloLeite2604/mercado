@@ -9,23 +9,23 @@ import javax.persistence.ManyToOne;
 import org.marceloleite.mercado.databaseretriever.persistence.objects.PersistenceObject;
 
 @Entity(name = "BALANCES")
-public class OldBalancePO implements PersistenceObject<BalanceIdPO> {
+public class OldBalancePO implements PersistenceObject<OldBalanceIdPO> {
 
 	@EmbeddedId
-	private BalanceIdPO balanceIdPO;
+	private OldBalanceIdPO balanceIdPO;
 
 	@ManyToOne
 	@JoinColumn(name = "ACCO_OWNER", insertable = false, updatable = false)
-	private AccountPO accountPO;
+	private OldAccountPO accountPO;
 
 	@Column(name = "AMOUNT", nullable = false)
 	private Double amount;
 
-	public BalanceIdPO getBalanceIdPO() {
+	public OldBalanceIdPO getBalanceIdPO() {
 		return balanceIdPO;
 	}
 
-	public void setBalanceIdPO(BalanceIdPO balanceIdPO) {
+	public void setBalanceIdPO(OldBalanceIdPO balanceIdPO) {
 		this.balanceIdPO = balanceIdPO;
 	}
 
@@ -37,21 +37,21 @@ public class OldBalancePO implements PersistenceObject<BalanceIdPO> {
 		this.amount = amount;
 	}
 
-	public AccountPO getAccountPO() {
+	public OldAccountPO getAccountPO() {
 		return accountPO;
 	}
 
-	public void setAccountPO(AccountPO accountPO) {
+	public void setAccountPO(OldAccountPO accountPO) {
 		this.accountPO = accountPO;
 	}
 
 	@Override
 	public Class<?> getEntityClass() {
-		return BalancePO.class;
+		return OldBalancePO.class;
 	}
 
 	@Override
-	public BalanceIdPO getId() {
+	public OldBalanceIdPO getId() {
 		return balanceIdPO;
 	}
 

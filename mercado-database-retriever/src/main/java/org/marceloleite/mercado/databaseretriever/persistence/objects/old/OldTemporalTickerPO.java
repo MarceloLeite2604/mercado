@@ -11,10 +11,10 @@ import org.marceloleite.mercado.commons.util.converter.DurationToStringConverter
 import org.marceloleite.mercado.databaseretriever.persistence.objects.PersistenceObject;
 
 @Entity(name = "TEMPORAL_TICKERS")
-public class OldTemporalTickerPO implements PersistenceObject<TemporalTickerIdPO> {
+public class OldTemporalTickerPO implements PersistenceObject<OldTemporalTickerIdPO> {
 
 	@EmbeddedId
-	private TemporalTickerIdPO temporalTickerId;
+	private OldTemporalTickerIdPO temporalTickerId;
 
 	@Column(name="ORDERS", nullable = false)
 	private long orders;
@@ -65,7 +65,7 @@ public class OldTemporalTickerPO implements PersistenceObject<TemporalTickerIdPO
 		super();
 	}
 
-	private OldTemporalTickerPO(TemporalTickerIdPO temporalTickerId, long orders, double high, double average, double low,
+	private OldTemporalTickerPO(OldTemporalTickerIdPO temporalTickerId, long orders, double high, double average, double low,
 			double vol, double first, double last, double previousLast, double buy, double previousBuy, double sell,
 			double previousSell, long buyOrders, long sellOrders, Duration duration) {
 		super();
@@ -87,8 +87,8 @@ public class OldTemporalTickerPO implements PersistenceObject<TemporalTickerIdPO
 		this.duration = duration;
 	}
 
-	public OldTemporalTickerPO(TemporalTickerPO temporalTickerPO) {
-		this(new TemporalTickerIdPO(temporalTickerPO.getId()), temporalTickerPO.getOrders(), temporalTickerPO.getHigh(),
+	public OldTemporalTickerPO(OldTemporalTickerPO temporalTickerPO) {
+		this(new OldTemporalTickerIdPO(temporalTickerPO.getId()), temporalTickerPO.getOrders(), temporalTickerPO.getHigh(),
 				temporalTickerPO.getAverage(), temporalTickerPO.getLow(), temporalTickerPO.getVol(),
 				temporalTickerPO.getFirst(), temporalTickerPO.getLast(), temporalTickerPO.getPreviousLast(),
 				temporalTickerPO.getBuy(), temporalTickerPO.getPreviousBuy(), temporalTickerPO.getSell(),
@@ -192,11 +192,11 @@ public class OldTemporalTickerPO implements PersistenceObject<TemporalTickerIdPO
 		this.first = first;
 	}
 
-	public TemporalTickerIdPO getTemporalTickerId() {
+	public OldTemporalTickerIdPO getTemporalTickerId() {
 		return temporalTickerId;
 	}
 
-	public void setTemporalTickerIdPO(TemporalTickerIdPO temporalTickerId) {
+	public void setTemporalTickerIdPO(OldTemporalTickerIdPO temporalTickerId) {
 		this.temporalTickerId = temporalTickerId;
 	}
 
@@ -226,11 +226,11 @@ public class OldTemporalTickerPO implements PersistenceObject<TemporalTickerIdPO
 
 	@Override
 	public Class<?> getEntityClass() {
-		return TemporalTickerPO.class;
+		return OldTemporalTickerPO.class;
 	}
 
 	@Override
-	public TemporalTickerIdPO getId() {
+	public OldTemporalTickerIdPO getId() {
 		return this.temporalTickerId;
 	}
 
