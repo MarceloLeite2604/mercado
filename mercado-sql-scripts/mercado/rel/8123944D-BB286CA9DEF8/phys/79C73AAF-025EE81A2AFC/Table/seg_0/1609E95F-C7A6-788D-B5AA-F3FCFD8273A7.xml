@@ -1,0 +1,26 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev12c class="oracle.dbtools.crest.model.design.storage.oracle.v12c.TableProxyOraclev12c" name="ACCOUNTS" directorySegmentName="seg_0" id="1609E95F-C7A6-788D-B5AA-F3FCFD8273A7">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:36:23 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+<logging>YES</logging>
+<partitionedRowMovement>DISABLE</partitionedRowMovement>
+<temporaryChanged>false</temporaryChanged>
+<accessDriverType>oracle_loader</accessDriverType>
+<rejectLimit></rejectLimit>
+<columnProxies itemClass="oracle.dbtools.crest.model.design.storage.oracle.v12c.ColumnProxyOraclev12c">
+<ColumnProxy name="OWNER" id="0D52C333-6BD3-AE2E-E181-EFDB3AB22EC8">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:36:23 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+</ColumnProxy>
+</columnProxies>
+<primaryKeys>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="ACCO_PK" id="A33C29B2-4E02-36D2-E176-327DDA0C482A">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:36:23 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+<indexSort>SORTED</indexSort>
+</PrimaryKey>
+</primaryKeys>
+</TableProxyOraclev12c>

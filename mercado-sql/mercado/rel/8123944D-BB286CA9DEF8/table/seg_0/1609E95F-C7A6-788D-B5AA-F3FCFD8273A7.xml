@@ -1,0 +1,39 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="1609E95F-C7A6-788D-B5AA-F3FCFD8273A7" name="ACCOUNTS">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:01:43 UTC</createdTime>
+<generatorID>FF9CEB7F-B0DD-CEF4-9D6C-6F638826E59E</generatorID>
+<ownerDesignName>mercado</ownerDesignName>
+<abbreviation>ACCO</abbreviation>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="OWNER" id="0D52C333-6BD3-AE2E-E181-EFDB3AB22EC8">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:01:43 UTC</createdTime>
+<generatorID>D50B8A3C-A3CB-AD5D-36B3-F1F6BA19A18C</generatorID>
+<ownerDesignName>mercado</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>64 CHAR</dataTypeSize>
+<ownDataTypeParameters>64 CHAR,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="A33C29B2-4E02-36D2-E176-327DDA0C482A" name="ACCO_PK">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:01:43 UTC</createdTime>
+<generatorID>3D0DE01F-CD0B-0BA4-2271-C09A592CA504</generatorID>
+<ownerDesignName>mercado</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="0D52C333-6BD3-AE2E-E181-EFDB3AB22EC8"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

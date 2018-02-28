@@ -1,0 +1,263 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="7119D18D-8001-7940-8E97-372C06D1E2F5" name="TEMPORAL_TICKERS">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 15:16:52 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+<engineerTo>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<preferredAbbreviation>TEMPORAL_TICKERS</preferredAbbreviation>
+<shortName>TETI</shortName>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="CURRENCY" id="72CAE973-23C7-BD85-4C18-D46F68FF69E5">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 15:17:24 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+<engineerTo>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+</engineerTo>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>C0FF9A66-7E35-E913-A432-F83306475582</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="START_TIME" id="18C70228-4B3C-3AD3-9D9F-73A0695126E2">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 15:17:34 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+<engineerTo>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT047</logicalDatatype>
+<dataTypePrecision>0</dataTypePrecision>
+<ownDataTypeParameters>,0,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="END_TIME" id="C3BE988F-AC7A-D374-DDB9-3D93FEBE180D">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 15:18:11 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+<engineerTo>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT047</logicalDatatype>
+<dataTypePrecision>0</dataTypePrecision>
+<ownDataTypeParameters>,0,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="ORDERS" id="1B45551F-5768-CACD-35D4-A91EBCC1D6EA">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 15:18:41 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+<engineerTo>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>12</dataTypePrecision>
+<ownDataTypeParameters>,12,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="BUY_ORDERS" id="97992947-6D7A-696D-6AB9-8F3A24540622">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 15:19:07 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+<engineerTo>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>12</dataTypePrecision>
+<ownDataTypeParameters>,12,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="SELL_ORDERS" id="A9E07354-D9A6-E982-7995-0229C96F3E87">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 15:19:25 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+<engineerTo>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>12</dataTypePrecision>
+<ownDataTypeParameters>,12,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="BUY" id="9A2DF227-4549-4C4E-6B64-E2FD10729253">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 15:19:36 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+<engineerTo>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+</engineerTo>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>EE73E7A5-75C0-513C-08D9-98E102E9D0D5</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="PREVIOUS_BUY" id="E25753B4-9360-198A-D8B3-A6042E049AF3">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 15:19:54 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+<engineerTo>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+</engineerTo>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>EE73E7A5-75C0-513C-08D9-98E102E9D0D5</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="SELL" id="DA2B46AF-34A2-BA5D-32FA-9B36CAD20CD8">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 15:20:03 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+<engineerTo>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+</engineerTo>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>EE73E7A5-75C0-513C-08D9-98E102E9D0D5</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="PREVIOUS_SELL" id="74092CB6-D7FC-3E47-1766-A7EDCA509F3E">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 15:20:16 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+<engineerTo>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+</engineerTo>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>EE73E7A5-75C0-513C-08D9-98E102E9D0D5</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="LAST_PRICE" id="6746DCE9-E8AC-901F-B5E3-FC3848E575F4">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 15:20:27 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+<engineerTo>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+</engineerTo>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>EE73E7A5-75C0-513C-08D9-98E102E9D0D5</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="PREVIOUS_LAST_PRICE" id="F63FC32A-3574-6732-BE7A-26D6223485FE">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 15:20:39 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+<engineerTo>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+</engineerTo>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>EE73E7A5-75C0-513C-08D9-98E102E9D0D5</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="FIRST_PRICE" id="9154260A-5039-353D-6739-8D32F6A29FA8">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 15:20:51 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+<engineerTo>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+</engineerTo>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>EE73E7A5-75C0-513C-08D9-98E102E9D0D5</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="HIGHEST_PRICE" id="D48D854E-389D-88AB-FCEF-8D5C70E39D47">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 15:20:59 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+<engineerTo>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+</engineerTo>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>EE73E7A5-75C0-513C-08D9-98E102E9D0D5</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="LOWEST_PRICE" id="7416BBB0-EEAA-AF02-EB1A-22013456FEFA">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 15:21:08 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+<engineerTo>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+</engineerTo>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>EE73E7A5-75C0-513C-08D9-98E102E9D0D5</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="AVERAGE_PRICE" id="AA6902ED-77ED-D536-5815-93A679FD3A49">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 15:21:20 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+<engineerTo>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+</engineerTo>
+<use>0</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<domain>EE73E7A5-75C0-513C-08D9-98E102E9D0D5</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="TIME_DURATION" id="031F674E-64AF-2E8A-0DDB-001ED94E1E7A">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 15:21:31 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+<engineerTo>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>12</dataTypePrecision>
+<ownDataTypeParameters>,12,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="VALUME_TRADED" id="911A7D98-ECDE-DFC1-C60A-A14D2C2886C2">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 15:22:13 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+<engineerTo>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT019</logicalDatatype>
+<dataTypePrecision>20</dataTypePrecision>
+<dataTypeScale>8</dataTypeScale>
+<ownDataTypeParameters>,20,8</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="BE2004DE-922E-D40C-476F-DBBD1311EAF4" name="TETI_PK">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 15:23:00 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
+<engineerTo>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="false"/>
+</engineerTo>
+<pk>true</pk>
+<newElementsIDs>72CAE973-23C7-BD85-4C18-D46F68FF69E5,18C70228-4B3C-3AD3-9D9F-73A0695126E2,C3BE988F-AC7A-D374-DDB9-3D93FEBE180D</newElementsIDs>
+<usedAttributes>
+<attributeRef>72CAE973-23C7-BD85-4C18-D46F68FF69E5</attributeRef>
+<attributeRef>18C70228-4B3C-3AD3-9D9F-73A0695126E2</attributeRef>
+<attributeRef>C3BE988F-AC7A-D374-DDB9-3D93FEBE180D</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

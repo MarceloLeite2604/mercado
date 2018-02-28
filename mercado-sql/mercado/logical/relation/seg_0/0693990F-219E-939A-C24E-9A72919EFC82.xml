@@ -1,0 +1,19 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="PARA_CLASS_FK" directorySegmentName="seg_0" id="0693990F-219E-939A-C24E-9A72919EFC82">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 14:22:47 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+<engineerTo>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+</engineerTo>
+<sourcePk>91088142-8D38-464F-C6B6-EA1BE199F53D</sourcePk>
+<identifying>true</identifying>
+<optionalSource>true</optionalSource>
+<optionalTarget>false</optionalTarget>
+<sourceCardinality>1</sourceCardinality>
+<sourceEntity>35001C21-38F1-49E9-BE3F-582D0B48D799</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>5311A49C-448A-C762-BC3D-DEA6EE48CFC5</targetEntity>
+<transferable>true</transferable>
+<deleteRule>NO ACTION</deleteRule>
+</Relation>

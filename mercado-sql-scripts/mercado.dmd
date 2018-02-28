@@ -1,0 +1,13 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<OSDM_Design class="oracle.dbtools.crest.model.design.Design" name="mercado" id="46E2CE63-010E-D645-DCD1-25D2C7622298" version="3.5">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 12:06:31 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+<capitalNames>false</capitalNames>
+<designId>46E2CE63-010E-D645-DCD1-25D2C7622298</designId>
+<usedDesignStorageDescriptors>
+<designDescr class="oracle.dbtools.crest.model.design.Design$DesignStorageDesc" id="7CC2EA82-60BD-8CA3-5054-9D0386C22D96">
+<designStoragePath>/home/marcelo/git/mercado/mercado-sql-scripts</designStoragePath>
+</designDescr>
+</usedDesignStorageDescriptors>
+</OSDM_Design>

@@ -1,0 +1,53 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev12c class="oracle.dbtools.crest.model.design.storage.oracle.v12c.TableProxyOraclev12c" name="VARIABLES" directorySegmentName="seg_0" id="C9E78805-6DD7-7C41-8431-19D07447268D">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:36:23 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+<logging>YES</logging>
+<partitionedRowMovement>DISABLE</partitionedRowMovement>
+<temporaryChanged>false</temporaryChanged>
+<accessDriverType>oracle_loader</accessDriverType>
+<rejectLimit></rejectLimit>
+<columnProxies itemClass="oracle.dbtools.crest.model.design.storage.oracle.v12c.ColumnProxyOraclev12c">
+<ColumnProxy name="CLASS_STRA_CURRENCY" id="49249C0A-961F-AFD3-9F70-270E99F67243">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:36:23 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="VALUE" id="5A410D76-A4DB-A781-CC1E-D69EEF8091F4">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:36:23 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="CLASS_NAME" id="5C503265-6C82-1066-F3FE-2D55318C7B99">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:36:23 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="CLASS_STRA_ACCO_OWNER" id="7AB8A0C4-FD88-BBCA-2283-644389DB2A3B">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:36:23 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="NAME" id="D9A7B759-CDF3-285B-D6B3-31892EBD8724">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:36:23 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+</ColumnProxy>
+</columnProxies>
+<foreignKeys>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="VARI_CLASS_FK" id="E33D9693-BC2B-5BEA-2FD8-1977364B4B4F">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:36:23 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+</ForeignKey>
+</foreignKeys>
+<primaryKeys>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="VARI_PK" id="D5117489-DE08-1230-A735-5E3E89AEE3D3">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:36:23 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+<indexSort>SORTED</indexSort>
+</PrimaryKey>
+</primaryKeys>
+</TableProxyOraclev12c>

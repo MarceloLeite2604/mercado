@@ -1,0 +1,114 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="17641074-27DE-2AFB-6A5D-8DE885CAC738" name="VARIABLES">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 14:23:33 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+<engineerTo>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<preferredAbbreviation>VARIABLES</preferredAbbreviation>
+<shortName>VARI</shortName>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="CLASS_STRA_ACCO_OWNER" id="9F871763-DC5A-58C3-68E3-013E69951351">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 15:13:23 UTC</createdTime>
+<generatorID>014C5118-0F48-4E33-A92D-03AFA1FC04EA</generatorID>
+<ownerDesignName>mercado</ownerDesignName>
+<engineerTo>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+</engineerTo>
+<referedAttribute>6FDEF2AD-38C5-80E3-6D83-D2D60C49B12C</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>64 CHAR</dataTypeSize>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="CLASS_STRA_CURRENCY" id="775B9861-54A0-394E-5095-42BC03B1299B">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 15:13:23 UTC</createdTime>
+<generatorID>014C5118-0F48-4E33-A92D-03AFA1FC04EA</generatorID>
+<ownerDesignName>mercado</ownerDesignName>
+<engineerTo>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+</engineerTo>
+<referedAttribute>031568B4-DF85-863B-8044-79E15E98AB5A</referedAttribute>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>C0FF9A66-7E35-E913-A432-F83306475582</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="CLASS_NAME" id="3D2EB5C3-BDAA-9544-3076-95C07426FFBA">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 15:13:23 UTC</createdTime>
+<generatorID>014C5118-0F48-4E33-A92D-03AFA1FC04EA</generatorID>
+<ownerDesignName>mercado</ownerDesignName>
+<engineerTo>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+</engineerTo>
+<referedAttribute>228D8DA7-9F1C-6EE8-13D1-7DEF410F7BBC</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>256 CHAR</dataTypeSize>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="NAME" id="D437E870-011D-BB6E-FFBB-3D4565806DD8">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 14:23:41 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+<engineerTo>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>256 CHAR</dataTypeSize>
+<ownDataTypeParameters>256 CHAR,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="VALUE" id="D18CD121-F874-5255-37E0-D9EB5B3B0DDD">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 14:23:41 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+<engineerTo>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>4096 CHAR</dataTypeSize>
+<ownDataTypeParameters>4096 CHAR,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="0E0D934D-F4E4-65ED-620E-18B6D6B3EECB" name="VARI_PK">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 15:13:45 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
+<engineerTo>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="false"/>
+</engineerTo>
+<pk>true</pk>
+<newElementsIDs>014C5118-0F48-4E33-A92D-03AFA1FC04EA,014C5118-0F48-4E33-A92D-03AFA1FC04EA,D437E870-011D-BB6E-FFBB-3D4565806DD8</newElementsIDs>
+<usedAttributes>
+<attributeRef>9F871763-DC5A-58C3-68E3-013E69951351</attributeRef>
+<attributeRef>775B9861-54A0-394E-5095-42BC03B1299B</attributeRef>
+<attributeRef>3D2EB5C3-BDAA-9544-3076-95C07426FFBA</attributeRef>
+<attributeRef>9F871763-DC5A-58C3-68E3-013E69951351</attributeRef>
+<attributeRef>775B9861-54A0-394E-5095-42BC03B1299B</attributeRef>
+<attributeRef>3D2EB5C3-BDAA-9544-3076-95C07426FFBA</attributeRef>
+<attributeRef>D437E870-011D-BB6E-FFBB-3D4565806DD8</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

@@ -1,0 +1,66 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="964BEE0F-DE43-FB07-DF5A-64BCFFD86287" name="STRATEGIES">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:01:43 UTC</createdTime>
+<generatorID>F84D3148-3767-25E7-CF33-5E9FA29B2CF5</generatorID>
+<ownerDesignName>mercado</ownerDesignName>
+<abbreviation>STRA</abbreviation>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="ACCO_OWNER" id="B4B7919E-33FF-F5B5-FE94-E2B4797F5834">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:01:43 UTC</createdTime>
+<generatorID>766050DA-85CE-21E2-E6EF-1200C23D4E4C</generatorID>
+<ownerDesignName>mercado</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>64 CHAR</dataTypeSize>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="F417C93B-B785-9A88-9C96-BE186134F2B5" referredColumn="0D52C333-6BD3-AE2E-E181-EFDB3AB22EC8"/>
+</associations>
+</Column>
+<Column name="CURRENCY" id="6516108B-9CA4-C10B-3607-36DC184D3FBB">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:01:43 UTC</createdTime>
+<generatorID>DB705BF8-F930-97A5-1468-4CFE83D9AD21</generatorID>
+<ownerDesignName>mercado</ownerDesignName>
+<use>0</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<domain>C0FF9A66-7E35-E913-A432-F83306475582</domain>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="A91544AF-5F6E-55BD-01CA-85DC7C6D849C" name="STRA_PK">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:01:43 UTC</createdTime>
+<generatorID>A1524179-65EE-0B8D-D2FC-5111F4DEAC69</generatorID>
+<ownerDesignName>mercado</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="B4B7919E-33FF-F5B5-FE94-E2B4797F5834"/>
+<colUsage columnID="6516108B-9CA4-C10B-3607-36DC184D3FBB"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="E785A722-E78F-2A35-9112-E8998B9C51F2" name="STRA_ACCO_FK">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:01:43 UTC</createdTime>
+<generatorID>EC679E6B-2EBA-BD2A-F10F-32D1422A4996</generatorID>
+<ownerDesignName>mercado</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="B4B7919E-33FF-F5B5-FE94-E2B4797F5834"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

@@ -1,0 +1,31 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev12c class="oracle.dbtools.crest.model.design.storage.oracle.v12c.TableProxyOraclev12c" name="PROPERTIES" directorySegmentName="seg_0" id="B3D7D944-3966-2783-7DA8-B7636D140579">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:36:23 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+<logging>YES</logging>
+<partitionedRowMovement>DISABLE</partitionedRowMovement>
+<temporaryChanged>false</temporaryChanged>
+<accessDriverType>oracle_loader</accessDriverType>
+<rejectLimit></rejectLimit>
+<columnProxies itemClass="oracle.dbtools.crest.model.design.storage.oracle.v12c.ColumnProxyOraclev12c">
+<ColumnProxy name="VALUE" id="A1FDE564-3146-0FFF-5014-A7CF3E593D19">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:36:23 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="NAME" id="C9F741B3-C656-EDFC-E77D-6B6B0F6D0B70">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:36:23 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+</ColumnProxy>
+</columnProxies>
+<primaryKeys>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="PROP_PK" id="2ABDE79F-51BB-C26B-250D-6DAED45AA7B5">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-02-27 16:36:23 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+<indexSort>SORTED</indexSort>
+</PrimaryKey>
+</primaryKeys>
+</TableProxyOraclev12c>
