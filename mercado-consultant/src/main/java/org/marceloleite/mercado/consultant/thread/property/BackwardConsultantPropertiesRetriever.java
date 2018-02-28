@@ -57,7 +57,7 @@ public class BackwardConsultantPropertiesRetriever extends AbstractConsultantThr
 		if (oldestTrade == null) {
 			return null;
 		} else {
-			return oldestTrade.getDate();
+			return oldestTrade.getTradeDate();
 		}
 	}
 }

@@ -4,7 +4,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 import org.marceloleite.mercado.commons.Currency;
-import org.marceloleite.mercado.simulator.strategy.Strategy;
+import org.marceloleite.mercado.simulator.strategies.Strategy;
 
 public class StrategyLoader {
 

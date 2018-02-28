@@ -1,5 +1,7 @@
 package org.marceloleite.mercado.converter.entity;
 
+import java.math.BigDecimal;
+
 import org.marceloleite.mercado.base.model.data.BalanceData;
 import org.marceloleite.mercado.commons.util.converter.Converter;
 import org.marceloleite.mercado.databaseretriever.persistence.objects.BalanceIdPO;
@@ -10,8 +12,8 @@ public class BalancePOToBalanceDataConverter implements Converter<BalancePO, Bal
 	@Override
 	public BalanceData convertTo(BalancePO balancePO) {
 		BalanceData balanceData = new BalanceData();
-		balanceData.setAmount(balancePO.getAmount());
-		balanceData.setCurrency(balancePO.getBalanceIdPO().getCurrency());
+		balanceData.setAmount(balancePO.getAmount().doubleValue());
+		balanceData.setCurrency(balancePO.getId().getCurrency());
 		return balanceData;
 	}
 
@@ -19,10 +21,10 @@ public class BalancePOToBalanceDataConverter implements Converter<BalancePO, Bal
 	public BalancePO convertFrom(BalanceData balanceData) {
 		BalancePO balancePO = new BalancePO();
 		BalanceIdPO balanceIdPO = new BalanceIdPO();
-		balanceIdPO.setAccountOwner(balanceData.getAccountData().getOwner());
+		balanceIdPO.setAccoOwner(balanceData.getAccountData().getOwner());
 		balanceIdPO.setCurrency(balanceData.getCurrency());
-		balancePO.setBalanceIdPO(balanceIdPO);
-		balancePO.setAmount(balanceData.getAmount());
+		balancePO.setId(balanceIdPO);
+		balancePO.setAmount(new BigDecimal(balanceData.getAmount()));
 		return balancePO;
 	}
 

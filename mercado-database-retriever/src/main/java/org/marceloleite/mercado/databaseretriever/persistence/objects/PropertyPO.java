@@ -1,30 +1,34 @@
 package org.marceloleite.mercado.databaseretriever.persistence.objects;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 
-@Entity(name = "PROPERTIES")
-public class PropertyPO implements PersistenceObject<String> {
+/**
+ * The persistent class for the PROPERTIES database table.
+ * 
+ */
+@Entity
+@Table(name="PROPERTIES")
+@NamedQuery(name="PropertyPO.findAll", query="SELECT p FROM PropertyPO p")
+public class PropertyPO implements Serializable, PersistenceObject<String> {
+	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name="NAME", nullable = false)
 	private String name;
 
-	@Column(name="VALUE", nullable = false)
+	@Column(name="\"VALUE\"")
 	private String value;
 
-	public PropertyPO(String name, String value) {
-		this.name = name;
-		this.value = value;
-	}
-
 	public PropertyPO() {
-		this(null, null);
 	}
 
 	public String getName() {
-		return name;
+		return this.name;
 	}
 
 	public void setName(String name) {
@@ -32,7 +36,7 @@ public class PropertyPO implements PersistenceObject<String> {
 	}
 
 	public String getValue() {
-		return value;
+		return this.value;
 	}
 
 	public void setValue(String value) {
@@ -46,6 +50,6 @@ public class PropertyPO implements PersistenceObject<String> {
 
 	@Override
 	public String getId() {
-		return this.name;
+		return name;
 	}
 }

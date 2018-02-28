@@ -8,61 +8,54 @@ import javax.persistence.Embeddable;
 
 import org.marceloleite.mercado.commons.Currency;
 
+/**
+ * The primary key class for the TICKERS database table.
+ * 
+ */
 @Embeddable
 public class TickerIdPO implements Serializable {
-
+	//default serial version id, required for serializable classes.
 	private static final long serialVersionUID = 1L;
 
-	@Column(name = "CURRENCY", nullable = false)
 	private Currency currency;
 
-	@Column(name = "TICKER_TIME", nullable = false)
-	private ZonedDateTime time;
+	@Column(name="TICKER_TIME")
+	private ZonedDateTime tickerTime;
 
-	public Currency getCurrency() {
-		return currency;
+	public TickerIdPO() {
 	}
-
+	public Currency getCurrency() {
+		return this.currency;
+	}
 	public void setCurrency(Currency currency) {
 		this.currency = currency;
 	}
-
-	public ZonedDateTime getTime() {
-		return time;
+	public ZonedDateTime getTickerTime() {
+		return this.tickerTime;
+	}
+	public void setTickerTime(ZonedDateTime tickerTime) {
+		this.tickerTime = tickerTime;
 	}
 
-	public void setTime(ZonedDateTime time) {
-		this.time = time;
+	public boolean equals(Object other) {
+		if (this == other) {
+			return true;
+		}
+		if (!(other instanceof TickerIdPO)) {
+			return false;
+		}
+		TickerIdPO castOther = (TickerIdPO)other;
+		return 
+			this.currency.equals(castOther.currency)
+			&& this.tickerTime.equals(castOther.tickerTime);
 	}
 
-	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((currency == null) ? 0 : currency.hashCode());
-		result = prime * result + ((time == null) ? 0 : time.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		TickerIdPO other = (TickerIdPO) obj;
-		if (currency == null) {
-			if (other.currency != null)
-				return false;
-		} else if (!currency.equals(other.currency))
-			return false;
-		if (time == null) {
-			if (other.time != null)
-				return false;
-		} else if (!time.equals(other.time))
-			return false;
-		return true;
+		int hash = 17;
+		hash = hash * prime + this.currency.hashCode();
+		hash = hash * prime + this.tickerTime.hashCode();
+		
+		return hash;
 	}
 }

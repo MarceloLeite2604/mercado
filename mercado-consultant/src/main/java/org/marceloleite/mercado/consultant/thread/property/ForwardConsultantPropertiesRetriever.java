@@ -57,7 +57,7 @@ public class ForwardConsultantPropertiesRetriever extends AbstractConsultantThre
 		if (newestTrade == null) {
 			return null;
 		} else {
-			return newestTrade.getDate();
+			return newestTrade.getTradeDate();
 		}
 	}
 }

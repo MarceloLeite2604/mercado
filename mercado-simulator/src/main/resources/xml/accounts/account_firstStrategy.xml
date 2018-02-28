@@ -11,10 +11,26 @@
 	<strategies>
 		<strategy>
 			<currency>BTC</currency>
-			<classes>
-				<class>org.marceloleite.mercado.simulator.strategy.first.FirstStrategy
-				</class>
-			</classes>
+			<class>org.marceloleite.mercado.simulator.strategy.first.FirstStrategy
+			</class>
+			<parameters>
+				<parameter>
+					<name>growthPercentageThreshold</name>
+					<value>0.01</value>
+				</parameter>
+				<parameter>
+					<name>shrinkPercentageThreshold</name>
+					<value>-0.01</value>
+				</parameter>
+				<parameter>
+					<name>totalBuySteps</name>
+					<value>5</value>
+				</parameter>
+				<parameter>
+					<name>totalSellSteps</name>
+					<value>6</value>
+				</parameter>
+			</parameters>
 		</strategy>
 	</strategies>
 </account>

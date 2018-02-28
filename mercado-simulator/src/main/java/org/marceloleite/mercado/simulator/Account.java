@@ -11,7 +11,7 @@ import org.marceloleite.mercado.base.model.data.AccountData;
 import org.marceloleite.mercado.base.model.data.BuyOrderData;
 import org.marceloleite.mercado.base.model.data.DepositData;
 import org.marceloleite.mercado.base.model.data.SellOrderData;
-import org.marceloleite.mercado.base.model.data.StrategyClassData;
+import org.marceloleite.mercado.base.model.data.ClassData;
 import org.marceloleite.mercado.base.model.data.StrategyData;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
@@ -19,7 +19,7 @@ import org.marceloleite.mercado.simulator.converter.CurrencyAmountToStringConver
 import org.marceloleite.mercado.simulator.order.BuyOrderBuilder;
 import org.marceloleite.mercado.simulator.order.BuyOrderBuilder.BuyOrder;
 import org.marceloleite.mercado.simulator.order.SellOrderBuilder.SellOrder;
-import org.marceloleite.mercado.simulator.strategy.Strategy;
+import org.marceloleite.mercado.simulator.strategies.Strategy;
 import org.marceloleite.mercado.simulator.temporalcontroller.TemporalController;
 
 public class Account {
@@ -108,9 +108,9 @@ public class Account {
 		if (strategyDatas != null && !strategyDatas.isEmpty()) {
 			for (StrategyData strategyData : strategyDatas) {
 				List<Strategy> strategies = new ArrayList<>();
-				List<StrategyClassData> strategyClassDatas = strategyData.getStrategyClassDatas();
+				List<ClassData> strategyClassDatas = strategyData.getStrategyClassDatas();
 				Currency currency = strategyData.getCurrency();
-				for (StrategyClassData strategyClassData : strategyClassDatas) {
+				for (ClassData strategyClassData : strategyClassDatas) {
 					Strategy strategy = strategyLoader.load(strategyClassData.getClassName().trim(), currency);
 					strategies.add(strategy);
 				}

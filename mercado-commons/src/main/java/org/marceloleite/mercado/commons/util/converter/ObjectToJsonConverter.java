@@ -91,4 +91,11 @@ public class ObjectToJsonConverter implements Converter<Object, String> {
 	public <T> T convertFromToObject(String json, Class<T> clazz) {
 		return (T) convertFrom(json);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public <T> T convertFromToObject(String json, T object) {
+		return (T)convertFromToObject(json, object.getClass());
+	}
+
+	
 }

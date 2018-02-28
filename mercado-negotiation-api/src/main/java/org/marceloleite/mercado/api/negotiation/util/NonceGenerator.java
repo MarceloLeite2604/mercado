@@ -1,13 +1,18 @@
 package org.marceloleite.mercado.api.negotiation.util;
 
-import org.marceloleite.mercado.databaseretriever.persistence.dao.PropertyDAO;
+import org.marceloleite.mercado.databaseretriever.persistence.daos.PropertyDAO;
 import org.marceloleite.mercado.databaseretriever.persistence.objects.PropertyPO;
 
 public class NonceGenerator {
 
 	private static final String NONCE_PROPERTY_NAME = "system.negotiationapi.nonce";
 
-	private static final PropertyPO propertyPOToEnquire = new PropertyPO(NONCE_PROPERTY_NAME, null);
+	private static final PropertyPO propertyPOToEnquire = new PropertyPO();
+	
+	static {
+		propertyPOToEnquire.setName(NONCE_PROPERTY_NAME);
+		propertyPOToEnquire.setValue(null);
+	}
 
 	private static NonceGenerator INSTANCE;
 
@@ -24,7 +29,8 @@ public class NonceGenerator {
 		if (noncePropertyPO != null) {
 			nonce = Long.parseLong(noncePropertyPO.getValue());
 		} else {
-			noncePropertyPO = new PropertyPO(NONCE_PROPERTY_NAME, null);
+			noncePropertyPO = new PropertyPO();
+			noncePropertyPO.setName(NONCE_PROPERTY_NAME);
 		}
 		noncePropertyPO.setValue(Long.toString(++nonce));
 		propertyDAO.merge(noncePropertyPO);
