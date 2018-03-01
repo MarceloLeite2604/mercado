@@ -1,7 +1,9 @@
 package org.marceloleite.mercado.xml;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -15,8 +17,11 @@ import org.marceloleite.mercado.xml.structures.XmlAccount;
 import org.marceloleite.mercado.xml.structures.XmlBalanceEntryList;
 import org.marceloleite.mercado.xml.structures.XmlBalances;
 import org.marceloleite.mercado.xml.structures.XmlBuyOrder;
+import org.marceloleite.mercado.xml.structures.XmlClass;
 import org.marceloleite.mercado.xml.structures.XmlCurrencyAmount;
 import org.marceloleite.mercado.xml.structures.XmlDeposit;
+import org.marceloleite.mercado.xml.structures.XmlParameter;
+import org.marceloleite.mercado.xml.structures.XmlStrategy;
 
 public class Main {
 
@@ -31,6 +36,9 @@ public class Main {
 	private static XmlBalances xmlBalances;
 	private static XmlAccount xmlAccount;
 	private static XmlBuyOrder xmlBuyOrder;
+	private static XmlStrategy xmlStrategy;
+	private static XmlClass xmlClass;
+	private static XmlParameter xmlParameter;
 
 	public static void main(String[] args) throws Exception {
 		jaxbContext = createJaxbContext();
@@ -53,7 +61,8 @@ public class Main {
 
 	private static JAXBContext createJaxbContext() throws JAXBException {
 		JAXBContext jaxbContext = JAXBContext.newInstance(XmlBuyOrder.class, XmlAccount.class,
-				XmlBalanceEntryList.class, XmlBalances.class, XmlDeposit.class, XmlCurrencyAmount.class);
+				XmlBalanceEntryList.class, XmlBalances.class, XmlDeposit.class, XmlCurrencyAmount.class,
+				XmlClass.class, XmlStrategy.class, XmlParameter.class);
 		return jaxbContext;
 	}
 
@@ -79,6 +88,32 @@ public class Main {
 		xmlAccount.setXmlDeposits(Arrays.asList(xmlDeposit));
 		xmlAccount.setXmlBalances(xmlBalances);
 		xmlAccount.setXmlBuyOrders(Arrays.asList(xmlBuyOrder));
+		
+		List<XmlParameter> xmlParameters = new ArrayList<>();
+		xmlParameter = new XmlParameter();
+		xmlParameter.setName("growthPercentageThreshold");
+		xmlParameter.setValue("0.0496");
+		xmlParameters.add(xmlParameter);
+		
+		xmlParameter = new XmlParameter();
+		xmlParameter.setName("shrinkPercentageThreshold");
+		xmlParameter.setValue("-0.05");
+		xmlParameters.add(xmlParameter);
+		
+		List<XmlClass> xmlClasses = new ArrayList<>();
+		xmlClass = new XmlClass();
+		xmlClass.setName("org.marceloleite.mercado.simulator.strategies.third.ThirdStrategy");
+		xmlClass.setXmlParameters(xmlParameters);
+		xmlClasses.add(xmlClass);
+		
+		
+		List<XmlStrategy> xmlStrategies = new ArrayList<>();
+		xmlStrategy = new XmlStrategy();
+		xmlStrategy.setCurrency(Currency.BITCOIN);
+		xmlStrategy.setXmlClasses(xmlClasses);
+		xmlStrategies.add(xmlStrategy);
+		
+		xmlAccount.setXmlStrategies(xmlStrategies);
 	}
 
 	private static void marshallXmlBalances() throws Exception {
@@ -110,8 +145,9 @@ public class Main {
 	}
 
 	private static void unmarshallXmlBalances() throws Exception {
-		XmlBalanceEntryList xmlBalanceEntryList = (XmlBalanceEntryList)unmarshaller.unmarshal(createFileForClassXml(XmlBalances.class));
-		xmlBalances = new XmlBalancesXmlAdapter().unmarshal(xmlBalanceEntryList) ;
+		XmlBalanceEntryList xmlBalanceEntryList = (XmlBalanceEntryList) unmarshaller
+				.unmarshal(createFileForClassXml(XmlBalances.class));
+		xmlBalances = new XmlBalancesXmlAdapter().unmarshal(xmlBalanceEntryList);
 	}
 
 	private static void unmarshallXmlBuyOrder() throws JAXBException {

@@ -26,7 +26,7 @@ public class ParameterPOToParameterDataConverter
 		StrategyData strategyData = classData.getStrategyData();
 		parameterIdPO.setClassStraAccoOwner(strategyData.getAccountData().getOwner());
 		parameterIdPO.setClassStraCurrency(strategyData.getCurrency());
-		parameterIdPO.setClassName(classData.getClassName());
+		parameterIdPO.setClassName(classData.getName());
 		parameterIdPO.setName(parameterData.getName());
 		parameterPO.setId(parameterIdPO);
 		parameterPO.setValue(parameterData.getValue());

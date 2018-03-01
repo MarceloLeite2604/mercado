@@ -12,7 +12,18 @@
 		<strategy>
 			<currency>BTC</currency>
 			<classes>
-				<class>org.marceloleite.mercado.simulator.strategy.third.ThirdStrategy
+				<class>
+					<name>org.marceloleite.mercado.simulator.strategy.third.ThirdStrategy</name>
+					<parameters>
+						<parameter>
+							<name>growthPercentageThreshold</name>
+							<value>0.0496</value>
+						</parameter>
+						<parameter>
+							<name>shrinkPercentageThreshold</name>
+							<value>-0.05</value>
+						</parameter>
+					</parameters>
 				</class>
 			</classes>
 		</strategy>

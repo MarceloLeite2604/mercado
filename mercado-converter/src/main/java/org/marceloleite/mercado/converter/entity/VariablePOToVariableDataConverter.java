@@ -25,7 +25,7 @@ public class VariablePOToVariableDataConverter
 		VariableIdPO variableIdPO = new VariableIdPO();
 		variableIdPO.setClassStraAccoOwner(strategyData.getAccountData().getOwner());
 		variableIdPO.setClassStraCurrency(strategyData.getCurrency());
-		variableIdPO.setClassName(classData.getClassName());
+		variableIdPO.setClassName(classData.getName());
 		variableIdPO.setName(variableData.getName());
 		variablePO.setId(variableIdPO);
 		variablePO.setValue(variableData.getValue());

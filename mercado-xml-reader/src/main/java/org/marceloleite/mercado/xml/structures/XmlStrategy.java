@@ -5,24 +5,22 @@ import java.util.List;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.xml.adapters.CurrencyXmlAdapter;
 
 @XmlRootElement(name = "strategy")
-@XmlType(propOrder= {"currency", "classNames"})
 public class XmlStrategy {
 	
 	private Currency currency;
 	
-	private List<String> classNames;
+	private List<XmlClass> xmlClasses;
 	
-	public XmlStrategy(Currency currency, List<String> classNames) {
+	public XmlStrategy(Currency currency, List<XmlClass> xmlClasses) {
 		super();
 		this.currency = currency;
-		this.classNames = classNames;
+		this.xmlClasses = xmlClasses;
 	}
 
 	public XmlStrategy() {
@@ -41,11 +39,11 @@ public class XmlStrategy {
 
 	@XmlElementWrapper(name="classes")
 	@XmlElement(name="class")
-	public List<String> getClassNames() {
-		return classNames;
+	public List<XmlClass> getXmlClasses() {
+		return xmlClasses;
 	}
 
-	public void setClassNames(List<String> classNames) {
-		this.classNames = classNames;
+	public void setXmlClasses(List<XmlClass> xmlClasses) {
+		this.xmlClasses = xmlClasses;
 	}	
 }
