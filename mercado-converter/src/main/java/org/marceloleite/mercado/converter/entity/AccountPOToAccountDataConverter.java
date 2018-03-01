@@ -35,9 +35,11 @@ public class AccountPOToAccountDataConverter implements Converter<AccountPO, Acc
 		accountPO.setOwner(accountData.getOwner());
 		List<BalanceData> balanceDatas = accountData.getBalanceDatas();
 		List<BalancePO> balancePOs = listBalancePOToListBalanceDataConverter.convertFrom(balanceDatas);
+		balancePOs.forEach(balancePO -> balancePO.setAccountPO(accountPO));
 		accountPO.setBalancePOs(balancePOs);
 		List<StrategyData> strategyDatas = accountData.getStrategyDatas();
 		List<StrategyPO> strategyPOs = listStrategyPOToListStrategyDataConverter.convertFrom(strategyDatas);
+		strategyPOs.forEach(strategyPO -> strategyPO.setAccount(accountPO));
 		accountPO.setStrategyPOs(strategyPOs);
 		return accountPO;
 	}
