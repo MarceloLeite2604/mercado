@@ -30,9 +30,9 @@ public class VariablePO implements Serializable, PersistenceObject<VariableIdPO>
 	//bi-directional many-to-one association to ClassPO
 	@ManyToOne
 	@JoinColumns({
-		@JoinColumn(name="CLASS_NAME", referencedColumnName="NAME"),
-		@JoinColumn(name="CLASS_STRA_ACCO_OWNER", referencedColumnName="STRA_ACCO_OWNER"),
-		@JoinColumn(name="CLASS_STRA_CURRENCY", referencedColumnName="STRA_CURRENCY")
+		@JoinColumn(name="CLASS_NAME", referencedColumnName="NAME", insertable=false, updatable=false),
+		@JoinColumn(name="CLASS_STRA_ACCO_OWNER", referencedColumnName="STRA_ACCO_OWNER", insertable=false, updatable=false),
+		@JoinColumn(name="CLASS_STRA_CURRENCY", referencedColumnName="STRA_CURRENCY", insertable=false, updatable=false)
 		})
 	private ClassPO classPO;
 

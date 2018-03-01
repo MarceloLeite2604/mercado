@@ -30,7 +30,7 @@ public class StrategyPO implements Serializable, PersistenceObject<StrategyIdPO>
 
 	//bi-directional many-to-one association to AccountPO
 	@ManyToOne
-	@JoinColumn(name="ACCO_OWNER")
+	@JoinColumn(name="ACCO_OWNER", insertable=false, updatable=false)
 	private AccountPO account;
 
 	public StrategyPO() {

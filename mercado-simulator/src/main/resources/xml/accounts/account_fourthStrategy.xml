@@ -13,7 +13,7 @@
 			<currency>BTC</currency>
 			<classes>
 				<class>
-					<name>org.marceloleite.mercado.simulator.strategy.fourth.FourthStrategy</name>
+					<name>org.marceloleite.mercado.simulator.strategies.fourth.FourthStrategy</name>
 					<parameters>
 						<parameter>
 							<name>growthPercentageThreshold</name>

@@ -13,7 +13,7 @@
 			<currency>BTC</currency>
 			<classes>
 				<class>
-					<name>org.marceloleite.mercado.simulator.strategy.first.FirstStrategy
+					<name>org.marceloleite.mercado.simulator.strategies.first.FirstStrategy
 					</name>
 					<parameters>
 						<parameter>

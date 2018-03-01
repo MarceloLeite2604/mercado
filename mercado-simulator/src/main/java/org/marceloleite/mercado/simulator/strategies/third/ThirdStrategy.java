@@ -193,13 +193,12 @@ public class ThirdStrategy extends AbstractStrategy {
 	@Override
 	protected void defineParameter(Property parameter) {
 		ThirdStrategyParameter thirdStrategyParameter = ThirdStrategyParameter.findByName(parameter.getName());
-		ObjectToJsonConverter objectToJsonConverter = new ObjectToJsonConverter();
 		switch(thirdStrategyParameter) {
 		case GROWTH_PERCENTAGE_THRESHOLD:
-			growthPercentageThreshold = objectToJsonConverter.convertFromToObject(parameter.getValue(), growthPercentageThreshold);
+			growthPercentageThreshold = Double.parseDouble(parameter.getValue());
 			break;
 		case SHRINK_PERCENTAGE_THRESHOLD:
-			shrinkPercentageThreshold = objectToJsonConverter.convertFromToObject(parameter.getValue(), shrinkPercentageThreshold);
+			shrinkPercentageThreshold = Double.parseDouble(parameter.getValue());
 			break;
 		}
 	}

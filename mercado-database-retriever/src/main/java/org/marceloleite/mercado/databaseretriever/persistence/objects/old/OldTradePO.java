@@ -11,7 +11,7 @@ import javax.persistence.Enumerated;
 import org.marceloleite.mercado.commons.TradeType;
 import org.marceloleite.mercado.databaseretriever.persistence.objects.PersistenceObject;
 
-@Entity(name = "TRADES")
+//@Entity(name = "TRADES")
 public class OldTradePO implements PersistenceObject<OldTradeIdPO> {
 
 	@EmbeddedId

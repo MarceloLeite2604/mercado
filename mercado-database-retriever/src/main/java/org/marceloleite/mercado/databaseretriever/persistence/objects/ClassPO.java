@@ -27,8 +27,8 @@ public class ClassPO implements Serializable, PersistenceObject<ClassIdPO> {
 
 	// bi-directional many-to-one association to StrategyPO
 	@ManyToOne
-	@JoinColumns({ @JoinColumn(name = "STRA_ACCO_OWNER", referencedColumnName = "ACCO_OWNER"),
-			@JoinColumn(name = "STRA_CURRENCY", referencedColumnName = "CURRENCY") })
+	@JoinColumns({ @JoinColumn(name = "STRA_ACCO_OWNER", referencedColumnName = "ACCO_OWNER", insertable=false, updatable=false),
+			@JoinColumn(name = "STRA_CURRENCY", referencedColumnName = "CURRENCY", insertable=false, updatable=false) })
 	private StrategyPO strategyPO;
 
 	// bi-directional many-to-one association to ParameterPO

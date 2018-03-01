@@ -210,13 +210,13 @@ public class FourthStrategy extends AbstractStrategy {
 
 		switch (fourthStrategyparameter) {
 		case CIRCULAR_ARRAY_SIZE:
-			circularArray = new CircularArray<>(Integer.parseInt(fourthStrategyparameter.getValue()));
+			circularArray = new CircularArray<>(Integer.parseInt(parameter.getValue()));
 			break;
 		case GROWTH_PERCENTAGE_THRESHOLD:
-			growthPercentageThreshold = Double.parseDouble(fourthStrategyparameter.getValue());
+			growthPercentageThreshold = Double.parseDouble(parameter.getValue());
 			break;
 		case SHRINK_PERCENTAGE_THRESHOLD:
-			shrinkPercentageThreshold = Double.parseDouble(fourthStrategyparameter.getValue());
+			shrinkPercentageThreshold = Double.parseDouble(parameter.getValue());
 			break;
 
 		}

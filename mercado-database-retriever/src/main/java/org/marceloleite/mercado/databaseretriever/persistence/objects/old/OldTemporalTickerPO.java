@@ -10,7 +10,7 @@ import org.marceloleite.mercado.commons.util.NonDigitalCurrencyFormatter;
 import org.marceloleite.mercado.commons.util.converter.DurationToStringConverter;
 import org.marceloleite.mercado.databaseretriever.persistence.objects.PersistenceObject;
 
-@Entity(name = "TEMPORAL_TICKERS")
+//@Entity(name = "TEMPORAL_TICKERS")
 public class OldTemporalTickerPO implements PersistenceObject<OldTemporalTickerIdPO> {
 
 	@EmbeddedId

@@ -27,7 +27,7 @@ public class BalancePO implements Serializable, PersistenceObject<BalanceIdPO> {
 
 	// bi-directional many-to-one association to AccountPO
 	@ManyToOne
-	@JoinColumn(name = "ACCO_OWNER")
+	@JoinColumn(name = "ACCO_OWNER", insertable=false, updatable=false)
 	private AccountPO accountPO;
 
 	public BalancePO() {

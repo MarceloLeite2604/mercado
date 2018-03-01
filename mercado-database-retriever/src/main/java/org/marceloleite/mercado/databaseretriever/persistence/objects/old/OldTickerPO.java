@@ -6,7 +6,7 @@ import javax.persistence.Entity;
 
 import org.marceloleite.mercado.databaseretriever.persistence.objects.PersistenceObject;
 
-@Entity(name = "TICKERS")
+//@Entity(name = "TICKERS")
 public class OldTickerPO implements PersistenceObject<OldTickerIdPO> {
 
 	@EmbeddedId

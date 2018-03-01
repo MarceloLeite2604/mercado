@@ -7,7 +7,7 @@ import javax.persistence.Embeddable;
 
 import org.marceloleite.mercado.commons.Currency;
 
-@Embeddable
+//@Embeddable
 public class OldBalanceIdPO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
