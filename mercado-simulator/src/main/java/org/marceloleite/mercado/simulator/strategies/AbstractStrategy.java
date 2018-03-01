@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.properties.Property;
 import org.marceloleite.mercado.simulator.Account;
@@ -93,6 +95,7 @@ public abstract class AbstractStrategy implements Strategy {
 
 	public void setVariables(List<Property> variables) {
 		checkVariables(variables);
+		listVariablesOnLog(variables);
 		this.variables = variables;
 		for (Property variable : variables) {
 			defineParameter(variable);
@@ -104,6 +107,7 @@ public abstract class AbstractStrategy implements Strategy {
 		for (Property parameter : parameters) {
 			defineParameter(parameter);
 		}
+		listParametersOnLog(parameters);
 	}
 
 	private List<Property> retrieveVariables() {
@@ -113,12 +117,27 @@ public abstract class AbstractStrategy implements Strategy {
 			for (Enum<?> enumConstant : enumConstants) {
 				Property property = (Property) enumConstant;
 				properties.add(retrieveVariable(property.getName()));
-				
 			}
 		}
 		return properties;
 	}
-	
+
+	private void listVariablesOnLog(List<Property> variables) {
+		Logger logger = LogManager.getLogger(this.getClass());
+		logger.info("Variables: ");
+		for (Property variable : variables) {
+			logger.info("\t" + variable.getName() + " = " + variable.getValue());
+		}
+	}
+
+	private void listParametersOnLog(List<Property> parameters) {
+		Logger logger = LogManager.getLogger(this.getClass());
+		logger.info("Parameters: ");
+		for (Property parameter : parameters) {
+			logger.info("\t" + parameter.getName() + " = " + parameter.getValue());
+		}
+	}
+
 	protected abstract Property retrieveVariable(String name);
 
 	protected abstract void defineVariable(Property variable);

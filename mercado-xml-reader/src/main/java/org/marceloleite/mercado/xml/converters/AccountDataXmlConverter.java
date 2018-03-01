@@ -27,18 +27,31 @@ public class AccountDataXmlConverter implements XmlConverter<XmlAccount, Account
 	public AccountData convertToObject(XmlAccount xmlAccount) {
 		String owner = xmlAccount.getOwner();
 		XmlBalances xmlBalances = xmlAccount.getXmlBalances();
+		AccountData accountData = new AccountData();
+		
+		accountData.setOwner(owner);
+		
 		List<BalanceData> balanceDatas = new BalanceXmlConverter().convertToObject(xmlBalances);
-		List<XmlBuyOrder> xmlBuyOrders = xmlAccount.getXmlBuyOrders();
-		List<BuyOrderData> buyOrdersData = createBuyOrders(xmlBuyOrders);
-		List<XmlSellOrder> xmlSellOrders = xmlAccount.getXmlSellOrders();
-		List<SellOrderData> sellOrdersData = createSellOrders(xmlSellOrders);
-		List<XmlDeposit> xmlDeposits = xmlAccount.getXmlDeposits();
-		List<DepositData> depositsData = createDeposits(xmlDeposits);
-		List<XmlStrategy> xmlStrategies = xmlAccount.getXmlStrategies();
-		List<StrategyData> strategyDatas = createStrategies(xmlStrategies);
-
-		AccountData account = new AccountData(owner, balanceDatas, depositsData, buyOrdersData, sellOrdersData, strategyDatas);
-		return account;
+		balanceDatas.forEach(balanceData -> balanceData.setAccountData(accountData));
+		accountData.setBalanceDatas(balanceDatas);
+		
+		List<BuyOrderData> buyOrderDatas = createBuyOrders(xmlAccount.getXmlBuyOrders());
+		balanceDatas.forEach(balanceData -> balanceData.setAccountData(accountData));
+		accountData.setBuyOrderDatas(buyOrderDatas);
+		
+		List<SellOrderData> sellOrderDatas = createSellOrders(xmlAccount.getXmlSellOrders());
+		sellOrderDatas.forEach(sellOrderData -> sellOrderData.setAccountData(accountData));
+		accountData.setSellOrderDatas(sellOrderDatas);
+		
+		List<DepositData> depositDatas = createDeposits(xmlAccount.getXmlDeposits());
+		depositDatas.forEach(depositData -> depositData.setAccountData(accountData));
+		accountData.setDepositDatas(depositDatas);
+		
+		List<StrategyData> strategyDatas = createStrategies(xmlAccount.getXmlStrategies());
+		strategyDatas.forEach(strategyData -> strategyData.setAccountData(accountData));
+		accountData.setStrategyDatas(strategyDatas);
+		
+		return accountData;
 	}
 
 	private List<StrategyData> createStrategies(List<XmlStrategy> xmlStrategies) {

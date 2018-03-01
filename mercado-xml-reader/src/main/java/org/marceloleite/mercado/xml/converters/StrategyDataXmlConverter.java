@@ -22,8 +22,9 @@ public class StrategyDataXmlConverter implements XmlConverter<XmlStrategy, Strat
 		StrategyData strategyData = new StrategyData();
 		
 		strategyData.setCurrency(xmlStrategy.getCurrency());
-		strategyData.setClassDatas(new ListClassXmlConverter().convertToObject(xmlStrategy.getXmlClasses()));
-		
+		List<ClassData> classDatas = new ListClassXmlConverter().convertToObject(xmlStrategy.getXmlClasses());
+		classDatas.forEach(classData -> classData.setStrategyData(strategyData));
+		strategyData.setClassDatas(classDatas);
 		return strategyData;
 	}
 

@@ -5,6 +5,8 @@ import java.time.ZonedDateTime;
 public class SellOrderData {
 
 	private ZonedDateTime time;
+	
+	private AccountData accountData;
 
 	private CurrencyAmountData currencyAmountToSell;
 
@@ -43,5 +45,13 @@ public class SellOrderData {
 
 	public void setCurrencyAmountToReceive(CurrencyAmountData currencyAmountToReceive) {
 		this.currencyAmountToReceive = currencyAmountToReceive;
+	}
+
+	public AccountData getAccountData() {
+		return accountData;
+	}
+
+	public void setAccountData(AccountData accountData) {
+		this.accountData = accountData;
 	}
 }
