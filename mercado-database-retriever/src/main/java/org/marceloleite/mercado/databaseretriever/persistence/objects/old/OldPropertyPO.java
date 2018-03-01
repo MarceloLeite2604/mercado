@@ -6,7 +6,7 @@ import javax.persistence.Id;
 
 import org.marceloleite.mercado.databaseretriever.persistence.objects.PersistenceObject;
 
-@Entity(name = "PROPERTIES")
+//@Entity(name = "PROPERTIES")
 public class OldPropertyPO implements PersistenceObject<String> {
 
 	@Id

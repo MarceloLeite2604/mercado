@@ -275,16 +275,16 @@ public class FirstStrategy extends AbstractStrategy {
 
 		switch (firstStrategyParameter) {
 		case BUY_STEP_FACTORIAL_NUMBER:
-			this.buySteps = MathUtils.factorial(Long.parseLong(firstStrategyParameter.getValue()));
+			buySteps = MathUtils.factorial(Long.parseLong(parameter.getValue()));
 			break;
 		case GROWTH_PERCENTAGE_THRESHOLD:
-			this.growthPercentageThreshold = Double.parseDouble(firstStrategyParameter.getValue());
+			growthPercentageThreshold = Double.parseDouble(parameter.getValue());
 			break;
 		case SELL_STEP_FACTORIAL_NUMBER:
-			this.sellSteps = MathUtils.factorial(Long.parseLong(firstStrategyParameter.getValue()));
+			sellSteps = MathUtils.factorial(Long.parseLong(parameter.getValue()));
 			break;
 		case SHRINK_PERCENTAGE_THRESHOLD:
-			this.shrinkPercentageThreshold = Double.parseDouble(firstStrategyParameter.getValue());
+			shrinkPercentageThreshold = Double.parseDouble(parameter.getValue());
 			break;
 		}
 

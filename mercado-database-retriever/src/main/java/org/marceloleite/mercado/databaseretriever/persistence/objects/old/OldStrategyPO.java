@@ -10,7 +10,7 @@ import javax.persistence.OneToMany;
 
 import org.marceloleite.mercado.databaseretriever.persistence.objects.PersistenceObject;
 
-@Entity(name = "STRATEGIES")
+//@Entity(name = "STRATEGIES")
 public class OldStrategyPO implements PersistenceObject<OldStrategyIdPO> {
 
 	@EmbeddedId

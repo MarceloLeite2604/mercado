@@ -9,7 +9,7 @@ import javax.persistence.OneToMany;
 
 import org.marceloleite.mercado.databaseretriever.persistence.objects.PersistenceObject;
 
-@Entity(name="ACCOUNTS")
+//@Entity(name="ACCOUNTS")
 public class OldAccountPO implements PersistenceObject<String> {
 
 	@Id

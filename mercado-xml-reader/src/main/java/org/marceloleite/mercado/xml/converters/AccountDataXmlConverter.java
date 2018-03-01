@@ -35,13 +35,13 @@ public class AccountDataXmlConverter implements XmlConverter<XmlAccount, Account
 		List<XmlDeposit> xmlDeposits = xmlAccount.getXmlDeposits();
 		List<DepositData> depositsData = createDeposits(xmlDeposits);
 		List<XmlStrategy> xmlStrategies = xmlAccount.getXmlStrategies();
-		List<StrategyData> strategyDatas = createCurrenciesStrategies(xmlStrategies);
+		List<StrategyData> strategyDatas = createStrategies(xmlStrategies);
 
 		AccountData account = new AccountData(owner, balanceDatas, depositsData, buyOrdersData, sellOrdersData, strategyDatas);
 		return account;
 	}
 
-	private List<StrategyData> createCurrenciesStrategies(List<XmlStrategy> xmlStrategies) {
+	private List<StrategyData> createStrategies(List<XmlStrategy> xmlStrategies) {
 		StrategyDataXmlConverter strategyDataXmlConverter = new StrategyDataXmlConverter();
 		List<StrategyData> strategyDatas = new ArrayList<>();
 		for (XmlStrategy xmlStrategy : xmlStrategies) {

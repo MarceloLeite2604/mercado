@@ -22,8 +22,10 @@ public class ListParameterXmlConverter implements XmlConverter<List<XmlParameter
 	public List<ParameterData> convertToObject(List<XmlParameter> xmlParameters) {
 		List<ParameterData> parameterDatas = new ArrayList<>();
 		ParameterXmlConverter parameterXmlConverter = new ParameterXmlConverter();
-		for (XmlParameter xmlParameter : xmlParameters) {
-			parameterDatas.add(parameterXmlConverter.convertToObject(xmlParameter));
+		if (xmlParameters != null && !xmlParameters.isEmpty()) {
+			for (XmlParameter xmlParameter : xmlParameters) {
+				parameterDatas.add(parameterXmlConverter.convertToObject(xmlParameter));
+			}
 		}
 		return parameterDatas;
 	}
