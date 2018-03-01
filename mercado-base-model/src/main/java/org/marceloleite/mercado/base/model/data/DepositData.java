@@ -8,6 +8,8 @@ public class DepositData {
 	
 	private CurrencyAmountData currencyAmount;
 	
+	private AccountData accountData;
+	
 	public DepositData() {
 		super();
 	}
@@ -33,6 +35,13 @@ public class DepositData {
 	public void setCurrencyAmount(CurrencyAmountData currencyAmount) {
 		this.currencyAmount = currencyAmount;
 	}
-	
+
+	public AccountData getAccountData() {
+		return accountData;
+	}
+
+	public void setAccountData(AccountData accountData) {
+		this.accountData = accountData;
+	}
 	
 }

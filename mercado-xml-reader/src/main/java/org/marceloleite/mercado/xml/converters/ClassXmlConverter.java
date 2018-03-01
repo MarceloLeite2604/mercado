@@ -25,6 +25,7 @@ public class ClassXmlConverter implements XmlConverter<XmlClass, ClassData> {
 		ClassData classData = new ClassData();
 		classData.setName(xmlClass.getName());
 		List<ParameterData> parameterDatas = listParameterXmlConverter.convertToObject(xmlClass.getXmlParameters());
+		parameterDatas.forEach(parameterData -> parameterData.setClassData(classData));
 		classData.setParameterDatas(parameterDatas);
 		return classData;
 	}
