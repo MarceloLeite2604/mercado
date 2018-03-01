@@ -6,7 +6,7 @@ import java.lang.reflect.InvocationTargetException;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.simulator.strategies.Strategy;
 
-public class StrategyLoader {
+public class StrategyClassLoader {
 
 	@SuppressWarnings("unchecked")
 	public Strategy load(String className, Currency currency) {

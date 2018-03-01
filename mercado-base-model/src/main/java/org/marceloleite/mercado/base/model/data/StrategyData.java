@@ -12,11 +12,7 @@ public class StrategyData {
 
 	private Currency currency;
 
-	private List<ParameterData> strategyParameterDatas;
-
-	private List<VariableData> strategyVariableDatas;
-	
-	private List<ClassData> strategyClassDatas;
+	private List<ClassData> classDatas;
 
 	public StrategyData() {
 		super();
@@ -46,27 +42,11 @@ public class StrategyData {
 		this.accountData = accountData;
 	}
 
-	public List<ParameterData> getStrategyParameterDatas() {
-		return strategyParameterDatas;
+	public List<ClassData> getClassDatas() {
+		return classDatas;
 	}
 
-	public void setStrategyParameterDatas(List<ParameterData> strategyParameterDatas) {
-		this.strategyParameterDatas = strategyParameterDatas;
-	}
-
-	public List<VariableData> getStrategyVariableDatas() {
-		return strategyVariableDatas;
-	}
-
-	public void setStrategyVariableDatas(List<VariableData> strategyVariableDatas) {
-		this.strategyVariableDatas = strategyVariableDatas;
-	}
-
-	public List<ClassData> getStrategyClassDatas() {
-		return strategyClassDatas;
-	}
-
-	public void setStrategyClassDatas(List<ClassData> strategyClassDatas) {
-		this.strategyClassDatas = strategyClassDatas;
+	public void setClassDatas(List<ClassData> classDatas) {
+		this.classDatas = classDatas;
 	}
 }

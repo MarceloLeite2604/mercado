@@ -9,12 +9,14 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.base.model.data.AccountData;
 import org.marceloleite.mercado.base.model.data.BuyOrderData;
+import org.marceloleite.mercado.base.model.data.ClassData;
 import org.marceloleite.mercado.base.model.data.DepositData;
 import org.marceloleite.mercado.base.model.data.SellOrderData;
-import org.marceloleite.mercado.base.model.data.ClassData;
 import org.marceloleite.mercado.base.model.data.StrategyData;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
+import org.marceloleite.mercado.converter.datamodel.ListParameterDatasToListPropertyConverter;
+import org.marceloleite.mercado.properties.Property;
 import org.marceloleite.mercado.simulator.converter.CurrencyAmountToStringConverter;
 import org.marceloleite.mercado.simulator.order.BuyOrderBuilder;
 import org.marceloleite.mercado.simulator.order.BuyOrderBuilder.BuyOrder;
@@ -102,16 +104,20 @@ public class Account {
 
 	private Map<Currency, List<Strategy>> createCurrenciesStrategies(AccountData accountData) {
 		Map<Currency, List<Strategy>> currenciesStrategies = new EnumMap<Currency, List<Strategy>>(Currency.class);
-		StrategyLoader strategyLoader = new StrategyLoader();
+		StrategyClassLoader strategyLoader = new StrategyClassLoader();
 
 		List<StrategyData> strategyDatas = accountData.getStrategyDatas();
+		ListParameterDatasToListPropertyConverter listParameterDatasToListPropertyConverter = new ListParameterDatasToListPropertyConverter();
+		
 		if (strategyDatas != null && !strategyDatas.isEmpty()) {
 			for (StrategyData strategyData : strategyDatas) {
 				List<Strategy> strategies = new ArrayList<>();
-				List<ClassData> strategyClassDatas = strategyData.getStrategyClassDatas();
+				List<ClassData> classDatas = strategyData.getClassDatas();
 				Currency currency = strategyData.getCurrency();
-				for (ClassData strategyClassData : strategyClassDatas) {
-					Strategy strategy = strategyLoader.load(strategyClassData.getClassName().trim(), currency);
+				for (ClassData classData : classDatas) {
+					Strategy strategy = strategyLoader.load(classData.getName().trim(), currency);
+					List<Property> properties = listParameterDatasToListPropertyConverter.convertTo(classData.getParameterDatas());
+					strategy.setParameters(properties);
 					strategies.add(strategy);
 				}
 				currenciesStrategies.put(currency, strategies);

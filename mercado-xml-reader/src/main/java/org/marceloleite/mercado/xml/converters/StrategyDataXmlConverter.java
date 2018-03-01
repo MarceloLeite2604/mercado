@@ -1,6 +1,5 @@
 package org.marceloleite.mercado.xml.converters;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.marceloleite.mercado.base.model.data.ClassData;
@@ -12,12 +11,8 @@ public class StrategyDataXmlConverter implements XmlConverter<XmlStrategy, Strat
 	@Override
 	public XmlStrategy convertToXml(StrategyData strategyData) {
 		XmlStrategy xmlStrategy = new XmlStrategy();
-		List<ClassData> strategyClassDatas = strategyData.getStrategyClassDatas();
-		List<String> classNames = new ArrayList<>();
-		for (ClassData strategyClassData : strategyClassDatas) {
-			classNames.add(strategyClassData.getClassName());
-		}
-		xmlStrategy.setClassNames(classNames);
+		List<ClassData> classDatas = strategyData.getClassDatas();
+		xmlStrategy.setXmlClasses(new ListClassXmlConverter().convertToXml(classDatas));
 		xmlStrategy.setCurrency(strategyData.getCurrency());
 		return xmlStrategy;
 	}
@@ -25,15 +20,10 @@ public class StrategyDataXmlConverter implements XmlConverter<XmlStrategy, Strat
 	@Override
 	public StrategyData convertToObject(XmlStrategy xmlStrategy) {
 		StrategyData strategyData = new StrategyData();
-		List<ClassData> strategyClassDatas = new ArrayList<>();
-		List<String> classNames = xmlStrategy.getClassNames();
-		for (String className : classNames) {
-			ClassData strategyClassData = new ClassData();
-			strategyClassData.setClassName(className);
-			strategyClassDatas.add(strategyClassData);
-		}
-		strategyData.setStrategyClassDatas(strategyClassDatas);
+		
 		strategyData.setCurrency(xmlStrategy.getCurrency());
+		strategyData.setClassDatas(new ListClassXmlConverter().convertToObject(xmlStrategy.getXmlClasses()));
+		
 		return strategyData;
 	}
 

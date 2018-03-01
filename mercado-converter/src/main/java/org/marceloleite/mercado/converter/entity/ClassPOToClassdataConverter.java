@@ -17,7 +17,7 @@ public class ClassPOToClassdataConverter implements Converter<ClassPO, ClassData
 	@Override
 	public ClassData convertTo(ClassPO classPO) {
 		ClassData classData = new ClassData();
-		classData.setClassName(classPO.getId().getName());
+		classData.setName(classPO.getId().getName());
 		List<ParameterData> strategyParameterDatas = createParameterDatas(classPO);
 		classData.setParameterDatas(strategyParameterDatas);
 		List<VariableData> strategyVariableDatas = createVariableDatas(classPO);
@@ -29,7 +29,7 @@ public class ClassPOToClassdataConverter implements Converter<ClassPO, ClassData
 	public ClassPO convertFrom(ClassData classData) {
 		ClassPO classPO = new ClassPO();
 		ClassIdPO classIdPO = new ClassIdPO();
-		classIdPO.setName(classData.getClassName());
+		classIdPO.setName(classData.getName());
 		classPO.setId(classIdPO);
 		classPO.setParameterPOs(createParameterPOList(classData));
 		classPO.setVariablePOs(createVariablePOList(classData));

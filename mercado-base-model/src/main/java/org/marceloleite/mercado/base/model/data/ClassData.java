@@ -6,7 +6,7 @@ public class ClassData {
 
 	private StrategyData strategyData;
 
-	private String className;
+	private String name;
 	
 	private List<ParameterData> parameterDatas;
 	
@@ -20,12 +20,12 @@ public class ClassData {
 		this.strategyData = strategyData;
 	}
 
-	public String getClassName() {
-		return className;
+	public String getName() {
+		return name;
 	}
 
-	public void setClassName(String className) {
-		this.className = className;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public List<ParameterData> getParameterDatas() {

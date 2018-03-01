@@ -16,8 +16,7 @@ public class StrategyPOToStrategyDataConverter implements Converter<StrategyPO, 
 	@Override
 	public StrategyData convertTo(StrategyPO strategyPO) {
 		StrategyData strategyData = new StrategyData();
-		List<ClassData> strategyClassDatas = createStrategyClassDatas(strategyPO);
-		strategyData.setStrategyClassDatas(strategyClassDatas);
+		strategyData.setClassDatas(createStrategyClassDatas(strategyPO));
 		strategyData.setCurrency(strategyPO.getId().getCurrency());
 		return strategyData;
 	}
@@ -33,7 +32,7 @@ public class StrategyPOToStrategyDataConverter implements Converter<StrategyPO, 
 	}
 
 	private List<ClassPO> createClassPOs(StrategyData strategyData) {
-		List<ClassData> classDatas = strategyData.getStrategyClassDatas();
+		List<ClassData> classDatas = strategyData.getClassDatas();
 		List<ClassPO> classPOs = new ArrayList<>();
 
 		if (classDatas != null && !classDatas.isEmpty()) {
@@ -42,7 +41,7 @@ public class StrategyPOToStrategyDataConverter implements Converter<StrategyPO, 
 				ClassIdPO classIdPO = new ClassIdPO();
 				classIdPO.setStraAccoOwner(strategyData.getAccountData().getOwner());
 				classIdPO.setStraCurrency(strategyData.getCurrency());
-				classIdPO.setName(classData.getClassName());
+				classIdPO.setName(classData.getName());
 				classPO.setId(classIdPO);
 				classPOs.add(classPO);
 			}
@@ -57,7 +56,7 @@ public class StrategyPOToStrategyDataConverter implements Converter<StrategyPO, 
 		if (classPOs != null && !classPOs.isEmpty()) {
 			for (ClassPO classPO : classPOs) {
 				ClassData classData = new ClassData();
-				classData.setClassName(classPO.getId().getName());
+				classData.setName(classPO.getId().getName());
 				classDatas.add(classData);
 			}
 		}
