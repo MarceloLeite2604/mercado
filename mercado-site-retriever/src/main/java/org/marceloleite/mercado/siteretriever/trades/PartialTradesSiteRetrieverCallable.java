@@ -4,10 +4,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
-import org.marceloleite.mercado.base.model.Trade;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
-import org.marceloleite.mercado.converter.datamodel.ListToMapTradeConverter;
+import org.marceloleite.mercado.converter.data.ListToMapTradeConverter;
+import org.marceloleite.mercado.data.Trade;
 import org.marceloleite.mercado.siteretriever.util.checker.MaxTradesReachedCheck;
 
 class PartialTradesSiteRetrieverCallable implements Callable<Map<Long, Trade>> {

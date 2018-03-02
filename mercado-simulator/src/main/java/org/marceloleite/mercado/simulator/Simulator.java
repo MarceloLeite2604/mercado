@@ -12,24 +12,27 @@ import java.util.concurrent.Semaphore;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.marceloleite.mercado.base.model.TemporalTicker;
+import org.marceloleite.mercado.base.model.Account;
+import org.marceloleite.mercado.base.model.Balance;
+import org.marceloleite.mercado.base.model.CurrencyAmount;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeDivisionController;
 import org.marceloleite.mercado.commons.TimeInterval;
+import org.marceloleite.mercado.data.TemporalTicker;
 import org.marceloleite.mercado.simulator.property.SimulatorPropertiesRetriever;
 
 public class Simulator {
 
 	private static final Logger LOGGER = LogManager.getLogger(Simulator.class);
 
-	private House house;
+	private SimulationHouse house;
 
 	private TimeDivisionController timeDivisionController;
 
 	private Duration stepDuration;
 
 	public Simulator() {
-		this.house = new House();
+		this.house = new SimulationHouse();
 	}
 
 	private void configure() {
@@ -39,7 +42,7 @@ public class Simulator {
 		this.stepDuration = simulatorPropertiesRetriever.retrieveStepDurationTime();
 		Duration retrievingDuration = simulatorPropertiesRetriever.retrieveRetrievingDurationTime();
 		timeDivisionController = new TimeDivisionController(startTime, endTime, retrievingDuration);
-		this.house = new House();
+		this.house = new SimulationHouse();
 	}
 
 	public void runSimulation() {

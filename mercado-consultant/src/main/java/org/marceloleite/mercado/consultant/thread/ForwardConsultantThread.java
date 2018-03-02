@@ -5,11 +5,11 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 import org.jboss.logging.Logger;
-import org.marceloleite.mercado.base.model.Trade;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.util.ZonedDateTimeUtils;
 import org.marceloleite.mercado.consultant.thread.property.ForwardConsultantPropertiesRetriever;
+import org.marceloleite.mercado.data.Trade;
 import org.marceloleite.mercado.retriever.TradesRetriever;
 
 public class ForwardConsultantThread extends AbstractConsultantThread {

@@ -34,7 +34,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.marceloleite</groupId>
-			<artifactId>mercado-base-model</artifactId>
+			<artifactId>mercado-data</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>

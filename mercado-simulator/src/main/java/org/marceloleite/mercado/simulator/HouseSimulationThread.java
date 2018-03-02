@@ -7,9 +7,9 @@ import java.util.concurrent.Semaphore;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.marceloleite.mercado.base.model.TemporalTicker;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
+import org.marceloleite.mercado.data.TemporalTicker;
 
 public class HouseSimulationThread extends Thread {
 	
@@ -18,13 +18,13 @@ public class HouseSimulationThread extends Thread {
 
 	private static final String THREAD_NAME = "House Simulation";
 
-	private House house;
+	private SimulationHouse house;
 	private TreeMap<TimeInterval, Map<Currency, TemporalTicker>> temporalTickersDataModelsByTimeInterval;
 	private Boolean finished;
 	private Semaphore updateSemaphore;
 	private Semaphore runSimulationSemaphore;
 
-	public HouseSimulationThread(House house, Semaphore updateSemaphore, Semaphore runSimulationSemaphore) {
+	public HouseSimulationThread(SimulationHouse house, Semaphore updateSemaphore, Semaphore runSimulationSemaphore) {
 		super();
 		this.house = house;
 		this.temporalTickersDataModelsByTimeInterval = null;

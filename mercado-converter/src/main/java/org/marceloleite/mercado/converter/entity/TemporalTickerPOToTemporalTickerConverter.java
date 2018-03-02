@@ -3,8 +3,8 @@ package org.marceloleite.mercado.converter.entity;
 import java.math.BigDecimal;
 import java.time.Duration;
 
-import org.marceloleite.mercado.base.model.TemporalTicker;
 import org.marceloleite.mercado.commons.util.converter.Converter;
+import org.marceloleite.mercado.data.TemporalTicker;
 import org.marceloleite.mercado.databaseretriever.persistence.objects.TemporalTickerIdPO;
 import org.marceloleite.mercado.databaseretriever.persistence.objects.TemporalTickerPO;
 

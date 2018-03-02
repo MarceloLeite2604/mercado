@@ -1,6 +1,6 @@
 package org.marceloleite.mercado.xml.converters;
 
-import org.marceloleite.mercado.base.model.data.ParameterData;
+import org.marceloleite.mercado.data.ParameterData;
 import org.marceloleite.mercado.xml.structures.XmlParameter;
 
 public class ParameterXmlConverter implements XmlConverter<XmlParameter, ParameterData> {

@@ -1,7 +1,7 @@
 package org.marceloleite.mercado.converter.entity;
 
-import org.marceloleite.mercado.base.model.Ticker;
 import org.marceloleite.mercado.commons.util.converter.Converter;
+import org.marceloleite.mercado.data.Ticker;
 import org.marceloleite.mercado.databaseretriever.persistence.objects.TickerIdPO;
 import org.marceloleite.mercado.databaseretriever.persistence.objects.TickerPO;
 

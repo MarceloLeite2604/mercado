@@ -1,8 +1,8 @@
 package org.marceloleite.mercado.xml.converters;
 
-import org.marceloleite.mercado.base.model.data.BuyOrderData;
-import org.marceloleite.mercado.base.model.data.CurrencyAmountData;
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.data.BuyOrderData;
+import org.marceloleite.mercado.data.CurrencyAmountData;
 import org.marceloleite.mercado.xml.structures.XmlBuyOrder;
 
 public class BuyOrderXmlConverter implements XmlConverter<XmlBuyOrder, BuyOrderData> {

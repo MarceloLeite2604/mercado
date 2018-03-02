@@ -1,7 +1,5 @@
 package org.marceloleite.mercado.converter;
 
-import org.marceloleite.mercado.base.model.Orderbook;
-import org.marceloleite.mercado.base.model.Ticker;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.util.converter.ObjectToJsonConverter;
 import org.marceloleite.mercado.converter.json.CurrencyJsonSerializer;
@@ -10,6 +8,8 @@ import org.marceloleite.mercado.converter.json.api.data.JsonTickerToTickerConver
 import org.marceloleite.mercado.converter.json.api.data.OrderbookConverter;
 import org.marceloleite.mercado.converter.json.api.negotiation.getaccountinfo.JsonBalanceDeserializer;
 import org.marceloleite.mercado.converter.json.api.negotiation.getaccountinfo.JsonWithdrawalLimitsDeserializer;
+import org.marceloleite.mercado.data.Orderbook;
+import org.marceloleite.mercado.data.Ticker;
 import org.marceloleite.mercado.jsonmodel.api.data.JsonOrderbook;
 import org.marceloleite.mercado.jsonmodel.api.data.JsonTicker;
 import org.marceloleite.mercado.jsonmodel.api.negotiation.JsonGetOrderResponse;

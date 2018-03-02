@@ -1,7 +1,7 @@
 package org.marceloleite.mercado.retriever;
 
-import org.marceloleite.mercado.base.model.data.AccountData;
 import org.marceloleite.mercado.converter.entity.AccountPOToAccountDataConverter;
+import org.marceloleite.mercado.data.AccountData;
 import org.marceloleite.mercado.databaseretriever.persistence.daos.AccountDAO;
 import org.marceloleite.mercado.databaseretriever.persistence.objects.AccountPO;
 
