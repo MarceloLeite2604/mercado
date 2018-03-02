@@ -6,11 +6,11 @@ import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.marceloleite.mercado.base.model.Trade;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.util.ZonedDateTimeUtils;
 import org.marceloleite.mercado.commons.util.converter.ZonedDateTimeToStringConverter;
 import org.marceloleite.mercado.consultant.thread.property.BackwardConsultantPropertiesRetriever;
+import org.marceloleite.mercado.data.Trade;
 import org.marceloleite.mercado.retriever.TradesRetriever;
 
 public class BackwardConsultantThread extends AbstractConsultantThread {

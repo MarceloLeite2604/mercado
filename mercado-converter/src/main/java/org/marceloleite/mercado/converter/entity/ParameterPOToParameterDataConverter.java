@@ -1,9 +1,9 @@
 package org.marceloleite.mercado.converter.entity;
 
-import org.marceloleite.mercado.base.model.data.ClassData;
-import org.marceloleite.mercado.base.model.data.ParameterData;
-import org.marceloleite.mercado.base.model.data.StrategyData;
 import org.marceloleite.mercado.commons.util.converter.Converter;
+import org.marceloleite.mercado.data.ClassData;
+import org.marceloleite.mercado.data.ParameterData;
+import org.marceloleite.mercado.data.StrategyData;
 import org.marceloleite.mercado.databaseretriever.persistence.objects.ParameterIdPO;
 import org.marceloleite.mercado.databaseretriever.persistence.objects.ParameterPO;
 

@@ -2,8 +2,8 @@ package org.marceloleite.mercado.xml.converters;
 
 import java.util.List;
 
-import org.marceloleite.mercado.base.model.data.ClassData;
-import org.marceloleite.mercado.base.model.data.StrategyData;
+import org.marceloleite.mercado.data.ClassData;
+import org.marceloleite.mercado.data.StrategyData;
 import org.marceloleite.mercado.xml.structures.XmlStrategy;
 
 public class StrategyDataXmlConverter implements XmlConverter<XmlStrategy, StrategyData>{

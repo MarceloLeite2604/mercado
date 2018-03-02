@@ -1,8 +1,8 @@
 package org.marceloleite.mercado.converter.json.api.data;
 
-import org.marceloleite.mercado.base.model.Ticker;
 import org.marceloleite.mercado.commons.util.converter.Converter;
 import org.marceloleite.mercado.commons.util.converter.LongToZonedDateTimeConverter;
+import org.marceloleite.mercado.data.Ticker;
 import org.marceloleite.mercado.jsonmodel.api.data.JsonTicker;
 import org.marceloleite.mercado.jsonmodel.api.data.JsonTickerValues;
 

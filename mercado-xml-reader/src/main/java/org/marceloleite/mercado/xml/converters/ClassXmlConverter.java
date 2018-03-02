@@ -2,8 +2,8 @@ package org.marceloleite.mercado.xml.converters;
 
 import java.util.List;
 
-import org.marceloleite.mercado.base.model.data.ClassData;
-import org.marceloleite.mercado.base.model.data.ParameterData;
+import org.marceloleite.mercado.data.ClassData;
+import org.marceloleite.mercado.data.ParameterData;
 import org.marceloleite.mercado.xml.structures.XmlClass;
 import org.marceloleite.mercado.xml.structures.XmlParameter;
 

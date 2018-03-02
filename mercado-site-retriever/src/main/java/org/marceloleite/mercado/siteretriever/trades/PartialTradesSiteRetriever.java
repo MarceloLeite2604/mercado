@@ -6,11 +6,11 @@ import java.util.List;
 import javax.ws.rs.NotFoundException;
 import javax.ws.rs.core.MediaType;
 
-import org.marceloleite.mercado.base.model.Trade;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.util.EpochSecondsToZonedDateTimeConveter;
 import org.marceloleite.mercado.converter.json.api.data.ListJsonTradeToListTradeConverter;
+import org.marceloleite.mercado.data.Trade;
 import org.marceloleite.mercado.jsonmodel.api.data.JsonTrade;
 import org.marceloleite.mercado.siteretriever.AbstractSiteRetriever;
 

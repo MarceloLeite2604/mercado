@@ -2,9 +2,9 @@ package org.marceloleite.mercado.xml.converters;
 
 import java.time.ZonedDateTime;
 
-import org.marceloleite.mercado.base.model.data.CurrencyAmountData;
-import org.marceloleite.mercado.base.model.data.DepositData;
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.data.CurrencyAmountData;
+import org.marceloleite.mercado.data.DepositData;
 import org.marceloleite.mercado.xml.structures.XmlDeposit;
 
 public class DepositXmlConverter implements XmlConverter<XmlDeposit, DepositData> {

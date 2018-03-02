@@ -3,7 +3,7 @@ package org.marceloleite.mercado.xml.converters;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.marceloleite.mercado.base.model.data.ClassData;
+import org.marceloleite.mercado.data.ClassData;
 import org.marceloleite.mercado.xml.structures.XmlClass;
 
 public class ListClassXmlConverter implements XmlConverter<List<XmlClass>, List<ClassData>> {

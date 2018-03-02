@@ -3,8 +3,8 @@ package org.marceloleite.mercado.converter.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.marceloleite.mercado.base.model.data.ParameterData;
 import org.marceloleite.mercado.commons.util.converter.Converter;
+import org.marceloleite.mercado.data.ParameterData;
 import org.marceloleite.mercado.databaseretriever.persistence.objects.ParameterPO;
 
 public class ListParameterPOToListParameterDataConverter implements Converter<List<ParameterPO>, List<ParameterData>> {

@@ -3,12 +3,12 @@ package org.marceloleite.mercado.xml.converters;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.marceloleite.mercado.base.model.data.AccountData;
-import org.marceloleite.mercado.base.model.data.BalanceData;
-import org.marceloleite.mercado.base.model.data.BuyOrderData;
-import org.marceloleite.mercado.base.model.data.DepositData;
-import org.marceloleite.mercado.base.model.data.SellOrderData;
-import org.marceloleite.mercado.base.model.data.StrategyData;
+import org.marceloleite.mercado.data.AccountData;
+import org.marceloleite.mercado.data.BalanceData;
+import org.marceloleite.mercado.data.BuyOrderData;
+import org.marceloleite.mercado.data.DepositData;
+import org.marceloleite.mercado.data.SellOrderData;
+import org.marceloleite.mercado.data.StrategyData;
 import org.marceloleite.mercado.xml.structures.XmlAccount;
 import org.marceloleite.mercado.xml.structures.XmlBalances;
 import org.marceloleite.mercado.xml.structures.XmlBuyOrder;

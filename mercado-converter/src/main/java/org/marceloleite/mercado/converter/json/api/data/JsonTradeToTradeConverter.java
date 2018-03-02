@@ -1,9 +1,9 @@
 package org.marceloleite.mercado.converter.json.api.data;
 
-import org.marceloleite.mercado.base.model.Trade;
 import org.marceloleite.mercado.commons.TradeType;
 import org.marceloleite.mercado.commons.util.converter.Converter;
 import org.marceloleite.mercado.commons.util.converter.LongToZonedDateTimeConverter;
+import org.marceloleite.mercado.data.Trade;
 import org.marceloleite.mercado.jsonmodel.api.data.JsonTrade;
 
 public class JsonTradeToTradeConverter implements Converter<JsonTrade, Trade> {

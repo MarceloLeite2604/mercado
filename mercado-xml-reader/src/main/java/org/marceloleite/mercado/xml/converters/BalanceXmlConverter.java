@@ -3,8 +3,8 @@ package org.marceloleite.mercado.xml.converters;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.marceloleite.mercado.base.model.data.BalanceData;
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.data.BalanceData;
 import org.marceloleite.mercado.xml.structures.XmlBalances;
 
 public class BalanceXmlConverter implements XmlConverter<XmlBalances, List<BalanceData>> {

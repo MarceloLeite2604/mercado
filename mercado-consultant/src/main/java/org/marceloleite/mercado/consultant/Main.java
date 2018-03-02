@@ -10,12 +10,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.marceloleite.mercado.base.model.Trade;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeDivisionController;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.util.ZonedDateTimeUtils;
 import org.marceloleite.mercado.commons.util.converter.ZonedDateTimeToStringConverter;
+import org.marceloleite.mercado.data.Trade;
 import org.marceloleite.mercado.databaseretriever.persistence.EntityManagerController;
 import org.marceloleite.mercado.retriever.TradesRetriever;
 
