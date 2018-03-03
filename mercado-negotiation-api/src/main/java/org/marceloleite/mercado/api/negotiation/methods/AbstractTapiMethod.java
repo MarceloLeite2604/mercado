@@ -15,7 +15,7 @@ import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.api.negotiation.util.HttpConnection;
 import org.marceloleite.mercado.api.negotiation.util.NonceGenerator;
 import org.marceloleite.mercado.api.negotiation.util.UrlGenerator;
-import org.marceloleite.mercado.commons.util.converter.ObjectToJsonConverter;
+import org.marceloleite.mercado.commons.converter.ObjectToJsonConverter;
 import org.marceloleite.mercado.jsonmodel.api.negotiation.JsonTapiResponse;
 
 public abstract class AbstractTapiMethod<T extends AbstractTapiResponse<?, ?>> {

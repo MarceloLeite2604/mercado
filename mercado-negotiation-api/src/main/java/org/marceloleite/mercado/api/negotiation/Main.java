@@ -12,8 +12,8 @@ import org.marceloleite.mercado.api.negotiation.methods.listorders.ListOrdersMet
 import org.marceloleite.mercado.api.negotiation.methods.listorders.ListOrdersMethodResponse;
 import org.marceloleite.mercado.api.negotiation.methods.listsystemmessages.ListSystemMessagesMethod;
 import org.marceloleite.mercado.api.negotiation.methods.listsystemmessages.ListSystemMessagesMethodResponse;
-import org.marceloleite.mercado.commons.util.converter.ObjectToJsonConverter;
-import org.marceloleite.mercado.commons.util.converter.ZonedDateTimeToStringConverter;
+import org.marceloleite.mercado.commons.converter.ObjectToJsonConverter;
+import org.marceloleite.mercado.commons.converter.ZonedDateTimeToStringConverter;
 import org.marceloleite.mercado.databaseretriever.persistence.EntityManagerController;
 import org.marceloleite.mercado.negotiationapi.model.CurrencyPair;
 import org.marceloleite.mercado.negotiationapi.model.listsystemmessages.SystemMessage;

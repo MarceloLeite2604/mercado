@@ -3,7 +3,7 @@ package org.marceloleite.mercado.converter.json.api.negotiation.listorderbook;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.marceloleite.mercado.commons.util.converter.Converter;
+import org.marceloleite.mercado.commons.converter.Converter;
 import org.marceloleite.mercado.jsonmodel.api.negotiation.orderbook.JsonOrderbook;
 import org.marceloleite.mercado.jsonmodel.api.negotiation.orderbook.JsonOrderbookRegister;
 import org.marceloleite.mercado.negotiationapi.model.listorderbook.Orderbook;

@@ -2,7 +2,7 @@ package org.marceloleite.mercado.consultant.util.converter;
 
 import java.time.Duration;
 
-import org.marceloleite.mercado.commons.util.converter.Converter;
+import org.marceloleite.mercado.commons.converter.Converter;
 
 public class StringToDurationConverter implements Converter<String, Duration> {
 

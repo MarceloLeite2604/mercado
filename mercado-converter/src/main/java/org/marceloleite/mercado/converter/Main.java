@@ -1,7 +1,7 @@
 package org.marceloleite.mercado.converter;
 
 import org.marceloleite.mercado.commons.Currency;
-import org.marceloleite.mercado.commons.util.converter.ObjectToJsonConverter;
+import org.marceloleite.mercado.commons.converter.ObjectToJsonConverter;
 import org.marceloleite.mercado.converter.json.CurrencyJsonSerializer;
 import org.marceloleite.mercado.converter.json.JsonToClassObjectConverter;
 import org.marceloleite.mercado.converter.json.api.data.JsonTickerToTickerConverter;

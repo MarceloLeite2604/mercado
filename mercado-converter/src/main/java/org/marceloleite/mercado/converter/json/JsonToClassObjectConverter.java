@@ -2,7 +2,7 @@ package org.marceloleite.mercado.converter.json;
 
 import java.io.IOException;
 
-import org.marceloleite.mercado.commons.util.converter.Converter;
+import org.marceloleite.mercado.commons.converter.Converter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 

@@ -1,6 +1,6 @@
 package org.marceloleite.mercado.databaseretriever.configuration;
 
-import org.marceloleite.mercado.properties.Property;
+import org.marceloleite.mercado.commons.properties.Property;
 
 public enum PersistenceProperty implements Property {
 

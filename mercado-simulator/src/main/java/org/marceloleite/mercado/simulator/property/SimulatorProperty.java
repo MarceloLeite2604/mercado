@@ -1,6 +1,6 @@
 package org.marceloleite.mercado.simulator.property;
 
-import org.marceloleite.mercado.properties.Property;
+import org.marceloleite.mercado.commons.properties.Property;
 
 public enum SimulatorProperty implements Property {
 

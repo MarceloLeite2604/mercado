@@ -1,8 +1,8 @@
 package org.marceloleite.mercado.converter.json.api.negotiation.getwithdrawal;
 
 import org.marceloleite.mercado.commons.Currency;
-import org.marceloleite.mercado.commons.util.converter.Converter;
-import org.marceloleite.mercado.commons.util.converter.LongToZonedDateTimeConverter;
+import org.marceloleite.mercado.commons.converter.Converter;
+import org.marceloleite.mercado.commons.converter.LongToZonedDateTimeConverter;
 import org.marceloleite.mercado.jsonmodel.api.negotiation.getwithdrawal.JsonWithdrawal;
 import org.marceloleite.mercado.negotiationapi.model.getwithdrawal.Withdrawal;
 import org.marceloleite.mercado.negotiationapi.model.getwithdrawal.WithdrawalStatus;

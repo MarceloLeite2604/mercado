@@ -3,6 +3,7 @@ package org.marceloleite.mercado.databaseretriever.persistence.objects;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -32,11 +33,11 @@ public class ClassPO implements Serializable, PersistenceObject<ClassIdPO> {
 	private StrategyPO strategyPO;
 
 	// bi-directional many-to-one association to ParameterPO
-	@OneToMany(mappedBy = "classPO")
+	@OneToMany(mappedBy = "classPO", cascade=CascadeType.PERSIST)
 	private List<ParameterPO> parameterPOs;
 
 	// bi-directional many-to-one association to VariablePO
-	@OneToMany(mappedBy = "classPO")
+	@OneToMany(mappedBy = "classPO", cascade=CascadeType.PERSIST)
 	private List<VariablePO> variablePOs;
 
 	public ClassPO() {

@@ -3,8 +3,8 @@ package org.marceloleite.mercado.simulator.property;
 import java.time.Duration;
 import java.time.ZonedDateTime;
 
-import org.marceloleite.mercado.commons.util.converter.ZonedDateTimeToStringConverter;
-import org.marceloleite.mercado.properties.Property;
+import org.marceloleite.mercado.commons.converter.ZonedDateTimeToStringConverter;
+import org.marceloleite.mercado.commons.properties.Property;
 import org.marceloleite.mercado.retriever.PropertyRetriever;
 
 public class SimulatorPropertiesRetriever {

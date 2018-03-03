@@ -2,9 +2,9 @@ package org.marceloleite.mercado.databaseretriever.configuration;
 
 import java.util.Properties;
 
-import org.marceloleite.mercado.properties.AbstractPropertiesReader;
-import org.marceloleite.mercado.properties.Property;
-import org.marceloleite.mercado.properties.StandardProperty;
+import org.marceloleite.mercado.commons.properties.AbstractPropertiesReader;
+import org.marceloleite.mercado.commons.properties.Property;
+import org.marceloleite.mercado.commons.properties.StandardProperty;
 
 public class PersistenceConfiguration extends AbstractPropertiesReader<StandardProperty> {
 

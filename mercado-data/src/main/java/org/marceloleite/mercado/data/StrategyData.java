@@ -8,8 +8,6 @@ public class StrategyData {
 
 	private AccountData accountData;
 
-	// private String name;
-
 	private Currency currency;
 
 	private List<ClassData> classDatas;
@@ -21,14 +19,6 @@ public class StrategyData {
 	public AccountData getAccountData() {
 		return accountData;
 	}
-
-	/*public String getName() {
-		return name;
-	}*/
-
-	/*public void setName(String name) {
-		this.name = name;
-	}*/
 
 	public Currency getCurrency() {
 		return currency;

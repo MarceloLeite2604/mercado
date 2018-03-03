@@ -1,6 +1,6 @@
 package org.marceloleite.mercado.converter.json.api.negotiation.getaccountinfo;
 
-import org.marceloleite.mercado.commons.util.converter.Converter;
+import org.marceloleite.mercado.commons.converter.Converter;
 import org.marceloleite.mercado.jsonmodel.api.negotiation.accountinfo.JsonCurrencyAvailable;
 import org.marceloleite.mercado.negotiationapi.model.getaccountinfo.CurrencyAvailable;
 

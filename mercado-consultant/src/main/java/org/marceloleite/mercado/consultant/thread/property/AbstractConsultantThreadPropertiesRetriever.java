@@ -4,10 +4,10 @@ import java.time.Duration;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
-import org.marceloleite.mercado.commons.util.converter.ZonedDateTimeToStringConverter;
+import org.marceloleite.mercado.commons.converter.ZonedDateTimeToStringConverter;
+import org.marceloleite.mercado.commons.properties.Property;
 import org.marceloleite.mercado.consultant.property.ConsultantProperty;
 import org.marceloleite.mercado.databaseretriever.persistence.daos.TradeDAO;
-import org.marceloleite.mercado.properties.Property;
 import org.marceloleite.mercado.retriever.PropertyRetriever;
 
 public abstract class AbstractConsultantThreadPropertiesRetriever implements ConsultantThreadPropertiesRetriever {

@@ -1,8 +1,8 @@
 package org.marceloleite.mercado.retriever.converter;
 
-import org.marceloleite.mercado.commons.util.converter.Converter;
+import org.marceloleite.mercado.commons.converter.Converter;
+import org.marceloleite.mercado.commons.properties.StandardProperty;
 import org.marceloleite.mercado.databaseretriever.persistence.objects.PropertyPO;
-import org.marceloleite.mercado.properties.StandardProperty;
 
 public class PropertyPOToStandardPropertyConverter implements Converter<PropertyPO, StandardProperty> {
 

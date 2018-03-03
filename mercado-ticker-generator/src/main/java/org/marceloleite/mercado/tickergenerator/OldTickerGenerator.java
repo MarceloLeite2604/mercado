@@ -8,7 +8,7 @@ import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeDivisionController;
 import org.marceloleite.mercado.commons.TimeInterval;
-import org.marceloleite.mercado.commons.util.converter.DurationToStringConverter;
+import org.marceloleite.mercado.commons.converter.DurationToStringConverter;
 import org.marceloleite.mercado.retriever.TemporalTickerRetriever;
 import org.marceloleite.mercado.retriever.checker.ValidDurationForTickerCheck;
 import org.marceloleite.mercado.tickergenerator.property.TickerGeneratorPropertiesRetriever;

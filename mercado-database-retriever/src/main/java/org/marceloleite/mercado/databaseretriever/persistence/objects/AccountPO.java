@@ -3,32 +3,36 @@ package org.marceloleite.mercado.databaseretriever.persistence.objects;
 import java.io.Serializable;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
-
 
 /**
  * The persistent class for the ACCOUNTS database table.
  * 
  */
 @Entity
-@Table(name="ACCOUNTS")
-@NamedQuery(name="AccountPO.findAll", query="SELECT a FROM AccountPO a")
+@Table(name = "ACCOUNTS")
+@NamedQuery(name = "AccountPO.findAll", query = "SELECT a FROM AccountPO a")
 public class AccountPO implements Serializable, PersistenceObject<String> {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	private String owner;
 
-	//bi-directional many-to-one association to BalancePO
-	@OneToMany(mappedBy="accountPO")
+	@OneToOne(mappedBy = "accountPO", cascade = CascadeType.PERSIST)
+	private TapiInformationPO tapiInformationPO;
+
+	// bi-directional many-to-one association to BalancePO
+	@OneToMany(mappedBy = "accountPO", cascade = CascadeType.PERSIST)
 	private List<BalancePO> balancePOs;
 
-	//bi-directional many-to-one association to StrategyPO
-	@OneToMany(mappedBy="account")
+	// bi-directional many-to-one association to StrategyPO
+	@OneToMany(mappedBy = "account", cascade = CascadeType.PERSIST)
 	private List<StrategyPO> strategyPOs;
 
 	public AccountPO() {
@@ -40,6 +44,14 @@ public class AccountPO implements Serializable, PersistenceObject<String> {
 
 	public void setOwner(String owner) {
 		this.owner = owner;
+	}
+
+	public TapiInformationPO getTapiInformationPO() {
+		return tapiInformationPO;
+	}
+
+	public void setTapiInformationPO(TapiInformationPO tapiInformationPO) {
+		this.tapiInformationPO = tapiInformationPO;
 	}
 
 	public List<BalancePO> getBalancePOs() {

@@ -4,7 +4,7 @@ import java.time.ZonedDateTime;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
-import org.marceloleite.mercado.commons.util.converter.ZonedDateTimeToStringConverter;
+import org.marceloleite.mercado.commons.converter.ZonedDateTimeToStringConverter;
 
 public class ZonedDateTimeXmlAdapter extends XmlAdapter<String, ZonedDateTime> {
 

@@ -4,7 +4,7 @@ import java.time.Duration;
 import java.time.ZonedDateTime;
 
 import org.marceloleite.mercado.commons.TimeDivisionController;
-import org.marceloleite.mercado.commons.util.ZonedDateTimeUtils;
+import org.marceloleite.mercado.commons.utils.ZonedDateTimeUtils;
 import org.marceloleite.mercado.databaseretriever.persistence.EntityManagerController;
 
 public class Main {

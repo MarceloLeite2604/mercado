@@ -1,6 +1,6 @@
 package org.marceloleite.mercado.tickergenerator.property;
 
-import org.marceloleite.mercado.properties.Property;
+import org.marceloleite.mercado.commons.properties.Property;
 
 public enum TickerGeneratorProperty implements Property {
 	

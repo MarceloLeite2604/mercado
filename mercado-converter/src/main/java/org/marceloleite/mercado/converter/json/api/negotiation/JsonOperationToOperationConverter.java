@@ -1,7 +1,7 @@
 package org.marceloleite.mercado.converter.json.api.negotiation;
 
-import org.marceloleite.mercado.commons.util.converter.Converter;
-import org.marceloleite.mercado.commons.util.converter.LongToZonedDateTimeConverter;
+import org.marceloleite.mercado.commons.converter.Converter;
+import org.marceloleite.mercado.commons.converter.LongToZonedDateTimeConverter;
 import org.marceloleite.mercado.jsonmodel.api.data.JsonOperation;
 import org.marceloleite.mercado.negotiationapi.model.listorders.Operation;
 

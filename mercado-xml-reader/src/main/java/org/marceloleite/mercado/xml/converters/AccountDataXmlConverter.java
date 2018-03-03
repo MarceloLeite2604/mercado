@@ -9,12 +9,14 @@ import org.marceloleite.mercado.data.BuyOrderData;
 import org.marceloleite.mercado.data.DepositData;
 import org.marceloleite.mercado.data.SellOrderData;
 import org.marceloleite.mercado.data.StrategyData;
+import org.marceloleite.mercado.data.TapiInformationData;
 import org.marceloleite.mercado.xml.structures.XmlAccount;
 import org.marceloleite.mercado.xml.structures.XmlBalances;
 import org.marceloleite.mercado.xml.structures.XmlBuyOrder;
 import org.marceloleite.mercado.xml.structures.XmlDeposit;
 import org.marceloleite.mercado.xml.structures.XmlSellOrder;
 import org.marceloleite.mercado.xml.structures.XmlStrategy;
+import org.marceloleite.mercado.xml.structures.XmlTapiInformation;
 
 public class AccountDataXmlConverter implements XmlConverter<XmlAccount, AccountData> {
 
@@ -28,29 +30,35 @@ public class AccountDataXmlConverter implements XmlConverter<XmlAccount, Account
 		String owner = xmlAccount.getOwner();
 		XmlBalances xmlBalances = xmlAccount.getXmlBalances();
 		AccountData accountData = new AccountData();
-		
+
 		accountData.setOwner(owner);
-		
+
+		XmlTapiInformation xmlTapiInformation = xmlAccount.getXmlTapiInformation();
+		TapiInformationData tapiInformationData = new TapiInformationsDataXmlConverter().convertToObject(xmlTapiInformation);
+		tapiInformationData.setAccountData(accountData);
+		accountData
+				.setTapiInformationData(tapiInformationData);
+
 		List<BalanceData> balanceDatas = new BalanceXmlConverter().convertToObject(xmlBalances);
 		balanceDatas.forEach(balanceData -> balanceData.setAccountData(accountData));
 		accountData.setBalanceDatas(balanceDatas);
-		
+
 		List<BuyOrderData> buyOrderDatas = createBuyOrders(xmlAccount.getXmlBuyOrders());
 		balanceDatas.forEach(balanceData -> balanceData.setAccountData(accountData));
 		accountData.setBuyOrderDatas(buyOrderDatas);
-		
+
 		List<SellOrderData> sellOrderDatas = createSellOrders(xmlAccount.getXmlSellOrders());
 		sellOrderDatas.forEach(sellOrderData -> sellOrderData.setAccountData(accountData));
 		accountData.setSellOrderDatas(sellOrderDatas);
-		
+
 		List<DepositData> depositDatas = createDeposits(xmlAccount.getXmlDeposits());
 		depositDatas.forEach(depositData -> depositData.setAccountData(accountData));
 		accountData.setDepositDatas(depositDatas);
-		
+
 		List<StrategyData> strategyDatas = createStrategies(xmlAccount.getXmlStrategies());
 		strategyDatas.forEach(strategyData -> strategyData.setAccountData(accountData));
 		accountData.setStrategyDatas(strategyDatas);
-		
+
 		return accountData;
 	}
 

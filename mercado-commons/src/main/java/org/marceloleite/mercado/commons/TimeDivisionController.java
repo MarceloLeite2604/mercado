@@ -5,7 +5,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.marceloleite.mercado.commons.util.converter.DurationToStringConverter;
+import org.marceloleite.mercado.commons.converter.DurationToStringConverter;
 
 public class TimeDivisionController {
 

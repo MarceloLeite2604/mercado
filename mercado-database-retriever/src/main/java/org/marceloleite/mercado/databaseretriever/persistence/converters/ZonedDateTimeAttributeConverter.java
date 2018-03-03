@@ -7,7 +7,7 @@ import java.time.ZonedDateTime;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
-import org.marceloleite.mercado.commons.util.ZonedDateTimeUtils;
+import org.marceloleite.mercado.commons.utils.ZonedDateTimeUtils;
 
 @Converter(autoApply = true)
 public class ZonedDateTimeAttributeConverter implements AttributeConverter<ZonedDateTime, Timestamp> {

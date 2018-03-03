@@ -3,10 +3,10 @@ package org.marceloleite.mercado.consultant;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.marceloleite.mercado.commons.properties.StandardProperty;
 import org.marceloleite.mercado.consultant.property.ConsultantProperty;
 import org.marceloleite.mercado.consultant.thread.BackwardConsultantThread;
 import org.marceloleite.mercado.consultant.thread.ForwardConsultantThread;
-import org.marceloleite.mercado.properties.StandardProperty;
 import org.marceloleite.mercado.retriever.PropertyRetriever;
 
 public class Consultant {

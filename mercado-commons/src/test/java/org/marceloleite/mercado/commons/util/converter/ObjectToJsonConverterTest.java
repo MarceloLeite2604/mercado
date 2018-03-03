@@ -4,6 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.marceloleite.mercado.commons.TestClass;
+import org.marceloleite.mercado.commons.converter.ObjectToJsonConverter;
 import org.mockito.InjectMocks;
 import org.mockito.junit.MockitoJUnitRunner;
 
