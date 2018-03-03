@@ -8,7 +8,7 @@
 			</PatternLayout>
 		</File>
 		<File name="HibernateLogFile"
-			fileName="src/main/resources/logs/mercado-simulator-hibernate.log">
+			fileName="src/main/resources/logs/mercado-controller-hibernate.log">
 			<PatternLayout>
 				<Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
 			</PatternLayout>

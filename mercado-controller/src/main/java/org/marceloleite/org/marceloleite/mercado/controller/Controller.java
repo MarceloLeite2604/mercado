@@ -6,6 +6,11 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
+
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.marceloleite.mercado.base.model.Account;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
@@ -13,6 +18,7 @@ import org.marceloleite.mercado.commons.utils.ZonedDateTimeUtils;
 import org.marceloleite.mercado.converter.entity.AccountPOToAccountDataConverter;
 import org.marceloleite.mercado.data.AccountData;
 import org.marceloleite.mercado.data.TemporalTicker;
+import org.marceloleite.mercado.databaseretriever.persistence.EntityManagerController;
 import org.marceloleite.mercado.databaseretriever.persistence.daos.AccountDAO;
 import org.marceloleite.mercado.databaseretriever.persistence.objects.AccountPO;
 import org.marceloleite.mercado.retriever.TemporalTickerRetriever;
@@ -61,7 +67,8 @@ public class Controller
 	private void retrieveAccounts() {
 		List<AccountData> accountDatas = new AccountsXmlReader(XML_DIRECTORY_PATH).readAccounts();
 		
-    	for (AccountData accountDataFromXml : accountDatas) {
+		EntityManager entityManager = EntityManagerController.getInstance().createEntityManager();
+		for (AccountData accountDataFromXml : accountDatas) {
 			AccountPO accountPO = searchAccountOnDatabase(accountDataFromXml.getOwner());
 			AccountData accountData;
 			if (accountPO != null) {
