@@ -5,7 +5,9 @@ import java.math.BigDecimal;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -27,7 +29,8 @@ public class BalancePO implements Serializable, PersistenceObject<BalanceIdPO> {
 
 	// bi-directional many-to-one association to AccountPO
 	@ManyToOne
-	@JoinColumn(name = "ACCO_OWNER", insertable=false, updatable=false)
+	@JoinColumns(value = {
+			@JoinColumn(name = "ACCO_OWNER", insertable = false, updatable = false) }, foreignKey = @ForeignKey(name = "BALA_ACCO_FK"))
 	private AccountPO accountPO;
 
 	public BalancePO() {

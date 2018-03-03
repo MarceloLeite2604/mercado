@@ -5,6 +5,7 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
@@ -30,11 +31,11 @@ public class ParameterPO implements Serializable, PersistenceObject<ParameterIdP
 
 	//bi-directional many-to-one association to ClassPO
 	@ManyToOne
-	@JoinColumns({
+	@JoinColumns(value={
 		@JoinColumn(name="CLASS_NAME", referencedColumnName="NAME", insertable=false, updatable=false),
 		@JoinColumn(name="CLASS_STRA_ACCO_OWNER", referencedColumnName="STRA_ACCO_OWNER", insertable=false, updatable=false),
 		@JoinColumn(name="CLASS_STRA_CURRENCY", referencedColumnName="STRA_CURRENCY", insertable=false, updatable=false)
-		})
+		}, foreignKey = @ForeignKey(name = "PARA_CLASS_FK"))
 	private ClassPO classPO;
 
 	public ParameterPO() {

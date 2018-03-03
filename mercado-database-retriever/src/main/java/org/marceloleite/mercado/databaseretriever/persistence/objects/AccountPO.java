@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -24,15 +25,15 @@ public class AccountPO implements Serializable, PersistenceObject<String> {
 	@Id
 	private String owner;
 
-	@OneToOne(mappedBy = "accountPO", cascade = CascadeType.PERSIST)
+	@OneToOne(mappedBy = "accountPO", cascade = CascadeType.ALL)
 	private TapiInformationPO tapiInformationPO;
 
 	// bi-directional many-to-one association to BalancePO
-	@OneToMany(mappedBy = "accountPO", cascade = CascadeType.PERSIST)
+	@OneToMany(mappedBy = "accountPO", cascade = CascadeType.ALL)
 	private List<BalancePO> balancePOs;
 
 	// bi-directional many-to-one association to StrategyPO
-	@OneToMany(mappedBy = "account", cascade = CascadeType.PERSIST)
+	@OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
 	private List<StrategyPO> strategyPOs;
 
 	public AccountPO() {

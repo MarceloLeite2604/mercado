@@ -6,6 +6,8 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
@@ -28,16 +30,17 @@ public class ClassPO implements Serializable, PersistenceObject<ClassIdPO> {
 
 	// bi-directional many-to-one association to StrategyPO
 	@ManyToOne
-	@JoinColumns({ @JoinColumn(name = "STRA_ACCO_OWNER", referencedColumnName = "ACCO_OWNER", insertable=false, updatable=false),
-			@JoinColumn(name = "STRA_CURRENCY", referencedColumnName = "CURRENCY", insertable=false, updatable=false) })
+	@JoinColumns(value = {
+			@JoinColumn(name = "STRA_ACCO_OWNER", referencedColumnName = "ACCO_OWNER", insertable = false, updatable = false),
+			@JoinColumn(name = "STRA_CURRENCY", referencedColumnName = "CURRENCY", insertable = false, updatable = false) }, foreignKey = @ForeignKey(name = "CLASS_STRA_FK"))
 	private StrategyPO strategyPO;
 
 	// bi-directional many-to-one association to ParameterPO
-	@OneToMany(mappedBy = "classPO", cascade=CascadeType.PERSIST)
+	@OneToMany(mappedBy = "classPO", cascade = CascadeType.ALL)
 	private List<ParameterPO> parameterPOs;
 
 	// bi-directional many-to-one association to VariablePO
-	@OneToMany(mappedBy = "classPO", cascade=CascadeType.PERSIST)
+	@OneToMany(mappedBy = "classPO", cascade = CascadeType.ALL)
 	private List<VariablePO> variablePOs;
 
 	public ClassPO() {
