@@ -1,7 +1,7 @@
 package org.marceloleite.mercado.api.negotiation.methods.getaccountinfo;
 
 import org.marceloleite.mercado.api.negotiation.methods.AbstractTapiResponse;
-import org.marceloleite.mercado.commons.util.converter.ObjectToJsonConverter;
+import org.marceloleite.mercado.commons.converter.ObjectToJsonConverter;
 import org.marceloleite.mercado.converter.json.api.negotiation.getaccountinfo.JsonAccountInfoToAccountInfoConverter;
 import org.marceloleite.mercado.converter.json.api.negotiation.getaccountinfo.JsonBalanceDeserializer;
 import org.marceloleite.mercado.converter.json.api.negotiation.getaccountinfo.JsonWithdrawalLimitsDeserializer;

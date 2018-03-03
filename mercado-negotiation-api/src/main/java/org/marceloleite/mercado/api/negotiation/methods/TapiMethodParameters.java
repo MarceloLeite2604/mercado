@@ -5,7 +5,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 
-import org.marceloleite.mercado.commons.util.converter.ObjectToJsonConverter;
+import org.marceloleite.mercado.commons.converter.ObjectToJsonConverter;
 
 public class TapiMethodParameters extends HashMap<String, Object> {
 

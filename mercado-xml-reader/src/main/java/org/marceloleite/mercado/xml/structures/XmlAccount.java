@@ -14,6 +14,8 @@ import org.marceloleite.mercado.xml.adapters.XmlBalancesXmlAdapter;
 public class XmlAccount {
 
 	private String owner;
+	
+	private XmlTapiInformation xmlTapiInformation;
 
 	private XmlBalances xmlBalances;
 
@@ -46,6 +48,15 @@ public class XmlAccount {
 
 	public void setOwner(String owner) {
 		this.owner = owner;
+	}
+
+	@XmlElement(name="tapiInformations")
+	public XmlTapiInformation getXmlTapiInformation() {
+		return xmlTapiInformation;
+	}
+
+	public void setXmlTapiInformation(XmlTapiInformation xmlTapiInformation) {
+		this.xmlTapiInformation = xmlTapiInformation;
 	}
 
 	@XmlElement(name="balances")

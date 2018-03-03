@@ -2,9 +2,9 @@ package org.marceloleite.mercado.tickergenerator.property;
 
 import java.time.ZonedDateTime;
 
-import org.marceloleite.mercado.commons.util.converter.ZonedDateTimeToStringConverter;
-import org.marceloleite.mercado.properties.Property;
-import org.marceloleite.mercado.properties.StandardProperty;
+import org.marceloleite.mercado.commons.converter.ZonedDateTimeToStringConverter;
+import org.marceloleite.mercado.commons.properties.Property;
+import org.marceloleite.mercado.commons.properties.StandardProperty;
 import org.marceloleite.mercado.retriever.PropertyRetriever;
 
 public class TickerGeneratorPropertiesRetriever {

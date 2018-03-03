@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.marceloleite.mercado.commons.util.converter.Converter;
+import org.marceloleite.mercado.commons.converter.Converter;
 import org.marceloleite.mercado.jsonmodel.api.data.JsonTrade;
 
 public class OldJsonTradeListToMapConverter implements Converter<List<JsonTrade>, Map<Long, JsonTrade>> {

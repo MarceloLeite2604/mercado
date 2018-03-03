@@ -1,10 +1,10 @@
 package org.marceloleite.mercado.retriever;
 
+import org.marceloleite.mercado.commons.properties.Property;
+import org.marceloleite.mercado.commons.properties.StandardPropertiesReader;
+import org.marceloleite.mercado.commons.properties.StandardProperty;
 import org.marceloleite.mercado.databaseretriever.persistence.daos.PropertyDAO;
 import org.marceloleite.mercado.databaseretriever.persistence.objects.PropertyPO;
-import org.marceloleite.mercado.properties.Property;
-import org.marceloleite.mercado.properties.StandardPropertiesReader;
-import org.marceloleite.mercado.properties.StandardProperty;
 import org.marceloleite.mercado.retriever.converter.PropertyPOToStandardPropertyConverter;
 import org.marceloleite.mercado.retriever.converter.StandardPropertyToPropertyPOConverter;
 

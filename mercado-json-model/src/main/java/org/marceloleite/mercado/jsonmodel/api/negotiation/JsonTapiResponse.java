@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.marceloleite.mercado.commons.util.converter.ObjectToJsonConverter;
+import org.marceloleite.mercado.commons.converter.ObjectToJsonConverter;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;

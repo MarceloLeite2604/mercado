@@ -22,6 +22,8 @@
 		<class>org.marceloleite.mercado.databaseretriever.persistence.objects.TradeIdPO</class>
 		<class>org.marceloleite.mercado.databaseretriever.persistence.objects.VariablePO</class>
 		<class>org.marceloleite.mercado.databaseretriever.persistence.objects.VariableIdPO</class>
+		<class>org.marceloleite.mercado.databaseretriever.persistence.objects.TapiInformationPO</class>
+		<class>org.marceloleite.mercado.databaseretriever.persistence.objects.TapiInformationIdPO</class>
 
 		<properties>
 			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver" />

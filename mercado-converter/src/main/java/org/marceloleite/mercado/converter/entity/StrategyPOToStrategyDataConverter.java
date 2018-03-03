@@ -3,7 +3,7 @@ package org.marceloleite.mercado.converter.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.marceloleite.mercado.commons.util.converter.Converter;
+import org.marceloleite.mercado.commons.converter.Converter;
 import org.marceloleite.mercado.data.ClassData;
 import org.marceloleite.mercado.data.StrategyData;
 import org.marceloleite.mercado.data.VariableData;
@@ -29,6 +29,7 @@ public class StrategyPOToStrategyDataConverter implements Converter<StrategyPO, 
 		StrategyPO strategyPO = new StrategyPO();
 		StrategyIdPO strategyIdPO = new StrategyIdPO();
 		strategyIdPO.setAccoOwner(strategyData.getAccountData().getOwner());
+		strategyIdPO.setCurrency(strategyData.getCurrency());
 		strategyPO.setId(strategyIdPO);
 		List<ClassPO> classPOs = createClassPOs(strategyData);
 		classPOs.forEach(classPO -> classPO.setStrategyPO(strategyPO));

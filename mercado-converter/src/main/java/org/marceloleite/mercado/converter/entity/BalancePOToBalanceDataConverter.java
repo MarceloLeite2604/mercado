@@ -2,7 +2,7 @@ package org.marceloleite.mercado.converter.entity;
 
 import java.math.BigDecimal;
 
-import org.marceloleite.mercado.commons.util.converter.Converter;
+import org.marceloleite.mercado.commons.converter.Converter;
 import org.marceloleite.mercado.data.BalanceData;
 import org.marceloleite.mercado.databaseretriever.persistence.objects.BalanceIdPO;
 import org.marceloleite.mercado.databaseretriever.persistence.objects.BalancePO;

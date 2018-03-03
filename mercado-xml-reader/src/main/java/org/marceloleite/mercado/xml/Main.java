@@ -11,7 +11,7 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import org.marceloleite.mercado.commons.Currency;
-import org.marceloleite.mercado.commons.util.ZonedDateTimeUtils;
+import org.marceloleite.mercado.commons.utils.ZonedDateTimeUtils;
 import org.marceloleite.mercado.xml.adapters.XmlBalancesXmlAdapter;
 import org.marceloleite.mercado.xml.structures.XmlAccount;
 import org.marceloleite.mercado.xml.structures.XmlBalanceEntryList;

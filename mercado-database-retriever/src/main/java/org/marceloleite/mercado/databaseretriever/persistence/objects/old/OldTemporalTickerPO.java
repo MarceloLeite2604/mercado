@@ -4,10 +4,9 @@ import java.time.Duration;
 
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
 
-import org.marceloleite.mercado.commons.util.NonDigitalCurrencyFormatter;
-import org.marceloleite.mercado.commons.util.converter.DurationToStringConverter;
+import org.marceloleite.mercado.commons.converter.DurationToStringConverter;
+import org.marceloleite.mercado.commons.formatter.NonDigitalCurrencyFormatter;
 import org.marceloleite.mercado.databaseretriever.persistence.objects.PersistenceObject;
 
 //@Entity(name = "TEMPORAL_TICKERS")

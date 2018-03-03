@@ -6,6 +6,8 @@ public class AccountData {
 
 	private String owner;
 
+	private TapiInformationData tapiInformationData;
+
 	private List<BalanceData> balanceDatas;
 
 	private List<DepositData> depositDatas;
@@ -17,8 +19,7 @@ public class AccountData {
 	private List<StrategyData> strategyDatas;
 
 	public AccountData(String owner, List<BalanceData> balanceDatas, List<DepositData> depositsData,
-			List<BuyOrderData> buyOrdersData, List<SellOrderData> sellOrdersData,
-			List<StrategyData> strategyDatas) {
+			List<BuyOrderData> buyOrdersData, List<SellOrderData> sellOrdersData, List<StrategyData> strategyDatas) {
 		super();
 		this.owner = owner;
 		this.balanceDatas = balanceDatas;
@@ -38,6 +39,14 @@ public class AccountData {
 
 	public void setOwner(String owner) {
 		this.owner = owner;
+	}
+
+	public TapiInformationData getTapiInformationData() {
+		return tapiInformationData;
+	}
+
+	public void setTapiInformationData(TapiInformationData tapiInformationData) {
+		this.tapiInformationData = tapiInformationData;
 	}
 
 	public List<BalanceData> getBalanceDatas() {

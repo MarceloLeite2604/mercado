@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.marceloleite.mercado.commons.converter.LocalDateTimeToStringConverter;
+import org.marceloleite.mercado.commons.converter.OldLongToLocalDateTimeConverter;
 import org.mockito.InjectMocks;
 import org.mockito.junit.MockitoJUnitRunner;
 

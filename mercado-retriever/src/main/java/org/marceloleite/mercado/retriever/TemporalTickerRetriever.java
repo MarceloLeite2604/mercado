@@ -36,6 +36,10 @@ public class TemporalTickerRetriever {
 		super();
 		this.temporalTickerDAO = new TemporalTickerDAO();
 	}
+	
+	public TemporalTicker retrieve(Currency currency, TimeInterval timeInterval) {
+		return retrieve(currency, timeInterval, false);
+	}
 
 	public TemporalTicker retrieve(Currency currency, TimeInterval timeInterval,
 			boolean ignoreValueOnDatabsase) {

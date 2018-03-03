@@ -16,6 +16,7 @@ import org.marceloleite.mercado.xml.structures.XmlBalances;
 import org.marceloleite.mercado.xml.structures.XmlBuyOrder;
 import org.marceloleite.mercado.xml.structures.XmlCurrencyAmount;
 import org.marceloleite.mercado.xml.structures.XmlDeposit;
+import org.marceloleite.mercado.xml.structures.XmlTapiInformation;
 
 public class XmlReader {
 
@@ -24,20 +25,29 @@ public class XmlReader {
 	private JAXBContext jaxbContext;
 
 	private static final Class<?>[] XML_CLASSES = { XmlBuyOrder.class, XmlAccount.class, XmlBalanceEntryList.class,
-			XmlBalances.class, XmlDeposit.class, XmlCurrencyAmount.class };
+			XmlBalances.class, XmlDeposit.class, XmlCurrencyAmount.class, XmlTapiInformation.class };
 
-	private static final String XML_DIRECTORY_PATH = "src/main/resources/xml/";
-	private static final String ACCOUNTS_DIRECTORY_NAME = "accounts/";
+	private static final String DEFAULT_ACCOUNTS_XML_DIRECTORY_PATH = "src/main/resources/xml/accounts/";
 
 	private static final String XML_FILE_EXTENSION = "XML";
+	
+	private String accountsXmlDirectoryLocation;
 
-	public XmlReader() {
+	public XmlReader(String accountsXmlDirectoryLocation) {
 		try {
 			this.jaxbContext = createJaxbContext();
 			this.unmarshaller = createUnmarshaller();
 		} catch (JAXBException exception) {
 			throw new RuntimeException(exception);
 		}
+		if ( accountsXmlDirectoryLocation == null || accountsXmlDirectoryLocation.isEmpty()) {
+			throw new IllegalArgumentException("Accounts XML Directory location can not be null.");
+		}
+		this.accountsXmlDirectoryLocation = accountsXmlDirectoryLocation;
+	}
+	
+	public XmlReader() {
+		this(DEFAULT_ACCOUNTS_XML_DIRECTORY_PATH);
 	}
 
 	private JAXBContext createJaxbContext() throws JAXBException {
@@ -60,7 +70,7 @@ public class XmlReader {
 	}
 
 	private List<File> getXmlAccountFiles() {
-		File accountsDirectory = new File(XML_DIRECTORY_PATH + ACCOUNTS_DIRECTORY_NAME);
+		File accountsDirectory = new File(accountsXmlDirectoryLocation);
 		FilenameFilter xmlFileNameFilter = new FilenameFilter() {
 
 			@Override

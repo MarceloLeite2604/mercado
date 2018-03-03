@@ -2,8 +2,8 @@ package org.marceloleite.mercado.api.negotiation.methods;
 
 import java.time.ZonedDateTime;
 
-import org.marceloleite.mercado.commons.util.converter.Converter;
-import org.marceloleite.mercado.commons.util.converter.LongToZonedDateTimeConverter;
+import org.marceloleite.mercado.commons.converter.Converter;
+import org.marceloleite.mercado.commons.converter.LongToZonedDateTimeConverter;
 import org.marceloleite.mercado.converter.json.JsonToClassObjectConverter;
 import org.marceloleite.mercado.jsonmodel.api.negotiation.JsonTapiResponse;
 

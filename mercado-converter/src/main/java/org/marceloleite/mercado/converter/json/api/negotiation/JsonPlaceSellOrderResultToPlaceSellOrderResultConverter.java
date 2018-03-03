@@ -1,6 +1,6 @@
 package org.marceloleite.mercado.converter.json.api.negotiation;
 
-import org.marceloleite.mercado.commons.util.converter.Converter;
+import org.marceloleite.mercado.commons.converter.Converter;
 import org.marceloleite.mercado.jsonmodel.api.data.JsonOrder;
 import org.marceloleite.mercado.jsonmodel.api.negotiation.JsonPlaceSellOrderResult;
 import org.marceloleite.mercado.negotiationapi.model.placesellorder.PlaceSellOrderResult;

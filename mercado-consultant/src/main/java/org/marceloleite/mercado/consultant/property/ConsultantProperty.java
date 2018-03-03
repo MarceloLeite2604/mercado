@@ -1,7 +1,7 @@
 package org.marceloleite.mercado.consultant.property;
 
-import org.marceloleite.mercado.properties.Property;
-import org.marceloleite.mercado.properties.StandardProperty;
+import org.marceloleite.mercado.commons.properties.Property;
+import org.marceloleite.mercado.commons.properties.StandardProperty;
 
 public enum ConsultantProperty implements Property {
 
