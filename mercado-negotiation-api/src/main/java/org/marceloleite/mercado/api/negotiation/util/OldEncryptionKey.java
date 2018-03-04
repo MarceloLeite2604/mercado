@@ -3,7 +3,7 @@ package org.marceloleite.mercado.api.negotiation.util;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 
-public class EncryptionKey {
+public class OldEncryptionKey {
 
 	private static final String VARIABLE_SECRET = "MBS";
 

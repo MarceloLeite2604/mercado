@@ -10,7 +10,8 @@ public enum TapiMethod {
 	PLACE_BUY_ORDER("place_buy_order"),
 	PLACE_SELL_ORDER("place_sell_order"),
 	CANCEL_ORDER("cancel_order"),
-	GET_WITHDRAWAL("get_withdrawal");
+	GET_WITHDRAWAL("get_withdrawal"),
+	WITHDRAW_COIN("withdraw_coin");
 	
 	private String methodName;
 

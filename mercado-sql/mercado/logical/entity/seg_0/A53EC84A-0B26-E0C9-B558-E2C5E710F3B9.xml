@@ -1,7 +1,7 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="BD7D0B1B-C442-27EF-D3C6-EDC6F49ABBE1" name="BALANCES">
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="A53EC84A-0B26-E0C9-B558-E2C5E710F3B9" name="TAPI_INFORMATIONS">
 <createdBy>marcelo</createdBy>
-<createdTime>2018-02-27 14:12:13 UTC</createdTime>
+<createdTime>2018-03-03 16:25:14 UTC</createdTime>
 <ownerDesignName>mercado</ownerDesignName>
 <shouldEngineer>false</shouldEngineer>
 <engineerTo>
@@ -15,69 +15,67 @@
 <maxVolumes>9999999</maxVolumes>
 <minVolumes>0</minVolumes>
 <normalForm>Third</normalForm>
-<preferredAbbreviation>BALANCES</preferredAbbreviation>
-<shortName>BALA</shortName>
+<preferredAbbreviation>TAPI_INFORMATIONS</preferredAbbreviation>
+<shortName>TAPI</shortName>
 <attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
-<Attribute name="ACCO_OWNER" id="F18E3B2B-6CE3-61DA-5252-CCB64122890B">
+<Attribute name="ACCO_OWNER" id="B484B717-CE60-F03B-4DE9-A8811705764E">
 <createdBy>marcelo</createdBy>
-<createdTime>2018-02-27 14:16:05 UTC</createdTime>
-<generatorID>C6D1EF01-7B38-E6D6-DE03-9E272320C1A3</generatorID>
+<createdTime>2018-03-03 16:26:42 UTC</createdTime>
+<generatorID>256A1C54-E522-B112-6177-0CC134F4E47A</generatorID>
 <ownerDesignName>mercado</ownerDesignName>
-<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="false"/>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
 </engineerTo>
 <referedAttribute>D50B8A3C-A3CB-AD5D-36B3-F1F6BA19A18C</referedAttribute>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
 <dataTypeSize>64 CHAR</dataTypeSize>
-<ownDataTypeParameters>64 CHAR,,</ownDataTypeParameters>
-</Attribute>
-<Attribute name="CURRENCY" id="A10462C6-9B54-B4F8-80EE-E522812D7E7F">
-<createdBy>marcelo</createdBy>
-<createdTime>2018-02-27 14:12:28 UTC</createdTime>
-<ownerDesignName>mercado</ownerDesignName>
-<shouldEngineer>false</shouldEngineer>
-<engineerTo>
-<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="false"/>
-</engineerTo>
-<use>0</use>
-<logicalDatatype>LOGDT024</logicalDatatype>
-<domain>C0FF9A66-7E35-E913-A432-F83306475582</domain>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="AMOUNT" id="21C9B87B-A12F-40DB-C14B-F49460635A04">
+<Attribute name="ID" id="331144BB-ED7D-7272-F26E-6197ABE9BBD4">
 <createdBy>marcelo</createdBy>
-<createdTime>2018-02-27 14:12:34 UTC</createdTime>
+<createdTime>2018-03-03 16:25:59 UTC</createdTime>
 <ownerDesignName>mercado</ownerDesignName>
 <shouldEngineer>false</shouldEngineer>
 <engineerTo>
 <item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="false"/>
 </engineerTo>
-<use>0</use>
-<logicalDatatype>LOGDT019</logicalDatatype>
-<dataTypePrecision>20</dataTypePrecision>
-<dataTypeScale>8</dataTypeScale>
-<domain>EE73E7A5-75C0-513C-08D9-98E102E9D0D5</domain>
-<ownDataTypeParameters>,20,8</ownDataTypeParameters>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>1024 CHAR</dataTypeSize>
+<ownDataTypeParameters>1024 CHAR,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="SECRET" id="D8DFD73B-1FD4-0233-376D-CB1786205A4E">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-03-03 16:26:16 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
+<engineerTo>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="false"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>1024 CHAR</dataTypeSize>
+<ownDataTypeParameters>1024 CHAR,,</ownDataTypeParameters>
 </Attribute>
 </attributes>
 <identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
-<identifier id="F460C1B7-94AF-AC8A-5EF9-157541E0D58A" name="BALA_PK">
+<identifier id="C224F170-9DE8-5EFE-3F33-3068A4827CF0" name="TAPI_PK">
 <createdBy>marcelo</createdBy>
-<createdTime>2018-02-27 14:16:21 UTC</createdTime>
+<createdTime>2018-03-03 16:26:58 UTC</createdTime>
 <ownerDesignName>mercado</ownerDesignName>
 <shouldEngineer>false</shouldEngineer>
 <engineerTo>
 <item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="false"/>
 </engineerTo>
 <pk>true</pk>
-<newElementsIDs>C6D1EF01-7B38-E6D6-DE03-9E272320C1A3,C6D1EF01-7B38-E6D6-DE03-9E272320C1A3,A10462C6-9B54-B4F8-80EE-E522812D7E7F</newElementsIDs>
+<newElementsIDs>256A1C54-E522-B112-6177-0CC134F4E47A,331144BB-ED7D-7272-F26E-6197ABE9BBD4</newElementsIDs>
 <usedAttributes>
-<attributeRef>F18E3B2B-6CE3-61DA-5252-CCB64122890B</attributeRef>
-<attributeRef>F18E3B2B-6CE3-61DA-5252-CCB64122890B</attributeRef>
-<attributeRef>A10462C6-9B54-B4F8-80EE-E522812D7E7F</attributeRef>
+<attributeRef>B484B717-CE60-F03B-4DE9-A8811705764E</attributeRef>
+<attributeRef>331144BB-ED7D-7272-F26E-6197ABE9BBD4</attributeRef>
 </usedAttributes>
 </identifier>
 </identifiers>

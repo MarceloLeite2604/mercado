@@ -3,8 +3,9 @@
 <createdBy>marcelo</createdBy>
 <createdTime>2018-02-27 15:16:52 UTC</createdTime>
 <ownerDesignName>mercado</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="false"/>
 </engineerTo>
 <adequatelyNormalized>NO</adequatelyNormalized>
 <expectedVolumes>0</expectedVolumes>
@@ -21,8 +22,9 @@
 <createdBy>marcelo</createdBy>
 <createdTime>2018-02-27 15:17:24 UTC</createdTime>
 <ownerDesignName>mercado</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="false"/>
 </engineerTo>
 <use>0</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
@@ -33,8 +35,9 @@
 <createdBy>marcelo</createdBy>
 <createdTime>2018-02-27 15:17:34 UTC</createdTime>
 <ownerDesignName>mercado</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="false"/>
 </engineerTo>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
@@ -46,8 +49,9 @@
 <createdBy>marcelo</createdBy>
 <createdTime>2018-02-27 15:18:11 UTC</createdTime>
 <ownerDesignName>mercado</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="false"/>
 </engineerTo>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
@@ -59,8 +63,9 @@
 <createdBy>marcelo</createdBy>
 <createdTime>2018-02-27 15:18:41 UTC</createdTime>
 <ownerDesignName>mercado</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="false"/>
 </engineerTo>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
@@ -72,8 +77,9 @@
 <createdBy>marcelo</createdBy>
 <createdTime>2018-02-27 15:19:07 UTC</createdTime>
 <ownerDesignName>mercado</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="false"/>
 </engineerTo>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
@@ -85,8 +91,9 @@
 <createdBy>marcelo</createdBy>
 <createdTime>2018-02-27 15:19:25 UTC</createdTime>
 <ownerDesignName>mercado</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="false"/>
 </engineerTo>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
@@ -98,8 +105,9 @@
 <createdBy>marcelo</createdBy>
 <createdTime>2018-02-27 15:19:36 UTC</createdTime>
 <ownerDesignName>mercado</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="false"/>
 </engineerTo>
 <use>0</use>
 <logicalDatatype>LOGDT019</logicalDatatype>
@@ -110,8 +118,9 @@
 <createdBy>marcelo</createdBy>
 <createdTime>2018-02-27 15:19:54 UTC</createdTime>
 <ownerDesignName>mercado</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="false"/>
 </engineerTo>
 <use>0</use>
 <logicalDatatype>LOGDT019</logicalDatatype>
@@ -122,8 +131,9 @@
 <createdBy>marcelo</createdBy>
 <createdTime>2018-02-27 15:20:03 UTC</createdTime>
 <ownerDesignName>mercado</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="false"/>
 </engineerTo>
 <use>0</use>
 <logicalDatatype>LOGDT019</logicalDatatype>
@@ -134,8 +144,9 @@
 <createdBy>marcelo</createdBy>
 <createdTime>2018-02-27 15:20:16 UTC</createdTime>
 <ownerDesignName>mercado</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="false"/>
 </engineerTo>
 <use>0</use>
 <logicalDatatype>LOGDT019</logicalDatatype>
@@ -146,8 +157,9 @@
 <createdBy>marcelo</createdBy>
 <createdTime>2018-02-27 15:20:27 UTC</createdTime>
 <ownerDesignName>mercado</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="false"/>
 </engineerTo>
 <use>0</use>
 <logicalDatatype>LOGDT019</logicalDatatype>
@@ -158,8 +170,9 @@
 <createdBy>marcelo</createdBy>
 <createdTime>2018-02-27 15:20:39 UTC</createdTime>
 <ownerDesignName>mercado</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="false"/>
 </engineerTo>
 <use>0</use>
 <logicalDatatype>LOGDT019</logicalDatatype>
@@ -170,8 +183,9 @@
 <createdBy>marcelo</createdBy>
 <createdTime>2018-02-27 15:20:51 UTC</createdTime>
 <ownerDesignName>mercado</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="false"/>
 </engineerTo>
 <use>0</use>
 <logicalDatatype>LOGDT019</logicalDatatype>
@@ -182,8 +196,9 @@
 <createdBy>marcelo</createdBy>
 <createdTime>2018-02-27 15:20:59 UTC</createdTime>
 <ownerDesignName>mercado</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="false"/>
 </engineerTo>
 <use>0</use>
 <logicalDatatype>LOGDT019</logicalDatatype>
@@ -194,8 +209,9 @@
 <createdBy>marcelo</createdBy>
 <createdTime>2018-02-27 15:21:08 UTC</createdTime>
 <ownerDesignName>mercado</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="false"/>
 </engineerTo>
 <use>0</use>
 <logicalDatatype>LOGDT019</logicalDatatype>
@@ -206,8 +222,9 @@
 <createdBy>marcelo</createdBy>
 <createdTime>2018-02-27 15:21:20 UTC</createdTime>
 <ownerDesignName>mercado</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="false"/>
 </engineerTo>
 <use>0</use>
 <logicalDatatype>LOGDT019</logicalDatatype>
@@ -218,8 +235,9 @@
 <createdBy>marcelo</createdBy>
 <createdTime>2018-02-27 15:21:31 UTC</createdTime>
 <ownerDesignName>mercado</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="false"/>
 </engineerTo>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
@@ -231,8 +249,9 @@
 <createdBy>marcelo</createdBy>
 <createdTime>2018-02-27 15:22:13 UTC</createdTime>
 <ownerDesignName>mercado</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="false"/>
 </engineerTo>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>

@@ -12,6 +12,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 /**
  * The persistent class for the ACCOUNTS database table.
  * 
@@ -25,15 +28,17 @@ public class AccountPO implements Serializable, PersistenceObject<String> {
 	@Id
 	private String owner;
 
-	@OneToOne(mappedBy = "accountPO", cascade = CascadeType.ALL)
+	@OneToOne(mappedBy = "accountPO", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private TapiInformationPO tapiInformationPO;
 
 	// bi-directional many-to-one association to BalancePO
-	@OneToMany(mappedBy = "accountPO", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "accountPO", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@Fetch(FetchMode.SUBSELECT)
 	private List<BalancePO> balancePOs;
 
 	// bi-directional many-to-one association to StrategyPO
-	@OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@Fetch(FetchMode.SUBSELECT)
 	private List<StrategyPO> strategyPOs;
 
 	public AccountPO() {

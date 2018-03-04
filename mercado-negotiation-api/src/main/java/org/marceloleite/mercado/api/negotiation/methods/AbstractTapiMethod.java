@@ -15,6 +15,7 @@ import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.api.negotiation.util.HttpConnection;
 import org.marceloleite.mercado.api.negotiation.util.NonceGenerator;
 import org.marceloleite.mercado.api.negotiation.util.UrlGenerator;
+import org.marceloleite.mercado.base.model.TapiInformation;
 import org.marceloleite.mercado.commons.converter.ObjectToJsonConverter;
 import org.marceloleite.mercado.jsonmodel.api.negotiation.JsonTapiResponse;
 
@@ -35,8 +36,11 @@ public abstract class AbstractTapiMethod<T extends AbstractTapiResponse<?, ?>> {
 	private Class<?> responseClass;
 
 	private String[] parameterNames;
-
-	public AbstractTapiMethod(TapiMethod tapiMethod, Class<?> responseClass, String[] parameterNames) {
+	
+	private TapiInformation tapiInformation;
+	
+	public AbstractTapiMethod(TapiInformation tapiInformation, TapiMethod tapiMethod, Class<?> responseClass, String[] parameterNames) {
+		this.tapiInformation = tapiInformation;
 		this.tapiMethod = tapiMethod;
 		this.responseClass = responseClass;
 		this.parameterNames = parameterNames;
@@ -91,7 +95,7 @@ public abstract class AbstractTapiMethod<T extends AbstractTapiResponse<?, ?>> {
 		TapiMethodParameters tapiMethodParameters = generateTapiMethodParameters(objectParameters);
 		URL url = new UrlGenerator().generate(generateAddress(), tapiMethodParameters);
 		LOGGER.debug("Url generated is: " + url);
-		HttpsURLConnection httpsUrlConnection = new HttpConnection().createHttpsUrlConnection(url);
+		HttpsURLConnection httpsUrlConnection = new HttpConnection(tapiInformation).createHttpsUrlConnection(url);
 		try {
 			httpsUrlConnection.connect();
 			sendHttpUrlConnectionProperties(httpsUrlConnection, tapiMethodParameters);

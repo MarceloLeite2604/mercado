@@ -3,8 +3,9 @@
 <createdBy>marcelo</createdBy>
 <createdTime>2018-02-27 14:19:15 UTC</createdTime>
 <ownerDesignName>mercado</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="false"/>
 </engineerTo>
 <adequatelyNormalized>NO</adequatelyNormalized>
 <expectedVolumes>0</expectedVolumes>
@@ -22,23 +23,25 @@
 <createdTime>2018-02-27 14:20:26 UTC</createdTime>
 <generatorID>59B70BE0-B59C-3606-8F57-E1891013F57A</generatorID>
 <ownerDesignName>mercado</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="false"/>
 </engineerTo>
 <referedAttribute>766050DA-85CE-21E2-E6EF-1200C23D4E4C</referedAttribute>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
 <dataTypeSize>64 CHAR</dataTypeSize>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
+<ownDataTypeParameters>64 CHAR,,</ownDataTypeParameters>
 </Attribute>
 <Attribute name="STRA_CURRENCY" id="031568B4-DF85-863B-8044-79E15E98AB5A">
 <createdBy>marcelo</createdBy>
 <createdTime>2018-02-27 14:20:26 UTC</createdTime>
 <generatorID>59B70BE0-B59C-3606-8F57-E1891013F57A</generatorID>
 <ownerDesignName>mercado</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="false"/>
 </engineerTo>
 <referedAttribute>DB705BF8-F930-97A5-1468-4CFE83D9AD21</referedAttribute>
 <use>0</use>
@@ -50,8 +53,9 @@
 <createdBy>marcelo</createdBy>
 <createdTime>2018-02-27 14:19:55 UTC</createdTime>
 <ownerDesignName>mercado</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="false"/>
 </engineerTo>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
@@ -72,7 +76,6 @@
 <pk>true</pk>
 <newElementsIDs>59B70BE0-B59C-3606-8F57-E1891013F57A,228D8DA7-9F1C-6EE8-13D1-7DEF410F7BBC</newElementsIDs>
 <usedAttributes>
-<attributeRef>6FDEF2AD-38C5-80E3-6D83-D2D60C49B12C</attributeRef>
 <attributeRef>031568B4-DF85-863B-8044-79E15E98AB5A</attributeRef>
 <attributeRef>228D8DA7-9F1C-6EE8-13D1-7DEF410F7BBC</attributeRef>
 </usedAttributes>

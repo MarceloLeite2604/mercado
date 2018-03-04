@@ -15,6 +15,9 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+
 /**
  * The persistent class for the CLASSES database table.
  * 
@@ -36,11 +39,13 @@ public class ClassPO implements Serializable, PersistenceObject<ClassIdPO> {
 	private StrategyPO strategyPO;
 
 	// bi-directional many-to-one association to ParameterPO
-	@OneToMany(mappedBy = "classPO", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "classPO", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@Fetch(FetchMode.SUBSELECT)
 	private List<ParameterPO> parameterPOs;
 
 	// bi-directional many-to-one association to VariablePO
-	@OneToMany(mappedBy = "classPO", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "classPO", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@Fetch(FetchMode.SUBSELECT)
 	private List<VariablePO> variablePOs;
 
 	public ClassPO() {

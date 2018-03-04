@@ -3,8 +3,9 @@
 <createdBy>marcelo</createdBy>
 <createdTime>2018-02-27 15:23:45 UTC</createdTime>
 <ownerDesignName>mercado</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="false"/>
 </engineerTo>
 <adequatelyNormalized>NO</adequatelyNormalized>
 <expectedVolumes>0</expectedVolumes>
@@ -21,8 +22,9 @@
 <createdBy>marcelo</createdBy>
 <createdTime>2018-02-27 15:23:55 UTC</createdTime>
 <ownerDesignName>mercado</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="false"/>
 </engineerTo>
 <use>0</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
@@ -33,8 +35,9 @@
 <createdBy>marcelo</createdBy>
 <createdTime>2018-02-27 15:24:01 UTC</createdTime>
 <ownerDesignName>mercado</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="false"/>
 </engineerTo>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
@@ -46,8 +49,9 @@
 <createdBy>marcelo</createdBy>
 <createdTime>2018-02-27 15:24:16 UTC</createdTime>
 <ownerDesignName>mercado</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="false"/>
 </engineerTo>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
@@ -60,8 +64,9 @@
 <createdBy>marcelo</createdBy>
 <createdTime>2018-02-27 15:24:21 UTC</createdTime>
 <ownerDesignName>mercado</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="false"/>
 </engineerTo>
 <nullsAllowed>true</nullsAllowed>
 <useDomainConstraints>false</useDomainConstraints>
@@ -74,8 +79,9 @@
 <createdBy>marcelo</createdBy>
 <createdTime>2018-02-27 15:24:54 UTC</createdTime>
 <ownerDesignName>mercado</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="false"/>
 </engineerTo>
 <nullsAllowed>true</nullsAllowed>
 <use>0</use>
@@ -87,8 +93,9 @@
 <createdBy>marcelo</createdBy>
 <createdTime>2018-02-27 15:24:59 UTC</createdTime>
 <ownerDesignName>mercado</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="false"/>
 </engineerTo>
 <nullsAllowed>true</nullsAllowed>
 <useDomainConstraints>false</useDomainConstraints>

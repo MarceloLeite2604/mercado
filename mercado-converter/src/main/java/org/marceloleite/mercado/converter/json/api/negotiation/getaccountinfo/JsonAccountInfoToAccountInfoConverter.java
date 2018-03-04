@@ -9,7 +9,7 @@ public class JsonAccountInfoToAccountInfoConverter implements Converter<JsonAcco
 	@Override
 	public AccountInfo convertTo(JsonAccountInfo jsonAccountInfo) {
 		AccountInfo accountInfo = new AccountInfo();
-		accountInfo.setBalance(new JsonBalanceToBalanceConverter().convertTo(jsonAccountInfo.getJsonBalance()));
+		accountInfo.setBalanceApi(new JsonBalanceToBalanceApiConverter().convertTo(jsonAccountInfo.getJsonBalance()));
 		accountInfo.setWithdrawalLimits(new JsonWithdrawalLimitsToWithdrawalLimitsConverter().convertTo(jsonAccountInfo.getJsonWithdrawlLimits()));
 		return accountInfo;
 	}

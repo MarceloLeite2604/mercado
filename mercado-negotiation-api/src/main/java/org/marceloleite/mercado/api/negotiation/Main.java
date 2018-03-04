@@ -12,6 +12,7 @@ import org.marceloleite.mercado.api.negotiation.methods.listorders.ListOrdersMet
 import org.marceloleite.mercado.api.negotiation.methods.listorders.ListOrdersMethodResponse;
 import org.marceloleite.mercado.api.negotiation.methods.listsystemmessages.ListSystemMessagesMethod;
 import org.marceloleite.mercado.api.negotiation.methods.listsystemmessages.ListSystemMessagesMethodResponse;
+import org.marceloleite.mercado.base.model.TapiInformation;
 import org.marceloleite.mercado.commons.converter.ObjectToJsonConverter;
 import org.marceloleite.mercado.commons.converter.ZonedDateTimeToStringConverter;
 import org.marceloleite.mercado.databaseretriever.persistence.EntityManagerController;
@@ -31,7 +32,7 @@ public class Main {
 	@SuppressWarnings("unused")
 	private static void listOrderbookMethod() {
 		try {
-			ListOrderbookMethodResponse listOrderbookMethodResponse = new ListOrderbookMethod()
+			ListOrderbookMethodResponse listOrderbookMethodResponse = new ListOrderbookMethod(createTapiInformation())
 					.execute(CurrencyPair.BRLBCH);
 			System.out.println(new ObjectToJsonConverter().convertTo(listOrderbookMethodResponse.getResponse()));
 		} finally {
@@ -42,7 +43,7 @@ public class Main {
 	@SuppressWarnings("unused")
 	private static void listSystemMessagesMethod() {
 		try {
-			ListSystemMessagesMethodResponse listSystemMessagesMethodResponse = new ListSystemMessagesMethod()
+			ListSystemMessagesMethodResponse listSystemMessagesMethodResponse = new ListSystemMessagesMethod(createTapiInformation())
 					.execute();
 			System.out.println("Status code: " + listSystemMessagesMethodResponse.getStatusCode());
 			System.out.println("Error message: " + listSystemMessagesMethodResponse.getErrorMessage());
@@ -64,7 +65,7 @@ public class Main {
 	@SuppressWarnings("unused")
 	private static void listOrdersMethod() {
 		try {
-			ListOrdersMethodResponse listOrdersMethodResponse = new ListOrdersMethod().execute(CurrencyPair.BRLBCH);
+			ListOrdersMethodResponse listOrdersMethodResponse = new ListOrdersMethod(createTapiInformation()).execute(CurrencyPair.BRLBCH);
 			System.out.println(new ObjectToJsonConverter().convertTo(listOrdersMethodResponse));
 		} finally {
 			EntityManagerController.getInstance().close();
@@ -74,7 +75,7 @@ public class Main {
 	@SuppressWarnings("unused")
 	private static void getAccountInfoMethod() {
 		try {
-			GetAccountInfoMethodResponse getAccountInfoMethodResponse = new GetAccountInfoMethod().execute();
+			GetAccountInfoMethodResponse getAccountInfoMethodResponse = new GetAccountInfoMethod(createTapiInformation()).execute();
 			System.out.println(new ObjectToJsonConverter().convertTo(getAccountInfoMethodResponse.getResponse()));
 		} finally {
 			EntityManagerController.getInstance().close();
@@ -84,10 +85,17 @@ public class Main {
 	@SuppressWarnings("unused")
 	private static void getOrderMethod() {
 		try {
-			GetOrderMethodResponse getOrderMethodResponse = new GetOrderMethod().execute(CurrencyPair.BRLBCH, 1024453l);
+			GetOrderMethodResponse getOrderMethodResponse = new GetOrderMethod(createTapiInformation()).execute(CurrencyPair.BRLBCH, 1024453l);
 			System.out.println(new ObjectToJsonConverter().convertTo(getOrderMethodResponse.getResponse()));
 		} finally {
 			EntityManagerController.getInstance().close();
 		}
+	}
+	
+	private static TapiInformation createTapiInformation() {
+		TapiInformation tapiInformation = new TapiInformation();
+		tapiInformation.setId("z8IetMpskqZLuNipdAuAp4jb16axbxeIrKy5gI33c6tNJwilFUzwDw==");
+		tapiInformation.setSecret("avR+lJKCyZSQaScxSll9dM7T1TnYzI9gTUfqEWXfgCdnrrhowyJTmveDygS3kcG6iVGgg9Hd0Ar/JHp+p2HiJKjmYhGJZbdW");
+		return tapiInformation;
 	}
 }

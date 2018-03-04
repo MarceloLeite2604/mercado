@@ -3,8 +3,9 @@
 <createdBy>marcelo</createdBy>
 <createdTime>2018-02-27 12:18:12 UTC</createdTime>
 <ownerDesignName>mercado</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="false"/>
 </engineerTo>
 <adequatelyNormalized>NO</adequatelyNormalized>
 <expectedVolumes>0</expectedVolumes>
@@ -22,22 +23,24 @@
 <createdTime>2018-02-27 14:09:03 UTC</createdTime>
 <generatorID>EC679E6B-2EBA-BD2A-F10F-32D1422A4996</generatorID>
 <ownerDesignName>mercado</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="false"/>
 </engineerTo>
 <referedAttribute>D50B8A3C-A3CB-AD5D-36B3-F1F6BA19A18C</referedAttribute>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
 <dataTypeSize>64 CHAR</dataTypeSize>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
+<ownDataTypeParameters>64 CHAR,,</ownDataTypeParameters>
 </Attribute>
 <Attribute name="CURRENCY" id="DB705BF8-F930-97A5-1468-4CFE83D9AD21">
 <createdBy>marcelo</createdBy>
 <createdTime>2018-02-27 12:18:25 UTC</createdTime>
 <ownerDesignName>mercado</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="false"/>
 </engineerTo>
 <use>0</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
@@ -55,9 +58,8 @@
 <item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="false"/>
 </engineerTo>
 <pk>true</pk>
-<newElementsIDs>EC679E6B-2EBA-BD2A-F10F-32D1422A4996,DB705BF8-F930-97A5-1468-4CFE83D9AD21</newElementsIDs>
+<newElementsIDs>DB705BF8-F930-97A5-1468-4CFE83D9AD21</newElementsIDs>
 <usedAttributes>
-<attributeRef>766050DA-85CE-21E2-E6EF-1200C23D4E4C</attributeRef>
 <attributeRef>DB705BF8-F930-97A5-1468-4CFE83D9AD21</attributeRef>
 </usedAttributes>
 </identifier>

@@ -1,0 +1,79 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="1EF916C6-F74B-4822-85E4-0EF54FC1EBAC" name="TAPI_INFORMATIONS">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-03-03 16:28:51 UTC</createdTime>
+<generatorID>A53EC84A-0B26-E0C9-B558-E2C5E710F3B9</generatorID>
+<ownerDesignName>mercado</ownerDesignName>
+<abbreviation>TAPI</abbreviation>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="ACCO_OWNER" id="35AC53D0-51E2-8F9A-E3EA-04ADDB694A50">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-03-03 16:28:51 UTC</createdTime>
+<generatorID>B484B717-CE60-F03B-4DE9-A8811705764E</generatorID>
+<ownerDesignName>mercado</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>64 CHAR</dataTypeSize>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="9E3418B7-C906-8C55-02A6-481407917A3D" referredColumn="0D52C333-6BD3-AE2E-E181-EFDB3AB22EC8"/>
+</associations>
+</Column>
+<Column name="ID" id="342B4C1D-9570-B530-ECD2-5D3D21E35880">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-03-03 16:28:51 UTC</createdTime>
+<generatorID>331144BB-ED7D-7272-F26E-6197ABE9BBD4</generatorID>
+<ownerDesignName>mercado</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>1024 CHAR</dataTypeSize>
+<ownDataTypeParameters>1024 CHAR,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="SECRET" id="29FE1F58-3F86-842D-DCEA-1DB8C50B1A45">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-03-03 16:28:51 UTC</createdTime>
+<generatorID>D8DFD73B-1FD4-0233-376D-CB1786205A4E</generatorID>
+<ownerDesignName>mercado</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>1024 CHAR</dataTypeSize>
+<ownDataTypeParameters>1024 CHAR,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="6B5AD286-996F-0080-B129-D846D74C9518" name="TAPI_PK">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-03-03 16:28:51 UTC</createdTime>
+<generatorID>C224F170-9DE8-5EFE-3F33-3068A4827CF0</generatorID>
+<ownerDesignName>mercado</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="35AC53D0-51E2-8F9A-E3EA-04ADDB694A50"/>
+<colUsage columnID="342B4C1D-9570-B530-ECD2-5D3D21E35880"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="6232E012-69E3-AB78-1A85-57008B5F10F7" name="TAPI_ACCO_FK">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-03-03 16:29:10 UTC</createdTime>
+<generatorID>256A1C54-E522-B112-6177-0CC134F4E47A</generatorID>
+<ownerDesignName>mercado</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="35AC53D0-51E2-8F9A-E3EA-04ADDB694A50"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

@@ -2,13 +2,13 @@ package org.marceloleite.mercado.negotiationapi.model.getaccountinfo;
 
 public class AccountInfo {
 
-	private Balance balance;
+	private BalanceApi balanceApi;
 	
 	private WithdrawalLimits withdrawalLimits;
 
-	public AccountInfo(Balance balance, WithdrawalLimits withdrawalLimits) {
+	public AccountInfo(BalanceApi balanceApi, WithdrawalLimits withdrawalLimits) {
 		super();
-		this.balance = balance;
+		this.balanceApi = balanceApi;
 		this.withdrawalLimits = withdrawalLimits;
 	}
 	
@@ -16,12 +16,12 @@ public class AccountInfo {
 		this(null, null);
 	}
 
-	public Balance getBalance() {
-		return balance;
+	public BalanceApi getBalanceApi() {
+		return balanceApi;
 	}
 
-	public void setBalance(Balance balance) {
-		this.balance = balance;
+	public void setBalanceApi(BalanceApi balanceApi) {
+		this.balanceApi = balanceApi;
 	}
 
 	public WithdrawalLimits getWithdrawalLimits() {

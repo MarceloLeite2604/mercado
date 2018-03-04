@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 import org.marceloleite.mercado.commons.Currency;
 
-public class Balance extends HashMap<Currency, CurrencyAvailable>{
+public class BalanceApi extends HashMap<Currency, CurrencyAvailable>{
 
 	private static final long serialVersionUID = 1L;
 
