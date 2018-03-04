@@ -4,13 +4,13 @@ import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.converter.Converter;
 import org.marceloleite.mercado.jsonmodel.api.negotiation.accountinfo.JsonBalance;
 import org.marceloleite.mercado.jsonmodel.api.negotiation.accountinfo.JsonCurrencyAvailable;
-import org.marceloleite.mercado.negotiationapi.model.getaccountinfo.Balance;
+import org.marceloleite.mercado.negotiationapi.model.getaccountinfo.BalanceApi;
 
-public class JsonBalanceToBalanceConverter implements Converter<JsonBalance, Balance> {
+public class JsonBalanceToBalanceApiConverter implements Converter<JsonBalance, BalanceApi> {
 
 	@Override
-	public Balance convertTo(JsonBalance jsonBalance) {
-		Balance balance = new Balance();
+	public BalanceApi convertTo(JsonBalance jsonBalance) {
+		BalanceApi balance = new BalanceApi();
 		if (jsonBalance != null && !jsonBalance.isEmpty()) {
 			JsonCurrencyAvaliableToCurrencyAvaliableConverter jsonCurrencyAvaliableToCurrencyAvaliableConverter = new JsonCurrencyAvaliableToCurrencyAvaliableConverter();
 			for (Currency currency : jsonBalance.keySet()) {
@@ -23,7 +23,7 @@ public class JsonBalanceToBalanceConverter implements Converter<JsonBalance, Bal
 	}
 
 	@Override
-	public JsonBalance convertFrom(Balance balance) {
+	public JsonBalance convertFrom(BalanceApi balance) {
 		throw new UnsupportedOperationException();
 	}
 

@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.marceloleite.mercado.api.negotiation.methods.AbstractTapiMethod;
 import org.marceloleite.mercado.api.negotiation.methods.TapiMethod;
+import org.marceloleite.mercado.base.model.TapiInformation;
 import org.marceloleite.mercado.commons.OrderType;
 import org.marceloleite.mercado.negotiationapi.model.CurrencyPair;
 import org.marceloleite.mercado.negotiationapi.model.OrderStatus;
@@ -14,8 +15,8 @@ public class ListOrdersMethod extends AbstractTapiMethod<ListOrdersMethodRespons
 	private static final String[] PARAMETER_NAMES = {"coin_pair", "order_type", "status_list", "has_fulls",
 			"from_id", "to_id", "from_timestamp", "to_timestamp"};
 
-	public ListOrdersMethod() {
-		super(TapiMethod.LIST_ORDERS, ListOrdersMethodResponse.class, PARAMETER_NAMES);
+	public ListOrdersMethod(TapiInformation tapiInformation) {
+		super(tapiInformation, TapiMethod.LIST_ORDERS, ListOrdersMethodResponse.class, PARAMETER_NAMES);
 	}
 
 	public ListOrdersMethodResponse execute(CurrencyPair coinPair, OrderType orderType,

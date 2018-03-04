@@ -19,7 +19,9 @@ public class StrategyPOToStrategyDataConverter implements Converter<StrategyPO, 
 	@Override
 	public StrategyData convertTo(StrategyPO strategyPO) {
 		StrategyData strategyData = new StrategyData();
-		strategyData.setClassDatas(createStrategyClassDatas(strategyPO));
+		List<ClassData> classDatas = createStrategyClassDatas(strategyPO);
+		classDatas.forEach(classData -> classData.setStrategyData(strategyData));
+		strategyData.setClassDatas(classDatas);
 		strategyData.setCurrency(strategyPO.getId().getCurrency());
 		return strategyData;
 	}
@@ -72,9 +74,9 @@ public class StrategyPOToStrategyDataConverter implements Converter<StrategyPO, 
 		List<ClassData> classDatas = new ArrayList<>();
 
 		if (classPOs != null && !classPOs.isEmpty()) {
+			ClassPOToClassDataConverter classPOToClassDataConverter = new ClassPOToClassDataConverter();
 			for (ClassPO classPO : classPOs) {
-				ClassData classData = new ClassData();
-				classData.setName(classPO.getId().getName());
+				ClassData classData = classPOToClassDataConverter.convertTo(classPO);
 				classDatas.add(classData);
 			}
 		}

@@ -12,17 +12,22 @@ import org.marceloleite.mercado.databaseretriever.persistence.objects.ClassPO;
 import org.marceloleite.mercado.databaseretriever.persistence.objects.ParameterPO;
 import org.marceloleite.mercado.databaseretriever.persistence.objects.VariablePO;
 
-public class ClassPOToClassdataConverter implements Converter<ClassPO, ClassData>{
+public class ClassPOToClassDataConverter implements Converter<ClassPO, ClassData>{
 
 	@Override
 	public ClassData convertTo(ClassPO classPO) {
 		ClassData classData = new ClassData();
 		classData.setName(classPO.getId().getName());
-		List<ParameterData> strategyParameterDatas = createParameterDatas(classPO);
-		classData.setParameterDatas(strategyParameterDatas);
-		List<VariableData> strategyVariableDatas = createVariableDatas(classPO);
-		classData.setVariableDatas(strategyVariableDatas);
-		return null;
+		
+		List<ParameterData> parameterDatas = createParameterDatas(classPO);
+		parameterDatas.forEach(parameterData -> parameterData.setClassData(classData));
+		classData.setParameterDatas(parameterDatas);
+		
+		List<VariableData> variableDatas = createVariableDatas(classPO);
+		variableDatas.forEach(variableData -> variableData.setClassData(classData));
+		classData.setVariableDatas(variableDatas);
+		
+		return classData;
 	}
 
 	@Override
@@ -31,11 +36,15 @@ public class ClassPOToClassdataConverter implements Converter<ClassPO, ClassData
 		ClassIdPO classIdPO = new ClassIdPO();
 		classIdPO.setName(classData.getName());
 		classPO.setId(classIdPO);
-		classPO.setParameterPOs(createParameterPOList(classData));
-		classPO.setVariablePOs(createVariablePOList(classData));
-
+		List<ParameterPO> parameterPOs = createParameterPOs(classData);
+		parameterPOs.forEach(parameterPO -> parameterPO.setClassPO(classPO));
+		classPO.setParameterPOs(parameterPOs);
 		
-		return null;
+		List<VariablePO> variablePOs = createVariablePOs(classData);
+		variablePOs.forEach(variablePO -> variablePO.setClassPO(classPO));
+		classPO.setVariablePOs(variablePOs);
+		
+		return classPO;
 	}
 	
 	private List<VariableData> createVariableDatas(ClassPO classPO) {
@@ -55,20 +64,19 @@ public class ClassPOToClassdataConverter implements Converter<ClassPO, ClassData
 
 	private List<ParameterData> createParameterDatas(ClassPO classPO) {
 		List<ParameterPO> parameterPOs = classPO.getParameterPOs();
-
+		ParameterPOToParameterDataConverter parameterPOToParameterDataConverter = new ParameterPOToParameterDataConverter();
 		List<ParameterData> parameterDatas = new ArrayList<>();
 
 		if (parameterPOs != null && !parameterPOs.isEmpty()) {
 			for (ParameterPO parameterPO : parameterPOs) {
-				ParameterData parameterData = new ParameterData();
-				parameterData.setValue(parameterPO.getValue());
+				ParameterData parameterData = parameterPOToParameterDataConverter.convertTo(parameterPO);
 				parameterDatas.add(parameterData);
 			}
 		}
 		return parameterDatas;
 	}
 	
-	private List<VariablePO> createVariablePOList(ClassData classData) {
+	private List<VariablePO> createVariablePOs(ClassData classData) {
 		List<VariableData> variableDatas = classData.getVariableDatas();
 		VariablePOToVariableDataConverter variablePOToVariableDataConverter = new VariablePOToVariableDataConverter();
 		List<VariablePO> variablePOs = new ArrayList<>();
@@ -81,7 +89,7 @@ public class ClassPOToClassdataConverter implements Converter<ClassPO, ClassData
 		return variablePOs;
 	}
 	
-	private List<ParameterPO> createParameterPOList(ClassData classData) {
+	private List<ParameterPO> createParameterPOs(ClassData classData) {
 		List<ParameterData> parameterDatas = classData.getParameterDatas();
 		ParameterPOToParameterDataConverter parameterPOToParameterDataConverter = new ParameterPOToParameterDataConverter();
 		List<ParameterPO> parameterPOs = new ArrayList<>();

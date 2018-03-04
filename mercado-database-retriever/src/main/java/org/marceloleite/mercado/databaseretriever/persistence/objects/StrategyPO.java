@@ -29,7 +29,7 @@ public class StrategyPO implements Serializable, PersistenceObject<StrategyIdPO>
 	private StrategyIdPO id;
 
 	// bi-directional many-to-one association to ClassPO
-	@OneToMany(mappedBy = "strategyPO", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "strategyPO", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<ClassPO> classPOs;
 
 	// bi-directional many-to-one association to AccountPO
