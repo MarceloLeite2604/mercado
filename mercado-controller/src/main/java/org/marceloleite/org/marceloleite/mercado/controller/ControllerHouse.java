@@ -26,7 +26,7 @@ public class ControllerHouse implements House {
 
 	public ControllerHouse() {
 		super();
-		/* TODO: Create order executor. */
+		this.orderExecutor = new MailOrderExecutor();
 		this.temporalTickerRetriever = new TemporalTickerRetriever();
 	}
 

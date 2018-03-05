@@ -48,6 +48,21 @@ public enum CurrencyPair {
 			}
 		}
 		
-		throw new IllegalArgumentException("Could not find currency pair fro acronym: " + currencyPairAcronyms);
+		throw new IllegalArgumentException("Could not find currency pair for acronym: " + currencyPairAcronyms);
+	}
+	
+	public static CurrencyPair retrieveByPair(Currency firstCurrency, Currency secondCurrency) {
+		if (firstCurrency == null) {
+			throw new IllegalArgumentException("First currency cannot be null.");
+		}
+		
+		if (secondCurrency == null) {
+			throw new IllegalArgumentException("Second currency cannot be null.");
+		}
+		
+		StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder.append(firstCurrency.getAcronym());
+		stringBuilder.append(secondCurrency.getAcronym());
+		return retrieveByPairAcronym(stringBuilder.toString());
 	}
 }

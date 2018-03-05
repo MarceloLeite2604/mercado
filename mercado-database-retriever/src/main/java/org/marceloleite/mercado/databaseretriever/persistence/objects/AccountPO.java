@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -27,9 +28,12 @@ public class AccountPO implements Serializable, PersistenceObject<String> {
 
 	@Id
 	private String owner;
-
+	
 	@OneToOne(mappedBy = "accountPO", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private TapiInformationPO tapiInformationPO;
+	
+	@Column(name="EMAIL")
+	private String email;	
 
 	// bi-directional many-to-one association to BalancePO
 	@OneToMany(mappedBy = "accountPO", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -58,6 +62,14 @@ public class AccountPO implements Serializable, PersistenceObject<String> {
 
 	public void setTapiInformationPO(TapiInformationPO tapiInformationPO) {
 		this.tapiInformationPO = tapiInformationPO;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public List<BalancePO> getBalancePOs() {
