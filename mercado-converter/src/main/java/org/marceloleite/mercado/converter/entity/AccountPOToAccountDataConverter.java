@@ -18,6 +18,7 @@ public class AccountPOToAccountDataConverter implements Converter<AccountPO, Acc
 		AccountData accountData = new AccountData();
 		accountData.setOwner(accountPO.getOwner());
 		accountData.setTapiInformationData(new TapiInformationPOToTapiInformationDataConverter().convertTo(accountPO.getTapiInformationPO()));
+		accountData.setEmail(accountPO.getEmail());
 		ListBalancePOToListBalanceDataConverter listBalancePOToListBalanceDataConverter = new ListBalancePOToListBalanceDataConverter();
 		ListStrategyPOToListStrategyDataConverter listStrategyPOToListStrategyDataConverter = new ListStrategyPOToListStrategyDataConverter();
 		List<BalancePO> balancePOs = accountPO.getBalancePOs();
@@ -39,6 +40,8 @@ public class AccountPOToAccountDataConverter implements Converter<AccountPO, Acc
 		TapiInformationPO tapiInformationPO = new TapiInformationPOToTapiInformationDataConverter().convertFrom(accountData.getTapiInformationData());
 		tapiInformationPO.setAccountPO(accountPO);
 		accountPO.setTapiInformationPO(tapiInformationPO);
+		
+		accountPO.setEmail(accountData.getEmail());
 		
 		List<BalanceData> balanceDatas = accountData.getBalanceDatas();
 		List<BalancePO> balancePOs = listBalancePOToListBalanceDataConverter.convertFrom(balanceDatas);

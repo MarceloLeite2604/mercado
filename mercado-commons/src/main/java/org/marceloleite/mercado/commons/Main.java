@@ -38,7 +38,7 @@ public class Main {
 	
 	@SuppressWarnings("unused")
 	private static void encrypt() {
-		String string = "";
+		String string = "This message will be encrypted.";
 		Encrypt encrypt = new Encrypt();
 		String encryptedString = encrypt.encrypt(string);
 		System.out.println(encryptedString);

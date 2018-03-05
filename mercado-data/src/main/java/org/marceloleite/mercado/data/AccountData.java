@@ -7,6 +7,8 @@ public class AccountData {
 	private String owner;
 
 	private TapiInformationData tapiInformationData;
+	
+	private String email;
 
 	private List<BalanceData> balanceDatas;
 
@@ -47,6 +49,14 @@ public class AccountData {
 
 	public void setTapiInformationData(TapiInformationData tapiInformationData) {
 		this.tapiInformationData = tapiInformationData;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public List<BalanceData> getBalanceDatas() {
