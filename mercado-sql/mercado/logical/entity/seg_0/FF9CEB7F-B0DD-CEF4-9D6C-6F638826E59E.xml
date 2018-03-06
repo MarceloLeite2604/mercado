@@ -3,9 +3,8 @@
 <createdBy>marcelo</createdBy>
 <createdTime>2018-02-27 12:14:50 UTC</createdTime>
 <ownerDesignName>mercado</ownerDesignName>
-<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="false"/>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
 </engineerTo>
 <adequatelyNormalized>NO</adequatelyNormalized>
 <expectedVolumes>0</expectedVolumes>
@@ -32,15 +31,28 @@
 <dataTypeSize>64 CHAR</dataTypeSize>
 <ownDataTypeParameters>64 CHAR,,</ownDataTypeParameters>
 </Attribute>
+<Attribute name="EMAIL" id="C8526C24-E889-EC40-F556-4817EEB92695">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-03-05 19:45:42 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+<engineerTo>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>64 CHAR</dataTypeSize>
+<ownDataTypeParameters>64 CHAR,,</ownDataTypeParameters>
+</Attribute>
 </attributes>
 <identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
 <identifier id="3D0DE01F-CD0B-0BA4-2271-C09A592CA504" name="ACCO_PK">
 <createdBy>marcelo</createdBy>
 <createdTime>2018-02-27 12:16:54 UTC</createdTime>
 <ownerDesignName>mercado</ownerDesignName>
-<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="false"/>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
 </engineerTo>
 <pk>true</pk>
 <newElementsIDs>D50B8A3C-A3CB-AD5D-36B3-F1F6BA19A18C</newElementsIDs>

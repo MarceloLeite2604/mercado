@@ -52,7 +52,7 @@ public class Controller {
 	}
 
 	private void check(List<Account> accounts) {
-		if (accounts != null && accounts.isEmpty()) {
+		if (accounts != null && !accounts.isEmpty()) {
 			TimeInterval timeInterval = retrievePreviousMinuteInterval();
 			house.updateTemporalTickers(timeInterval);
 			for (Account account : accounts) {
@@ -69,7 +69,6 @@ public class Controller {
 				}
 			}
 		}
-
 	}
 
 	private void waitNextMinute() {

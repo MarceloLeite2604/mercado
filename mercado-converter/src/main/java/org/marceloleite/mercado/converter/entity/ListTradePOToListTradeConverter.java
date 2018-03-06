@@ -7,14 +7,16 @@ import org.marceloleite.mercado.commons.converter.Converter;
 import org.marceloleite.mercado.data.Trade;
 import org.marceloleite.mercado.databaseretriever.persistence.objects.TradePO;
 
-public class ListTradePOToListTradeConverter implements Converter<List<TradePO>, List<Trade>>{
+public class ListTradePOToListTradeConverter implements Converter<List<TradePO>, List<Trade>> {
 
 	@Override
 	public List<Trade> convertTo(List<TradePO> tradePOs) {
 		TradePOToTradeConverter tradePOToTrade = new TradePOToTradeConverter();
 		List<Trade> trades = new ArrayList<>();
-		for (TradePO tradePO : tradePOs) {
-			trades.add(tradePOToTrade.convertTo(tradePO));
+		if (tradePOs != null && !tradePOs.isEmpty()) {
+			for (TradePO tradePO : tradePOs) {
+				trades.add(tradePOToTrade.convertTo(tradePO));
+			}
 		}
 		return trades;
 	}
@@ -23,8 +25,10 @@ public class ListTradePOToListTradeConverter implements Converter<List<TradePO>,
 	public List<TradePO> convertFrom(List<Trade> trades) {
 		TradePOToTradeConverter tradePOToTrade = new TradePOToTradeConverter();
 		List<TradePO> tradePOs = new ArrayList<>();
-		for (Trade trade : trades) {
-			tradePOs.add(tradePOToTrade.convertFrom(trade));
+		if (trades != null && !trades.isEmpty()) {
+			for (Trade trade : trades) {
+				tradePOs.add(tradePOToTrade.convertFrom(trade));
+			}
 		}
 		return tradePOs;
 	}

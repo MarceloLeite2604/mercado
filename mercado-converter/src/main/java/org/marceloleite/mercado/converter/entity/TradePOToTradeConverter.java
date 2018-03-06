@@ -17,7 +17,7 @@ public class TradePOToTradeConverter implements Converter<TradePO, Trade>{
 		trade.setDate(tradePO.getTradeDate());
 		trade.setPrice(tradePO.getPrice());
 		trade.setTradeType(tradePO.getTradeType());
-		return null;
+		return trade;
 	}
 
 	@Override

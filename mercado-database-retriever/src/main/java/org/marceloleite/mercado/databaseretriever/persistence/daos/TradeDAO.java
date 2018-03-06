@@ -32,10 +32,10 @@ public class TradeDAO extends AbstractDAO<TradePO> {
 			+ END_PARAMETER;
 
 	private static final String NEWEST_TRADE_RETRIEVED = "SELECT * FROM " + Entity.TRADE.getName()
-			+ " WHERE date = ( SELECT max(trade_date) FROM " + Entity.TRADE.getName() + ")";
+			+ " WHERE trade_date = ( SELECT max(trade_date) FROM " + Entity.TRADE.getName() + ")";
 
 	private static final String OLDEST_TRADE_RETRIEVED = "SELECT * FROM " + Entity.TRADE.getName()
-			+ " WHERE date = ( SELECT min(trade_date) FROM " + Entity.TRADE.getName() + ")";
+			+ " WHERE trade_date = ( SELECT min(trade_date) FROM " + Entity.TRADE.getName() + ")";
 
 	private static final String PREVIOUS_TRADE = "SELECT * FROM " + Entity.TRADE.getName()
 			+ " WHERE trade_id = (SELECT max(trade_id) FROM " + Entity.TRADE.getName()

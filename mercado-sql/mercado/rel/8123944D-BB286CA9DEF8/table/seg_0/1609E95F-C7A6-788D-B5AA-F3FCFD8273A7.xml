@@ -21,6 +21,19 @@
 <ownDataTypeParameters>64 CHAR,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
+<Column name="EMAIL" id="D59AFB4C-6A6B-7F49-97CC-ABD456ABD666">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-03-05 19:47:20 UTC</createdTime>
+<generatorID>C8526C24-E889-EC40-F556-4817EEB92695</generatorID>
+<ownerDesignName>mercado</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>64 CHAR</dataTypeSize>
+<ownDataTypeParameters>64 CHAR,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
 </columns>
 <indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
 <ind_PK_UK id="A33C29B2-4E02-36D2-E176-327DDA0C482A" name="ACCO_PK">
