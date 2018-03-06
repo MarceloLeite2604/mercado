@@ -14,35 +14,35 @@
 			</PatternLayout>
 		</File>
 		<File name="OriginalStrategyLogFile"
-			fileName="src/main/resources/logs/mercado-simulator-original-strategy.log"
+			fileName="src/main/resources/logs/mercado-controller-original-strategy.log"
 			append="false">
 			<PatternLayout>
 				<Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
 			</PatternLayout>
 		</File>
 		<File name="FirstStrategyLogFile"
-			fileName="src/main/resources/logs/mercado-simulator-first-strategy.log"
+			fileName="src/main/resources/logs/mercado-controller-first-strategy.log"
 			append="false">
 			<PatternLayout>
 				<Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
 			</PatternLayout>
 		</File>
 		<File name="SecondStrategyLogFile"
-			fileName="src/main/resources/logs/mercado-simulator-second-strategy.log"
+			fileName="src/main/resources/logs/mercado-controller-second-strategy.log"
 			append="false">
 			<PatternLayout>
 				<Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
 			</PatternLayout>
 		</File>
 		<File name="ThirdStrategyLogFile"
-			fileName="src/main/resources/logs/mercado-simulator-third-strategy.log"
+			fileName="src/main/resources/logs/mercado-controller-third-strategy.log"
 			append="false">
 			<PatternLayout>
 				<Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
 			</PatternLayout>
 		</File>
 		<File name="FourthStrategyLogFile"
-			fileName="src/main/resources/logs/mercado-simulator-fourth-strategy.log"
+			fileName="src/main/resources/logs/mercado-controller-fourth-strategy.log"
 			append="false">
 			<PatternLayout>
 				<Pattern>%d %p %c{1.} [%t] %m%n</Pattern>

@@ -53,9 +53,8 @@
 <createdBy>marcelo</createdBy>
 <createdTime>2018-02-27 14:09:27 UTC</createdTime>
 <ownerDesignName>mercado</ownerDesignName>
-<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="false"/>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
 </engineerTo>
 <pk>true</pk>
 <newElementsIDs>DB705BF8-F930-97A5-1468-4CFE83D9AD21</newElementsIDs>

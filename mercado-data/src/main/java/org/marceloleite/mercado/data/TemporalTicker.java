@@ -4,6 +4,8 @@ import java.time.Duration;
 import java.time.ZonedDateTime;
 
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.commons.TimeInterval;
+import org.marceloleite.mercado.commons.formatter.DigitalCurrencyFormatter;
 
 public class TemporalTicker {
 
@@ -47,10 +49,10 @@ public class TemporalTicker {
 		super();
 	}
 
-	private TemporalTicker(Currency currency, ZonedDateTime start, ZonedDateTime end, Long orders,
-			Long buyOrders, Long sellOrders, Double buy, Double previousBuy, Double sell, Double previousSell,
-			Double lastPrice, Double previousLastPrice, Double firstPrice, Double highestPrice, Double lowestPrice,
-			Double averagePrice, Duration timeDuration, Double volumeTrades) {
+	private TemporalTicker(Currency currency, ZonedDateTime start, ZonedDateTime end, Long orders, Long buyOrders,
+			Long sellOrders, Double buy, Double previousBuy, Double sell, Double previousSell, Double lastPrice,
+			Double previousLastPrice, Double firstPrice, Double highestPrice, Double lowestPrice, Double averagePrice,
+			Duration timeDuration, Double volumeTrades) {
 		super();
 		this.currency = currency;
 		this.start = start;
@@ -73,15 +75,12 @@ public class TemporalTicker {
 	}
 
 	public TemporalTicker(TemporalTicker temporalTicker) {
-		this(temporalTicker.getCurrency(), temporalTicker.getStart(),
-				temporalTicker.getEnd(), temporalTicker.getOrders(),
-				temporalTicker.getBuyOrders(), temporalTicker.getSellOrders(),
-				temporalTicker.getBuy(), temporalTicker.getPreviousBuy(),
-				temporalTicker.getSell(), temporalTicker.getPreviousSell(),
-				temporalTicker.getLastPrice(), temporalTicker.getPreviousLastPrice(),
-				temporalTicker.getFirstPrice(), temporalTicker.getHighestPrice(),
-				temporalTicker.getLowestPrice(), temporalTicker.getAveragePrice(),
-				temporalTicker.getTimeDuration(), temporalTicker.getVolumeTrades());
+		this(temporalTicker.getCurrency(), temporalTicker.getStart(), temporalTicker.getEnd(),
+				temporalTicker.getOrders(), temporalTicker.getBuyOrders(), temporalTicker.getSellOrders(),
+				temporalTicker.getBuy(), temporalTicker.getPreviousBuy(), temporalTicker.getSell(),
+				temporalTicker.getPreviousSell(), temporalTicker.getLastPrice(), temporalTicker.getPreviousLastPrice(),
+				temporalTicker.getFirstPrice(), temporalTicker.getHighestPrice(), temporalTicker.getLowestPrice(),
+				temporalTicker.getAveragePrice(), temporalTicker.getTimeDuration(), temporalTicker.getVolumeTrades());
 	}
 
 	public Currency getCurrency() {
@@ -260,5 +259,36 @@ public class TemporalTicker {
 		} else if (!start.equals(other.start))
 			return false;
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder stringBuilder = new StringBuilder();
+		DigitalCurrencyFormatter digitalCurrencyFormatter = new DigitalCurrencyFormatter();
+
+		stringBuilder.append("[ ");
+		stringBuilder.append(currency);
+		stringBuilder.append(", " + new TimeInterval(start, end));
+		stringBuilder.append(", orders: " + orders);
+		stringBuilder.append(", buy orders: " + buyOrders);
+		stringBuilder.append(", sell orders: " + sellOrders);
+		stringBuilder.append(", volume: " + volumeTrades);
+
+		double buy = (this.buy != null ? this.buy : this.previousBuy);
+		stringBuilder.append(", buy: " + digitalCurrencyFormatter.format(buy));
+
+		double sell = (this.sell != null ? this.sell : this.previousSell);
+		stringBuilder.append(", sell: " + digitalCurrencyFormatter.format(sell));
+
+		double lastPrice = (this.lastPrice != null ? this.lastPrice : this.previousLastPrice);
+		stringBuilder.append(", last: " + digitalCurrencyFormatter.format(lastPrice));
+
+		stringBuilder.append(", first: " + digitalCurrencyFormatter.format(firstPrice));
+		stringBuilder.append(", high: " + digitalCurrencyFormatter.format(highestPrice));
+		stringBuilder.append(", low: " + digitalCurrencyFormatter.format(lowestPrice));
+		stringBuilder.append(", average: " + digitalCurrencyFormatter.format(averagePrice));
+		stringBuilder.append(" ]");
+
+		return stringBuilder.toString();
 	}
 }

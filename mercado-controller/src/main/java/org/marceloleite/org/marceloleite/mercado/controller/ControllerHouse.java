@@ -55,8 +55,11 @@ public class ControllerHouse implements House {
 		temporalTickersByCurrency = new EnumMap<>(Currency.class);
 
 		for (Currency currency : Currency.values()) {
-			TemporalTicker temporalTicker = temporalTickerRetriever.retrieve(currency, timeInterval);
-			temporalTickersByCurrency.put(currency, temporalTicker);
+			/* TODO: Watch out with BGOLD. */
+			if (currency.isDigital() && currency != Currency.BGOLD) {
+				TemporalTicker temporalTicker = temporalTickerRetriever.retrieve(currency, timeInterval);
+				temporalTickersByCurrency.put(currency, temporalTicker);
+			}
 		}
 	}
 
