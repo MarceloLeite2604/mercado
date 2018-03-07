@@ -15,8 +15,9 @@ public class MailOrderExecutor implements OrderExecutor {
 	public BuyOrder executeBuyOrder(BuyOrder buyOrder, House house, Account account) {
 		List<String> to = Arrays.asList(account.getEmail());
 		String subject = "Buy " + buyOrder.getCurrencyAmountToBuy().getCurrency();
-		String content = "It's time to buy " + buyOrder.getCurrencyAmountToBuy() + ". You'll pay approximately "
-				+ buyOrder.getCurrencyAmountToPay() + ".";
+		/*String content = "It's time to buy " + buyOrder.getCurrencyAmountToBuy() + ". You'll pay approximately "
+				+ buyOrder.getCurrencyAmountToPay() + ".";*/
+		String content = "A new buy order has been created: " + buyOrder.toString();
 		new MailSender().sendEmail(to, null, null, subject, content);
 		return buyOrder;
 	}
@@ -25,8 +26,9 @@ public class MailOrderExecutor implements OrderExecutor {
 	public SellOrder executeSellOrder(SellOrder sellOrder, House house, Account account) {
 		List<String> to = Arrays.asList(account.getEmail());
 		String subject = "Sell " + sellOrder.getCurrencyAmountToSell().getCurrency();
-		String content = "It's time to sell " + sellOrder.getCurrencyAmountToSell() + ". You'll receive approximately "
-				+ sellOrder.getCurrencyAmountToReceive() + ".";
+		/*String content = "It's time to sell " + sellOrder.getCurrencyAmountToSell() + ". You'll receive approximately "
+				+ sellOrder.getCurrencyAmountToReceive() + ".";*/
+		String content = "A new sell order has been created: " + sellOrder.toString();
 		new MailSender().sendEmail(to, null, null, subject, content);
 		return sellOrder;
 	}
