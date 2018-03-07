@@ -55,6 +55,7 @@ public class ClassPOToClassDataConverter implements Converter<ClassPO, ClassData
 		if (variablePOs != null && !variablePOs.isEmpty()) {
 			for (VariablePO variablePO : variablePOs) {
 				VariableData variableData = new VariableData();
+				variableData.setName(variablePO.getId().getName());
 				variableData.setValue(variablePO.getValue());
 				variableDatas.add(variableData);
 			}

@@ -12,7 +12,7 @@ public class ClassXmlConverter implements XmlConverter<XmlClass, ClassData> {
 	@Override
 	public XmlClass convertToXml(ClassData classData) {
 		XmlClass xmlClass = new XmlClass();
-		xmlClass.setName(classData.getName());
+		xmlClass.setName(classData.getName().trim());
 		ListParameterXmlConverter listParameterXmlConverter = new ListParameterXmlConverter();
 		List<XmlParameter> xmlParameters = listParameterXmlConverter.convertToXml(classData.getParameterDatas());
 		xmlClass.setXmlParameters(xmlParameters);
@@ -23,7 +23,7 @@ public class ClassXmlConverter implements XmlConverter<XmlClass, ClassData> {
 	public ClassData convertToObject(XmlClass xmlClass) {
 		ListParameterXmlConverter listParameterXmlConverter = new ListParameterXmlConverter();
 		ClassData classData = new ClassData();
-		classData.setName(xmlClass.getName());
+		classData.setName(xmlClass.getName().trim());
 		List<ParameterData> parameterDatas = listParameterXmlConverter.convertToObject(xmlClass.getXmlParameters());
 		parameterDatas.forEach(parameterData -> parameterData.setClassData(classData));
 		classData.setParameterDatas(parameterDatas);
