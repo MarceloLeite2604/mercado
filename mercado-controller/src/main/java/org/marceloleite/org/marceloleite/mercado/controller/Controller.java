@@ -21,15 +21,11 @@ import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.utils.ZonedDateTimeUtils;
 import org.marceloleite.mercado.converter.entity.AccountPOToAccountDataConverter;
-import org.marceloleite.mercado.converter.entity.ClassPOToClassDataConverter;
 import org.marceloleite.mercado.converter.json.api.negotiation.BalanceApiToListBalanceDataConverter;
 import org.marceloleite.mercado.data.AccountData;
 import org.marceloleite.mercado.data.BalanceData;
-import org.marceloleite.mercado.data.ClassData;
 import org.marceloleite.mercado.databaseretriever.persistence.daos.AccountDAO;
-import org.marceloleite.mercado.databaseretriever.persistence.daos.ClassDAO;
 import org.marceloleite.mercado.databaseretriever.persistence.objects.AccountPO;
-import org.marceloleite.mercado.databaseretriever.persistence.objects.ClassPO;
 import org.marceloleite.mercado.negotiationapi.model.getaccountinfo.AccountInfo;
 import org.marceloleite.mercado.xml.readers.AccountsXmlReader;
 
@@ -70,6 +66,7 @@ public class Controller {
 			Map<Currency, List<Strategy>> currenciesStrategies = account.getCurrenciesStrategies();
 			checkCurrenciesStrategies(timeInterval, account, currenciesStrategies);
 		}
+		save(accounts);
 	}
 
 	private void checkCurrenciesStrategies(TimeInterval timeInterval, Account account,
@@ -80,19 +77,18 @@ public class Controller {
 				checkStrategies(timeInterval, account, strategies);
 				checkBuyOrders(timeInterval, account, house);
 				checkSellOrders(timeInterval, account, house);
-				saveStrategies(strategies);
+				
 			}
 		}
 	}
 
-	private void saveStrategies(List<Strategy> strategies) {
-		if (strategies != null && !strategies.isEmpty()) {
-			ClassDAO classDAO = new ClassDAO();
-			ClassPOToClassDataConverter classPOToClassDataConverter = new ClassPOToClassDataConverter();
-			for (Strategy strategy : strategies) {
-				ClassData classData = strategy.retrieveData();
-				ClassPO classPO = classPOToClassDataConverter.convertFrom(classData);
-				classDAO.merge(classPO);
+	private void save(List<Account> accounts) {
+		AccountPOToAccountDataConverter accountPOToAccountDataConverter = new AccountPOToAccountDataConverter();
+		if (accounts != null && !accounts.isEmpty()) {
+			for (Account account : accounts) {
+				AccountData accountData = account.retrieveData();
+				AccountPO accountPO = accountPOToAccountDataConverter.convertFrom(accountData);
+				accountDAO.merge(accountPO);
 			}
 		}
 	}

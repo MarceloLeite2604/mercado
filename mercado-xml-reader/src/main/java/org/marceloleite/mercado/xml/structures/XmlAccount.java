@@ -15,6 +15,8 @@ public class XmlAccount {
 
 	private String owner;
 	
+	private String email;
+	
 	private XmlTapiInformation xmlTapiInformation;
 
 	private XmlBalances xmlBalances;
@@ -48,6 +50,15 @@ public class XmlAccount {
 
 	public void setOwner(String owner) {
 		this.owner = owner;
+	}
+	
+	@XmlElement
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	@XmlElement(name="tapiInformations")

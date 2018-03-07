@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <account>
 	<owner>Marcelo Leite</owner>
+	<email>marceloleite2604@gmail.com</email>
 	<tapiInformations>
 		<id>z8IetMpskqZLuNipdAuAp4jb16axbxeIrKy5gI33c6tNJwilFUzwDw==</id>
 		<secret>avR+lJKCyZSQaScxSll9dM7T1TnYzI9gTUfqEWXfgCdnrrhowyJTmveDygS3kcG6iVGgg9Hd0Ar/JHp+p2HiJKjmYhGJZbdW</secret>
@@ -10,16 +11,17 @@
 			<currency>BTC</currency>
 			<classes>
 				<class>
-					<name>org.marceloleite.mercado.strategies.third.ThirdStrategy
-					</name>
+					<name>org.marceloleite.mercado.strategies.third.ThirdStrategy</name>
 					<parameters>
 						<parameter>
 							<name>growthPercentageThreshold</name>
-							<value>0.0496</value>
+							<!-- <value>0.0496</value> -->
+							<value>0.02</value>
 						</parameter>
 						<parameter>
 							<name>shrinkPercentageThreshold</name>
-							<value>-0.05</value>
+							<!-- <value>-0.05</value> -->
+							<value>-0.015</value>
 						</parameter>
 					</parameters>
 				</class>

@@ -28,10 +28,12 @@ public class AccountDataXmlConverter implements XmlConverter<XmlAccount, Account
 	@Override
 	public AccountData convertToObject(XmlAccount xmlAccount) {
 		String owner = xmlAccount.getOwner();
+		String email = xmlAccount.getEmail();
 		XmlBalances xmlBalances = xmlAccount.getXmlBalances();
 		AccountData accountData = new AccountData();
 
 		accountData.setOwner(owner);
+		accountData.setEmail(email);
 
 		XmlTapiInformation xmlTapiInformation = xmlAccount.getXmlTapiInformation();
 		TapiInformationData tapiInformationData = new TapiInformationsDataXmlConverter().convertToObject(xmlTapiInformation);

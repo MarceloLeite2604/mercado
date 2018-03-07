@@ -2,9 +2,13 @@ package org.marceloleite.mercado.commons.converter;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.time.ZonedDateTime;
 
-import org.marceloleite.mercado.commons.formatter.ZonedDateTimeSerializer;
+import org.marceloleite.mercado.commons.deserializer.DurationDeserializer;
+import org.marceloleite.mercado.commons.deserializer.ZonedDateTimeDeserializer;
+import org.marceloleite.mercado.commons.serializer.DurationSerializer;
+import org.marceloleite.mercado.commons.serializer.ZonedDateTimeSerializer;
 import org.marceloleite.mercado.commons.utils.ZonedDateTimeUtils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -36,8 +40,19 @@ public class ObjectToJsonConverter implements Converter<Object, String> {
 			simpleModuleName = "ObjectToJsonConverter";
 		}
 		simpleModule = new SimpleModule(simpleModuleName, new Version(1, 0, 0, null, null, null));
-		simpleModule.addSerializer(ZonedDateTime.class, new ZonedDateTimeSerializer());
+		addDefaultSerializers();
+		addDefaultDeserializers();
 		objectMapper.setDateFormat(new SimpleDateFormat(ZonedDateTimeUtils.DATE_FORMAT));
+	}
+
+	private void addDefaultSerializers() {
+		simpleModule.addSerializer(ZonedDateTime.class, new ZonedDateTimeSerializer());
+		simpleModule.addSerializer(Duration.class, new DurationSerializer());
+	}
+
+	private void addDefaultDeserializers() {
+		simpleModule.addDeserializer(ZonedDateTime.class, new ZonedDateTimeDeserializer());
+		simpleModule.addDeserializer(Duration.class, new DurationDeserializer());
 	}
 
 	public ObjectToJsonConverter(Class<?> clazz) {
@@ -51,7 +66,7 @@ public class ObjectToJsonConverter implements Converter<Object, String> {
 		}
 		objectMapper = new ObjectMapper();
 		simpleModule = new SimpleModule(simpleModuleName, new Version(1, 0, 0, null, null, null));
-		simpleModule.addSerializer(ZonedDateTime.class, new ZonedDateTimeSerializer());
+		addDefaultSerializers();
 		objectMapper.setDateFormat(new SimpleDateFormat(ZonedDateTimeUtils.DATE_FORMAT));
 	}
 
@@ -89,6 +104,7 @@ public class ObjectToJsonConverter implements Converter<Object, String> {
 
 	@SuppressWarnings("unchecked")
 	public <T> T convertFromToObject(String json, Class<T> clazz) {
+		this.clazz = clazz;
 		return (T) convertFrom(json);
 	}
 	
