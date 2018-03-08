@@ -1,4 +1,4 @@
-package org.marceloleite.org.marceloleite.mercado.controller;
+package org.marceloleite.mercado.controller;
 
 import org.marceloleite.mercado.api.negotiation.methods.placebuyorder.PlaceBuyOrderMethod;
 import org.marceloleite.mercado.api.negotiation.methods.placebuyorder.PlaceBuyOrderMethodResponse;
