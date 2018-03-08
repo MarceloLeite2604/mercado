@@ -1,41 +1,30 @@
 package org.marceloleite.mercado.commons.properties;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 public class PropertiesFileReader {
 
-	private String propertiesFilePath;
+	private String propertiesFileName;
 
 	public PropertiesFileReader(String propertiesFilePath) {
 		super();
-		this.propertiesFilePath = propertiesFilePath;
+		this.propertiesFileName = propertiesFilePath;
 	}
 
 	public String getPropertiesFilePath() {
-		return propertiesFilePath;
+		return propertiesFileName;
 	}
 
 	public Properties readPropertiesFile() {
 		Properties properties;
-		FileInputStream fileInputStream = null;
-		try {
-			File file = new File(propertiesFilePath);
-			fileInputStream = new FileInputStream(file);
+		ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+		try (InputStream inputStream = contextClassLoader.getResourceAsStream(propertiesFileName)) {
 			properties = new Properties();
-			properties.load(fileInputStream);
+			properties.load(inputStream);
 		} catch (IOException ioException) {
 			throw new RuntimeException(ioException);
-		} finally {
-			if (fileInputStream != null) {
-				try {
-					fileInputStream.close();
-				} catch (IOException ioException) {
-					throw new RuntimeException(ioException);
-				}
-			}
 		}
 
 		return properties;

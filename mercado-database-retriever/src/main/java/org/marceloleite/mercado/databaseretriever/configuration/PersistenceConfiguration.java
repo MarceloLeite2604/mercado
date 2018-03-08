@@ -8,14 +8,14 @@ import org.marceloleite.mercado.commons.properties.StandardProperty;
 
 public class PersistenceConfiguration extends AbstractPropertiesReader<StandardProperty> {
 
-	private static final String PERSISTENCE_CONFIGURATION_FILE_PATH = "src/main/resources/persistence.properties";
+	private static final String PERSISTENCE_CONFIGURATION_FILE_NAME = "persistence.properties";
 
-	public PersistenceConfiguration(String configurationFilePath) {
-		readConfiguration(configurationFilePath);
+	public PersistenceConfiguration(String configurationFileName) {
+		readConfiguration(configurationFileName);
 	}
 
 	public PersistenceConfiguration() {
-		readConfiguration(PERSISTENCE_CONFIGURATION_FILE_PATH);
+		readConfiguration(PERSISTENCE_CONFIGURATION_FILE_NAME);
 	}
 
 	@Override
@@ -32,7 +32,13 @@ public class PersistenceConfiguration extends AbstractPropertiesReader<StandardP
 		for (PersistenceProperty persistenceProperty : PersistenceProperty.values()) {
 			Property property = getPersistenceProperty(persistenceProperty);
 			if (null != property) {
-				properties.setProperty(property.getName(), property.getValue());
+				if (property.getValue() == null) {
+					if (property.isRequired()) {
+						throw new RuntimeException("Property \"" + property.getName() + "\" is not defined.");
+					}
+				} else {
+					properties.setProperty(property.getName(), property.getValue());
+				}
 			}
 		}
 		return properties;
