@@ -1,4 +1,4 @@
-package org.marceloleite.org.marceloleite.mercado.controller;
+package org.marceloleite.mercado.controller;
 
 import java.time.Duration;
 import java.time.ZonedDateTime;
