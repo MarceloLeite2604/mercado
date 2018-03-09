@@ -188,6 +188,10 @@ public class Account {
 		return balance;
 	}
 
+	public void setBalance(Balance balance) {
+		this.balance = balance;
+	}
+
 	public TemporalController<Deposit> getDepositsTemporalController() {
 		return depositsTemporalController;
 	}
@@ -261,5 +265,4 @@ public class Account {
 		}
 		return strategyDatas;
 	}
-
 }
