@@ -1,5 +1,6 @@
 **/target/
 **/.settings/
+**/output/
 **/.project
 **/.classpath
 **/persistence.properties
