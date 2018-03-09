@@ -13,11 +13,13 @@ public class SimulatorPropertiesRetriever {
 
 	private static final Duration DEFAULT_STEP_TIME = Duration.ofSeconds(30);
 	private static final Duration DEFAULT_RETRIEVING_TIME = Duration.ofSeconds(600);
+	
+	private static final String PROPERTIES_FILE_NAME = "simulator.properties";
 
 	private PropertyRetriever propertyRetriever;
 
 	public SimulatorPropertiesRetriever() {
-		this.propertyRetriever = new PropertyRetriever();
+		this.propertyRetriever = new PropertyRetriever(PROPERTIES_FILE_NAME);
 	}
 
 	public ZonedDateTime retrieveStartTime() {

@@ -21,6 +21,9 @@ public class PropertiesFileReader {
 		Properties properties;
 		ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
 		try (InputStream inputStream = contextClassLoader.getResourceAsStream(propertiesFileName)) {
+			if (inputStream == null) {
+				throw new RuntimeException("Could not find property file \"" + propertiesFileName + "\".");
+			}
 			properties = new Properties();
 			properties.load(inputStream);
 		} catch (IOException ioException) {

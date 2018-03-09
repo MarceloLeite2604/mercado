@@ -68,6 +68,7 @@ public class SimulationHouse implements House {
 		this.temporalTickerRetriever = new TemporalTickerRetriever();
 		this.temporalTickers = new EnumMap<>(Currency.class);
 		this.temporalTickerVariations = new EnumMap<>(Currency.class);
+		this.orderExecutor = new SimulationOrderExecutor();
 		this.accounts = retrieveAccounts();
 	}
 

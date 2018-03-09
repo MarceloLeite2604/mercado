@@ -57,6 +57,7 @@ public class Controller {
 		if (accounts != null && !accounts.isEmpty()) {
 			TimeInterval timeInterval = retrievePreviousMinuteInterval();
 			house.updateTemporalTickers(timeInterval);
+			LOGGER.debug(house.getTemporalTickers().get(Currency.BITCOIN));
 			checkAccounts(accounts, timeInterval);
 		}
 	}
