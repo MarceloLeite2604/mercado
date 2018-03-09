@@ -1,0 +1,39 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>org.marceloleite</groupId>
+	<artifactId>mercado</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<name>mercado</name>
+	<url>http://maven.apache.org</url>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+	</properties>
+
+	<modules>
+		<module>base-model</module>
+		<module>commons</module>
+		<module>consultant</module>
+		<module>controller</module>
+		<module>converter</module>
+		<module>data</module>
+		<module>database-retriever</module>
+		<module>json-model</module>
+		<module>negotiation-api</module>
+		<module>negotiation-api-model</module>
+		<module>retriever</module>
+		<module>simulator</module>
+		<module>site-retriever</module>
+		<module>sql</module>
+		<module>strategies</module>
+		<module>ticker-creator</module>
+		<module>ticker-generator</module>
+		<module>xml-reader</module>
+	</modules>
+</project>
