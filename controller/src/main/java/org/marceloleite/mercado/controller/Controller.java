@@ -11,6 +11,7 @@ import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.api.negotiation.methods.getaccountinfo.GetAccountInfoMethod;
 import org.marceloleite.mercado.api.negotiation.methods.getaccountinfo.GetAccountInfoMethodResponse;
 import org.marceloleite.mercado.base.model.Account;
+import org.marceloleite.mercado.base.model.Balance;
 import org.marceloleite.mercado.base.model.House;
 import org.marceloleite.mercado.base.model.OrderExecutor;
 import org.marceloleite.mercado.base.model.Strategy;
@@ -78,7 +79,8 @@ public class Controller {
 				checkStrategies(timeInterval, account, strategies);
 				checkBuyOrders(timeInterval, account, house);
 				checkSellOrders(timeInterval, account, house);
-				
+				List<BalanceData> balanceDatas = retrieveAccountBalance(account.retrieveData());
+				account.setBalance(new Balance(balanceDatas));
 			}
 		}
 	}
@@ -160,7 +162,8 @@ public class Controller {
 					accountData = new AccountPOToAccountDataConverter().convertTo(accountPO);
 				} else {
 					accountData = accountDataFromXml;
-					accountData = retrieveAccountBalance(accountData);
+					List<BalanceData> balanceDatas = retrieveAccountBalance(accountData);
+					accountData.setBalanceDatas(balanceDatas);
 					saveAccountOnDatabase(accountData);
 				}
 				Account account = new Account(accountData);
@@ -170,15 +173,14 @@ public class Controller {
 		return accounts;
 	}
 
-	private AccountData retrieveAccountBalance(AccountData accountData) {
+	private List<BalanceData> retrieveAccountBalance(AccountData accountData) {
 		TapiInformation tapiInformation = new TapiInformation(accountData.getTapiInformationData());
 		GetAccountInfoMethodResponse getAccountInfoMethodResponse = new GetAccountInfoMethod(tapiInformation).execute();
 		AccountInfo accountInfo = getAccountInfoMethodResponse.getResponse();
 		BalanceApiToListBalanceDataConverter balanceApiToListBalanceDataConverter = new BalanceApiToListBalanceDataConverter();
 		List<BalanceData> balanceDatas = balanceApiToListBalanceDataConverter.convertTo(accountInfo.getBalanceApi());
-		balanceDatas.forEach(balanceData -> balanceData.setAccountData(accountData));
 		accountData.setBalanceDatas(balanceDatas);
-		return accountData;
+		return balanceDatas;
 	}
 
 	private AccountPO searchAccountOnDatabase(String owner) {
@@ -190,5 +192,5 @@ public class Controller {
 	private void saveAccountOnDatabase(AccountData accountDataFromXml) {
 		AccountPO accountPO = new AccountPOToAccountDataConverter().convertFrom(accountDataFromXml);
 		accountDAO.persist(accountPO);
-	}
+	}	
 }
