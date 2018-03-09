@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<account>
+	<owner>ThirdStrategy</owner>
+	<email/>
+	<tapiInformations>
+		<id/>
+		<secret/>
+	</tapiInformations>
+	<balances>
+		<balance>
+			<currency>BRL</currency>
+			<amount>1000</amount>
+		</balance>
+	</balances>
+	<deposits />
+	<strategies>
+		<strategy>
+			<currency>BTC</currency>
+			<classes>
+				<class>
+					<name>org.marceloleite.mercado.strategies.third.ThirdStrategy</name>
+					<parameters>
+						<parameter>
+							<name>growthPercentageThreshold</name>
+							<value>0.0496</value>
+						</parameter>
+						<parameter>
+							<name>shrinkPercentageThreshold</name>
+							<value>-0.05</value>
+						</parameter>
+					</parameters>
+				</class>
+			</classes>
+		</strategy>
+	</strategies>
+</account>
