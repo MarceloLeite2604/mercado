@@ -4,7 +4,7 @@ import java.util.Properties;
 
 public abstract class AbstractPropertiesReader<E extends Property> implements PropertiesReader<E> {
 
-	protected static final String DEFAULT_PROPERTIES_FILE_PATH = "src/main/resources/application.properties";
+	protected static final String DEFAULT_PROPERTIES_FILE_PATH = "application.properties";
 
 	private Properties properties;	
 
