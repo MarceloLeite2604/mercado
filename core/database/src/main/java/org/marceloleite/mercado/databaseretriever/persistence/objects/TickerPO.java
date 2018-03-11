@@ -21,17 +21,22 @@ public class TickerPO implements Serializable, PersistenceObject<TickerIdPO> {
 	@EmbeddedId
 	private TickerIdPO id;
 
+	@Column(name="BUY")
 	private double buy;
 
+	@Column(name="HIGH")
 	private double high;
 
 	@Column(name="\"LAST\"")
 	private double last;
 
+	@Column(name="LOW")
 	private double low;
 
+	@Column(name="SELL")
 	private double sell;
 
+	@Column(name="VOLUME")
 	private double volume;
 
 	public TickerPO() {

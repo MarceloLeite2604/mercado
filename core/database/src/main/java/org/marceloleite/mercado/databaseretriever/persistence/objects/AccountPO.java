@@ -27,12 +27,13 @@ public class AccountPO implements Serializable, PersistenceObject<String> {
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@Column(name="OWNER", length=64)
 	private String owner;
 	
 	@OneToOne(mappedBy = "accountPO", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private TapiInformationPO tapiInformationPO;
 	
-	@Column(name="EMAIL")
+	@Column(name="EMAIL", length=64)
 	private String email;	
 
 	// bi-directional many-to-one association to BalancePO

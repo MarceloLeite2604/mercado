@@ -3,6 +3,7 @@ package org.marceloleite.mercado.databaseretriever.persistence.objects;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
+import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
@@ -25,6 +26,7 @@ public class BalancePO implements Serializable, PersistenceObject<BalanceIdPO> {
 	@EmbeddedId
 	private BalanceIdPO id;
 
+	@Column(name="AMOUNT")
 	private BigDecimal amount;
 
 	// bi-directional many-to-one association to AccountPO

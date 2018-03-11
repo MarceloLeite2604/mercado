@@ -26,7 +26,7 @@ public class ParameterPO implements Serializable, PersistenceObject<ParameterIdP
 	@EmbeddedId
 	private ParameterIdPO id;
 
-	@Column(name="\"VALUE\"")
+	@Column(name="\"VALUE\"", length=128)
 	private String value;
 
 	//bi-directional many-to-one association to ClassPO
