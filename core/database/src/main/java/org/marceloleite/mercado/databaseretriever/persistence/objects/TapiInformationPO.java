@@ -2,6 +2,7 @@ package org.marceloleite.mercado.databaseretriever.persistence.objects;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
@@ -24,6 +25,7 @@ public class TapiInformationPO implements Serializable, PersistenceObject<TapiIn
 	@EmbeddedId
 	private TapiInformationIdPO id;
 
+	@Column(name="SECRET", length=128)
 	private String secret;
 
 	// bi-directional many-to-one association to AccountPOLixo

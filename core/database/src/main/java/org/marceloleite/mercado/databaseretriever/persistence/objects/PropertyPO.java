@@ -19,9 +19,10 @@ public class PropertyPO implements Serializable, PersistenceObject<String> {
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@Column(name="NAME", length=64)
 	private String name;
 
-	@Column(name="\"VALUE\"")
+	@Column(name="\"VALUE\"", length=128)
 	private String value;
 
 	public PropertyPO() {

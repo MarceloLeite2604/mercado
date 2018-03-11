@@ -13,9 +13,10 @@ public class TapiInformationIdPO implements Serializable {
 	//default serial version id, required for serializable classes.
 	private static final long serialVersionUID = 1L;
 
-	@Column(name="ACCO_OWNER", insertable=false, updatable=false)
+	@Column(name="ACCO_OWNER", length=64, insertable=false, updatable=false)
 	private String accoOwner;
 
+	@Column(name="ID", length=64)
 	private String id;
 
 	public TapiInformationIdPO() {

@@ -25,6 +25,7 @@ public class TemporalTickerPO implements Serializable, PersistenceObject<Tempora
 	@Column(name="AVERAGE_PRICE")
 	private double averagePrice;
 
+	@Column(name="BUY")
 	private double buy;
 
 	@Column(name="BUY_ORDERS")
@@ -42,6 +43,7 @@ public class TemporalTickerPO implements Serializable, PersistenceObject<Tempora
 	@Column(name="LOWEST_PRICE")
 	private double lowestPrice;
 
+	@Column(name="ORDERS")
 	private BigDecimal orders;
 
 	@Column(name="PREVIOUS_BUY")
@@ -53,6 +55,7 @@ public class TemporalTickerPO implements Serializable, PersistenceObject<Tempora
 	@Column(name="PREVIOUS_SELL")
 	private double previousSell;
 
+	@Column(name="SELL")
 	private double sell;
 
 	@Column(name="SELL_ORDERS")

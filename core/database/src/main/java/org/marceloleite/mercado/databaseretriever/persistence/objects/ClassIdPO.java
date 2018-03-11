@@ -16,12 +16,13 @@ public class ClassIdPO implements Serializable {
 	//default serial version id, required for serializable classes.
 	private static final long serialVersionUID = 1L;
 
-	@Column(name="STRA_ACCO_OWNER", insertable=false, updatable=false)
+	@Column(name="STRA_ACCO_OWNER", length=64, insertable=false, updatable=false)
 	private String straAccoOwner;
 
-	@Column(name="STRA_CURRENCY", insertable=false, updatable=false)
+	@Column(name="STRA_CURRENCY", length=4, insertable=false, updatable=false)
 	private Currency straCurrency;
 
+	@Column(name="NAME", length=128)
 	private String name;
 
 	public ClassIdPO() {

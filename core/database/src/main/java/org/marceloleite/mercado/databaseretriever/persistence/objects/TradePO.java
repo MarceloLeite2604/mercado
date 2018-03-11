@@ -24,8 +24,10 @@ public class TradePO implements Serializable, PersistenceObject<TradeIdPO> {
 	@EmbeddedId
 	private TradeIdPO id;
 
+	@Column(name="AMOUNT")
 	private double amount;
 
+	@Column(name="PRICE")
 	private double price;
 
 	@Column(name="TRADE_DATE")
