@@ -8,14 +8,14 @@ import org.marceloleite.mercado.commons.properties.StandardProperty;
 
 public class PersistenceConfiguration extends AbstractPropertiesReader<StandardProperty> {
 
-	private static final String PERSISTENCE_CONFIGURATION_FILE_NAME = "persistence.properties";
+	private static final String DEFAULT_PERSISTENCE_CONFIGURATION_FILE_NAME = "persistence.properties";
 
 	public PersistenceConfiguration(String configurationFileName) {
 		readConfiguration(configurationFileName);
 	}
 
 	public PersistenceConfiguration() {
-		readConfiguration(PERSISTENCE_CONFIGURATION_FILE_NAME);
+		readConfiguration(DEFAULT_PERSISTENCE_CONFIGURATION_FILE_NAME);
 	}
 
 	@Override
