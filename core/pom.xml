@@ -22,6 +22,7 @@
 		<module>converter</module>
 		<module>data</module>
 		<module>database</module>
+		<module>extra-libs</module>
 		<module>json-model</module>
 		<module>negotiation-api</module>
 		<module>negotiation-api-model</module>
