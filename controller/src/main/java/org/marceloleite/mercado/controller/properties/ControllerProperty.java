@@ -1,4 +1,4 @@
-package org.marceloleite.mercado.controller.parameters;
+package org.marceloleite.mercado.controller.properties;
 
 import org.marceloleite.mercado.commons.properties.Property;
 

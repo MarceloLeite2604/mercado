@@ -68,7 +68,6 @@ public class PropertyRetriever {
 			} else {
 				standardConfiguration = new StandardPropertiesReader(configurationFilePath);
 			}
-			standardConfiguration.readConfiguration();
 		}
 	}
 }
