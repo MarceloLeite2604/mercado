@@ -21,12 +21,11 @@ import org.marceloleite.mercado.base.model.order.SellOrderBuilder.SellOrder;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.utils.ZonedDateTimeUtils;
-import org.marceloleite.mercado.controller.parameters.ControllerPropertiesRetriever;
+import org.marceloleite.mercado.controller.properties.ControllerPropertiesRetriever;
 import org.marceloleite.mercado.converter.entity.AccountPOToAccountDataConverter;
 import org.marceloleite.mercado.converter.json.api.negotiation.BalanceApiToListBalanceDataConverter;
 import org.marceloleite.mercado.data.AccountData;
 import org.marceloleite.mercado.data.BalanceData;
-import org.marceloleite.mercado.databaseretriever.persistence.EntityManagerController;
 import org.marceloleite.mercado.databaseretriever.persistence.daos.AccountDAO;
 import org.marceloleite.mercado.databaseretriever.persistence.objects.AccountPO;
 import org.marceloleite.mercado.negotiationapi.model.getaccountinfo.AccountInfo;
@@ -46,7 +45,7 @@ public class Controller {
 		this.accountDAO = new AccountDAO();
 		this.house = new ControllerHouse();
 		this.controllerPropertiesRetriever = new ControllerPropertiesRetriever();
-		configureEntityManagerController();
+		// configureEntityManagerController();
 	}
 
 	public void start() {
@@ -58,14 +57,12 @@ public class Controller {
 		}
 	}
 	
-	private void configureEntityManagerController() {
+	/*private void configureEntityManagerController() {
 		String persistenceFileName = controllerPropertiesRetriever.retrievePersistenceFileName();
 		if ( persistenceFileName != null ) {
 			EntityManagerController.setPersistenceFileName(persistenceFileName);
 		}
-	}
-
-	
+	}*/	
 
 	private void check(List<Account> accounts) {
 		if (accounts != null && !accounts.isEmpty()) {

@@ -18,7 +18,7 @@ public final class EntityManagerController {
 
 	private EntityManagerController() {
 		PersistenceConfiguration persistenceConfiguration;
-		if (persistenceFileName != null) {
+		if (persistenceFileName == null) {
 			persistenceConfiguration = new PersistenceConfiguration();
 		} else {
 			persistenceConfiguration = new PersistenceConfiguration(persistenceFileName);
