@@ -64,6 +64,7 @@ public class AccountData {
 	}
 
 	public void setBalanceDatas(List<BalanceData> balanceDatas) {
+		balanceDatas.forEach(balanceData -> balanceData.setAccountData(this));
 		this.balanceDatas = balanceDatas;
 	}
 

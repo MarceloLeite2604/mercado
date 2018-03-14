@@ -25,7 +25,7 @@ public class VariablePO implements Serializable, PersistenceObject<VariableIdPO>
 	@EmbeddedId
 	private VariableIdPO id;
 
-	@Column(name="\"VALUE\"", length=128)
+	@Column(name="\"VALUE\"", length=4000)
 	private String value;
 
 	//bi-directional many-to-one association to ClassPO
