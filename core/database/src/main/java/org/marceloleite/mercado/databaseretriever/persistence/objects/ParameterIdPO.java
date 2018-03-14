@@ -25,6 +25,7 @@ public class ParameterIdPO implements Serializable {
 	@Column(name="CLASS_NAME", length=128, insertable=false, updatable=false)
 	private String className;
 
+	@Column(name="NAME", length=64)
 	private String name;
 
 	public ParameterIdPO() {
