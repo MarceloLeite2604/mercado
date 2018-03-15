@@ -15,14 +15,11 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import org.marceloleite.mercado.commons.encryption.Encrypt;
+import org.marceloleite.mercado.commons.properties.SystemProperty;
 import org.marceloleite.mercado.databaseretriever.persistence.daos.PropertyDAO;
 import org.marceloleite.mercado.databaseretriever.persistence.objects.PropertyPO;
 
 public class MailSender {
-
-	public static final String EMAIL_USERNAME_PROPERTY = "email.username";
-
-	public static final String EMAIL_PASSWORD_PROPERTY = "email.password";
 
 	public static Properties properties;
 
@@ -77,12 +74,12 @@ public class MailSender {
 	}
 
 	private String retrieveUsername() {
-		PropertyPO propertyPO = retrieveProperty(EMAIL_USERNAME_PROPERTY);
+		PropertyPO propertyPO = retrieveProperty(SystemProperty.EMAIL_USERNAME.getName());
 		return propertyPO.getValue();
 	}
 
 	private String retrievePassword() {
-		PropertyPO propertyPO = retrieveProperty(EMAIL_PASSWORD_PROPERTY);
+		PropertyPO propertyPO = retrieveProperty(SystemProperty.EMAIL_PASSWORD.getName());
 		String encryptedPassword = propertyPO.getValue();
 		return new Encrypt().decrypt(encryptedPassword);
 	}

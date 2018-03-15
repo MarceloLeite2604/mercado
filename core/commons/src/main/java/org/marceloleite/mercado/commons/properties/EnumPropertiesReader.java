@@ -1,8 +1,12 @@
 package org.marceloleite.mercado.commons.properties;
 
-public interface PropertiesReader<E extends Property> {
+import java.util.Properties;
 
+public interface EnumPropertiesReader<E extends Enum<? extends Property>> {
+	
 	void readConfiguration(String configurationFilePath);
 	
 	E getProperty(E property);
+
+	Properties getProperties();
 }

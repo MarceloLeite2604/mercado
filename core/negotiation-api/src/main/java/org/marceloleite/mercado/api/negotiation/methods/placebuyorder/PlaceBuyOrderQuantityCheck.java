@@ -1,9 +1,9 @@
 package org.marceloleite.mercado.api.negotiation.methods.placebuyorder;
 
 import org.marceloleite.mercado.commons.Currency;
-import org.marceloleite.mercado.commons.interfaces.Check;
+import org.marceloleite.mercado.commons.interfaces.Checker;
 
-public class PlaceBuyOrderQuantityCheck implements Check<Double> {
+public class PlaceBuyOrderQuantityCheck implements Checker<Double> {
 
 	private double MINIMAL_QUANTITY_FOR_BTC = 0.001;
 	private double MINIMAL_QUANTITY_FOR_LTC = 0.009;

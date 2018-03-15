@@ -5,18 +5,15 @@ import org.marceloleite.mercado.strategies.StrategyPropertyUtils;
 
 public enum ThirdStrategyParameter implements Property {
 	
-	GROWTH_PERCENTAGE_THRESHOLD("growthPercentageThreshold", true),
-	SHRINK_PERCENTAGE_THRESHOLD("shrinkPercentageThreshold", true);
+	GROWTH_PERCENTAGE_THRESHOLD("growthPercentageThreshold"),
+	SHRINK_PERCENTAGE_THRESHOLD("shrinkPercentageThreshold");
 
 	private String name;
 
 	private String value;
 
-	private boolean required;
-
-	private ThirdStrategyParameter(String name, boolean required) {
+	private ThirdStrategyParameter(String name) {
 		this.name = name;
-		this.required = required;
 	}
 
 	public String getName() {
@@ -36,15 +33,21 @@ public enum ThirdStrategyParameter implements Property {
 	}
 
 	public boolean isRequired() {
-		return required;
+		return true;
 	}
 
-	public void setRequired(boolean required) {
-		this.required = required;
-	}
-	
 	public static ThirdStrategyParameter findByName(String name) {
 		return (ThirdStrategyParameter)StrategyPropertyUtils.findByName(ThirdStrategyParameter.class, name);
+	}
+
+	@Override
+	public String getDefaultValue() {
+		return null;
+	}
+
+	@Override
+	public boolean isEncrypted() {
+		return false;
 	}
 
 }

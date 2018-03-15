@@ -17,11 +17,9 @@ public class PropertyToVariableDataConverter implements Converter <Property, Var
 
 	@Override
 	public Property convertFrom(VariableData variableData) {
-		Property property = new StandardProperty();
-		property.setName(variableData.getName());
-		property.setValue(variableData.getValue());
-		
-		return property;
+		String name = variableData.getName();
+		String value = variableData.getValue();
+		return new StandardProperty(name, value, false);
 	}
 
 }

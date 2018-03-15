@@ -1,6 +1,7 @@
 package org.marceloleite.mercado.commons.interfaces;
 
-public interface Check<T> {
+@FunctionalInterface
+public interface Checker<T> {
 
 	public boolean check(T object);
 }

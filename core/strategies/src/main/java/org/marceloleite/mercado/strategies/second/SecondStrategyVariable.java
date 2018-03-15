@@ -47,4 +47,14 @@ public enum SecondStrategyVariable implements Property {
 	public static SecondStrategyVariable findByName(String name) {
 		return (SecondStrategyVariable)StrategyPropertyUtils.findByName(SecondStrategyVariable.class, name);
 	}
+
+	@Override
+	public String getDefaultValue() {
+		return null;
+	}
+
+	@Override
+	public boolean isEncrypted() {
+		return false;
+	}
 }

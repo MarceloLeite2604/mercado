@@ -4,20 +4,25 @@ import org.marceloleite.mercado.commons.properties.Property;
 
 public enum SimulatorProperty implements Property {
 
-	HOUSE_TRADE_PERCENTAGE("simulator.house.tradePercentage", true),
-	START_TIME("simulator.startTime", true),
-	END_TIME("simulator.endTime", true),
-	STEP_DURATION("simulator.stepDuration", true),
-	RETRIEVING_DURATION("simulator.retrievingDuration", true);
+	HOUSE_TRADE_PERCENTAGE("simulator.house.tradePercentage", "0.07"),
+	START_TIME("simulator.startTime"),
+	END_TIME("simulator.endTime"),
+	STEP_DURATION("simulator.stepDuration", "30"),
+	RETRIEVING_DURATION("simulator.retrievingDuration", "600");
 
 	private String name;
 	
+	private String defaultValue;
+	
 	private String value;
 
-	private boolean required;
-
-	private SimulatorProperty(String name, boolean required) {
+	private SimulatorProperty(String name, String defaultvalue) {
 		this.name = name;
+		this.defaultValue = defaultvalue;
+	}
+	
+	private SimulatorProperty(String name) {
+		this(name, null);
 	}
 
 	@Override
@@ -48,6 +53,16 @@ public enum SimulatorProperty implements Property {
 
 	@Override
 	public boolean isRequired() {
-		return this.required;
+		return (defaultValue == null);
+	}
+
+	@Override
+	public String getDefaultValue() {
+		return defaultValue;
+	}
+
+	@Override
+	public boolean isEncrypted() {
+		return false;
 	}
 }
