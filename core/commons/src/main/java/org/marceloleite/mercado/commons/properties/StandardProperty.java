@@ -24,9 +24,20 @@ public class StandardProperty implements Property {
 
 	public StandardProperty(Property property) {
 		super();
+
+		if (property == null) {
+			throw new IllegalArgumentException("Property cannot be null.");
+		}
+
 		this.name = new String(property.getName());
-		this.value = new String(property.getValue());
-		this.defaultValue = new String(property.getDefaultValue());
+		if (property.getValue() != null) {
+			this.value = new String(property.getValue());
+		}
+
+		if (property.getDefaultValue() != null) {
+			this.defaultValue = new String(property.getDefaultValue());
+		}
+		
 		this.encrypted = new Boolean(property.isEncrypted());
 	}
 
