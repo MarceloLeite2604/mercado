@@ -27,8 +27,13 @@ public class Encrypt {
 	private static final String TRANSFORMATION = CRYPTOGRAPHIC_ALGORITHM + "/" + FEEDBACK_MODE + "/" + PADDING_SCHEME;
 
 	public String encrypt(String content) {
+		return encrypt(content, retrieveKey());
+	}
+
+	public String encrypt(String content, String key) {
 		try {
-			byte[] cryptedBytes = encryptDecrypt(content.getBytes(), Cipher.ENCRYPT_MODE);
+			byte[] keyBytes = DatatypeConverter.parseBase64Binary(key);
+			byte[] cryptedBytes = encryptDecrypt(content.getBytes(), keyBytes, Cipher.ENCRYPT_MODE);
 			return DatatypeConverter.printBase64Binary(cryptedBytes);
 		} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException
 				| BadPaddingException | InvalidAlgorithmParameterException exception) {
@@ -37,9 +42,14 @@ public class Encrypt {
 	}
 
 	public String decrypt(String content) {
+		return decrypt(content, retrieveKey());
+	}
+
+	public String decrypt(String content, String key) {
 		try {
 			byte[] encryptedBytes = DatatypeConverter.parseBase64Binary(content);
-			byte[] decryptedBytes = encryptDecrypt(encryptedBytes, Cipher.DECRYPT_MODE);
+			byte[] keyBytes = DatatypeConverter.parseBase64Binary(key);
+			byte[] decryptedBytes = encryptDecrypt(encryptedBytes, keyBytes, Cipher.DECRYPT_MODE);
 			return new String(decryptedBytes);
 		} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException
 				| BadPaddingException | InvalidAlgorithmParameterException exception) {
@@ -47,21 +57,22 @@ public class Encrypt {
 		}
 	}
 
-	private byte[] encryptDecrypt(byte[] content, int opMode) throws InvalidKeyException, NoSuchAlgorithmException,
-			NoSuchPaddingException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException {
-		SecretKey secretKey = new SecretKeySpec(retrieveKey(), CRYPTOGRAPHIC_ALGORITHM);
+	private byte[] encryptDecrypt(byte[] content, byte[] key, int opMode)
+			throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException,
+			BadPaddingException, InvalidAlgorithmParameterException {
+		SecretKey secretKey = new SecretKeySpec(key, CRYPTOGRAPHIC_ALGORITHM);
 		Cipher cipher = createCipher(secretKey, opMode);
 		return cipher.doFinal(content);
 	}
 
-	private Cipher createCipher(final SecretKey secretKey, int opMode)
-			throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException {
+	private Cipher createCipher(final SecretKey secretKey, int opMode) throws NoSuchAlgorithmException,
+			NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException {
 		Cipher cipher = Cipher.getInstance(TRANSFORMATION);
 		cipher.init(opMode, secretKey, new IvParameterSpec(new byte[8]));
 		return cipher;
 	}
 
-	private byte[] retrieveKey() {
+	private String retrieveKey() {
 		String key = System.getenv(KEY_ENVIRONMENT_VARIABLE_NAME);
 		if (key == null) {
 			throw new IllegalStateException(
@@ -72,7 +83,8 @@ public class Encrypt {
 			throw new IllegalStateException("The encrypt key is empty.");
 		}
 
-		return DatatypeConverter.parseBase64Binary(key);
+		// return DatatypeConverter.parseBase64Binary(key);
+		return key;
 	}
 
 	public String generateKey() {

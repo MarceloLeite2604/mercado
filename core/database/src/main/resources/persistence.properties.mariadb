@@ -1,7 +1,7 @@
 javax.persistence.jdbc.driver=com.mysql.cj.jdbc.Driver
 javax.persistence.jdbc.url=jdbc:mysql://localhost/mercado
-javax.persistence.jdbc.user=mercado
-javax.persistence.jdbc.password=michael01jackson
+javax.persistence.jdbc.user=69/UF5LQ7rY=
+javax.persistence.jdbc.password=HQbtfCrbBsz1YcnbP/8dkUXogkD+qRqj
 hibernate.hbm2ddl.auto=update
 hibernate.show_sql=true
 hibernate.dialect=org.hibernate.dialect.MariaDB53Dialect
