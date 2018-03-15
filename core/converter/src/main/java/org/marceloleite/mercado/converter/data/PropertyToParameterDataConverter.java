@@ -17,11 +17,9 @@ public class PropertyToParameterDataConverter implements Converter <Property, Pa
 
 	@Override
 	public Property convertFrom(ParameterData parameterData) {
-		Property property = new StandardProperty();
-		property.setName(parameterData.getName());
-		property.setValue(parameterData.getValue());
-		
-		return property;
+		String name = parameterData.getName();
+		String value = parameterData.getValue();
+		return new StandardProperty(name, value, false);
 	}
 
 }

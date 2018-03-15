@@ -8,9 +8,9 @@ public class PropertyPOToStandardPropertyConverter implements Converter<Property
 
 	@Override
 	public StandardProperty convertTo(PropertyPO propertyPO) {
-		StandardProperty standardProperty = new StandardProperty();
-		standardProperty.setName(propertyPO.getName());
-		standardProperty.setValue(propertyPO.getValue());
+		String name = propertyPO.getName();
+		String value = propertyPO.getValue();
+		StandardProperty standardProperty = new StandardProperty(name, value, false);
 		return standardProperty;
 	}
 

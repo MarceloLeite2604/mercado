@@ -5,20 +5,17 @@ import org.marceloleite.mercado.strategies.StrategyPropertyUtils;
 
 public enum FirstStrategyParameter implements Property {
 
-	GROWTH_PERCENTAGE_THRESHOLD("growthPercentageThreshold", true),
-	SHRINK_PERCENTAGE_THRESHOLD("shrinkPercentageThreshold", true),
-	BUY_STEP_FACTORIAL_NUMBER("buyStepFactorialNumber", true),
-	SELL_STEP_FACTORIAL_NUMBER("sellStepFactorialNumber", true);
+	GROWTH_PERCENTAGE_THRESHOLD("growthPercentageThreshold"),
+	SHRINK_PERCENTAGE_THRESHOLD("shrinkPercentageThreshold"),
+	BUY_STEP_FACTORIAL_NUMBER("buyStepFactorialNumber"),
+	SELL_STEP_FACTORIAL_NUMBER("sellStepFactorialNumber");
 
 	private String name;
 
 	private String value;
 
-	private boolean required;
-
-	private FirstStrategyParameter(String name, boolean required) {
+	private FirstStrategyParameter(String name) {
 		this.name = name;
-		this.required = required;
 	}
 
 	@Override
@@ -44,10 +41,20 @@ public enum FirstStrategyParameter implements Property {
 
 	@Override
 	public boolean isRequired() {
-		return required;
+		return true;
 	}
 	
 	public static FirstStrategyParameter findByName(String name) {
 		return (FirstStrategyParameter)StrategyPropertyUtils.findByName(FirstStrategyParameter.class, name);
+	}
+
+	@Override
+	public String getDefaultValue() {
+		return null;
+	}
+
+	@Override
+	public boolean isEncrypted() {
+		return false;
 	}
 }

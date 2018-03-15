@@ -8,7 +8,7 @@ import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.data.Trade;
 import org.marceloleite.mercado.siteretriever.converters.ListToMapTradeConverter;
-import org.marceloleite.mercado.siteretriever.util.checker.MaxTradesReachedCheck;
+import org.marceloleite.mercado.siteretriever.util.checker.MaxTradesReachedChecker;
 
 class PartialTradesSiteRetrieverCallable implements Callable<Map<Long, Trade>> {
 
@@ -27,7 +27,7 @@ class PartialTradesSiteRetrieverCallable implements Callable<Map<Long, Trade>> {
 	public Map<Long, Trade> call() throws Exception {
 		List<Trade> trades = new PartialTradesSiteRetriever(currency).retrieve(timeInterval);
 		Map<Long, Trade> result;
-		if (new MaxTradesReachedCheck().check(trades)) {
+		if (new MaxTradesReachedChecker().check(trades)) {
 			System.err.println("Warning: Maximum trades exceeded from " + timeInterval + ". Splitting execution.");
 			result = splitExecution();
 		} else {

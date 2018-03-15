@@ -40,4 +40,14 @@ public enum FourthStrategyVariable implements Property {
 	public static FourthStrategyVariable findByName(String name) {
 		return (FourthStrategyVariable)StrategyPropertyUtils.findByName(FourthStrategyVariable.class, name);
 	}
+
+	@Override
+	public String getDefaultValue() {
+		return null;
+	}
+
+	@Override
+	public boolean isEncrypted() {
+		return false;
+	}
 }

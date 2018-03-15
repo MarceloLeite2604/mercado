@@ -45,4 +45,14 @@ public enum FirstStrategyVariable implements Property {
 	public static FirstStrategyVariable findByName(String name) {
 		return (FirstStrategyVariable)StrategyPropertyUtils.findByName(FirstStrategyVariable.class, name);
 	}
+
+	@Override
+	public String getDefaultValue() {
+		return null;
+	}
+
+	@Override
+	public boolean isEncrypted() {
+		return false;
+	}
 }

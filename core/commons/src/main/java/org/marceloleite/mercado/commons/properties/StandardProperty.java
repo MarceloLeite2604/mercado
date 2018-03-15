@@ -6,45 +6,61 @@ public class StandardProperty implements Property {
 
 	private String value;
 
-	private boolean required;
-	
-	public StandardProperty() {
-		super();
-	}
-	
-	public StandardProperty(String name, String value, boolean required) {
+	private String defaultValue;
+
+	private boolean encrypted;
+
+	public StandardProperty(String name, String value, Boolean encrypted, String defaultValue) {
 		super();
 		this.name = name;
 		this.value = value;
-		this.required = required;
+		this.defaultValue = defaultValue;
+		this.encrypted = encrypted;
 	}
 
-	public StandardProperty(String name, boolean required) {
-		this(name, null, required);
+	public StandardProperty(String name, String value, boolean encrypted) {
+		this(name, value, encrypted, null);
+	}
+
+	public StandardProperty(Property property) {
+		super();
+		this.name = new String(property.getName());
+		this.value = new String(property.getValue());
+		this.defaultValue = new String(property.getDefaultValue());
+		this.encrypted = new Boolean(property.isEncrypted());
 	}
 
 	public String getName() {
 		return name;
 	}
 
+	@Override
 	public void setName(String name) {
 		this.name = name;
 	}
 
+	@Override
 	public boolean isRequired() {
-		return required;
+		return (defaultValue == null);
 	}
 
-	public void setRequired(boolean required) {
-		this.required = required;
-	}
-
+	@Override
 	public String getValue() {
-		return value;
+		return this.value;
 	}
 
+	@Override
 	public void setValue(String value) {
 		this.value = value;
 	}
 
+	@Override
+	public String getDefaultValue() {
+		return defaultValue;
+	}
+
+	@Override
+	public boolean isEncrypted() {
+		return encrypted;
+	}
 }

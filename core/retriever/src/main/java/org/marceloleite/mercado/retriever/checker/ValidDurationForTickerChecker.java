@@ -2,9 +2,9 @@ package org.marceloleite.mercado.retriever.checker;
 
 import java.time.Duration;
 
-import org.marceloleite.mercado.commons.interfaces.Check;
+import org.marceloleite.mercado.commons.interfaces.Checker;
 
-public class ValidDurationForTickerCheck implements Check<Duration> {
+public class ValidDurationForTickerChecker implements Checker<Duration> {
 
 	private static final Duration TEN_SECONDS_DURATION = Duration.ofSeconds(10l);
 

@@ -5,17 +5,14 @@ import org.marceloleite.mercado.commons.properties.StandardProperty;
 
 public enum SecondStrategyParameter implements Property {
 	
-	TOTAL_TIME_INTERVAL_TO_ANALYZE("totalTimeIntervalToAnalyze", true);
+	TOTAL_TIME_INTERVAL_TO_ANALYZE("totalTimeIntervalToAnalyze");
 
 	private String name;
 	
 	private String value;
-	
-	private boolean required;
 
-	private SecondStrategyParameter(String name, boolean required) {
+	private SecondStrategyParameter(String name) {
 		this.name = name;
-		this.required = required;
 	}
 
 	@Override
@@ -41,10 +38,20 @@ public enum SecondStrategyParameter implements Property {
 
 	@Override
 	public boolean isRequired() {
-		return this.required;
+		return true;
 	}
 	
 	public StandardProperty toStandardProperty() {
 		return new StandardProperty(name, value, true);
+	}
+
+	@Override
+	public String getDefaultValue() {
+		return null;
+	}
+
+	@Override
+	public boolean isEncrypted() {
+		return false;
 	}
 }

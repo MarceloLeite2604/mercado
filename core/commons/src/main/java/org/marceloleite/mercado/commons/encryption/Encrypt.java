@@ -16,7 +16,7 @@ import javax.xml.bind.DatatypeConverter;
 
 public class Encrypt {
 
-	private static final String KEY_ENVIRONMENT_VARIABLE_NAME = "MERCADO_ENCRYPT_KEY";
+	public static final String KEY_ENVIRONMENT_VARIABLE_NAME = "MERCADO_ENCRYPT_KEY";
 
 	private static final String CRYPTOGRAPHIC_ALGORITHM = "DESede";
 

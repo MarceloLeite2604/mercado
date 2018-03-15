@@ -21,7 +21,7 @@ public enum ThirdStrategyVariable implements Property {
 	}
 
 	public void setName(String name) {
-		this.name = name;
+		throw new UnsupportedOperationException(); 
 	}
 
 	public String getValue() {
@@ -38,5 +38,15 @@ public enum ThirdStrategyVariable implements Property {
 	
 	public static ThirdStrategyVariable findByName(String name) {
 		return (ThirdStrategyVariable)StrategyPropertyUtils.findByName(ThirdStrategyVariable.class, name);
+	}
+
+	@Override
+	public String getDefaultValue() {
+		return null;
+	}
+
+	@Override
+	public boolean isEncrypted() {
+		return false;
 	}
 }

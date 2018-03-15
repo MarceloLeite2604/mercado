@@ -53,7 +53,7 @@ public class PropertyRetriever {
 	}
 
 	private StandardProperty retrievePropertyFromConfigurationFile(String name) {
-		StandardProperty propertyForEnquirement = new StandardProperty(name, false);
+		StandardProperty propertyForEnquirement = new StandardProperty(name, null, false);
 
 		createStandardConfiguration();
 		Property property = standardConfiguration.getProperty(propertyForEnquirement);
