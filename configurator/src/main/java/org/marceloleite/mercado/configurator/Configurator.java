@@ -6,7 +6,11 @@ import java.util.List;
 
 import org.marceloleite.mercado.commons.Reader;
 import org.marceloleite.mercado.commons.encryption.Encrypt;
+import org.marceloleite.mercado.commons.properties.StandardProperty;
 import org.marceloleite.mercado.commons.properties.SystemProperty;
+import org.marceloleite.mercado.configurator.properties.ConfiguratorPropertiesRetriever;
+import org.marceloleite.mercado.converter.entity.PropertyPOToStandardPropertyConverter;
+import org.marceloleite.mercado.databaseretriever.persistence.EntityManagerController;
 import org.marceloleite.mercado.databaseretriever.persistence.daos.PropertyDAO;
 import org.marceloleite.mercado.databaseretriever.persistence.objects.PropertyPO;
 
@@ -16,12 +20,23 @@ public class Configurator {
 
 	private String encryptKey;
 
+	private boolean encryptKeyCreated;
+
 	private String emailAddress;
 
 	private String emailPassword;
 
-	public Configurator() {
+	private ConfiguratorPropertiesRetriever configuratorPropertiesRetriever;
 
+	public Configurator() {
+		this.configuratorPropertiesRetriever = new ConfiguratorPropertiesRetriever();
+		configureEntityManager();
+		this.encryptKeyCreated = false;
+	}
+
+	private void configureEntityManager() {
+		String persistenceFileName = configuratorPropertiesRetriever.retrievePersistenceFileName();
+		EntityManagerController.setPersistenceFileName(persistenceFileName);
 	}
 
 	public void configureSystem() {
@@ -41,6 +56,7 @@ public class Configurator {
 		if (encryptKeyFromEnvironmentVariable == null || encryptKeyFromEnvironmentVariable.isEmpty()) {
 			System.out.println("Encrypt key not found on system. Creating one.");
 			encryptKey = createEncryptKey();
+			encryptKeyCreated = true;
 		} else {
 			encryptKey = encryptKeyFromEnvironmentVariable;
 		}
@@ -108,16 +124,18 @@ public class Configurator {
 	}
 
 	private PropertyPO createPropertyPO(SystemProperty systemProperty, String value) {
-		PropertyPO propertyPO = new PropertyPO();
-
-		propertyPO.setName(systemProperty.getName());
-		propertyPO.setValue(value);
-
-		return propertyPO;
+		StandardProperty standardProperty = new StandardProperty(systemProperty);
+		standardProperty.setValue(value);
+		if (systemProperty.isEncrypted()) {
+			standardProperty.setValue(new Encrypt().encrypt(standardProperty.getValue(), encryptKey));
+		}
+		return new PropertyPOToStandardPropertyConverter().convertFrom(standardProperty);
 	}
 
 	private void informEncryptKey() {
-		System.out.println("Please store this environment variable on your system: ");
-		System.out.println(Encrypt.KEY_ENVIRONMENT_VARIABLE_NAME + "=" + encryptKey);
+		if (encryptKeyCreated) {
+			System.out.println("Please store this environment variable on your system: ");
+			System.out.println(Encrypt.KEY_ENVIRONMENT_VARIABLE_NAME + "=" + encryptKey);
+		}
 	}
 }

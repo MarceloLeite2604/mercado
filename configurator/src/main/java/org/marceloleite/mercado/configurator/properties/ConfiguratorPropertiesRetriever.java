@@ -9,4 +9,8 @@ public class ConfiguratorPropertiesRetriever extends AbstractEnumPropertiesReade
 	public ConfiguratorPropertiesRetriever() {
 		super(ConfiguratorProperty.class, PROPERTIES_FILE_NAME);
 	}
+	
+	public String retrievePersistenceFileName() {
+		return getProperty(ConfiguratorProperty.PERSISTENCE_FILE_NAME).getValue();
+	}
 }

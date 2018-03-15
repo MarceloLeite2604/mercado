@@ -4,7 +4,7 @@ import org.marceloleite.mercado.commons.properties.Property;
 
 public enum ConfiguratorProperty implements Property {
 	
-	NONCE_INITIAL_VALUE("nonce.initialValue");
+	PERSISTENCE_FILE_NAME("configurator.persistenceFileName", "persistence.properties");
 	
 	private String name;
 	
@@ -12,10 +12,10 @@ public enum ConfiguratorProperty implements Property {
 	
 	private String defaultValue;
 
-	private ConfiguratorProperty(String name) {
+	private ConfiguratorProperty(String name, String defaultValue) {
 		this.name = name;
 		this.value = null;
-		this.defaultValue = null;
+		this.defaultValue = defaultValue;
 	}
 	
 	public String getName() {
