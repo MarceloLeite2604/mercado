@@ -3,11 +3,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.marceloleite.mercado</groupId>
-	<artifactId>configurator</artifactId>
+	<artifactId>encryptor</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
-	<name>configurator</name>
+	<name>encryptor</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
@@ -19,7 +19,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.marceloleite.mercado</groupId>
-			<artifactId>retriever</artifactId>
+			<artifactId>commons</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>

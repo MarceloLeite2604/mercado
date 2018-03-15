@@ -4,9 +4,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.marceloleite.mercado.commons.Reader;
 import org.marceloleite.mercado.commons.encryption.Encrypt;
 import org.marceloleite.mercado.commons.properties.SystemProperty;
-import org.marceloleite.mercado.configurator.reader.Reader;
 import org.marceloleite.mercado.databaseretriever.persistence.daos.PropertyDAO;
 import org.marceloleite.mercado.databaseretriever.persistence.objects.PropertyPO;
 

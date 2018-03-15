@@ -1,4 +1,4 @@
-package org.marceloleite.mercado.configurator.reader;
+package org.marceloleite.mercado.commons;
 
 import java.io.BufferedReader;
 import java.io.Console;
@@ -10,14 +10,17 @@ import org.marceloleite.mercado.commons.interfaces.Parser;
 
 public class Reader {
 
-	private static final int MAX_RETRIES = 3;
+	private static final int DEFAULT_MAX_RETRIES = 3;
 
 	private BufferedReader bufferedReader;
 
 	private boolean hideInput;
+	
+	private int maxRetries;
 
 	public Reader() {
 		this.bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+		this.maxRetries = DEFAULT_MAX_RETRIES;
 	}
 
 	public <T> T read(String inputMessage, Parser<T> parser, Checker<T> check) throws IOException {
@@ -26,7 +29,7 @@ public class Reader {
 		T parsedValue = null;
 		int retries = 0;
 		try {
-			while (!valueRead && retries < MAX_RETRIES) {
+			while (!valueRead && retries < maxRetries) {
 				System.out.print(inputMessage);
 				value = readInput();
 				if (value != null && !value.isEmpty()) {
@@ -43,7 +46,7 @@ public class Reader {
 			throw new RuntimeException("Error while reading content.", exception);
 		}
 
-		if (retries >= MAX_RETRIES) {
+		if (retries >= DEFAULT_MAX_RETRIES) {
 			throw new IOException("User did not enter a value.");
 		}
 
@@ -73,5 +76,9 @@ public class Reader {
 
 	public void hideInput(boolean hideInput) {
 		this.hideInput = hideInput;
+	}
+
+	public void setMaxRetries(int maxRetries) {
+		this.maxRetries = maxRetries;
 	}
 }

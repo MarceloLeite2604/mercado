@@ -23,6 +23,7 @@ public final class EntityManagerController {
 		} else {
 			persistenceConfiguration = new PersistenceConfiguration(persistenceFileName);
 		}
+		persistenceConfiguration.readConfiguration();
 		entityManagerFactory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT,
 				persistenceConfiguration.getProperties());
 	}
