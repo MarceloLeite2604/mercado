@@ -23,49 +23,49 @@ import org.hibernate.annotations.FetchMode;
 public class OrderPO {
 
 	@EmbeddedId
-	private OrderIdPO orderIdPO;
-	
-	@Column(name="FIRST_CURRENCY")
+	private OrderIdPO id;
+
+	@Column(name = "FIRST_CURRENCY")
 	private Currency firstCurrency;
-	
-	@Column(name="SECOND_CURRENCY")
+
+	@Column(name = "SECOND_CURRENCY")
 	private Currency secondCurrency;
-	
-	@Column(name="HAS_FILLS")
+
+	@Column(name = "HAS_FILLS")
 	private Boolean hasFills;
-	
-	@Column(name="QUANTITY")
+
+	@Column(name = "QUANTITY")
 	private BigDecimal quantity;
-	
-	@Column(name="LIMIT_PRICE")
+
+	@Column(name = "LIMIT_PRICE")
 	private BigDecimal limitPrice;
 
-	@Column(name="EXECUTED_QUANTITY")
+	@Column(name = "EXECUTED_QUANTITY")
 	private BigDecimal executedQuantity;
 
-	@Column(name="EXECUTED_PRICE_AVERAGE")
+	@Column(name = "EXECUTED_PRICE_AVERAGE")
 	private BigDecimal executedPriceAverage;
 
-	@Column(name="FEE")
+	@Column(name = "FEE")
 	private BigDecimal fee;
 
-	@Column(name="CREATED")
+	@Column(name = "CREATED")
 	private ZonedDateTime created;
 
-	@Column(name="UPDATED")
+	@Column(name = "UPDATED")
 	private ZonedDateTime updated;
-	
+
 	// bi-directional many-to-one association to StrategyPO
 	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@Fetch(FetchMode.SUBSELECT)
 	List<OperationPO> operationPOs;
 
-	public OrderIdPO getOrderIdPO() {
-		return orderIdPO;
+	public OrderIdPO getId() {
+		return id;
 	}
 
-	public void setOrderIdPO(OrderIdPO orderIdPO) {
-		this.orderIdPO = orderIdPO;
+	public void setId(OrderIdPO id) {
+		this.id = id;
 	}
 
 	public Currency getFirstCurrency() {
@@ -132,23 +132,28 @@ public class OrderPO {
 		this.fee = fee;
 	}
 
-	public ZonedDateTime getCreatedTimestamp() {
+	public ZonedDateTime getCreated() {
 		return created;
 	}
 
-	public void setCreatedTimestamp(ZonedDateTime created) {
+	public void setCreated(ZonedDateTime created) {
 		this.created = created;
 	}
 
-	public ZonedDateTime getUpdatedTimestamp() {
+	public ZonedDateTime getUpdated() {
 		return updated;
 	}
 
-	public void setUpdatedTimestamp(ZonedDateTime updated) {
+	public void setUpdated(ZonedDateTime updated) {
 		this.updated = updated;
 	}
 
-	// private List<Operation> operations;
-	
-	
+	public List<OperationPO> getOperationPOs() {
+		return operationPOs;
+	}
+
+	public void setOperationPOs(List<OperationPO> operationPOs) {
+		this.operationPOs = operationPOs;
+	}
+
 }
