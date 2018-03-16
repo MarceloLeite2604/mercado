@@ -7,10 +7,12 @@ public class AccountData {
 	private String owner;
 
 	private TapiInformationData tapiInformationData;
-	
+
 	private String email;
 
 	private List<BalanceData> balanceDatas;
+
+	private List<WithdrawalData> withdrawalDatas;
 
 	private List<DepositData> depositDatas;
 
@@ -66,6 +68,14 @@ public class AccountData {
 	public void setBalanceDatas(List<BalanceData> balanceDatas) {
 		balanceDatas.forEach(balanceData -> balanceData.setAccountData(this));
 		this.balanceDatas = balanceDatas;
+	}
+
+	public List<WithdrawalData> getWithdrawalDatas() {
+		return withdrawalDatas;
+	}
+
+	public void setWithdrawalDatas(List<WithdrawalData> withdrawalDatas) {
+		this.withdrawalDatas = withdrawalDatas;
 	}
 
 	public List<DepositData> getDepositDatas() {

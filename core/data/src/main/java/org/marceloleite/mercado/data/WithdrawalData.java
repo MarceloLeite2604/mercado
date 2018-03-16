@@ -2,7 +2,7 @@ package org.marceloleite.mercado.data;
 
 import org.marceloleite.mercado.commons.Currency;
 
-public class BalanceData {
+public class WithdrawalData {
 
 	private AccountData accountData;
 
