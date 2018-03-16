@@ -23,7 +23,7 @@ import javax.persistence.Table;
 public class OperationPO {
 
 	@EmbeddedId
-	private OperationIdPO operationIdPO;
+	private OperationIdPO id;
 
 	// bi-directional many-to-one association to ClassPO
 	@ManyToOne
@@ -43,4 +43,52 @@ public class OperationPO {
 
 	@Column(name = "EXECUTED")
 	private ZonedDateTime executed;
+
+	public OperationIdPO getId() {
+		return id;
+	}
+
+	public void setId(OperationIdPO id) {
+		this.id = id;
+	}
+
+	public OrderPO getOrder() {
+		return order;
+	}
+
+	public void setOrder(OrderPO order) {
+		this.order = order;
+	}
+
+	public BigDecimal getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(BigDecimal quantity) {
+		this.quantity = quantity;
+	}
+
+	public BigDecimal getPrice() {
+		return price;
+	}
+
+	public void setPrice(BigDecimal price) {
+		this.price = price;
+	}
+
+	public BigDecimal getFeeRate() {
+		return feeRate;
+	}
+
+	public void setFeeRate(BigDecimal feeRate) {
+		this.feeRate = feeRate;
+	}
+
+	public ZonedDateTime getExecuted() {
+		return executed;
+	}
+
+	public void setExecuted(ZonedDateTime executed) {
+		this.executed = executed;
+	}
 }
