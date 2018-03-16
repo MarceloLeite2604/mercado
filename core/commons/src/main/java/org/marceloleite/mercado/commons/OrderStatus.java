@@ -1,4 +1,4 @@
-package org.marceloleite.mercado.negotiationapi.model;
+package org.marceloleite.mercado.commons;
 
 public enum OrderStatus {
 

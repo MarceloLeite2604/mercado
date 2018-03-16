@@ -1,27 +1,28 @@
 package org.marceloleite.mercado.converter.json.api.negotiation;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.marceloleite.mercado.commons.OrderStatus;
 import org.marceloleite.mercado.commons.OrderType;
 import org.marceloleite.mercado.commons.converter.Converter;
 import org.marceloleite.mercado.commons.converter.LongToZonedDateTimeConverter;
+import org.marceloleite.mercado.data.OperationData;
+import org.marceloleite.mercado.data.OrderData;
 import org.marceloleite.mercado.jsonmodel.api.data.JsonOperation;
 import org.marceloleite.mercado.jsonmodel.api.data.JsonOrder;
 import org.marceloleite.mercado.negotiationapi.model.CurrencyPair;
-import org.marceloleite.mercado.negotiationapi.model.Order;
-import org.marceloleite.mercado.negotiationapi.model.listorders.Operation;
 
-public class JsonOrderToOrderConverter implements Converter<JsonOrder, Order> {
+public class JsonOrderToOrderDataConverter implements Converter<JsonOrder, OrderData> {
 
 	@Override
-	public Order convertTo(JsonOrder jsonOrder) {
-		Order order = new Order();
+	public OrderData convertTo(JsonOrder jsonOrder) {
+		OrderData order = new OrderData();
 		order.setId(jsonOrder.getOrderId());
-		order.setCurrencyPair(CurrencyPair.retrieveByPairAcronym(jsonOrder.getCoinPair()));
-		order.setOrderType(OrderType.getByValue(jsonOrder.getOrderType()));
-		order.setOrderStatus(OrderStatus.getByValue(jsonOrder.getStatus()));
+		CurrencyPair currencyPair = CurrencyPair.retrieveByPairAcronym(jsonOrder.getCoinPair());
+		order.setFirstCurrency(currencyPair.getFirstCurrency());
+		order.setSecondCurrency(currencyPair.getSecondCurrency());
+		order.setType(OrderType.getByValue(jsonOrder.getOrderType()));
+		order.setStatus(OrderStatus.getByValue(jsonOrder.getStatus()));
 		order.setHasFills(jsonOrder.getHasFills());
 		order.setQuantity(Double.parseDouble(jsonOrder.getQuantity()));
 		order.setLimitPrice(Double.parseDouble(jsonOrder.getLimitPrice()));
@@ -30,25 +31,19 @@ public class JsonOrderToOrderConverter implements Converter<JsonOrder, Order> {
 		order.setFee(Double.parseDouble(jsonOrder.getFee()));
 		LongToZonedDateTimeConverter longToZonedDateTimeConverter = new LongToZonedDateTimeConverter();
 		long longCreatedTimestamp = Long.parseLong(jsonOrder.getCreatedTimestamp());
-		order.setCreatedTimestamp(longToZonedDateTimeConverter.convertTo(longCreatedTimestamp));
+		order.setCreated(longToZonedDateTimeConverter.convertTo(longCreatedTimestamp));
 		long longUpdatedTimestamp = Long.parseLong(jsonOrder.getUpdatedTimestamp());
-		order.setUpdatedTimestamp(longToZonedDateTimeConverter.convertTo(longUpdatedTimestamp));
-		
+		order.setUpdated(longToZonedDateTimeConverter.convertTo(longUpdatedTimestamp));
+
 		List<JsonOperation> jsonOperations = jsonOrder.getOperations();
-		List<Operation> operations = null;
-		JsonOperationToOperationConverter jsonOperationToOperationConverter = new JsonOperationToOperationConverter();
-		if ( jsonOperations != null && !jsonOperations.isEmpty()) {
-			operations = new ArrayList<>();
-			for (JsonOperation jsonOperation : jsonOrder.getOperations()) {
-				operations.add(jsonOperationToOperationConverter.convertTo(jsonOperation));
-			}
-		}
-		order.setOperations(operations);
+		List<OperationData> operationDatas = new ListJsonOperationToListOperationDataConverter()
+				.convertTo(jsonOperations);
+		order.setOperationDatas(operationDatas);
 		return order;
 	}
 
 	@Override
-	public JsonOrder convertFrom(Order Order) {
+	public JsonOrder convertFrom(OrderData orderData) {
 		throw new UnsupportedOperationException();
 	}
 

@@ -2,7 +2,6 @@ package org.marceloleite.mercado.databaseretriever.persistence.objects;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
-import java.util.Currency;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -16,6 +15,9 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
+import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.commons.OrderStatus;
+import org.marceloleite.mercado.commons.OrderType;
 
 @Entity
 @Table(name = "ORDERS")
@@ -30,6 +32,12 @@ public class OrderPO {
 
 	@Column(name = "SECOND_CURRENCY")
 	private Currency secondCurrency;
+
+	@Column(name = "TYPE")
+	private OrderType type;
+
+	@Column(name = "STATUS")
+	private OrderStatus status;
 
 	@Column(name = "HAS_FILLS")
 	private Boolean hasFills;
@@ -82,6 +90,22 @@ public class OrderPO {
 
 	public void setSecondCurrency(Currency secondCurrency) {
 		this.secondCurrency = secondCurrency;
+	}
+
+	public OrderType getType() {
+		return type;
+	}
+
+	public void setType(OrderType type) {
+		this.type = type;
+	}
+
+	public OrderStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(OrderStatus status) {
+		this.status = status;
 	}
 
 	public Boolean getHasFills() {
