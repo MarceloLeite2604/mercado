@@ -1,23 +1,30 @@
 package org.marceloleite.mercado.data;
 
 import java.time.ZonedDateTime;
-import java.util.Currency;
 import java.util.List;
+
+import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.commons.OrderStatus;
+import org.marceloleite.mercado.commons.OrderType;
 
 public class OrderData {
 
 	private AccountData accountData;
-	
+
 	private Long id;
-	
+
 	private Currency firstCurrency;
-	
+
 	private Currency secondCurrency;
-	
+
+	private OrderType type;
+
+	private OrderStatus status;
+
 	private Boolean hasFills;
-	
+
 	private Double quantity;
-	
+
 	private Double limitPrice;
 
 	private Double executedQuantity;
@@ -29,9 +36,9 @@ public class OrderData {
 	private ZonedDateTime created;
 
 	private ZonedDateTime updated;
-	
+
 	List<OperationData> operationDatas;
-	
+
 	public OrderData() {
 		super();
 	}
@@ -66,6 +73,22 @@ public class OrderData {
 
 	public void setSecondCurrency(Currency secondCurrency) {
 		this.secondCurrency = secondCurrency;
+	}
+
+	public OrderType getType() {
+		return type;
+	}
+
+	public void setType(OrderType type) {
+		this.type = type;
+	}
+
+	public OrderStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(OrderStatus status) {
+		this.status = status;
 	}
 
 	public Boolean getHasFills() {
@@ -139,5 +162,5 @@ public class OrderData {
 	public void setOperationDatas(List<OperationData> operationDatas) {
 		this.operationDatas = operationDatas;
 	}
-	
+
 }

@@ -24,6 +24,8 @@ public class OrderPOToOrderDataConverter implements Converter<OrderPO, OrderData
 		orderData.setFee(orderPO.getFee().doubleValue());
 		orderData.setFirstCurrency(orderPO.getFirstCurrency());
 		orderData.setSecondCurrency(orderPO.getSecondCurrency());
+		orderData.setStatus(orderPO.getStatus());
+		orderData.setType(orderPO.getType());
 		orderData.setHasFills(orderPO.getHasFills());
 		orderData.setLimitPrice(orderPO.getLimitPrice().doubleValue());
 		orderData.setQuantity(orderPO.getQuantity().doubleValue());
@@ -51,6 +53,8 @@ public class OrderPOToOrderDataConverter implements Converter<OrderPO, OrderData
 		orderPO.setFee(new BigDecimal(orderData.getFee()));
 		orderPO.setFirstCurrency(orderData.getFirstCurrency());
 		orderPO.setSecondCurrency(orderData.getSecondCurrency());
+		orderPO.setStatus(orderData.getStatus());
+		orderPO.setType(orderData.getType());
 		orderPO.setHasFills(orderData.getHasFills());
 		orderPO.setLimitPrice(new BigDecimal(orderData.getLimitPrice()));
 		orderPO.setQuantity(new BigDecimal(orderData.getQuantity()));

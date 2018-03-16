@@ -6,9 +6,9 @@ import java.util.List;
 import org.marceloleite.mercado.api.negotiation.methods.AbstractTapiMethod;
 import org.marceloleite.mercado.api.negotiation.methods.TapiMethod;
 import org.marceloleite.mercado.base.model.TapiInformation;
+import org.marceloleite.mercado.commons.OrderStatus;
 import org.marceloleite.mercado.commons.OrderType;
 import org.marceloleite.mercado.negotiationapi.model.CurrencyPair;
-import org.marceloleite.mercado.negotiationapi.model.OrderStatus;
 
 public class ListOrdersMethod extends AbstractTapiMethod<ListOrdersMethodResponse> {
 	

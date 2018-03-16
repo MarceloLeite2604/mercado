@@ -3,6 +3,7 @@ package org.marceloleite.mercado.negotiationapi.model;
 import java.time.ZonedDateTime;
 import java.util.List;
 
+import org.marceloleite.mercado.commons.OrderStatus;
 import org.marceloleite.mercado.commons.OrderType;
 import org.marceloleite.mercado.negotiationapi.model.listorders.Operation;
 
