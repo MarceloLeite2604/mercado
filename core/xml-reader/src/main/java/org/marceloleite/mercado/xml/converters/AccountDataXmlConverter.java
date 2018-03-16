@@ -10,6 +10,7 @@ import org.marceloleite.mercado.data.DepositData;
 import org.marceloleite.mercado.data.SellOrderData;
 import org.marceloleite.mercado.data.StrategyData;
 import org.marceloleite.mercado.data.TapiInformationData;
+import org.marceloleite.mercado.data.WithdrawalData;
 import org.marceloleite.mercado.xml.structures.XmlAccount;
 import org.marceloleite.mercado.xml.structures.XmlBalances;
 import org.marceloleite.mercado.xml.structures.XmlBuyOrder;
@@ -17,6 +18,7 @@ import org.marceloleite.mercado.xml.structures.XmlDeposit;
 import org.marceloleite.mercado.xml.structures.XmlSellOrder;
 import org.marceloleite.mercado.xml.structures.XmlStrategy;
 import org.marceloleite.mercado.xml.structures.XmlTapiInformation;
+import org.marceloleite.mercado.xml.structures.XmlWithdrawals;
 
 public class AccountDataXmlConverter implements XmlConverter<XmlAccount, AccountData> {
 
@@ -30,6 +32,7 @@ public class AccountDataXmlConverter implements XmlConverter<XmlAccount, Account
 		String owner = xmlAccount.getOwner();
 		String email = xmlAccount.getEmail();
 		XmlBalances xmlBalances = xmlAccount.getXmlBalances();
+		XmlWithdrawals xmlWithdrawals = xmlAccount.getXmlWithdrawals();
 		AccountData accountData = new AccountData();
 
 		accountData.setOwner(owner);
@@ -44,9 +47,13 @@ public class AccountDataXmlConverter implements XmlConverter<XmlAccount, Account
 		List<BalanceData> balanceDatas = new BalanceXmlConverter().convertToObject(xmlBalances);
 		balanceDatas.forEach(balanceData -> balanceData.setAccountData(accountData));
 		accountData.setBalanceDatas(balanceDatas);
+		
+		List<WithdrawalData> withdrawalDatas = new WithdrawalXmlConverter().convertToObject(xmlWithdrawals);
+		withdrawalDatas.forEach(withdrawalData -> withdrawalData.setAccountData(accountData));
+		accountData.setWithdrawalDatas(withdrawalDatas);
 
 		List<BuyOrderData> buyOrderDatas = createBuyOrders(xmlAccount.getXmlBuyOrders());
-		balanceDatas.forEach(balanceData -> balanceData.setAccountData(accountData));
+		withdrawalDatas.forEach(balanceData -> balanceData.setAccountData(accountData));
 		accountData.setBuyOrderDatas(buyOrderDatas);
 
 		List<SellOrderData> sellOrderDatas = createSellOrders(xmlAccount.getXmlSellOrders());

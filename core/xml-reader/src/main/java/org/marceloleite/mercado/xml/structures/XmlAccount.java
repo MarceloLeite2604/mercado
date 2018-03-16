@@ -20,6 +20,8 @@ public class XmlAccount {
 	private XmlTapiInformation xmlTapiInformation;
 
 	private XmlBalances xmlBalances;
+	
+	private XmlWithdrawals xmlWithdrawals;
 
 	private List<XmlDeposit> xmlDeposits;
 	
@@ -78,6 +80,14 @@ public class XmlAccount {
 
 	public void setXmlBalances(XmlBalances xmlBalances) {
 		this.xmlBalances = xmlBalances;
+	}
+
+	public XmlWithdrawals getXmlWithdrawals() {
+		return xmlWithdrawals;
+	}
+
+	public void setXmlWithdrawals(XmlWithdrawals xmlWithdrawals) {
+		this.xmlWithdrawals = xmlWithdrawals;
 	}
 
 	@XmlElementWrapper(name="deposits")

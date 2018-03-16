@@ -24,6 +24,7 @@ import org.hibernate.annotations.FetchMode;
 @Table(name = "ACCOUNTS")
 @NamedQuery(name = "AccountPO.findAll", query = "SELECT a FROM AccountPO a")
 public class AccountPO implements Serializable, PersistenceObject<String> {
+	
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -40,6 +41,11 @@ public class AccountPO implements Serializable, PersistenceObject<String> {
 	@OneToMany(mappedBy = "accountPO", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@Fetch(FetchMode.SUBSELECT)
 	private List<BalancePO> balancePOs;
+	
+	// bi-directional many-to-one association to BalancePO
+	@OneToMany(mappedBy = "accountPO", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@Fetch(FetchMode.SUBSELECT)
+	private List<WithdrawalPO> withdrawalPOs;
 
 	// bi-directional many-to-one association to StrategyPO
 	@OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -91,9 +97,29 @@ public class AccountPO implements Serializable, PersistenceObject<String> {
 	public BalancePO removeBalance(BalancePO balance) {
 		getBalancePOs().remove(balance);
 		balance.setAccountPO(null);
-
 		return balance;
 	}
+
+	public List<WithdrawalPO> getWithdrawalPOs() {
+		return withdrawalPOs;
+	}
+
+	public void setWithdrawalPOs(List<WithdrawalPO> withdrawalPOs) {
+		this.withdrawalPOs = withdrawalPOs;
+	}
+	
+	public WithdrawalPO addBalance(WithdrawalPO withdrawal) {
+		getWithdrawalPOs().add(withdrawal);
+		withdrawal.setAccountPO(this);
+
+		return withdrawal;
+	}
+
+	public WithdrawalPO removeBalance(WithdrawalPO withdrawal) {
+		getWithdrawalPOs().remove(withdrawal);
+		withdrawal.setAccountPO(null);
+		return withdrawal;
+	}	
 
 	public List<StrategyPO> getStrategyPOs() {
 		return this.strategyPOs;

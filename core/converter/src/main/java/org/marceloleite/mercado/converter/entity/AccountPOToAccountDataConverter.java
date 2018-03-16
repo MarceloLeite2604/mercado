@@ -6,10 +6,12 @@ import org.marceloleite.mercado.commons.converter.Converter;
 import org.marceloleite.mercado.data.AccountData;
 import org.marceloleite.mercado.data.BalanceData;
 import org.marceloleite.mercado.data.StrategyData;
+import org.marceloleite.mercado.data.WithdrawalData;
 import org.marceloleite.mercado.databaseretriever.persistence.objects.AccountPO;
 import org.marceloleite.mercado.databaseretriever.persistence.objects.BalancePO;
 import org.marceloleite.mercado.databaseretriever.persistence.objects.StrategyPO;
 import org.marceloleite.mercado.databaseretriever.persistence.objects.TapiInformationPO;
+import org.marceloleite.mercado.databaseretriever.persistence.objects.WithdrawalPO;
 
 public class AccountPOToAccountDataConverter implements Converter<AccountPO, AccountData> {
 
@@ -19,14 +21,19 @@ public class AccountPOToAccountDataConverter implements Converter<AccountPO, Acc
 		accountData.setOwner(accountPO.getOwner());
 		accountData.setTapiInformationData(new TapiInformationPOToTapiInformationDataConverter().convertTo(accountPO.getTapiInformationPO()));
 		accountData.setEmail(accountPO.getEmail());
-		ListBalancePOToListBalanceDataConverter listBalancePOToListBalanceDataConverter = new ListBalancePOToListBalanceDataConverter();
-		ListStrategyPOToListStrategyDataConverter listStrategyPOToListStrategyDataConverter = new ListStrategyPOToListStrategyDataConverter();
+		
 		List<BalancePO> balancePOs = accountPO.getBalancePOs();
-		List<BalanceData> balanceDatas = listBalancePOToListBalanceDataConverter.convertTo(balancePOs);
+		List<BalanceData> balanceDatas = new ListBalancePOToListBalanceDataConverter().convertTo(balancePOs);
 		accountData.setBalanceDatas(balanceDatas);
+		
+		List<WithdrawalPO> withdrawalPOs = accountPO.getWithdrawalPOs();
+		List<WithdrawalData> withdrawalDatas = new ListWithdrawalPOToListWithdrawalDataConverter().convertTo(withdrawalPOs);
+		accountData.setWithdrawalDatas(withdrawalDatas);
+		
 		List<StrategyPO> strategyPOs = accountPO.getStrategyPOs();
-		List<StrategyData> strategyDatas = listStrategyPOToListStrategyDataConverter.convertTo(strategyPOs);
+		List<StrategyData> strategyDatas = new ListStrategyPOToListStrategyDataConverter().convertTo(strategyPOs);
 		accountData.setStrategyDatas(strategyDatas);;
+		
 		return accountData;
 	}
 
