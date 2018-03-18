@@ -3,17 +3,17 @@ package org.marceloleite.mercado.strategies.fifth;
 import org.marceloleite.mercado.commons.properties.Property;
 import org.marceloleite.mercado.strategies.StrategyPropertyUtils;
 
-public enum FourthStrategyVariable implements Property {
+public enum FifthStrategyVariable implements Property {
 	
+	WORKING_AMOUNT_CURRENCY("workingAmountCurrency"),
 	BASE_TEMPORAL_TICKER("baseTemporalTicker"),
-	STATUS("status"),
-	CIRCULAR_ARRAY("CircularArray");
+	STATUS("status");
 
 	private String name;
 
 	private String value;
 
-	private FourthStrategyVariable(String name) {
+	private FifthStrategyVariable(String name) {
 		this.name = name;
 	}
 
@@ -22,7 +22,7 @@ public enum FourthStrategyVariable implements Property {
 	}
 
 	public void setName(String name) {
-		this.name = name;
+		throw new UnsupportedOperationException(); 
 	}
 
 	public String getValue() {
@@ -37,8 +37,8 @@ public enum FourthStrategyVariable implements Property {
 		return true;
 	}
 	
-	public static FourthStrategyVariable findByName(String name) {
-		return (FourthStrategyVariable)StrategyPropertyUtils.findByName(FourthStrategyVariable.class, name);
+	public static FifthStrategyVariable findByName(String name) {
+		return (FifthStrategyVariable)StrategyPropertyUtils.findByName(FifthStrategyVariable.class, name);
 	}
 
 	@Override

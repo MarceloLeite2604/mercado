@@ -14,12 +14,13 @@ import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.base.model.Account;
 import org.marceloleite.mercado.base.model.Balance;
 import org.marceloleite.mercado.base.model.House;
-import org.marceloleite.mercado.base.model.Order;
 import org.marceloleite.mercado.base.model.OrderExecutor;
 import org.marceloleite.mercado.base.model.Strategy;
 import org.marceloleite.mercado.base.model.TemporalTickerVariation;
+import org.marceloleite.mercado.base.model.order.BuyOrderBuilder.BuyOrder;
+import org.marceloleite.mercado.base.model.order.OrderStatus;
+import org.marceloleite.mercado.base.model.order.SellOrderBuilder.SellOrder;
 import org.marceloleite.mercado.commons.Currency;
-import org.marceloleite.mercado.commons.OrderStatus;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.data.AccountData;
 import org.marceloleite.mercado.data.TemporalTicker;
@@ -27,7 +28,7 @@ import org.marceloleite.mercado.retriever.TemporalTickerRetriever;
 import org.marceloleite.mercado.simulator.order.SimulationOrderExecutor;
 import org.marceloleite.mercado.xml.readers.AccountsXmlReader;
 
-public class SimulationHouse implements House {
+public class OldSimulationHouse implements House {
 
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = LogManager.getLogger(SimulationHouse.class);
@@ -48,7 +49,7 @@ public class SimulationHouse implements House {
 	
 	private OrderExecutor orderExecutor;
 
-	private SimulationHouse(List<Account> accounts, Map<String, Balance> comissionBalance, double comissionPercentage,
+	private OldSimulationHouse(List<Account> accounts, Map<String, Balance> comissionBalance, double comissionPercentage,
 			Map<Currency, TemporalTicker> temporalTickers,
 			Map<Currency, TemporalTickerVariation> temporalTickerVariations,
 			TemporalTickerRetriever temporalTickerRetriever) {
@@ -60,7 +61,7 @@ public class SimulationHouse implements House {
 		this.orderExecutor = new SimulationOrderExecutor();
 	}
 
-	public SimulationHouse() {
+	public OldSimulationHouse() {
 		super();
 		comissionBalance = new HashMap<>();
 		comissionPercentage = DEFAULT_COMISSION_PERCENTAGE;
@@ -71,7 +72,7 @@ public class SimulationHouse implements House {
 		this.accounts = retrieveAccounts();
 	}
 
-	public SimulationHouse(SimulationHouse house) {
+	public OldSimulationHouse(SimulationHouse house) {
 		this(new ArrayList<>(house.getAccounts()), new HashMap<>(house.getComissionBalance()),
 				house.getComissionPercentage(), new EnumMap<>(house.getTemporalTickers()),
 				new EnumMap<>(house.getTemporalTickerVariations()), new TemporalTickerRetriever());
@@ -182,9 +183,9 @@ public class SimulationHouse implements House {
 	}
 
 	private void checkBuyOrders(TimeInterval currentTimeInterval, Account account) {
-		List<Order> orders = account.getBuyOrdersTemporalController().retrieve(currentTimeInterval);
-		List<Order> buyOrdersCreated = orders.stream()
-				.filter(buyOrder -> buyOrder.getStatus() == OrderStatus.OPEN).collect(Collectors.toList());
+		List<BuyOrder> buyOrders = account.getBuyOrdersTemporalController().retrieve(currentTimeInterval);
+		List<BuyOrder> buyOrdersCreated = buyOrders.stream()
+				.filter(buyOrder -> buyOrder.getOrderStatus() == OrderStatus.CREATED).collect(Collectors.toList());
 		if (buyOrdersCreated != null && buyOrdersCreated.size() > 0) {
 			SimulationOrderExecutor orderExecutor = new SimulationOrderExecutor();
 			buyOrdersCreated.forEach(buyOrder -> orderExecutor.executeBuyOrder(buyOrder, this, account));
@@ -192,9 +193,9 @@ public class SimulationHouse implements House {
 	}
 
 	private void checkSellOrders(TimeInterval currentTimeInterval, Account account) {
-		List<Order> orders = account.getSellOrdersTemporalController().retrieve(currentTimeInterval);
-		List<Order> sellOrdersCreated = orders.stream()
-				.filter(sellOrder -> sellOrder.getStatus() == OrderStatus.OPEN).collect(Collectors.toList());
+		List<SellOrder> sellOrders = account.getSellOrdersTemporalController().retrieve(currentTimeInterval);
+		List<SellOrder> sellOrdersCreated = sellOrders.stream()
+				.filter(sellOrder -> sellOrder.getOrderStatus() == OrderStatus.CREATED).collect(Collectors.toList());
 		if (sellOrdersCreated != null && sellOrdersCreated.size() > 0) {
 			SimulationOrderExecutor orderExecutor = new SimulationOrderExecutor();
 			sellOrdersCreated.forEach(sellOrder -> orderExecutor.executeSellOrder(sellOrder, this, account));
@@ -202,7 +203,7 @@ public class SimulationHouse implements House {
 	}
 
 	@Override
-	public OrderExecutor getOrderExecutor() {
+	public org.marceloleite.mercado.base.model.OrderExecutor getOrderExecutor() {
 		return orderExecutor;
 	}
 }

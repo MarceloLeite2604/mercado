@@ -12,9 +12,7 @@ import org.marceloleite.mercado.base.model.converter.CurrencyAmountToStringConve
 import org.marceloleite.mercado.base.model.converter.ListParameterDatasToListPropertyConverter;
 import org.marceloleite.mercado.base.model.converter.ListVariableDatasToListPropertyConverter;
 import org.marceloleite.mercado.base.model.order.BuyOrderBuilder;
-import org.marceloleite.mercado.base.model.order.BuyOrderBuilder.BuyOrder;
 import org.marceloleite.mercado.base.model.order.SellOrderBuilder;
-import org.marceloleite.mercado.base.model.order.SellOrderBuilder.SellOrder;
 import org.marceloleite.mercado.base.model.temporalcontroller.TemporalController;
 import org.marceloleite.mercado.base.model.util.StrategyClassLoader;
 import org.marceloleite.mercado.commons.Currency;
@@ -22,10 +20,9 @@ import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.properties.Property;
 import org.marceloleite.mercado.data.AccountData;
 import org.marceloleite.mercado.data.BalanceData;
-import org.marceloleite.mercado.data.BuyOrderData;
 import org.marceloleite.mercado.data.ClassData;
 import org.marceloleite.mercado.data.DepositData;
-import org.marceloleite.mercado.data.SellOrderData;
+import org.marceloleite.mercado.data.OrderData;
 import org.marceloleite.mercado.data.StrategyData;
 import org.marceloleite.mercado.data.TapiInformationData;
 
@@ -43,16 +40,16 @@ public class Account {
 
 	private TemporalController<Deposit> depositsTemporalController;
 
-	private TemporalController<BuyOrder> buyOrdersTemporalController;
+	private TemporalController<Order> buyOrdersTemporalController;
 
-	private TemporalController<SellOrder> sellOrdersTemporalController;
+	private TemporalController<Order> sellOrdersTemporalController;
 
 	private Map<Currency, List<Strategy>> currenciesStrategies;
 
 	public Account(String owner, TapiInformation tapiInformation, String email, Balance balance,
 			TemporalController<Deposit> depositsTemporalController,
-			TemporalController<BuyOrder> buyOrdersTemporalController,
-			TemporalController<SellOrder> sellOrdersTemporalController,
+			TemporalController<Order> buyOrdersTemporalController,
+			TemporalController<Order> sellOrdersTemporalController,
 			Map<Currency, List<Strategy>> currenciesStrategies) {
 		super();
 		this.owner = owner;
@@ -102,33 +99,33 @@ public class Account {
 		return deposits;
 	}
 
-	private TemporalController<BuyOrder> createBuyOrdersTemporalController(AccountData accountData) {
-		TemporalController<BuyOrder> buyOrders = new TemporalController<>();
+	private TemporalController<Order> createBuyOrdersTemporalController(AccountData accountData) {
+		TemporalController<Order> buyOrders = new TemporalController<>();
 		BuyOrderBuilder buyOrderBuilder = new BuyOrderBuilder();
-		List<BuyOrderData> buyOrderDatas = accountData.getBuyOrderDatas();
+		List<OrderData> buyOrderDatas = accountData.getBuyOrderDatas();
 		if (buyOrderDatas != null && !buyOrderDatas.isEmpty()) {
-			for (BuyOrderData buyOrderData : buyOrderDatas) {
-				CurrencyAmount currencyAmountToBuy = new CurrencyAmount(buyOrderData.getCurrencyAmountToBuy());
-				CurrencyAmount currencyAmountToPay = new CurrencyAmount(buyOrderData.getCurrencyAmountToPay());
-				BuyOrder buyOrder = buyOrderBuilder.toExecuteOn(buyOrderData.getTime()).buying(currencyAmountToBuy)
-						.paying(currencyAmountToPay).build();
-				buyOrders.add(buyOrder);
+			for (OrderData orderData : buyOrderDatas) {
+				CurrencyAmount currencyAmountToBuy = new CurrencyAmount(orderData.getSecondCurrency(), orderData.getQuantity());
+				CurrencyAmount currencyAmountUnitPrice = new CurrencyAmount(orderData.getFirstCurrency(), orderData.getLimitPrice());
+				Order order = buyOrderBuilder.toExecuteOn(orderData.getIntended()).buying(currencyAmountToBuy)
+						.payingUnitPriceOf(currencyAmountUnitPrice).build();
+				buyOrders.add(order);
 			}
 		}
 		return buyOrders;
 	}
 
-	private TemporalController<SellOrder> createSellOrdersTemporalController(AccountData accountData) {
-		TemporalController<SellOrder> sellOrders = new TemporalController<>();
+	private TemporalController<Order> createSellOrdersTemporalController(AccountData accountData) {
+		TemporalController<Order> sellOrders = new TemporalController<>();
 		SellOrderBuilder sellOrderBuilder = new SellOrderBuilder();
-		List<SellOrderData> sellOrderDatas = accountData.getSellOrderDatas();
+		List<OrderData> sellOrderDatas = accountData.getSellOrderDatas();
 		if (sellOrderDatas != null && !sellOrderDatas.isEmpty()) {
-			for (SellOrderData sellOrderData : sellOrderDatas) {
-				CurrencyAmount currencyAmountToSell = new CurrencyAmount(sellOrderData.getCurrencyAmountToSell());
-				CurrencyAmount currencyAmountToReceive = new CurrencyAmount(sellOrderData.getCurrencyAmountToReceive());
-				SellOrder sellOrder = sellOrderBuilder.toExecuteOn(sellOrderData.getTime())
-						.selling(currencyAmountToSell).receiving(currencyAmountToReceive).build();
-				sellOrders.add(sellOrder);
+			for (OrderData orderData : sellOrderDatas) {
+				CurrencyAmount currencyAmountToSell = new CurrencyAmount(orderData.getSecondCurrency(), orderData.getQuantity());
+				CurrencyAmount currencyAmountUnitPrice = new CurrencyAmount(orderData.getFirstCurrency(), orderData.getLimitPrice());
+				Order order = sellOrderBuilder.toExecuteOn(orderData.getIntended())
+						.selling(currencyAmountToSell).receivingUnitPriceOf(currencyAmountUnitPrice).build();
+				sellOrders.add(order);
 			}
 		}
 		return sellOrders;
@@ -196,11 +193,11 @@ public class Account {
 		return depositsTemporalController;
 	}
 
-	public TemporalController<BuyOrder> getBuyOrdersTemporalController() {
+	public TemporalController<Order> getBuyOrdersTemporalController() {
 		return buyOrdersTemporalController;
 	}
 
-	public TemporalController<SellOrder> getSellOrdersTemporalController() {
+	public TemporalController<Order> getSellOrdersTemporalController() {
 		return sellOrdersTemporalController;
 	}
 

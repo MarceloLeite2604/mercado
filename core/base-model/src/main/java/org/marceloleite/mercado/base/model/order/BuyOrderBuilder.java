@@ -1,17 +1,13 @@
 package org.marceloleite.mercado.base.model.order;
 
 import java.time.ZonedDateTime;
-import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.base.model.CurrencyAmount;
-import org.marceloleite.mercado.base.model.temporalcontroller.AbstractTimedObject;
+import org.marceloleite.mercado.base.model.Order;
 import org.marceloleite.mercado.commons.Currency;
-import org.marceloleite.mercado.commons.TimeInterval;
-import org.marceloleite.mercado.commons.formatter.DigitalCurrencyFormatter;
-import org.marceloleite.mercado.data.BuyOrderData;
-import org.marceloleite.mercado.data.TemporalTicker;
+import org.marceloleite.mercado.commons.OrderType;
 
 public class BuyOrderBuilder {
 
@@ -20,32 +16,32 @@ public class BuyOrderBuilder {
 
 	private ZonedDateTime time;
 
-	private Currency currencyToBuy;
+	private Currency secondCurrency;
 
-	private Currency currencyToPay;
+	private Currency firstCurrency;
 
-	private Double amountToBuy;
+	private Double quantity;
 
-	private Double amountToPay;
+	private Double limitPrice;
 
 	public BuyOrderBuilder() {
-		this.currencyToPay = Currency.REAL;
+		this.firstCurrency = Currency.REAL;
 	}
 
 	public BuyOrderBuilder buyingCurrency(Currency currencyToBuy) {
-		this.currencyToBuy = currencyToBuy;
+		this.secondCurrency = currencyToBuy;
 		return this;
 	}
 
 	public BuyOrderBuilder buying(CurrencyAmount currencyAmountToBuy) {
-		this.currencyToBuy = currencyAmountToBuy.getCurrency();
-		this.amountToBuy = currencyAmountToBuy.getAmount();
+		this.secondCurrency = currencyAmountToBuy.getCurrency();
+		this.quantity = currencyAmountToBuy.getAmount();
 		return this;
 	}
 
-	public BuyOrderBuilder paying(CurrencyAmount currencyAmountToPay) {
-		this.currencyToPay = currencyAmountToPay.getCurrency();
-		this.amountToPay = currencyAmountToPay.getAmount();
+	public BuyOrderBuilder payingUnitPriceOf(CurrencyAmount currencyAmountPayingUnitPrice) {
+		this.firstCurrency = currencyAmountPayingUnitPrice.getCurrency();
+		this.limitPrice = currencyAmountPayingUnitPrice.getAmount();
 		return this;
 	}
 
@@ -54,44 +50,44 @@ public class BuyOrderBuilder {
 		return this;
 	}
 
-	public BuyOrder build() {
+	public Order build() {
 		checkValues();
 		checkRules();
 
 		ZonedDateTime time = ZonedDateTime.from(this.time);
 		this.time = null;
 
-		Currency currencyToBuy = this.currencyToBuy;
-		this.currencyToBuy = null;
+		Currency currencyToBuy = this.secondCurrency;
+		this.secondCurrency = null;
 
-		Double amountToBuy = this.amountToBuy;
-		this.amountToBuy = null;
+		Double amountToBuy = this.quantity;
+		this.quantity = null;
 
-		Currency currencyToPay = this.currencyToPay;
+		Currency firstCurrency = this.firstCurrency;
 
-		Double amountToPay = this.amountToPay;
-		this.amountToPay = null;
+		Double limitPrice = this.limitPrice;
+		this.limitPrice = null;
 
-		return new BuyOrder(time, currencyToBuy, amountToBuy, currencyToPay, amountToPay);
+		return new Order(firstCurrency, currencyToBuy, OrderType.BUY, amountToBuy, limitPrice, time);
 	}
 
 	private void checkRules() {
-		if (amountToBuy != null) {
-			CurrencyAmount currencyAmountToBuy = new CurrencyAmount(currencyToBuy, amountToBuy);
+		if (quantity != null) {
+			CurrencyAmount currencyAmountToBuy = new CurrencyAmount(secondCurrency, quantity);
 			if (MinimalAmounts.isAmountLowerThanMinimal(currencyAmountToBuy)) {
-				CurrencyAmount minimalAmount = new CurrencyAmount(currencyToBuy,
-						MinimalAmounts.retrieveMinimalAmountFor(currencyToBuy));
+				CurrencyAmount minimalAmount = new CurrencyAmount(secondCurrency,
+						MinimalAmounts.retrieveMinimalAmountFor(secondCurrency));
 				throw new RuntimeException("The amount of " + currencyAmountToBuy
 						+ " to buy is inferior to the limit amount of " + minimalAmount + ".");
 			}
 		}
 
-		if (amountToPay != null) {
-			CurrencyAmount currencyAmountToPay = new CurrencyAmount(currencyToPay, amountToPay);
-			if (MinimalAmounts.isAmountLowerThanMinimal(currencyAmountToPay)) {
-				CurrencyAmount minimalAmount = new CurrencyAmount(currencyToPay,
-						MinimalAmounts.retrieveMinimalAmountFor(currencyToPay));
-				throw new RuntimeException("The amount of " + currencyAmountToPay
+		if (limitPrice != null) {
+			CurrencyAmount currencyAmountUnitPrice = new CurrencyAmount(firstCurrency, limitPrice);
+			if (MinimalAmounts.isAmountLowerThanMinimal(currencyAmountUnitPrice)) {
+				CurrencyAmount minimalAmount = new CurrencyAmount(firstCurrency,
+						MinimalAmounts.retrieveMinimalAmountFor(firstCurrency));
+				throw new RuntimeException("The amount of " + currencyAmountUnitPrice
 						+ " to pay is inferior to the limit amount of " + minimalAmount + ".");
 			}
 		}
@@ -102,130 +98,20 @@ public class BuyOrderBuilder {
 			throw new RuntimeException("Execution time for operation was not informed.");
 		}
 
-		if (currencyToBuy == null) {
+		if (secondCurrency == null) {
 			throw new RuntimeException("Currency to buy was not informed.");
 		}
 
-		if (currencyToPay == null) {
+		if (firstCurrency == null) {
 			throw new RuntimeException("Currency to pay was not informed.");
 		}
 
-		if (amountToBuy == null && amountToPay == null) {
-			throw new RuntimeException("Neither the amount of " + currencyToBuy + " to buy nor the amount of "
-					+ currencyToPay + " to pay were informed.");
-		}
-	}
-
-	public static class BuyOrder extends AbstractTimedObject {
-
-		private static final Logger LOGGER = LogManager.getLogger(BuyOrder.class);
-
-		private ZonedDateTime time;
-
-		private CurrencyAmount currencyAmountToBuy;
-
-		private CurrencyAmount currencyAmountToPay;
-
-		private OrderStatus orderStatus;
-
-		private BuyOrder(ZonedDateTime time, Currency currencyToBuy, Double amountToBuy, Currency currencyToPay,
-				Double amountToPay) {
-			super();
-			this.time = time;
-			if (!currencyToBuy.isDigital()) {
-				throw new IllegalArgumentException(
-						"Currency to buy must be digital. " + currencyToBuy.getAcronym() + " is not digital.");
-			}
-
-			if (currencyToPay.isDigital()) {
-				throw new IllegalArgumentException(
-						"Currency to pay cannot be digital. " + currencyToPay.getAcronym() + " is digital.");
-			}
-			this.currencyAmountToBuy = new CurrencyAmount(currencyToBuy, amountToBuy);
-			this.currencyAmountToPay = new CurrencyAmount(currencyToPay, amountToPay);
-			this.orderStatus = OrderStatus.CREATED;
+		if (quantity == null) {
+			throw new RuntimeException("Quantity of \"" + secondCurrency + "\" to buy was not informed.");
 		}
 
-		private BuyOrder(ZonedDateTime time, CurrencyAmount currencyAmountToBuy, CurrencyAmount currencyAmountToPay) {
-			this(time, currencyAmountToBuy.getCurrency(), currencyAmountToBuy.getAmount(),
-					currencyAmountToPay.getCurrency(), currencyAmountToPay.getAmount());
-		}
-
-		public BuyOrder(BuyOrderData buyOrderData) {
-			this(buyOrderData.getTime(), new CurrencyAmount(buyOrderData.getCurrencyAmountToBuy()),
-					new CurrencyAmount(buyOrderData.getCurrencyAmountToPay()));
-		}
-
-		@Override
-		public ZonedDateTime getTime() {
-			return time;
-		}
-
-		public CurrencyAmount getCurrencyAmountToBuy() {
-			return currencyAmountToBuy;
-		}
-
-		public CurrencyAmount getCurrencyAmountToPay() {
-			return currencyAmountToPay;
-		}
-
-		public OrderStatus getOrderStatus() {
-			return orderStatus;
-		}
-
-		public void setOrderStatus(OrderStatus orderStatus) {
-			this.orderStatus = orderStatus;
-		}
-
-		public void updateOrder(Map<Currency, TemporalTicker> temporalTickers) {
-			double buyingPrice;
-			buyingPrice = retrieveBuyingPrice(temporalTickers);
-			if (currencyAmountToBuy.getAmount() == null) {
-				Double amountToBuy = currencyAmountToPay.getAmount() / buyingPrice;
-				currencyAmountToBuy.setAmount(amountToBuy);
-
-			} else if (currencyAmountToPay.getAmount() == null) {
-				Double amountToPay = currencyAmountToBuy.getAmount() * buyingPrice;
-				currencyAmountToPay.setAmount(amountToPay);
-			}
-		}
-
-		private double retrieveBuyingPrice(Map<Currency, TemporalTicker> temporalTickers) {
-			Currency currency = currencyAmountToBuy.getCurrency();
-			TemporalTicker temporalTicker = temporalTickers.get(currency);
-			if (temporalTicker == null) {
-				throw new RuntimeException(
-						"No temporal ticker while retrieving buying price for " + currency + " currency.");
-			}
-
-			double buyingPrice = temporalTicker.getBuy();
-			if (buyingPrice == 0.0) {
-				buyingPrice = temporalTicker.getPreviousBuy();
-				if (buyingPrice == 0.0) {
-					TimeInterval timeInterval = new TimeInterval(temporalTicker.getStart(),
-							temporalTicker.getEnd());
-					throw new RuntimeException("Buying price informed on period " + timeInterval + " is zero.");
-				}
-			}
-			LOGGER.debug("Buying price is " + new DigitalCurrencyFormatter().format(buyingPrice));
-			return buyingPrice;
-		}
-
-		@Override
-		public String toString() {
-			String result = "buy order ";
-			if (currencyAmountToBuy.getAmount() != null) {
-				result += "of " + currencyAmountToBuy + " using ";
-				if (currencyAmountToPay.getAmount() != null) {
-					result += currencyAmountToPay;
-				} else {
-					result += currencyAmountToPay.getCurrency();
-				}
-
-			} else {
-				result += "paying " + currencyAmountToPay + " to buy " + currencyAmountToBuy.getCurrency();
-			}
-			return result;
+		if (limitPrice == null) {
+			throw new RuntimeException("Max \""+firstCurrency+"\" unit price to buy  \"" + secondCurrency + "\" was not informed.");
 		}
 	}
 }
