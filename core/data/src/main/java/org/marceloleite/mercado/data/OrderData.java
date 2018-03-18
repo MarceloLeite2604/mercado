@@ -37,6 +37,8 @@ public class OrderData {
 
 	private ZonedDateTime updated;
 
+	private ZonedDateTime intended;
+
 	List<OperationData> operationDatas;
 
 	public OrderData() {
@@ -153,6 +155,14 @@ public class OrderData {
 
 	public void setUpdated(ZonedDateTime updated) {
 		this.updated = updated;
+	}
+
+	public ZonedDateTime getIntended() {
+		return intended;
+	}
+
+	public void setIntended(ZonedDateTime intended) {
+		this.intended = intended;
 	}
 
 	public List<OperationData> getOperationDatas() {

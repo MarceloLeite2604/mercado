@@ -20,37 +20,30 @@ import org.marceloleite.mercado.commons.formatter.PercentageFormatter;
 import org.marceloleite.mercado.commons.properties.Property;
 import org.marceloleite.mercado.data.TemporalTicker;
 import org.marceloleite.mercado.strategies.AbstractStrategy;
-import org.marceloleite.mercado.strategies.second.CircularArray;
 
-public class FourthStrategy extends AbstractStrategy {
+public class FifthStrategy extends AbstractStrategy {
 
-	private static final Logger LOGGER = LogManager.getLogger(FourthStrategy.class);
+	private static final Logger LOGGER = LogManager.getLogger(FifthStrategy.class);
 
-	// private static final double GROWTH_PERCENTAGE_THRESHOLD = 0.0496;
+	private Double growthPercentageThreshold;
 
-	// private static final double SHRINK_PERCENTAGE_THRESHOLD = -0.05;
-
-	private static final int CIRCULAR_ARRAY_SIZE = 5;
+	private Double shrinkPercentageThreshold;
 
 	private Currency currency;
 
-	private double growthPercentageThreshold;
-
-	private double shrinkPercentageThreshold;
+	private Double workingAmountCurrency;
 
 	private TemporalTicker baseTemporalTicker;
 
 	private Status status;
 
-	private CircularArray<TemporalTicker> circularArray;
-
-	public FourthStrategy(Currency currency) {
+	public FifthStrategy(Currency currency) {
+		super(FifthStrategyParameter.class, FifthStrategyVariable.class);
 		this.currency = currency;
 		this.status = Status.UNDEFINED;
-		this.circularArray = new CircularArray<>(CIRCULAR_ARRAY_SIZE);
 	}
 
-	public FourthStrategy() {
+	public FifthStrategy() {
 		this(null);
 	}
 
@@ -63,8 +56,7 @@ public class FourthStrategy extends AbstractStrategy {
 	public void check(TimeInterval simulationTimeInterval, Account account, House house) {
 		setBaseIfNull(house.getTemporalTickers().get(currency));
 		TemporalTickerVariation temporalTickerVariation = generateTemporalTickerVariation(simulationTimeInterval,
-				house.getTemporalTickers().get(currency));
-
+				house);
 		if (temporalTickerVariation != null) {
 			double lastVariation = temporalTickerVariation.getLastVariation();
 			switch (status) {
@@ -96,21 +88,9 @@ public class FourthStrategy extends AbstractStrategy {
 		}
 	}
 
-	private TemporalTickerVariation generateTemporalTickerVariation(TimeInterval simulationTimeInterval,
-			TemporalTicker temporalTicker) {
-		if (temporalTicker == null) {
-			throw new RuntimeException("No temporal ticker for time interval " + simulationTimeInterval);
-		}
-		circularArray.add(temporalTicker);
-		if (circularArray.getSize() == CIRCULAR_ARRAY_SIZE) {
-			return new TemporalTickerVariation(circularArray.first(), circularArray.last());
-		} else {
-			return null;
-		}
-	}
-
 	private void setBaseIfNull(TemporalTicker temporalTicker) {
 		if (baseTemporalTicker == null) {
+			LOGGER.debug("Setting base temporal ticker as: " + temporalTicker + ".");
 			baseTemporalTicker = temporalTicker;
 		}
 	}
@@ -163,6 +143,18 @@ public class FourthStrategy extends AbstractStrategy {
 		return orderAmount;
 	}
 
+	private TemporalTickerVariation generateTemporalTickerVariation(TimeInterval simulationTimeInterval, House house) {
+		TemporalTicker currentTemporalTicker = house.getTemporalTickers().get(currency);
+		if (currentTemporalTicker == null) {
+			throw new RuntimeException("No temporal ticker for time interval " + simulationTimeInterval);
+		}
+
+		TemporalTickerVariation temporalTickerVariation = new TemporalTickerVariation(baseTemporalTicker,
+				currentTemporalTicker);
+		LOGGER.debug("Variation : " + temporalTickerVariation + ".");
+		return temporalTickerVariation;
+	}
+
 	private enum Status {
 		UNDEFINED,
 		APPLIED,
@@ -171,54 +163,58 @@ public class FourthStrategy extends AbstractStrategy {
 
 	@Override
 	protected Property retrieveVariable(String name) {
-		FourthStrategyVariable fourthStrategyVariable = FourthStrategyVariable.findByName(name);
+		FifthStrategyVariable thirdStrategyVariable = FifthStrategyVariable.findByName(name);
 		ObjectToJsonConverter objectToJsonConverter = new ObjectToJsonConverter();
-		switch (fourthStrategyVariable) {
+		String json = null;
+		switch (thirdStrategyVariable) {
 		case BASE_TEMPORAL_TICKER:
-			fourthStrategyVariable.setValue(objectToJsonConverter.convertTo(baseTemporalTicker));
-		case CIRCULAR_ARRAY:
-			fourthStrategyVariable.setValue(objectToJsonConverter.convertTo(circularArray));
+			json = objectToJsonConverter.convertTo(baseTemporalTicker);
 			break;
 		case STATUS:
-			fourthStrategyVariable.setValue(objectToJsonConverter.convertTo(status));
+			json = objectToJsonConverter.convertTo(status);
 			break;
-
+		case WORKING_AMOUNT_CURRENCY:
+			json = objectToJsonConverter.convertTo(workingAmountCurrency);
+			break;
 		}
-		return fourthStrategyVariable;
+
+		thirdStrategyVariable.setValue(json);
+		return thirdStrategyVariable;
 	}
 
 	@Override
 	protected void defineVariable(Property variable) {
-		FourthStrategyVariable fourthStrategyVariable = FourthStrategyVariable.findByName(variable.getName());
+		FifthStrategyVariable thirdStrategyVariable = FifthStrategyVariable.findByName(variable.getName());
 		ObjectToJsonConverter objectToJsonConverter = new ObjectToJsonConverter();
-		switch(fourthStrategyVariable) {
+		switch (thirdStrategyVariable) {
 		case BASE_TEMPORAL_TICKER:
-			baseTemporalTicker = objectToJsonConverter.convertFromToObject(variable.getName(), baseTemporalTicker);
-			break;
-		case CIRCULAR_ARRAY:
-			circularArray = objectToJsonConverter.convertFromToObject(variable.getName(), circularArray);
+			baseTemporalTicker = new TemporalTicker();
+			baseTemporalTicker = objectToJsonConverter.convertFromToObject(variable.getValue(), baseTemporalTicker);
 			break;
 		case STATUS:
-			status = objectToJsonConverter.convertFromToObject(variable.getName(), status);
+			status = objectToJsonConverter.convertFromToObject(variable.getValue(), status);
+			break;
+		case WORKING_AMOUNT_CURRENCY:
+			workingAmountCurrency = new Double(0.0);
+			workingAmountCurrency = objectToJsonConverter.convertFromToObject(variable.getValue(),
+					workingAmountCurrency);
 			break;
 		}
 	}
 
 	@Override
 	protected void defineParameter(Property parameter) {
-		FourthStrategyParameter fourthStrategyparameter = FourthStrategyParameter.findByName(parameter.getName());
-
-		switch (fourthStrategyparameter) {
-		case CIRCULAR_ARRAY_SIZE:
-			circularArray = new CircularArray<>(Integer.parseInt(parameter.getValue()));
-			break;
+		FifthStrategyParameter thirdStrategyParameter = FifthStrategyParameter.findByName(parameter.getName());
+		switch (thirdStrategyParameter) {
 		case GROWTH_PERCENTAGE_THRESHOLD:
 			growthPercentageThreshold = Double.parseDouble(parameter.getValue());
 			break;
 		case SHRINK_PERCENTAGE_THRESHOLD:
 			shrinkPercentageThreshold = Double.parseDouble(parameter.getValue());
 			break;
-
+		case WORKING_AMOUNT_CURRENCY:
+			workingAmountCurrency = Double.parseDouble(parameter.getValue());
+			break;
 		}
 	}
 }

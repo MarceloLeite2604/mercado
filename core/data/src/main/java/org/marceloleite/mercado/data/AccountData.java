@@ -16,14 +16,14 @@ public class AccountData {
 
 	private List<DepositData> depositDatas;
 
-	private List<BuyOrderData> buyOrderDatas;
+	private List<OrderData> buyOrderDatas;
 
-	private List<SellOrderData> sellOrderDatas;
+	private List<OrderData> sellOrderDatas;
 
 	private List<StrategyData> strategyDatas;
 
 	public AccountData(String owner, List<BalanceData> balanceDatas, List<DepositData> depositsData,
-			List<BuyOrderData> buyOrdersData, List<SellOrderData> sellOrdersData, List<StrategyData> strategyDatas) {
+			List<OrderData> buyOrdersData, List<OrderData> sellOrdersData, List<StrategyData> strategyDatas) {
 		super();
 		this.owner = owner;
 		this.balanceDatas = balanceDatas;
@@ -86,19 +86,19 @@ public class AccountData {
 		this.depositDatas = depositDatas;
 	}
 
-	public List<BuyOrderData> getBuyOrderDatas() {
+	public List<OrderData> getBuyOrderDatas() {
 		return buyOrderDatas;
 	}
 
-	public void setBuyOrderDatas(List<BuyOrderData> buyOrderDatas) {
+	public void setBuyOrderDatas(List<OrderData> buyOrderDatas) {
 		this.buyOrderDatas = buyOrderDatas;
 	}
 
-	public List<SellOrderData> getSellOrderDatas() {
+	public List<OrderData> getSellOrderDatas() {
 		return sellOrderDatas;
 	}
 
-	public void setSellOrderDatas(List<SellOrderData> sellOrderDatas) {
+	public void setSellOrderDatas(List<OrderData> sellOrderDatas) {
 		this.sellOrderDatas = sellOrderDatas;
 	}
 

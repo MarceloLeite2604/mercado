@@ -6,80 +6,58 @@ import org.marceloleite.mercado.base.model.Account;
 import org.marceloleite.mercado.base.model.Balance;
 import org.marceloleite.mercado.base.model.CurrencyAmount;
 import org.marceloleite.mercado.base.model.House;
-import org.marceloleite.mercado.base.model.Order;
 import org.marceloleite.mercado.base.model.OrderExecutor;
+import org.marceloleite.mercado.base.model.order.BuyOrderBuilder.BuyOrder;
+import org.marceloleite.mercado.base.model.order.OrderStatus;
+import org.marceloleite.mercado.base.model.order.SellOrderBuilder.SellOrder;
 import org.marceloleite.mercado.commons.Currency;
-import org.marceloleite.mercado.commons.OrderStatus;
 
-public class SimulationOrderExecutor implements OrderExecutor {
+public class OldSimulationOrderExecutor implements OrderExecutor {
 
 	private static final Logger LOGGER = LogManager.getLogger(SimulationOrderExecutor.class);
 
-	@Override
-	public Order placeOrder(Order order, House house, Account account) {
-		switch (order.getType()) {
-		case BUY:
-			order = executeBuyOrder(order, house, account);
-		case SELL:
-			order = executeSellOrder(order, house, account);
-		}
-		return null;
-	}
-
-	public Order executeBuyOrder(Order order, House house, Account account) {
-		CurrencyAmount currencyAmountToPay = calculateCurrencyAmountToPay(order);
+	public BuyOrder executeBuyOrder(BuyOrder buyOrder, House house, Account account) {
+		buyOrder.updateOrder(house.getTemporalTickers());
+		CurrencyAmount currencyAmountToPay = buyOrder.getCurrencyAmountToPay();
 		if (hasBalance(account, currencyAmountToPay)) {
-			LOGGER.info("Executing " + order + " on \"" + account.getOwner() + "\" account.");
-			CurrencyAmount currencyAmountCommission = calculateBuyOrderComission(order, house);
+			LOGGER.info("Executing " + buyOrder + " on \"" + account.getOwner() + "\" account.");
+			CurrencyAmount currencyAmountCommission = calculateComission(buyOrder, house);
 			LOGGER.debug("Commission amount is " + currencyAmountCommission + ".");
-			CurrencyAmount currencyAmountToDeposit = calculateBuyOrderDeposit(order, currencyAmountCommission);
+			CurrencyAmount currencyAmountToDeposit = calculateDeposit(buyOrder, currencyAmountCommission);
 			LOGGER.debug("Amount to withdraw is " + currencyAmountToPay + ".");
 			depositComission(currencyAmountCommission, house, account);
 			account.getBalance().withdraw(currencyAmountToPay);
 			LOGGER.debug("Amount to deposit is " + currencyAmountToDeposit + ".");
 			account.getBalance().deposit(currencyAmountToDeposit);
-			order.setStatus(OrderStatus.FILLED);
+			buyOrder.setOrderStatus(OrderStatus.EXECUTED);
 		} else {
 			LOGGER.info("Account \"" + account.getOwner() + "\" does not have enough "
 					+ currencyAmountToPay.getCurrency() + " balance to execute buy order. Cancelling.");
-			order.setStatus(OrderStatus.CANCELLED);
+			buyOrder.setOrderStatus(OrderStatus.CANCELLED);
 		}
-		return order;
+		return buyOrder;
 	}
 
-	private CurrencyAmount calculateCurrencyAmountToPay(Order order) {
-		Double amountToPay = order.getLimitPrice() * order.getQuantity();
-		Currency currencyToPay = order.getFirstCurrency();
-		return new CurrencyAmount(currencyToPay, amountToPay);
-	}
-	
-	private CurrencyAmount calculateCurrencyAmountToSell(Order order) {
-		Double quantity = order.getQuantity();
-		Currency currencyToSell = order.getSecondCurrency();
-		return new CurrencyAmount(currencyToSell, quantity);
-	}
-
-	
-
-	public Order executeSellOrder(Order order, House house, Account account) {
-		CurrencyAmount currencyAmountToSell = calculateCurrencyAmountToSell(order);
+	public SellOrder executeSellOrder(SellOrder sellOrder, House house, Account account) {
+		sellOrder.updateOrder(house.getTemporalTickers());
+		CurrencyAmount currencyAmountToSell = sellOrder.getCurrencyAmountToSell();
 		if (hasBalance(account, currencyAmountToSell)) {
-			LOGGER.info("Executing " + order + " on \"" + account.getOwner() + "\" account.");
-			CurrencyAmount currencyAmountCommission = calculateSellOrderCommission(order, house);
-			CurrencyAmount currencyAmountToDeposit = calculateSellOrderDeposit(order, currencyAmountCommission);
+			LOGGER.info("Executing " + sellOrder + " on \"" + account.getOwner() + "\" account.");
+			CurrencyAmount currencyAmountCommission = calculateCommission(sellOrder, house);
+			CurrencyAmount currencyAmountToDeposit = calculateDeposit(sellOrder, currencyAmountCommission);
 			LOGGER.debug("Commission amount is " + currencyAmountCommission + ".");
 			depositComission(currencyAmountCommission, house, account);
 			LOGGER.debug("Amount to withdraw is " + currencyAmountToSell + ".");
 			account.getBalance().withdraw(currencyAmountToSell);
 			LOGGER.debug("Amount to deposit is " + currencyAmountToDeposit + ".");
 			account.getBalance().deposit(currencyAmountToDeposit);
-			order.setStatus(OrderStatus.FILLED);
+			sellOrder.setOrderStatus(OrderStatus.EXECUTED);
 		} else {
 			LOGGER.info("Account \"" + account.getOwner() + "\" does not have enough "
 					+ currencyAmountToSell.getCurrency() + " balance to execute sell order. Cancelling.");
-			order.setStatus(OrderStatus.CANCELLED);
+			sellOrder.setOrderStatus(OrderStatus.CANCELLED);
 		}
-		return order;
+		return sellOrder;
 	}
 
 	private boolean hasBalance(Account account, CurrencyAmount amountToHave) {
@@ -88,28 +66,16 @@ public class SimulationOrderExecutor implements OrderExecutor {
 		return (balanceAmount.getAmount() >= amountToHave.getAmount());
 	}
 
-	private CurrencyAmount calculateBuyOrderComission(Order order, House house) {
-		CurrencyAmount currencyAmountToBuy = elaborateCurrencyAmountToBuy(order);
+	private CurrencyAmount calculateComission(BuyOrder buyOrder, House house) {
+		CurrencyAmount currencyAmountToBuy = buyOrder.getCurrencyAmountToBuy();
 		double comissionAmount = currencyAmountToBuy.getAmount() * house.getComissionPercentage();
 		return new CurrencyAmount(currencyAmountToBuy.getCurrency(), comissionAmount);
 	}
 
-	private CurrencyAmount elaborateCurrencyAmountToBuy(Order order) {
-		Double quantity = order.getQuantity();
-		Currency currencyToBuy = order.getSecondCurrency();
-		return new CurrencyAmount(currencyToBuy, quantity);
-	}
-
-	private CurrencyAmount calculateSellOrderCommission(Order order, House house) {
-		CurrencyAmount currencyAmountToReceive = elaborateCurrencyAmountToReceive(order);
+	private CurrencyAmount calculateCommission(SellOrder sellOrder, House house) {
+		CurrencyAmount currencyAmountToReceive = sellOrder.getCurrencyAmountToReceive();
 		double comissionAmount = currencyAmountToReceive.getAmount() * house.getComissionPercentage();
 		return new CurrencyAmount(currencyAmountToReceive.getCurrency(), comissionAmount);
-	}
-
-	private CurrencyAmount elaborateCurrencyAmountToReceive(Order order) {
-		Double quantity = order.getQuantity();
-		Currency firstCurrency = order.getFirstCurrency();
-		return new CurrencyAmount(firstCurrency, quantity);
 	}
 
 	private void depositComission(CurrencyAmount currencyAmountComission, House house, Account account) {
@@ -118,14 +84,14 @@ public class SimulationOrderExecutor implements OrderExecutor {
 		house.getComissionBalance().put(account.getOwner(), balance);
 	}
 
-	private CurrencyAmount calculateBuyOrderDeposit(Order order, CurrencyAmount currencyAmountComission) {
-		CurrencyAmount currencyAmountToBuy = elaborateCurrencyAmountToBuy(order);
+	private CurrencyAmount calculateDeposit(BuyOrder buyOrder, CurrencyAmount currencyAmountComission) {
+		CurrencyAmount currencyAmountToBuy = buyOrder.getCurrencyAmountToBuy();
 		double amountToDeposit = currencyAmountToBuy.getAmount() - currencyAmountComission.getAmount();
 		return new CurrencyAmount(currencyAmountToBuy.getCurrency(), amountToDeposit);
 	}
-	
-	private CurrencyAmount calculateSellOrderDeposit(Order order, CurrencyAmount currencyAmountComission) {
-		CurrencyAmount currencyAmountToReceive = elaborateCurrencyAmountToReceive(order);
+
+	private CurrencyAmount calculateDeposit(SellOrder sellOrder, CurrencyAmount currencyAmountComission) {
+		CurrencyAmount currencyAmountToReceive = sellOrder.getCurrencyAmountToReceive();
 		double amountToDeposit = currencyAmountToReceive.getAmount() - currencyAmountComission.getAmount();
 		return new CurrencyAmount(currencyAmountToReceive.getCurrency(), amountToDeposit);
 	}

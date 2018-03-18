@@ -8,13 +8,11 @@ import org.marceloleite.mercado.base.model.Account;
 import org.marceloleite.mercado.base.model.Balance;
 import org.marceloleite.mercado.base.model.CurrencyAmount;
 import org.marceloleite.mercado.base.model.House;
+import org.marceloleite.mercado.base.model.Order;
 import org.marceloleite.mercado.base.model.TemporalTickerVariation;
 import org.marceloleite.mercado.base.model.order.BuyOrderBuilder;
-import org.marceloleite.mercado.base.model.order.BuyOrderBuilder.BuyOrder;
 import org.marceloleite.mercado.base.model.order.MinimalAmounts;
-import org.marceloleite.mercado.base.model.order.OrderStatus;
 import org.marceloleite.mercado.base.model.order.SellOrderBuilder;
-import org.marceloleite.mercado.base.model.order.SellOrderBuilder.SellOrder;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.OrderType;
 import org.marceloleite.mercado.commons.TimeInterval;
@@ -101,43 +99,36 @@ public class FirstStrategy extends AbstractStrategy {
 	private void createSellOrder(TimeInterval simulationTimeInterval, Account account, House house) {
 		CurrencyAmount currencyAmountToReceive = calculateOrderAmount(OrderType.SELL, account);
 		if (currencyAmountToReceive != null) {
-			CurrencyAmount currencyAmountToSell = new CurrencyAmount(currency, null);
-			SellOrder sellOrder = new SellOrderBuilder().toExecuteOn(simulationTimeInterval.getStart())
-					.selling(currencyAmountToSell).receiving(currencyAmountToReceive).build();
-			LOGGER.debug("Created " + sellOrder + ".");
-			executeSellOrder(sellOrder, account, house);
-			// account.getSellOrdersTemporalController().add(sellOrder);
+			CurrencyAmount currencyAmountToSell = calculateCurrencyAmountToSell(currencyAmountToReceive, house);
+			CurrencyAmount currencyAmountUnitPrice = calculateCurrencyAmountUnitPrice(house);
+			Order order = new SellOrderBuilder().toExecuteOn(simulationTimeInterval.getStart())
+					.selling(currencyAmountToSell).receivingUnitPriceOf(currencyAmountUnitPrice).build();
+			LOGGER.debug("Created " + order + ".");
+			executeOrder(order, account, house);
 		}
 	}
 
-	private void executeSellOrder(SellOrder sellOrder, Account account, House house) {
-		house.getOrderExecutor().executeSellOrder(sellOrder, house, account);
-
-		switch (sellOrder.getOrderStatus()) {
-		case CREATED:
-			throw new RuntimeException("Requested " + sellOrder + " execution, but its status returned as \""
-					+ OrderStatus.CREATED + "\".");
-		case EXECUTED:
-			buySellStep.updateStep(OrderType.SELL);
-			break;
-		case CANCELLED:
-			LOGGER.info(sellOrder + " cancelled.");
-			break;
-		}
+	private CurrencyAmount calculateCurrencyAmountToSell(CurrencyAmount currencyAmountToReceive, House house) {
+		TemporalTicker temporalTicker = house.getTemporalTickers().get(currency);
+		Double lastPrice = temporalTicker.getLastPrice();
+		Double amountToReceive = currencyAmountToReceive.getAmount();
+		Double amountToSell = amountToReceive / lastPrice;
+		return new CurrencyAmount(currency, amountToSell);
 	}
 
-	private void executeBuyOrder(BuyOrder buyOrder, Account account, House house) {
-		house.getOrderExecutor().executeBuyOrder(buyOrder, house, account);
+	private void executeOrder(Order order, Account account, House house) {
+		house.getOrderExecutor().placeOrder(order, house, account);
 
-		switch (buyOrder.getOrderStatus()) {
-		case CREATED:
-			throw new RuntimeException("Requested " + buyOrder + " execution, but its status returned as \""
-					+ OrderStatus.CREATED + "\".");
-		case EXECUTED:
+		switch (order.getStatus()) {
+		case OPEN:
+		case UNDEFINED:
+			throw new RuntimeException(
+					"Requested " + order + " execution, but its status returned as \"" + order.getStatus() + "\".");
+		case FILLED:
 			buySellStep.updateStep(OrderType.BUY);
 			break;
 		case CANCELLED:
-			LOGGER.info(buyOrder + " cancelled.");
+			LOGGER.info(order + " cancelled.");
 			break;
 		}
 	}
@@ -167,13 +158,27 @@ public class FirstStrategy extends AbstractStrategy {
 	private void createBuyOrder(TimeInterval simulationTimeInterval, House house, Account account) {
 		CurrencyAmount currencyAmountToPay = calculateOrderAmount(OrderType.BUY, account);
 		if (currencyAmountToPay != null) {
-			CurrencyAmount currencyAmountToBuy = new CurrencyAmount(currency, null);
-			BuyOrder buyOrder = new BuyOrderBuilder().toExecuteOn(simulationTimeInterval.getStart())
-					.buying(currencyAmountToBuy).paying(currencyAmountToPay).build();
-			LOGGER.debug("Buy order created is " + buyOrder);
-			// account.getBuyOrdersTemporalController().add(buyOrder);
-			executeBuyOrder(buyOrder, account, house);
+			CurrencyAmount currencyAmountToBuy = calculateCurrencyAmountToBuy(currencyAmountToPay, house);
+			CurrencyAmount currencyAmountUnitPrice = calculateCurrencyAmountUnitPrice(house);
+			Order order = new BuyOrderBuilder().toExecuteOn(simulationTimeInterval.getStart())
+					.buying(currencyAmountToBuy).payingUnitPriceOf(currencyAmountUnitPrice).build();
+			LOGGER.debug("Buy order created is " + order);
+			executeOrder(order, account, house);
 		}
+	}
+
+	private CurrencyAmount calculateCurrencyAmountUnitPrice(House house) {
+		Double lastPrice = house.getTemporalTickers().get(currency).getLastPrice();
+		CurrencyAmount currencyAmountUnitPrice = new CurrencyAmount(currency, lastPrice);
+		return currencyAmountUnitPrice;
+	}
+
+	private CurrencyAmount calculateCurrencyAmountToBuy(CurrencyAmount currencyAmountToPay, House house) {
+		TemporalTicker temporalTicker = house.getTemporalTickers().get(currency);
+		Double lastPrice = temporalTicker.getLastPrice();
+		Double amountToPay = currencyAmountToPay.getAmount();
+		Double quantity = amountToPay / lastPrice;
+		return new CurrencyAmount(currency, quantity);
 	}
 
 	private void setBase(Account account, House house) {

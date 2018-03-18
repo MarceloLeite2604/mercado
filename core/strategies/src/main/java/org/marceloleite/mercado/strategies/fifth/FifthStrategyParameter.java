@@ -3,17 +3,17 @@ package org.marceloleite.mercado.strategies.fifth;
 import org.marceloleite.mercado.commons.properties.Property;
 import org.marceloleite.mercado.strategies.StrategyPropertyUtils;
 
-public enum FourthStrategyParameter implements Property {
+public enum FifthStrategyParameter implements Property {
 	
 	GROWTH_PERCENTAGE_THRESHOLD("growthPercentageThreshold"),
 	SHRINK_PERCENTAGE_THRESHOLD("shrinkPercentageThreshold"),
-	CIRCULAR_ARRAY_SIZE("circularArraySize");
-	
+	WORKING_AMOUNT_CURRENCY("workingAmountCurrency");
+
 	private String name;
-	
+
 	private String value;
 
-	private FourthStrategyParameter(String name) {
+	private FifthStrategyParameter(String name) {
 		this.name = name;
 	}
 
@@ -22,7 +22,7 @@ public enum FourthStrategyParameter implements Property {
 	}
 
 	public void setName(String name) {
-		throw new UnsupportedOperationException();
+		this.name = name;
 	}
 
 	public String getValue() {
@@ -33,13 +33,12 @@ public enum FourthStrategyParameter implements Property {
 		this.value = value;
 	}
 
-	@Override
 	public boolean isRequired() {
 		return true;
 	}
-	
-	public static FourthStrategyParameter findByName(String name) {
-		return (FourthStrategyParameter)StrategyPropertyUtils.findByName(FourthStrategyParameter.class, name);
+
+	public static FifthStrategyParameter findByName(String name) {
+		return (FifthStrategyParameter)StrategyPropertyUtils.findByName(FifthStrategyParameter.class, name);
 	}
 
 	@Override
