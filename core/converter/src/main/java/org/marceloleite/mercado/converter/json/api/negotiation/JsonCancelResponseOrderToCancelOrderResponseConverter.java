@@ -9,7 +9,7 @@ public class JsonCancelResponseOrderToCancelOrderResponseConverter implements Co
 	@Override
 	public CancelOrderResponse convertTo(JsonCancelOrderResponse jsonCancelOrderResponse) {
 		CancelOrderResponse cancelOrderResponse = new CancelOrderResponse();
-		cancelOrderResponse.setOrder(new JsonOrderToOrderConverter().convertTo(jsonCancelOrderResponse.getOrder()));
+		cancelOrderResponse.setOrderData(new JsonOrderToOrderDataConverter().convertTo(jsonCancelOrderResponse.getOrder()));
 		return cancelOrderResponse;
 	}
 

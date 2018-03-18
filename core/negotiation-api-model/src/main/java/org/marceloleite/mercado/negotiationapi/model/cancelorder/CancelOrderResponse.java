@@ -1,25 +1,25 @@
 package org.marceloleite.mercado.negotiationapi.model.cancelorder;
 
-import org.marceloleite.mercado.negotiationapi.model.Order;
+import org.marceloleite.mercado.data.OrderData;
 
 public class CancelOrderResponse {
 
-	private Order order;
+	private OrderData orderData;
 
-	public CancelOrderResponse(Order order) {
+	public CancelOrderResponse(OrderData orderData) {
 		super();
-		this.order = order;
+		this.orderData = orderData;
 	}
 	
 	public CancelOrderResponse() {
 		this(null);
 	}
 
-	public Order getOrder() {
-		return order;
+	public OrderData getOrderData() {
+		return orderData;
 	}
 	
-	public void setOrder(Order order) {
-		this.order = order;
+	public void setOrderData(OrderData orderData) {
+		this.orderData = orderData;
 	}
 }

@@ -8,9 +8,9 @@ import org.marceloleite.mercado.base.model.CurrencyAmount;
 import org.marceloleite.mercado.base.model.House;
 import org.marceloleite.mercado.base.model.OrderExecutor;
 import org.marceloleite.mercado.base.model.order.BuyOrderBuilder.BuyOrder;
+import org.marceloleite.mercado.base.model.order.OrderStatus;
 import org.marceloleite.mercado.base.model.order.SellOrderBuilder.SellOrder;
 import org.marceloleite.mercado.commons.Currency;
-import org.marceloleite.mercado.commons.OrderStatus;
 
 public class SimulationOrderExecutor implements OrderExecutor {
 
