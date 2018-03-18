@@ -15,7 +15,7 @@ public class PlaceSellOrderResult {
 		this(null);
 	}
 
-	public OrderData getOrder() {
+	public OrderData getOrderData() {
 		return orderData;
 	}
 
