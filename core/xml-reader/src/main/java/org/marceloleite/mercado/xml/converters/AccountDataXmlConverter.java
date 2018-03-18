@@ -7,6 +7,7 @@ import org.marceloleite.mercado.data.AccountData;
 import org.marceloleite.mercado.data.BalanceData;
 import org.marceloleite.mercado.data.BuyOrderData;
 import org.marceloleite.mercado.data.DepositData;
+import org.marceloleite.mercado.data.OrderData;
 import org.marceloleite.mercado.data.SellOrderData;
 import org.marceloleite.mercado.data.StrategyData;
 import org.marceloleite.mercado.data.TapiInformationData;
@@ -52,11 +53,11 @@ public class AccountDataXmlConverter implements XmlConverter<XmlAccount, Account
 		withdrawalDatas.forEach(withdrawalData -> withdrawalData.setAccountData(accountData));
 		accountData.setWithdrawalDatas(withdrawalDatas);
 
-		List<BuyOrderData> buyOrderDatas = createBuyOrders(xmlAccount.getXmlBuyOrders());
+		List<OrderData> buyOrderDatas = createBuyOrders(xmlAccount.getXmlBuyOrders());
 		withdrawalDatas.forEach(balanceData -> balanceData.setAccountData(accountData));
 		accountData.setBuyOrderDatas(buyOrderDatas);
 
-		List<SellOrderData> sellOrderDatas = createSellOrders(xmlAccount.getXmlSellOrders());
+		List<OrderData> sellOrderDatas = createSellOrders(xmlAccount.getXmlSellOrders());
 		sellOrderDatas.forEach(sellOrderData -> sellOrderData.setAccountData(accountData));
 		accountData.setSellOrderDatas(sellOrderDatas);
 
@@ -101,9 +102,9 @@ public class AccountDataXmlConverter implements XmlConverter<XmlAccount, Account
 		return deposits;
 	}
 
-	private List<BuyOrderData> createBuyOrders(List<XmlBuyOrder> xmlBuyOrders) {
-		List<BuyOrderData> buyOrdersData = new ArrayList<>();
-		BuyOrderXmlConverter buyOrderXmlConverter = new BuyOrderXmlConverter();
+	private List<OrderData> createBuyOrders(List<XmlBuyOrder> xmlBuyOrders) {
+		List<OrderData> buyOrdersData = new ArrayList<>();
+		OrderXmlConverter orderXmlConverter = new OrderXmlConverter();
 		for (XmlBuyOrder xmlBuyOrder : xmlBuyOrders) {
 			BuyOrderData buyOrderData = buyOrderXmlConverter.convertToObject(xmlBuyOrder);
 			buyOrdersData.add(buyOrderData);
