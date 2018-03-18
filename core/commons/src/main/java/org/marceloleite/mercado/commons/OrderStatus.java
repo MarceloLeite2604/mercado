@@ -2,6 +2,7 @@ package org.marceloleite.mercado.commons;
 
 public enum OrderStatus {
 
+	UNDEFINED(1),
 	OPEN(2),
 	CANCELLED(3),
 	FILLED(4);

@@ -12,7 +12,7 @@ public class JsonPlaceSellOrderResultToPlaceSellOrderResultConverter
 	public PlaceSellOrderResult convertTo(JsonPlaceSellOrderResult jsonPlaceSellOrderResult) {
 		PlaceSellOrderResult placeSellOrderResult = new PlaceSellOrderResult();
 		JsonOrder jsonOrder = jsonPlaceSellOrderResult.getOrder();
-		placeSellOrderResult.setOrder(new JsonOrderToOrderConverter().convertTo(jsonOrder));
+		placeSellOrderResult.setOrder(new JsonOrderToOrderDataConverter().convertTo(jsonOrder));
 		return placeSellOrderResult;
 	}
 

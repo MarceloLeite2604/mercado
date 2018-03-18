@@ -1,8 +1,8 @@
 package org.marceloleite.mercado.converter.json.api.negotiation;
 
 import org.marceloleite.mercado.commons.converter.Converter;
+import org.marceloleite.mercado.data.OrderData;
 import org.marceloleite.mercado.jsonmodel.api.negotiation.JsonPlaceBuyOrderResponse;
-import org.marceloleite.mercado.negotiationapi.model.Order;
 import org.marceloleite.mercado.negotiationapi.model.placebuyorder.PlaceBuyOrderResponse;
 
 public class JsonPlaceBuyOrderResponseToPlaceBuyOrderResponse
@@ -11,8 +11,8 @@ public class JsonPlaceBuyOrderResponseToPlaceBuyOrderResponse
 	@Override
 	public PlaceBuyOrderResponse convertTo(JsonPlaceBuyOrderResponse jsonPlaceBuyOrderResponse) {
 		PlaceBuyOrderResponse placeBuyOrderResponse = new PlaceBuyOrderResponse();
-		Order order = new JsonOrderToOrderConverter().convertTo(jsonPlaceBuyOrderResponse.getOrder());
-		placeBuyOrderResponse.setOrder(order);
+		OrderData orderData = new JsonOrderToOrderDataConverter().convertTo(jsonPlaceBuyOrderResponse.getOrder());
+		placeBuyOrderResponse.setOrder(orderData);
 		return placeBuyOrderResponse;
 	}
 
