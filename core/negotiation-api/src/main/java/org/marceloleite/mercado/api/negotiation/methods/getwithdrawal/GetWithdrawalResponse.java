@@ -1,4 +1,6 @@
-package org.marceloleite.mercado.negotiationapi.model.getwithdrawal;
+package org.marceloleite.mercado.api.negotiation.methods.getwithdrawal;
+
+import org.marceloleite.mercado.negotiationapi.model.getwithdrawal.Withdrawal;
 
 public class GetWithdrawalResponse {
 

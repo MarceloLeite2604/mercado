@@ -1,8 +1,9 @@
-package org.marceloleite.mercado.converter.json.api.negotiation.listorderbook;
+package org.marceloleite.mercado.api.negotiation.converters;
 
+import org.marceloleite.mercado.api.negotiation.methods.listorderbook.ListOrderbookResponse;
 import org.marceloleite.mercado.commons.converter.Converter;
+import org.marceloleite.mercado.converter.json.api.negotiation.listorderbook.JsonOrderbookToOrderbookConverter;
 import org.marceloleite.mercado.jsonmodel.api.negotiation.orderbook.JsonListOrderbookResponse;
-import org.marceloleite.mercado.negotiationapi.model.listorderbook.ListOrderbookResponse;
 import org.marceloleite.mercado.negotiationapi.model.listorderbook.Orderbook;
 
 public class JsonListOrderbookResponseToListOrderbookResponseConverter

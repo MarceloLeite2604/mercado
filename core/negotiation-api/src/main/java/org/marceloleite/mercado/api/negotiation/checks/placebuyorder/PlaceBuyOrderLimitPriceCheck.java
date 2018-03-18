@@ -1,4 +1,4 @@
-package org.marceloleite.mercado.api.negotiation.methods.placebuyorder;
+package org.marceloleite.mercado.api.negotiation.checks.placebuyorder;
 
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.interfaces.Checker;

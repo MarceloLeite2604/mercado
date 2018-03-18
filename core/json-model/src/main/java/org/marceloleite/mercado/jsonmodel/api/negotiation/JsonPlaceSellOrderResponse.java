@@ -3,7 +3,7 @@ package org.marceloleite.mercado.jsonmodel.api.negotiation;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.marceloleite.mercado.jsonmodel.api.negotiation.getwithdrawal.JsonWithdrawal;
+import org.marceloleite.mercado.jsonmodel.api.data.JsonOrder;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
@@ -13,23 +13,23 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({ "withdrawal" })
-public class JsonWithdrawCoinResult {
+@JsonPropertyOrder({ "order" })
+public class JsonPlaceSellOrderResponse {
 
-	@JsonProperty("withdrawal")
-	private JsonWithdrawal jsonWithdrawal;
+	@JsonProperty("order")
+	private JsonOrder order = null;
 
 	@JsonIgnore
 	private Map<String, Object> additionalProperties = new HashMap<String, Object>();
 
-	@JsonProperty("withdrawal")
-	public JsonWithdrawal getJsonWithdrawal() {
-		return jsonWithdrawal;
+	@JsonProperty("order")
+	public JsonOrder getOrder() {
+		return order;
 	}
 
-	@JsonProperty("withdrawal")
-	public void setJsonWithdrawal(JsonWithdrawal jsonWithdrawal) {
-		this.jsonWithdrawal = jsonWithdrawal;
+	@JsonProperty("order")
+	public void setOrder(JsonOrder order) {
+		this.order = order;
 	}
 
 	@JsonAnyGetter
