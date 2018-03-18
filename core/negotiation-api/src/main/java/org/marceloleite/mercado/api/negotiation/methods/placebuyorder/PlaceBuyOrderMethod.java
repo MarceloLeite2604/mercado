@@ -1,5 +1,6 @@
-package org.marceloleite.mercado.api.negotiation.methods.placebuyorder;
+	package org.marceloleite.mercado.api.negotiation.methods.placebuyorder;
 
+import org.marceloleite.mercado.api.negotiation.checks.placebuyorder.PlaceBuyOrderQuantityCheck;
 import org.marceloleite.mercado.api.negotiation.methods.AbstractTapiMethod;
 import org.marceloleite.mercado.api.negotiation.methods.TapiMethod;
 import org.marceloleite.mercado.base.model.TapiInformation;
@@ -15,6 +16,7 @@ public class PlaceBuyOrderMethod extends AbstractTapiMethod<PlaceBuyOrderMethodR
 	
 	public PlaceBuyOrderMethodResponse execute(CurrencyPair currencyPair, Double quantity, Double limitPrice) {
 		checkQuantityParameter(currencyPair, quantity);
+		/* TODO: Check limit price parameter. */
 		return executeMethod(currencyPair, quantity, limitPrice);
 	}
 

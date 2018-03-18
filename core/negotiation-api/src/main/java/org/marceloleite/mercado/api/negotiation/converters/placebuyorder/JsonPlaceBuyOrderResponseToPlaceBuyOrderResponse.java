@@ -1,9 +1,10 @@
-package org.marceloleite.mercado.converter.json.api.negotiation;
+package org.marceloleite.mercado.api.negotiation.converters.placebuyorder;
 
+import org.marceloleite.mercado.api.negotiation.methods.placebuyorder.PlaceBuyOrderResponse;
 import org.marceloleite.mercado.commons.converter.Converter;
+import org.marceloleite.mercado.converter.json.api.negotiation.JsonOrderToOrderDataConverter;
 import org.marceloleite.mercado.data.OrderData;
 import org.marceloleite.mercado.jsonmodel.api.negotiation.JsonPlaceBuyOrderResponse;
-import org.marceloleite.mercado.negotiationapi.model.placebuyorder.PlaceBuyOrderResponse;
 
 public class JsonPlaceBuyOrderResponseToPlaceBuyOrderResponse
 		implements Converter<JsonPlaceBuyOrderResponse, PlaceBuyOrderResponse> {

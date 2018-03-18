@@ -1,17 +1,17 @@
-package org.marceloleite.mercado.negotiationapi.model.withdrawcoin;
+package org.marceloleite.mercado.api.negotiation.methods.withdrawcoin;
 
 import org.marceloleite.mercado.negotiationapi.model.getwithdrawal.Withdrawal;
 
-public class WithdrawCoinResult {
+public class WithdrawCoinResponse {
 
 	private Withdrawal withdrawal;
 
-	public WithdrawCoinResult(Withdrawal withdrawal) {
+	public WithdrawCoinResponse(Withdrawal withdrawal) {
 		super();
 		this.withdrawal = withdrawal;
 	}
 
-	public WithdrawCoinResult() {
+	public WithdrawCoinResponse() {
 		this(null);
 	}
 

@@ -1,9 +1,13 @@
 package org.marceloleite.mercado.controller;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.api.negotiation.methods.placebuyorder.PlaceBuyOrderMethod;
 import org.marceloleite.mercado.api.negotiation.methods.placebuyorder.PlaceBuyOrderMethodResponse;
+import org.marceloleite.mercado.api.negotiation.methods.placebuyorder.PlaceBuyOrderResponse;
 import org.marceloleite.mercado.api.negotiation.methods.placesellorder.PlaceSellOrderMethod;
-import org.marceloleite.mercado.api.negotiation.methods.placesellorder.PlaceSellOrderMethodResult;
+import org.marceloleite.mercado.api.negotiation.methods.placesellorder.PlaceSellOrderMethodResponse;
+import org.marceloleite.mercado.api.negotiation.methods.placesellorder.PlaceSellOrderResponse;
 import org.marceloleite.mercado.base.model.Account;
 import org.marceloleite.mercado.base.model.House;
 import org.marceloleite.mercado.base.model.NewOrderExecutor;
@@ -12,10 +16,10 @@ import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.OrderStatus;
 import org.marceloleite.mercado.data.OrderData;
 import org.marceloleite.mercado.negotiationapi.model.CurrencyPair;
-import org.marceloleite.mercado.negotiationapi.model.placebuyorder.PlaceBuyOrderResponse;
-import org.marceloleite.mercado.negotiationapi.model.placesellorder.PlaceSellOrderResult;
 
 public class NewControllerOrderExecutor implements NewOrderExecutor {
+	
+	private static final Logger LOGGER = LogManager.getLogger(NewControllerOrderExecutor.class);
 
 	@Override
 	public Order placeOrder(Order order, House house, Account account) {
@@ -37,12 +41,17 @@ public class NewControllerOrderExecutor implements NewOrderExecutor {
 		Double limitPrice = order.getLimitPrice();
 		
 		PlaceSellOrderMethod placeSellOrderMethod = new PlaceSellOrderMethod(account.getTapiInformation());
-		PlaceSellOrderMethodResult placeSellOrderMethodResponse = placeSellOrderMethod.execute(currencyPair, quantity, limitPrice);
+		PlaceSellOrderMethodResponse placeSellOrderMethodResponse = placeSellOrderMethod.execute(currencyPair, quantity, limitPrice);
 		if ( placeSellOrderMethodResponse.getStatusCode() == 100 ) {
-			PlaceSellOrderResult placeSellOrderResponse = placeSellOrderMethodResponse.getResponse();
+			PlaceSellOrderResponse placeSellOrderResponse = placeSellOrderMethodResponse.getResponse();
 			OrderData orderData = placeSellOrderResponse.getOrderData();
 			return new Order(orderData);
 		} else {
+			StringBuilder stringBuilder = new StringBuilder();
+			stringBuilder.append("Place sell order method returned the following error: ");
+			stringBuilder.append(placeSellOrderMethodResponse.getStatusCode() + " - ");
+			stringBuilder.append(placeSellOrderMethodResponse.getErrorMessage());
+			LOGGER.warn(stringBuilder.toString());
 			order.setStatus(OrderStatus.CANCELLED);
 			return order;
 		}
@@ -59,6 +68,11 @@ public class NewControllerOrderExecutor implements NewOrderExecutor {
 			OrderData orderData = placeBuyOrderResponse.getOrderData();
 			return new Order(orderData);
 		} else {
+			StringBuilder stringBuilder = new StringBuilder();
+			stringBuilder.append("Place buy order method returned the following error: ");
+			stringBuilder.append(placeBuyOrderMethodResponse.getStatusCode() + " - ");
+			stringBuilder.append(placeBuyOrderMethodResponse.getErrorMessage());
+			LOGGER.warn(stringBuilder.toString());
 			order.setStatus(OrderStatus.CANCELLED);
 			return order;
 		}

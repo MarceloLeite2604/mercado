@@ -1,4 +1,6 @@
-package org.marceloleite.mercado.negotiationapi.model.listorderbook;
+package org.marceloleite.mercado.api.negotiation.methods.listorderbook;
+
+import org.marceloleite.mercado.negotiationapi.model.listorderbook.Orderbook;
 
 public class ListOrderbookResponse {
 

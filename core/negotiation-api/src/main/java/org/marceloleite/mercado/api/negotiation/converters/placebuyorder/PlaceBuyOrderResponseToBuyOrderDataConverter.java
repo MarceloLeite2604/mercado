@@ -1,18 +1,18 @@
-package org.marceloleite.mercado.converter.json.api.negotiation;
+package org.marceloleite.mercado.api.negotiation.converters.placebuyorder;
 
+import org.marceloleite.mercado.api.negotiation.methods.placebuyorder.PlaceBuyOrderResponse;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.converter.Converter;
 import org.marceloleite.mercado.data.BuyOrderData;
 import org.marceloleite.mercado.data.CurrencyAmountData;
 import org.marceloleite.mercado.data.OrderData;
-import org.marceloleite.mercado.negotiationapi.model.placebuyorder.PlaceBuyOrderResponse;
 
 public class PlaceBuyOrderResponseToBuyOrderDataConverter implements Converter <PlaceBuyOrderResponse, BuyOrderData>{
 
 	@Override
 	public BuyOrderData convertTo(PlaceBuyOrderResponse placeBuyOrderResponse) {
 		BuyOrderData buyOrderData = new BuyOrderData();
-		OrderData orderData = placeBuyOrderResponse.getOrder();
+		OrderData orderData = placeBuyOrderResponse.getOrderData();
 		
 		Currency currencyToPay = orderData.getFirstCurrency();
 		double amountToPay = orderData.getLimitPrice();

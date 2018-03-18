@@ -1,8 +1,9 @@
-package org.marceloleite.mercado.converter.json.api.negotiation;
+package org.marceloleite.mercado.api.negotiation.converters;
 
+import org.marceloleite.mercado.api.negotiation.methods.cancelorder.CancelOrderResponse;
 import org.marceloleite.mercado.commons.converter.Converter;
+import org.marceloleite.mercado.converter.json.api.negotiation.JsonOrderToOrderDataConverter;
 import org.marceloleite.mercado.jsonmodel.api.negotiation.JsonCancelOrderResponse;
-import org.marceloleite.mercado.negotiationapi.model.cancelorder.CancelOrderResponse;
 
 public class JsonCancelResponseOrderToCancelOrderResponseConverter implements Converter<JsonCancelOrderResponse, CancelOrderResponse> {
 

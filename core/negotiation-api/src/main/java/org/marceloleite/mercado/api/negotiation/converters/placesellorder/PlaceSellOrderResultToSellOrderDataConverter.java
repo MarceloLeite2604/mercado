@@ -1,18 +1,18 @@
-package org.marceloleite.mercado.converter.json.api.negotiation;
+package org.marceloleite.mercado.api.negotiation.converters.placesellorder;
 
+import org.marceloleite.mercado.api.negotiation.methods.placesellorder.PlaceSellOrderResponse;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.converter.Converter;
 import org.marceloleite.mercado.data.CurrencyAmountData;
 import org.marceloleite.mercado.data.OrderData;
 import org.marceloleite.mercado.data.SellOrderData;
-import org.marceloleite.mercado.negotiationapi.model.placesellorder.PlaceSellOrderResult;
 
-public class PlaceSellOrderResultToSellOrderDataConverter implements Converter <PlaceSellOrderResult, SellOrderData>{
+public class PlaceSellOrderResultToSellOrderDataConverter implements Converter <PlaceSellOrderResponse, SellOrderData>{
 
 	@Override
-	public SellOrderData convertTo(PlaceSellOrderResult placeSellOrderResponse) {
+	public SellOrderData convertTo(PlaceSellOrderResponse placeSellOrderResponse) {
 		SellOrderData sellOrderData = new SellOrderData();
-		OrderData orderData = placeSellOrderResponse.getOrder();
+		OrderData orderData = placeSellOrderResponse.getOrderData();
 		
 		Currency currencyToReceive = orderData.getFirstCurrency();
 		double amountToReceive = orderData.getLimitPrice();
@@ -28,7 +28,7 @@ public class PlaceSellOrderResultToSellOrderDataConverter implements Converter <
 	}
 
 	@Override
-	public PlaceSellOrderResult convertFrom(SellOrderData sellOrderData) {
+	public PlaceSellOrderResponse convertFrom(SellOrderData sellOrderData) {
 		throw new UnsupportedOperationException();
 	}
 

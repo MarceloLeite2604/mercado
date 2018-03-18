@@ -1,4 +1,4 @@
-package org.marceloleite.mercado.negotiationapi.model.cancelorder;
+package org.marceloleite.mercado.api.negotiation.methods.cancelorder;
 
 import org.marceloleite.mercado.data.OrderData;
 
