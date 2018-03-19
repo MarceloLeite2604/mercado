@@ -18,7 +18,7 @@
 <use>1</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
 <dataTypeSize>64 CHAR</dataTypeSize>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
+<ownDataTypeParameters>64 CHAR,,</ownDataTypeParameters>
 <previousColumn>false</previousColumn>
 <autoIncrementCycle>false</autoIncrementCycle>
 <associations>
@@ -130,7 +130,7 @@
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
-<Column name="EXECUTE_PRICE_AVERAGE" id="93BF8864-782E-2594-195A-90866FDEBEBE">
+<Column name="EXECUTED_PRICE_AVERAGE" id="93BF8864-782E-2594-195A-90866FDEBEBE">
 <createdBy>marcelo</createdBy>
 <createdTime>2018-03-19 16:50:55 UTC</createdTime>
 <generatorID>FEFD36D9-1B8D-46B3-48CF-886DBE9D774F</generatorID>
@@ -167,7 +167,7 @@
 <ownDataTypeParameters>,0,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
-<Column name="EXECUTED" id="DD048144-3FC7-8039-0837-BC4468298A44">
+<Column name="UPDATED" id="DD048144-3FC7-8039-0837-BC4468298A44">
 <createdBy>marcelo</createdBy>
 <createdTime>2018-03-19 16:50:55 UTC</createdTime>
 <generatorID>7683E87D-488A-C341-5342-9CB84C7EEBE7</generatorID>
@@ -180,7 +180,7 @@
 <ownDataTypeParameters>,0,</ownDataTypeParameters>
 <autoIncrementCycle>false</autoIncrementCycle>
 </Column>
-<Column name="INSTANTIATED" id="570857C1-5771-97D2-89C2-F8D3C3654879">
+<Column name="INTENDED" id="570857C1-5771-97D2-89C2-F8D3C3654879">
 <createdBy>marcelo</createdBy>
 <createdTime>2018-03-19 16:50:55 UTC</createdTime>
 <generatorID>98465657-E89C-7AA7-4831-024B901B8FDC</generatorID>
@@ -204,7 +204,6 @@
 <indexState>Primary Constraint</indexState>
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
-<colUsage columnID="C94025F2-A0A7-8E32-7F6F-9A8D65B62E0C"/>
 <colUsage columnID="548AE943-908F-1B5F-921A-1C3E4A0E09CE"/>
 </indexColumnUsage>
 </ind_PK_UK>

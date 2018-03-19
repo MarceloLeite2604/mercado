@@ -2,6 +2,7 @@
 <RMExtendedMap class="oracle.dbtools.crest.model.xtdmapping.RMExtendedMap">
 <mappings itemClass="oracle.dbtools.crest.model.xtdmapping.ContainerMapping">
 <CM id="0D71F4D1-3763AF6382699CB82EA0-235B829234EF" lID="0D71F4D1-AD99-DA3B-76AA-3763AF638269" lT="0" rID="9CB82EA0-9D34-A89D-6436-235B829234EF" rT="4">
+<keysSelection>DFA3CE9A-6802-6D11-D3CE-30AF3EAED9E5</keysSelection>
 <containedMappings itemClass="oracle.dbtools.crest.model.xtdmapping.RelMapping">
 <Mg id="342547ED-91A0DCFAAF6F3480876F-0E2FAB9A8940" lID="342547ED-4624-78FB-5CCD-91A0DCFAAF6F" rID="3480876F-73D7-2A26-E5CC-0E2FAB9A8940">
 </Mg>
@@ -56,6 +57,7 @@
 </containedMappings>
 </CM>
 <CM id="18696B44-E1AAE6564C6E668B082D-815A89E6FC5E" lID="18696B44-7C41-A47B-EE86-E1AAE6564C6E" lT="0" rID="668B082D-A628-4C5D-E979-815A89E6FC5E" rT="4">
+<keysSelection>3B83BA7F-5267-DB06-344E-69F254ED6776</keysSelection>
 <containedMappings itemClass="oracle.dbtools.crest.model.xtdmapping.RelMapping">
 <Mg id="3B83BA7F-69F254ED6776F99DD020-516C6273A4C9" lID="3B83BA7F-5267-DB06-344E-69F254ED6776" lT="2" rID="F99DD020-007C-2B33-9B2E-516C6273A4C9" rT="7">
 </Mg>

@@ -45,7 +45,7 @@
 <use>1</use>
 <logicalDatatype>LOGDT019</logicalDatatype>
 <dataTypePrecision>30</dataTypePrecision>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
+<ownDataTypeParameters>,30,</ownDataTypeParameters>
 </Attribute>
 <Attribute name="ID" id="72F48074-6F4B-7320-C083-4DF949C79E70">
 <createdBy>marcelo</createdBy>
@@ -117,15 +117,14 @@
 <createdBy>marcelo</createdBy>
 <createdTime>2018-03-19 16:48:22 UTC</createdTime>
 <ownerDesignName>mercado</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
 <engineerTo>
-<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="false"/>
 </engineerTo>
 <pk>true</pk>
 <newElementsIDs>4CA4E2DC-8F2F-5917-3DA9-FB94FE553571,4CA4E2DC-8F2F-5917-3DA9-FB94FE553571,72F48074-6F4B-7320-C083-4DF949C79E70</newElementsIDs>
 <usedAttributes>
-<attributeRef>BA5A8579-8CBE-91B5-DBCE-0FCA2C4697B8</attributeRef>
 <attributeRef>7FF806A8-3EBE-C536-598C-7A4AA5404A26</attributeRef>
-<attributeRef>BA5A8579-8CBE-91B5-DBCE-0FCA2C4697B8</attributeRef>
 <attributeRef>7FF806A8-3EBE-C536-598C-7A4AA5404A26</attributeRef>
 <attributeRef>72F48074-6F4B-7320-C083-4DF949C79E70</attributeRef>
 </usedAttributes>
