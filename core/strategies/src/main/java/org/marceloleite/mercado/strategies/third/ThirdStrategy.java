@@ -5,12 +5,11 @@ import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.base.model.Account;
 import org.marceloleite.mercado.base.model.CurrencyAmount;
 import org.marceloleite.mercado.base.model.House;
+import org.marceloleite.mercado.base.model.Order;
 import org.marceloleite.mercado.base.model.TemporalTickerVariation;
 import org.marceloleite.mercado.base.model.order.BuyOrderBuilder;
-import org.marceloleite.mercado.base.model.order.BuyOrderBuilder.BuyOrder;
 import org.marceloleite.mercado.base.model.order.MinimalAmounts;
 import org.marceloleite.mercado.base.model.order.SellOrderBuilder;
-import org.marceloleite.mercado.base.model.order.SellOrderBuilder.SellOrder;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.OrderType;
 import org.marceloleite.mercado.commons.TimeInterval;
@@ -67,7 +66,7 @@ public class ThirdStrategy extends AbstractStrategy {
 					LOGGER.debug(simulationTimeInterval + ": Last variation is "
 							+ new PercentageFormatter().format(lastVariation));
 					updateBase(house);
-					createBuyOrder(simulationTimeInterval, account);
+					createBuyOrder(simulationTimeInterval, account, house);
 				}
 				break;
 			case SAVED:
@@ -75,7 +74,7 @@ public class ThirdStrategy extends AbstractStrategy {
 					updateBase(house);
 				} else if (lastVariation != Double.NaN && lastVariation >= growthPercentageThreshold) {
 					updateBase(house);
-					createBuyOrder(simulationTimeInterval, account);
+					createBuyOrder(simulationTimeInterval, account, house);
 				}
 				break;
 			case APPLIED:
@@ -107,9 +106,9 @@ public class ThirdStrategy extends AbstractStrategy {
 	private void createSellOrder(TimeInterval simulationTimeInterval, Account account, House house) {
 		CurrencyAmount currencyAmountToSell = calculateOrderAmount(OrderType.SELL, account);
 		if (currencyAmountToSell != null) {
-			CurrencyAmount currencyAmountToReceive = new CurrencyAmount(Currency.REAL, null);
-			SellOrder sellOrder = new SellOrderBuilder().toExecuteOn(simulationTimeInterval.getStart())
-					.selling(currencyAmountToSell).receiving(currencyAmountToReceive).build();
+			CurrencyAmount currencyAmountUnitPrice = calculateCurrencyAmountUnitPrice(house);
+			Order sellOrder = new SellOrderBuilder().toExecuteOn(simulationTimeInterval.getStart())
+					.selling(currencyAmountToSell).receivingUnitPriceOf(currencyAmountUnitPrice).build();
 			LOGGER.info(new ZonedDateTimeToStringConverter().convertTo(simulationTimeInterval.getStart()) + ": Created "
 					+ sellOrder + ".");
 			account.getSellOrdersTemporalController().add(sellOrder);
@@ -117,17 +116,25 @@ public class ThirdStrategy extends AbstractStrategy {
 		}
 	}
 
-	private void createBuyOrder(TimeInterval simulationTimeInterval, Account account) {
+	private void createBuyOrder(TimeInterval simulationTimeInterval, Account account, House house) {
 		CurrencyAmount currencyAmountToPay = calculateOrderAmount(OrderType.BUY, account);
 		if (currencyAmountToPay != null) {
-			CurrencyAmount currencyAmountToBuy = new CurrencyAmount(currency, null);
-			BuyOrder buyOrder = new BuyOrderBuilder().toExecuteOn(simulationTimeInterval.getStart())
-					.buying(currencyAmountToBuy).paying(currencyAmountToPay).build();
+			CurrencyAmount currencyAmountUnitPrice = calculateCurrencyAmountUnitPrice(house);
+			CurrencyAmount calculateCurrencyAmountToBuy = calculateCurrencyAmountToBuy(currencyAmountToPay, currencyAmountUnitPrice);
+			Order buyOrder = new BuyOrderBuilder().toExecuteOn(simulationTimeInterval.getStart())
+					.buying(calculateCurrencyAmountToBuy).payingUnitPriceOf(currencyAmountUnitPrice).build();
 			LOGGER.info(new ZonedDateTimeToStringConverter().convertTo(simulationTimeInterval.getStart()) + ": Created "
 					+ buyOrder + ".");
 			account.getBuyOrdersTemporalController().add(buyOrder);
 			status = Status.APPLIED;
 		}
+	}
+	
+	private CurrencyAmount calculateCurrencyAmountToBuy(CurrencyAmount currencyAmountToPay,
+			CurrencyAmount currencyAmountUnitPrice) {
+		Double quantity = currencyAmountToPay.getAmount()/currencyAmountUnitPrice.getAmount();
+				CurrencyAmount currencyAmountToBuy = new CurrencyAmount(currency, quantity);
+		return currencyAmountToBuy;
 	}
 
 	private CurrencyAmount calculateOrderAmount(OrderType orderType, Account account) {
@@ -206,5 +213,11 @@ public class ThirdStrategy extends AbstractStrategy {
 			shrinkPercentageThreshold = Double.parseDouble(parameter.getValue());
 			break;
 		}
-	}	
+	}
+	
+	private CurrencyAmount calculateCurrencyAmountUnitPrice(House house) {
+		Double lastPrice = house.getTemporalTickers().get(currency).getLastPrice();
+		CurrencyAmount currencyAmountUnitPrice = new CurrencyAmount(currency, lastPrice);
+		return currencyAmountUnitPrice;
+	}
 }

@@ -5,12 +5,11 @@ import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.base.model.Account;
 import org.marceloleite.mercado.base.model.CurrencyAmount;
 import org.marceloleite.mercado.base.model.House;
+import org.marceloleite.mercado.base.model.Order;
 import org.marceloleite.mercado.base.model.TemporalTickerVariation;
 import org.marceloleite.mercado.base.model.order.BuyOrderBuilder;
-import org.marceloleite.mercado.base.model.order.BuyOrderBuilder.BuyOrder;
 import org.marceloleite.mercado.base.model.order.MinimalAmounts;
 import org.marceloleite.mercado.base.model.order.SellOrderBuilder;
-import org.marceloleite.mercado.base.model.order.SellOrderBuilder.SellOrder;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.OrderType;
 import org.marceloleite.mercado.commons.TimeInterval;
@@ -73,7 +72,7 @@ public class FourthStrategy extends AbstractStrategy {
 					LOGGER.debug(simulationTimeInterval + ": Last variation is "
 							+ new PercentageFormatter().format(lastVariation));
 					updateBase(house);
-					createBuyOrder(simulationTimeInterval, account);
+					createBuyOrder(simulationTimeInterval, account, house);
 				}
 				break;
 			case SAVED:
@@ -81,7 +80,7 @@ public class FourthStrategy extends AbstractStrategy {
 					updateBase(house);
 				} else if (lastVariation != Double.NaN && lastVariation >= growthPercentageThreshold) {
 					updateBase(house);
-					createBuyOrder(simulationTimeInterval, account);
+					createBuyOrder(simulationTimeInterval, account, house);
 				}
 				break;
 			case APPLIED:
@@ -125,26 +124,25 @@ public class FourthStrategy extends AbstractStrategy {
 	private void createSellOrder(TimeInterval simulationTimeInterval, Account account, House house) {
 		CurrencyAmount currencyAmountToSell = calculateOrderAmount(OrderType.SELL, account);
 		if (currencyAmountToSell != null) {
-			CurrencyAmount currencyAmountToReceive = new CurrencyAmount(Currency.REAL, null);
-			SellOrder sellOrder = new SellOrderBuilder().toExecuteOn(simulationTimeInterval.getStart())
-					.selling(currencyAmountToSell).receiving(currencyAmountToReceive).build();
+			CurrencyAmount currencyAmountUnitPrice = calculateCurrencyAmountUnitPrice(house);
+			Order sellOrder = new SellOrderBuilder().toExecuteOn(simulationTimeInterval.getStart())
+					.selling(currencyAmountToSell).receivingUnitPriceOf(currencyAmountUnitPrice).build();
 			LOGGER.info(new ZonedDateTimeToStringConverter().convertTo(simulationTimeInterval.getStart()) + ": Created "
 					+ sellOrder + ".");
-			account.getSellOrdersTemporalController().add(sellOrder);
-			status = Status.SAVED;
+			executeOrder(sellOrder, account, house);
 		}
 	}
 
-	private void createBuyOrder(TimeInterval simulationTimeInterval, Account account) {
+	private void createBuyOrder(TimeInterval simulationTimeInterval, Account account, House house) {
 		CurrencyAmount currencyAmountToPay = calculateOrderAmount(OrderType.BUY, account);
 		if (currencyAmountToPay != null) {
 			CurrencyAmount currencyAmountToBuy = new CurrencyAmount(currency, null);
-			BuyOrder buyOrder = new BuyOrderBuilder().toExecuteOn(simulationTimeInterval.getStart())
-					.buying(currencyAmountToBuy).paying(currencyAmountToPay).build();
+			CurrencyAmount currencyAmountUnitPrice = calculateCurrencyAmountUnitPrice(house);
+			Order buyOrder = new BuyOrderBuilder().toExecuteOn(simulationTimeInterval.getStart())
+					.buying(currencyAmountToBuy).payingUnitPriceOf(currencyAmountUnitPrice).build();
 			LOGGER.info(new ZonedDateTimeToStringConverter().convertTo(simulationTimeInterval.getStart()) + ": Created "
 					+ buyOrder + ".");
-			account.getBuyOrdersTemporalController().add(buyOrder);
-			status = Status.APPLIED;
+			executeOrder(buyOrder, account, house);
 		}
 	}
 
@@ -191,7 +189,7 @@ public class FourthStrategy extends AbstractStrategy {
 	protected void defineVariable(Property variable) {
 		FourthStrategyVariable fourthStrategyVariable = FourthStrategyVariable.findByName(variable.getName());
 		ObjectToJsonConverter objectToJsonConverter = new ObjectToJsonConverter();
-		switch(fourthStrategyVariable) {
+		switch (fourthStrategyVariable) {
 		case BASE_TEMPORAL_TICKER:
 			baseTemporalTicker = objectToJsonConverter.convertFromToObject(variable.getName(), baseTemporalTicker);
 			break;
@@ -219,6 +217,36 @@ public class FourthStrategy extends AbstractStrategy {
 			shrinkPercentageThreshold = Double.parseDouble(parameter.getValue());
 			break;
 
+		}
+	}
+
+	private CurrencyAmount calculateCurrencyAmountUnitPrice(House house) {
+		Double lastPrice = house.getTemporalTickers().get(currency).getLastPrice();
+		CurrencyAmount currencyAmountUnitPrice = new CurrencyAmount(currency, lastPrice);
+		return currencyAmountUnitPrice;
+	}
+
+	private void executeOrder(Order order, Account account, House house) {
+		house.getOrderExecutor().placeOrder(order, house, account);
+
+		switch (order.getStatus()) {
+		case OPEN:
+		case UNDEFINED:
+			throw new RuntimeException(
+					"Requested " + order + " execution, but its status returned as \"" + order.getStatus() + "\".");
+		case FILLED:
+			switch (order.getType()) {
+			case BUY:
+				status = Status.APPLIED;
+				break;
+			case SELL:
+				status = Status.SAVED;
+				break;
+			}
+			break;
+		case CANCELLED:
+			LOGGER.info(order + " cancelled.");
+			break;
 		}
 	}
 }

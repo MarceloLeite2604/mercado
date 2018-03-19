@@ -76,6 +76,14 @@ public class XmlOrder {
 	public XmlOrder() {
 		this(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
 	}
+	
+	public XmlOrder(Currency firstCurrency, Currency secondCurrency, Double quantity, Double limitPrice) {
+		super();
+		this.firstCurrency = firstCurrency;
+		this.secondCurrency = secondCurrency;
+		this.quantity = quantity;
+		this.limitPrice = limitPrice;
+	}
 
 	@XmlElement
 	public Long getId() {

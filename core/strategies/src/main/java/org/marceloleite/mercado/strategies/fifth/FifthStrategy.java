@@ -5,12 +5,11 @@ import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.base.model.Account;
 import org.marceloleite.mercado.base.model.CurrencyAmount;
 import org.marceloleite.mercado.base.model.House;
+import org.marceloleite.mercado.base.model.Order;
 import org.marceloleite.mercado.base.model.TemporalTickerVariation;
 import org.marceloleite.mercado.base.model.order.BuyOrderBuilder;
-import org.marceloleite.mercado.base.model.order.BuyOrderBuilder.BuyOrder;
 import org.marceloleite.mercado.base.model.order.MinimalAmounts;
 import org.marceloleite.mercado.base.model.order.SellOrderBuilder;
-import org.marceloleite.mercado.base.model.order.SellOrderBuilder.SellOrder;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.OrderType;
 import org.marceloleite.mercado.commons.TimeInterval;
@@ -20,25 +19,31 @@ import org.marceloleite.mercado.commons.formatter.PercentageFormatter;
 import org.marceloleite.mercado.commons.properties.Property;
 import org.marceloleite.mercado.data.TemporalTicker;
 import org.marceloleite.mercado.strategies.AbstractStrategy;
+import org.marceloleite.mercado.strategies.third.ThirdStrategyParameter;
+import org.marceloleite.mercado.strategies.third.ThirdStrategyVariable;
 
 public class FifthStrategy extends AbstractStrategy {
 
 	private static final Logger LOGGER = LogManager.getLogger(FifthStrategy.class);
 
-	private Double growthPercentageThreshold;
+	// private static final double GROWTH_PERCENTAGE_THRESHOLD = 0.0496;
 
+	// private static final double SHRINK_PERCENTAGE_THRESHOLD = -0.05;
+	
+	private Double growthPercentageThreshold;
+	
 	private Double shrinkPercentageThreshold;
 
 	private Currency currency;
 
-	private Double workingAmountCurrency;
-
 	private TemporalTicker baseTemporalTicker;
+	
+	private Double workingAmountCurrency;
 
 	private Status status;
 
 	public FifthStrategy(Currency currency) {
-		super(FifthStrategyParameter.class, FifthStrategyVariable.class);
+		super(ThirdStrategyParameter.class, ThirdStrategyVariable.class);
 		this.currency = currency;
 		this.status = Status.UNDEFINED;
 	}
@@ -65,7 +70,7 @@ public class FifthStrategy extends AbstractStrategy {
 					LOGGER.debug(simulationTimeInterval + ": Last variation is "
 							+ new PercentageFormatter().format(lastVariation));
 					updateBase(house);
-					createBuyOrder(simulationTimeInterval, account);
+					createBuyOrder(simulationTimeInterval, account, house);
 				}
 				break;
 			case SAVED:
@@ -73,7 +78,7 @@ public class FifthStrategy extends AbstractStrategy {
 					updateBase(house);
 				} else if (lastVariation != Double.NaN && lastVariation >= growthPercentageThreshold) {
 					updateBase(house);
-					createBuyOrder(simulationTimeInterval, account);
+					createBuyOrder(simulationTimeInterval, account, house);
 				}
 				break;
 			case APPLIED:
@@ -105,9 +110,9 @@ public class FifthStrategy extends AbstractStrategy {
 	private void createSellOrder(TimeInterval simulationTimeInterval, Account account, House house) {
 		CurrencyAmount currencyAmountToSell = calculateOrderAmount(OrderType.SELL, account);
 		if (currencyAmountToSell != null) {
-			CurrencyAmount currencyAmountToReceive = new CurrencyAmount(Currency.REAL, null);
-			SellOrder sellOrder = new SellOrderBuilder().toExecuteOn(simulationTimeInterval.getStart())
-					.selling(currencyAmountToSell).receiving(currencyAmountToReceive).build();
+			CurrencyAmount currencyAmountUnitPrice = calculateCurrencyAmountUnitPrice(house);
+			Order sellOrder = new SellOrderBuilder().toExecuteOn(simulationTimeInterval.getStart())
+					.selling(currencyAmountToSell).receivingUnitPriceOf(currencyAmountUnitPrice).build();
 			LOGGER.info(new ZonedDateTimeToStringConverter().convertTo(simulationTimeInterval.getStart()) + ": Created "
 					+ sellOrder + ".");
 			account.getSellOrdersTemporalController().add(sellOrder);
@@ -115,17 +120,25 @@ public class FifthStrategy extends AbstractStrategy {
 		}
 	}
 
-	private void createBuyOrder(TimeInterval simulationTimeInterval, Account account) {
+	private void createBuyOrder(TimeInterval simulationTimeInterval, Account account, House house) {
 		CurrencyAmount currencyAmountToPay = calculateOrderAmount(OrderType.BUY, account);
 		if (currencyAmountToPay != null) {
-			CurrencyAmount currencyAmountToBuy = new CurrencyAmount(currency, null);
-			BuyOrder buyOrder = new BuyOrderBuilder().toExecuteOn(simulationTimeInterval.getStart())
-					.buying(currencyAmountToBuy).paying(currencyAmountToPay).build();
+			CurrencyAmount currencyAmountUnitPrice = calculateCurrencyAmountUnitPrice(house);
+			CurrencyAmount calculateCurrencyAmountToBuy = calculateCurrencyAmountToBuy(currencyAmountToPay, currencyAmountUnitPrice);
+			Order buyOrder = new BuyOrderBuilder().toExecuteOn(simulationTimeInterval.getStart())
+					.buying(calculateCurrencyAmountToBuy).payingUnitPriceOf(currencyAmountUnitPrice).build();
 			LOGGER.info(new ZonedDateTimeToStringConverter().convertTo(simulationTimeInterval.getStart()) + ": Created "
 					+ buyOrder + ".");
 			account.getBuyOrdersTemporalController().add(buyOrder);
 			status = Status.APPLIED;
 		}
+	}
+	
+	private CurrencyAmount calculateCurrencyAmountToBuy(CurrencyAmount currencyAmountToPay,
+			CurrencyAmount currencyAmountUnitPrice) {
+		Double quantity = currencyAmountToPay.getAmount()/currencyAmountUnitPrice.getAmount();
+				CurrencyAmount currencyAmountToBuy = new CurrencyAmount(currency, quantity);
+		return currencyAmountToBuy;
 	}
 
 	private CurrencyAmount calculateOrderAmount(OrderType orderType, Account account) {
@@ -149,8 +162,7 @@ public class FifthStrategy extends AbstractStrategy {
 			throw new RuntimeException("No temporal ticker for time interval " + simulationTimeInterval);
 		}
 
-		TemporalTickerVariation temporalTickerVariation = new TemporalTickerVariation(baseTemporalTicker,
-				currentTemporalTicker);
+		TemporalTickerVariation temporalTickerVariation = new TemporalTickerVariation(baseTemporalTicker, currentTemporalTicker);
 		LOGGER.debug("Variation : " + temporalTickerVariation + ".");
 		return temporalTickerVariation;
 	}
@@ -163,30 +175,29 @@ public class FifthStrategy extends AbstractStrategy {
 
 	@Override
 	protected Property retrieveVariable(String name) {
-		FifthStrategyVariable thirdStrategyVariable = FifthStrategyVariable.findByName(name);
+		FifthStrategyVariable fifthStrategyVariable = FifthStrategyVariable.findByName(name);
 		ObjectToJsonConverter objectToJsonConverter = new ObjectToJsonConverter();
 		String json = null;
-		switch (thirdStrategyVariable) {
+		switch(fifthStrategyVariable) {
 		case BASE_TEMPORAL_TICKER:
 			json = objectToJsonConverter.convertTo(baseTemporalTicker);
 			break;
 		case STATUS:
 			json = objectToJsonConverter.convertTo(status);
-			break;
 		case WORKING_AMOUNT_CURRENCY:
 			json = objectToJsonConverter.convertTo(workingAmountCurrency);
 			break;
 		}
-
-		thirdStrategyVariable.setValue(json);
-		return thirdStrategyVariable;
+		
+		fifthStrategyVariable.setValue(json);
+		return fifthStrategyVariable;
 	}
 
 	@Override
 	protected void defineVariable(Property variable) {
-		FifthStrategyVariable thirdStrategyVariable = FifthStrategyVariable.findByName(variable.getName());
+		FifthStrategyVariable fifthStrategyVariable = FifthStrategyVariable.findByName(variable.getName());
 		ObjectToJsonConverter objectToJsonConverter = new ObjectToJsonConverter();
-		switch (thirdStrategyVariable) {
+		switch(fifthStrategyVariable) {
 		case BASE_TEMPORAL_TICKER:
 			baseTemporalTicker = new TemporalTicker();
 			baseTemporalTicker = objectToJsonConverter.convertFromToObject(variable.getValue(), baseTemporalTicker);
@@ -204,8 +215,8 @@ public class FifthStrategy extends AbstractStrategy {
 
 	@Override
 	protected void defineParameter(Property parameter) {
-		FifthStrategyParameter thirdStrategyParameter = FifthStrategyParameter.findByName(parameter.getName());
-		switch (thirdStrategyParameter) {
+		FifthStrategyParameter fifthStrategyParameter = FifthStrategyParameter.findByName(parameter.getName());
+		switch(fifthStrategyParameter) {
 		case GROWTH_PERCENTAGE_THRESHOLD:
 			growthPercentageThreshold = Double.parseDouble(parameter.getValue());
 			break;
@@ -216,5 +227,11 @@ public class FifthStrategy extends AbstractStrategy {
 			workingAmountCurrency = Double.parseDouble(parameter.getValue());
 			break;
 		}
+	}
+	
+	private CurrencyAmount calculateCurrencyAmountUnitPrice(House house) {
+		Double lastPrice = house.getTemporalTickers().get(currency).getLastPrice();
+		CurrencyAmount currencyAmountUnitPrice = new CurrencyAmount(currency, lastPrice);
+		return currencyAmountUnitPrice;
 	}
 }

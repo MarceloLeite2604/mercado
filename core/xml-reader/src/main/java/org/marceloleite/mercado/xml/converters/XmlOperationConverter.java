@@ -13,13 +13,18 @@ public class XmlOperationConverter implements XmlConverter<XmlOperation, Operati
 		xmlOperation.setId(operationData.getId());
 		xmlOperation.setPrice(operationData.getPrice());
 		xmlOperation.setQuantity(operationData.getQuantity());
-		return null;
+		return xmlOperation;
 	}
 
 	@Override
 	public OperationData convertToObject(XmlOperation xmlOperation) {
-		// TODO Auto-generated method stub
-		return null;
+		OperationData operationData = new OperationData();
+		operationData.setExecuted(xmlOperation.getExecuted());
+		operationData.setFeeRate(xmlOperation.getFeeRate());
+		operationData.setId(xmlOperation.getId());
+		operationData.setPrice(xmlOperation.getPrice());
+		operationData.setQuantity(xmlOperation.getQuantity());
+		return operationData;
 	}
 
 }

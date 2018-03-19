@@ -20,6 +20,7 @@ import org.marceloleite.mercado.xml.structures.XmlBuyOrder;
 import org.marceloleite.mercado.xml.structures.XmlClass;
 import org.marceloleite.mercado.xml.structures.XmlCurrencyAmount;
 import org.marceloleite.mercado.xml.structures.XmlDeposit;
+import org.marceloleite.mercado.xml.structures.XmlOrder;
 import org.marceloleite.mercado.xml.structures.XmlParameter;
 import org.marceloleite.mercado.xml.structures.XmlStrategy;
 
@@ -35,7 +36,7 @@ public class Main {
 	private static XmlDeposit xmlDeposit;
 	private static XmlBalances xmlBalances;
 	private static XmlAccount xmlAccount;
-	private static XmlBuyOrder xmlBuyOrder;
+	private static XmlOrder xmlOrder;
 	private static XmlStrategy xmlStrategy;
 	private static XmlClass xmlClass;
 	private static XmlParameter xmlParameter;
@@ -82,12 +83,12 @@ public class Main {
 		xmlDeposit = new XmlDeposit(ZonedDateTimeUtils.now(), Currency.BITCOIN, 0.2236);
 		xmlBalances = new XmlBalances();
 		xmlBalances.put(Currency.BITCOIN, 0.123);
-		xmlBuyOrder = new XmlBuyOrder(ZonedDateTimeUtils.now(), Currency.BITCOIN, 0.0123, Currency.REAL);
+		xmlOrder = new XmlOrder(Currency.REAL, Currency.BITCOIN, 1.0, 20000.0);
 		xmlAccount = new XmlAccount();
 		xmlAccount.setOwner("Marcelo");
 		xmlAccount.setXmlDeposits(Arrays.asList(xmlDeposit));
 		xmlAccount.setXmlBalances(xmlBalances);
-		xmlAccount.setXmlBuyOrders(Arrays.asList(xmlBuyOrder));
+		xmlAccount.setXmlBuyOrders(Arrays.asList(xmlOrder));
 		
 		List<XmlParameter> xmlParameters = new ArrayList<>();
 		xmlParameter = new XmlParameter();
@@ -129,7 +130,7 @@ public class Main {
 	}
 
 	private static void marshallXmlBuyOrder() throws JAXBException {
-		marshaller.marshal(xmlBuyOrder, createFileForClassXml(XmlBuyOrder.class));
+		marshaller.marshal(xmlOrder, createFileForClassXml(XmlBuyOrder.class));
 	}
 
 	private static void marshallXmlAccount() throws JAXBException {
@@ -151,7 +152,7 @@ public class Main {
 	}
 
 	private static void unmarshallXmlBuyOrder() throws JAXBException {
-		xmlBuyOrder = (XmlBuyOrder) unmarshaller.unmarshal(createFileForClassXml(XmlBuyOrder.class));
+		xmlOrder = (XmlOrder) unmarshaller.unmarshal(createFileForClassXml(XmlOrder.class));
 	}
 
 	private static void unmarshallXmlAccount() throws JAXBException {
