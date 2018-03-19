@@ -1,4 +1,4 @@
-package org.marceloleite.mercado.simulator.order;
+package org.marceloleite.mercado.simulator;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

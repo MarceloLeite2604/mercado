@@ -2,6 +2,8 @@
 @accounts.sql
 @tapi_informations.sql
 @balances.sql
+@orders.sql
+@operations.sql
 @strategies.sql
 @classes.sql
 @variables.sql

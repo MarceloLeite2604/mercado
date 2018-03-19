@@ -62,6 +62,9 @@ public class OrderPO {
 
 	@Column(name = "UPDATED")
 	private ZonedDateTime updated;
+	
+	@Column(name= "INTENDED")
+	private ZonedDateTime intended;
 
 	// bi-directional many-to-one association to StrategyPO
 	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.EAGER)

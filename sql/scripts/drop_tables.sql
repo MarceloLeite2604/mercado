@@ -4,5 +4,7 @@ DROP TABLE classes;
 DROP TABLE strategies;
 DROP TABLE balances;
 DROP TABLE tapi_informations;
+DROP TABLE operations;
+DROP TABLE orders;
 DROP TABLE accounts;
 DROP TABLE properties;

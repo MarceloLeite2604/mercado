@@ -1,0 +1,19 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Relation class="oracle.dbtools.crest.model.design.logical.Relation" name="ORDE_ACCO_FK" directorySegmentName="seg_0" id="493A0416-3A2F-7B91-8FF0-6A0120530338">
+<createdBy>marcelo</createdBy>
+<createdTime>2018-03-19 16:22:43 UTC</createdTime>
+<ownerDesignName>mercado</ownerDesignName>
+<engineerTo>
+<item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="true"/>
+</engineerTo>
+<sourcePk>3D0DE01F-CD0B-0BA4-2271-C09A592CA504</sourcePk>
+<identifying>false</identifying>
+<optionalSource>true</optionalSource>
+<optionalTarget>false</optionalTarget>
+<sourceCardinality>1</sourceCardinality>
+<sourceEntity>FF9CEB7F-B0DD-CEF4-9D6C-6F638826E59E</sourceEntity>
+<targetCardinalityString>*</targetCardinalityString>
+<targetEntity>0D71F4D1-AD99-DA3B-76AA-3763AF638269</targetEntity>
+<transferable>true</transferable>
+<deleteRule>NO ACTION</deleteRule>
+</Relation>

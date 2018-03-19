@@ -4,6 +4,7 @@ import org.marceloleite.mercado.commons.properties.Property;
 
 public enum SimulatorProperty implements Property {
 
+	PERSISTENCE_FILE("simulator.persistenceFile", "persistence.properties"),
 	HOUSE_TRADE_PERCENTAGE("simulator.house.tradePercentage", "0.07"),
 	START_TIME("simulator.startTime"),
 	END_TIME("simulator.endTime"),

@@ -16,7 +16,7 @@ public class OperationIdPO implements Serializable {
 	// default serial version id, required for serializable classes.
 	private static final long serialVersionUID = 1L;
 
-	@Column(name = "ACCO_OWNER", length = 64, insertable = false, updatable = false)
+	@Column(name = "ORDE_ACCO_OWNER", length = 64, insertable = false, updatable = false)
 	private String accoOwner;
 	
 	@Column(name = "ORDE_ID", insertable = false, updatable = false)

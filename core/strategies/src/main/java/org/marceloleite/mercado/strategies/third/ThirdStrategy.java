@@ -111,8 +111,7 @@ public class ThirdStrategy extends AbstractStrategy {
 					.selling(currencyAmountToSell).receivingUnitPriceOf(currencyAmountUnitPrice).build();
 			LOGGER.info(new ZonedDateTimeToStringConverter().convertTo(simulationTimeInterval.getStart()) + ": Created "
 					+ sellOrder + ".");
-			account.getSellOrdersTemporalController().add(sellOrder);
-			status = Status.SAVED;
+			executeOrder(sellOrder, account, house);
 		}
 	}
 
@@ -125,8 +124,7 @@ public class ThirdStrategy extends AbstractStrategy {
 					.buying(calculateCurrencyAmountToBuy).payingUnitPriceOf(currencyAmountUnitPrice).build();
 			LOGGER.info(new ZonedDateTimeToStringConverter().convertTo(simulationTimeInterval.getStart()) + ": Created "
 					+ buyOrder + ".");
-			account.getBuyOrdersTemporalController().add(buyOrder);
-			status = Status.APPLIED;
+			executeOrder(buyOrder, account, house);
 		}
 	}
 	
@@ -185,6 +183,30 @@ public class ThirdStrategy extends AbstractStrategy {
 		
 		thirdStrategyVariable.setValue(json);
 		return thirdStrategyVariable;
+	}
+	
+	private void executeOrder(Order order, Account account, House house) {
+		house.getOrderExecutor().placeOrder(order, house, account);
+
+		switch (order.getStatus()) {
+		case OPEN:
+		case UNDEFINED:
+			throw new RuntimeException(
+					"Requested " + order + " execution, but its status returned as \"" + order.getStatus() + "\".");
+		case FILLED:
+			switch (order.getType()) {
+			case BUY:
+				status = Status.APPLIED;
+				break;
+			case SELL:
+				status = Status.SAVED;
+				break;
+			}
+			break;
+		case CANCELLED:
+			LOGGER.info(order + " cancelled.");
+			break;
+		}
 	}
 
 	@Override

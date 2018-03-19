@@ -11,6 +11,7 @@ public class SimulatorPropertiesRetriever extends AbstractEnumPropertiesReader<S
 
 	public SimulatorPropertiesRetriever() {
 		super(SimulatorProperty.class, PROPERTIES_FILE_NAME);
+		readConfiguration();
 	}
 
 	public ZonedDateTime retrieveStartTime() {
@@ -27,5 +28,9 @@ public class SimulatorPropertiesRetriever extends AbstractEnumPropertiesReader<S
 	
 	public Duration retrieveRetrievingDurationTime() {
 		return getDurationProperty(SimulatorProperty.RETRIEVING_DURATION);
-	}	
+	}
+	
+	public String retrievePersistencePropertyFile() {
+		return getProperty(SimulatorProperty.PERSISTENCE_FILE).getValue();
+	}
 }

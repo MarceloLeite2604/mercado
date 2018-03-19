@@ -111,12 +111,11 @@ public class FifthStrategy extends AbstractStrategy {
 		CurrencyAmount currencyAmountToSell = calculateOrderAmount(OrderType.SELL, account);
 		if (currencyAmountToSell != null) {
 			CurrencyAmount currencyAmountUnitPrice = calculateCurrencyAmountUnitPrice(house);
-			Order sellOrder = new SellOrderBuilder().toExecuteOn(simulationTimeInterval.getStart())
+			Order order = new SellOrderBuilder().toExecuteOn(simulationTimeInterval.getStart())
 					.selling(currencyAmountToSell).receivingUnitPriceOf(currencyAmountUnitPrice).build();
 			LOGGER.info(new ZonedDateTimeToStringConverter().convertTo(simulationTimeInterval.getStart()) + ": Created "
-					+ sellOrder + ".");
-			account.getSellOrdersTemporalController().add(sellOrder);
-			status = Status.SAVED;
+					+ order + ".");
+			executeOrder(order, account, house);
 		}
 	}
 
@@ -125,12 +124,11 @@ public class FifthStrategy extends AbstractStrategy {
 		if (currencyAmountToPay != null) {
 			CurrencyAmount currencyAmountUnitPrice = calculateCurrencyAmountUnitPrice(house);
 			CurrencyAmount calculateCurrencyAmountToBuy = calculateCurrencyAmountToBuy(currencyAmountToPay, currencyAmountUnitPrice);
-			Order buyOrder = new BuyOrderBuilder().toExecuteOn(simulationTimeInterval.getStart())
+			Order order = new BuyOrderBuilder().toExecuteOn(simulationTimeInterval.getStart())
 					.buying(calculateCurrencyAmountToBuy).payingUnitPriceOf(currencyAmountUnitPrice).build();
 			LOGGER.info(new ZonedDateTimeToStringConverter().convertTo(simulationTimeInterval.getStart()) + ": Created "
-					+ buyOrder + ".");
-			account.getBuyOrdersTemporalController().add(buyOrder);
-			status = Status.APPLIED;
+					+ order + ".");
+			executeOrder(order, account, house);
 		}
 	}
 	
@@ -166,11 +164,29 @@ public class FifthStrategy extends AbstractStrategy {
 		LOGGER.debug("Variation : " + temporalTickerVariation + ".");
 		return temporalTickerVariation;
 	}
+	
+	private void executeOrder(Order order, Account account, House house) {
+		house.getOrderExecutor().placeOrder(order, house, account);
 
-	private enum Status {
-		UNDEFINED,
-		APPLIED,
-		SAVED;
+		switch (order.getStatus()) {
+		case OPEN:
+		case UNDEFINED:
+			throw new RuntimeException(
+					"Requested " + order + " execution, but its status returned as \"" + order.getStatus() + "\".");
+		case FILLED:
+			switch (order.getType()) {
+			case BUY:
+				status = Status.APPLIED;
+				break;
+			case SELL:
+				status = Status.SAVED;
+				break;
+			}
+			break;
+		case CANCELLED:
+			LOGGER.info(order + " cancelled.");
+			break;
+		}
 	}
 
 	@Override
@@ -233,5 +249,11 @@ public class FifthStrategy extends AbstractStrategy {
 		Double lastPrice = house.getTemporalTickers().get(currency).getLastPrice();
 		CurrencyAmount currencyAmountUnitPrice = new CurrencyAmount(currency, lastPrice);
 		return currencyAmountUnitPrice;
+	}
+	
+	private enum Status {
+		UNDEFINED,
+		APPLIED,
+		SAVED;
 	}
 }
