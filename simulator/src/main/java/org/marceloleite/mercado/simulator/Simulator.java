@@ -19,6 +19,7 @@ import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeDivisionController;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.data.TemporalTicker;
+import org.marceloleite.mercado.databaseretriever.persistence.EntityManagerController;
 import org.marceloleite.mercado.simulator.property.SimulatorPropertiesRetriever;
 
 public class Simulator {
@@ -31,18 +32,28 @@ public class Simulator {
 
 	private Duration stepDuration;
 
+	private SimulatorPropertiesRetriever simulatorPropertiesRetriever;
+
 	public Simulator() {
 		this.house = new SimulationHouse();
 	}
 
 	private void configure() {
-		SimulatorPropertiesRetriever simulatorPropertiesRetriever = new SimulatorPropertiesRetriever();
+		simulatorPropertiesRetriever = new SimulatorPropertiesRetriever();
+		configureEntityManagerController();
 		ZonedDateTime startTime = simulatorPropertiesRetriever.retrieveStartTime();
 		ZonedDateTime endTime = simulatorPropertiesRetriever.retrieveEndTime();
 		this.stepDuration = simulatorPropertiesRetriever.retrieveStepDurationTime();
 		Duration retrievingDuration = simulatorPropertiesRetriever.retrieveRetrievingDurationTime();
 		timeDivisionController = new TimeDivisionController(startTime, endTime, retrievingDuration);
 		this.house = new SimulationHouse();
+	}
+	
+	private void configureEntityManagerController() {
+		String persistenceFileName = simulatorPropertiesRetriever.retrievePersistencePropertyFile();
+		if (persistenceFileName != null) {
+			EntityManagerController.setPersistenceFileName(persistenceFileName);
+		}
 	}
 
 	public void runSimulation() {

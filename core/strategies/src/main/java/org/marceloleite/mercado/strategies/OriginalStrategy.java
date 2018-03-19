@@ -27,7 +27,7 @@ public class OriginalStrategy extends AbstractStrategy {
 	@Override
 	public void setCurrency(Currency currency) {
 		this.currency = currency;
-	}
+	}	
 
 	@Override
 	public void check(TimeInterval simulationTimeInterval, Account account, House house) {
@@ -38,11 +38,28 @@ public class OriginalStrategy extends AbstractStrategy {
 				CurrencyAmount currencyAmountUnitPrice = calculateCurrencyAmountUnitPrice(house);
 				CurrencyAmount currencyAmountToBuy = calculateCurrencyAmountToBuy(currencyAmountToPay,
 						currencyAmountUnitPrice);
-				Order buyOrder = new BuyOrderBuilder().toExecuteOn(simulationTimeInterval.getStart())
+				Order order = new BuyOrderBuilder().toExecuteOn(simulationTimeInterval.getStart())
 						.buying(currencyAmountToBuy).payingUnitPriceOf(currencyAmountUnitPrice).build();
-				LOGGER.debug("Buy order created is " + buyOrder);
-				account.getBuyOrdersTemporalController().add(buyOrder);
+				LOGGER.debug("Buy order created is " + order);
+				executeOrder(order, account, house);
 			}
+		}
+	}
+	
+	private void executeOrder(Order order, Account account, House house) {
+		house.getOrderExecutor().placeOrder(order, house, account);
+
+		switch (order.getStatus()) {
+		case OPEN:
+		case UNDEFINED:
+			throw new RuntimeException(
+					"Requested " + order + " execution, but its status returned as \"" + order.getStatus() + "\".");
+		case FILLED:
+			LOGGER.info(order + " executed.");
+			break;
+		case CANCELLED:
+			LOGGER.info(order + " cancelled.");
+			break;
 		}
 	}
 

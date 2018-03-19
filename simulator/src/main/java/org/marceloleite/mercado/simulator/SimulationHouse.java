@@ -24,7 +24,6 @@ import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.data.AccountData;
 import org.marceloleite.mercado.data.TemporalTicker;
 import org.marceloleite.mercado.retriever.TemporalTickerRetriever;
-import org.marceloleite.mercado.simulator.order.SimulationOrderExecutor;
 import org.marceloleite.mercado.xml.readers.AccountsXmlReader;
 
 public class SimulationHouse implements House {
@@ -154,8 +153,8 @@ public class SimulationHouse implements House {
 		for (Account account : accounts) {
 			account.checkTimedEvents(currentTimeInterval);
 			checkStrategies(currentTimeInterval, account);
-			checkBuyOrders(currentTimeInterval, account);
-			checkSellOrders(currentTimeInterval, account);
+			/*checkBuyOrders(currentTimeInterval, account);
+			checkSellOrders(currentTimeInterval, account);*/
 		}
 	}
 
@@ -168,8 +167,8 @@ public class SimulationHouse implements House {
 			for (Account account : accounts) {
 				account.checkTimedEvents(timeInterval);
 				checkStrategies(timeInterval, account);
-				checkBuyOrders(timeInterval, account);
-				checkSellOrders(timeInterval, account);
+				/*checkBuyOrders(timeInterval, account);
+				checkSellOrders(timeInterval, account);*/
 			}
 		}
 	}

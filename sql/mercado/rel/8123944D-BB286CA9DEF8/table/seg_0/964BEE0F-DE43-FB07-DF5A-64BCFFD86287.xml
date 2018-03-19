@@ -18,7 +18,7 @@
 <use>1</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
 <dataTypeSize>64 CHAR</dataTypeSize>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
+<ownDataTypeParameters>64 CHAR,,</ownDataTypeParameters>
 <previousColumn>false</previousColumn>
 <autoIncrementCycle>false</autoIncrementCycle>
 <associations>
@@ -47,7 +47,6 @@
 <indexState>Primary Constraint</indexState>
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
-<colUsage columnID="B4B7919E-33FF-F5B5-FE94-E2B4797F5834"/>
 <colUsage columnID="6516108B-9CA4-C10B-3607-36DC184D3FBB"/>
 </indexColumnUsage>
 </ind_PK_UK>

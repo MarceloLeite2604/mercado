@@ -31,7 +31,7 @@
 <use>1</use>
 <logicalDatatype>LOGDT024</logicalDatatype>
 <dataTypeSize>64 CHAR</dataTypeSize>
-<ownDataTypeParameters>,,</ownDataTypeParameters>
+<ownDataTypeParameters>64 CHAR,,</ownDataTypeParameters>
 </Attribute>
 <Attribute name="ID" id="331144BB-ED7D-7272-F26E-6197ABE9BBD4">
 <createdBy>marcelo</createdBy>
