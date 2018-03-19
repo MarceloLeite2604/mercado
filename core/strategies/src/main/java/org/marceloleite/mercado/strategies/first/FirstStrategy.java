@@ -18,7 +18,6 @@ import org.marceloleite.mercado.commons.OrderType;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.converter.ObjectToJsonConverter;
 import org.marceloleite.mercado.commons.converter.ZonedDateTimeToStringConverter;
-import org.marceloleite.mercado.commons.formatter.DigitalCurrencyFormatter;
 import org.marceloleite.mercado.commons.formatter.PercentageFormatter;
 import org.marceloleite.mercado.commons.properties.Property;
 import org.marceloleite.mercado.commons.utils.MathUtils;
@@ -28,14 +27,6 @@ import org.marceloleite.mercado.strategies.AbstractStrategy;
 public class FirstStrategy extends AbstractStrategy {
 
 	private static final Logger LOGGER = LogManager.getLogger(FirstStrategy.class);
-
-	// private static final double GROWTH_PERCENTAGE_THRESHOLD = 0.01;
-
-	// private static final double SHRINK_PERCENTAGE_THRESHOLD = -0.01;
-
-	// private static final long TOTAL_BUY_STEPS = MathUtils.factorial(5);
-
-	// private static final long TOTAL_SELL_STEPS = MathUtils.factorial(6);
 
 	private Long buySteps;
 
@@ -75,7 +66,7 @@ public class FirstStrategy extends AbstractStrategy {
 		if (temporalTickerVariation != null) {
 			Double lastVariation = temporalTickerVariation.getLastVariation();
 			if (lastVariation != null && lastVariation != Double.POSITIVE_INFINITY) {
-				checkGrowthPercentage(simulationTimeInterval, account, house, temporalTickerVariation);
+				checkGrowthPercentage(simulationTimeInterval, account, house, lastVariation);
 				checkShrinkPercentage(simulationTimeInterval, account, house, temporalTickerVariation);
 			}
 		}
@@ -88,32 +79,42 @@ public class FirstStrategy extends AbstractStrategy {
 			ZonedDateTimeToStringConverter zonedDateTimeToStringConverter = new ZonedDateTimeToStringConverter();
 			LOGGER.debug(zonedDateTimeToStringConverter.convertTo(simulationTimeInterval.getEnd())
 					+ ": Shrink threshold reached.");
-			if (hasBalance(account)) {
-				LOGGER.debug("Has balance for sell order.");
-				createSellOrder(simulationTimeInterval, account, house);
-				updateBaseTemporalTicker(house.getTemporalTickers().get(currency));
+			Order order = createSellOrder(simulationTimeInterval, account, house);
+			if (order != null) {
+				executeOrder(order, account, house);
+			}
+			updateBaseTemporalTicker(house.getTemporalTickers().get(currency));
+		}
+
+	}
+
+	private Order createSellOrder(TimeInterval simulationTimeInterval, Account account, House house) {
+		CurrencyAmount currencyAmountBaseValue = calculareCurrencyAmountBaseValue(OrderType.SELL, house);
+		CurrencyAmount currencyAmountToSell = calculateOrderAmount(OrderType.SELL, currencyAmountBaseValue, house,
+				account);
+		if (currencyAmountToSell == null) {
+			return null;
+		}
+		CurrencyAmount currencyAmountUnitPrice = calculateCurrencyAmountUnitPrice(house);
+		if (!hasBalanceFor(currencyAmountToSell, account)) {
+			if (!buySellStep.isOnMinSellStep()) {
+				LOGGER.debug("Decreasing sell step an creating a new order.");
+				buySellStep.updateStep(OrderType.SELL);
+				return createSellOrder(simulationTimeInterval, account, house);
+			} else {
+				LOGGER.debug("Sell step is on min. Cancelling order creation.");
+				return null;
 			}
 		}
+		Order order = new SellOrderBuilder().toExecuteOn(simulationTimeInterval.getStart())
+				.selling(currencyAmountToSell).receivingUnitPriceOf(currencyAmountUnitPrice).build();
+		LOGGER.debug("Order created is " + order + ".");
+		return order;
 	}
 
-	private void createSellOrder(TimeInterval simulationTimeInterval, Account account, House house) {
-		CurrencyAmount currencyAmountToReceive = calculateOrderAmount(OrderType.SELL, account);
-		if (currencyAmountToReceive != null) {
-			CurrencyAmount currencyAmountToSell = calculateCurrencyAmountToSell(currencyAmountToReceive, house);
-			CurrencyAmount currencyAmountUnitPrice = calculateCurrencyAmountUnitPrice(house);
-			Order order = new SellOrderBuilder().toExecuteOn(simulationTimeInterval.getStart())
-					.selling(currencyAmountToSell).receivingUnitPriceOf(currencyAmountUnitPrice).build();
-			LOGGER.debug("Created " + order + ".");
-			executeOrder(order, account, house);
-		}
-	}
-
-	private CurrencyAmount calculateCurrencyAmountToSell(CurrencyAmount currencyAmountToReceive, House house) {
-		TemporalTicker temporalTicker = house.getTemporalTickers().get(currency);
-		Double lastPrice = temporalTicker.getLastPrice();
-		Double amountToReceive = currencyAmountToReceive.getAmount();
-		Double amountToSell = amountToReceive / lastPrice;
-		return new CurrencyAmount(currency, amountToSell);
+	private boolean hasBalanceFor(CurrencyAmount currencyAmount, Account account) {
+		CurrencyAmount currencyAmountBalance = account.getBalance().get(currencyAmount.getCurrency());
+		return (currencyAmountBalance.getAmount() > currencyAmount.getAmount());
 	}
 
 	private void executeOrder(Order order, Account account, House house) {
@@ -125,7 +126,7 @@ public class FirstStrategy extends AbstractStrategy {
 			throw new RuntimeException(
 					"Requested " + order + " execution, but its status returned as \"" + order.getStatus() + "\".");
 		case FILLED:
-			buySellStep.updateStep(OrderType.BUY);
+			buySellStep.updateStep(order.getType());
 			break;
 		case CANCELLED:
 			LOGGER.info(order + " cancelled.");
@@ -134,51 +135,109 @@ public class FirstStrategy extends AbstractStrategy {
 	}
 
 	private void checkGrowthPercentage(TimeInterval simulationTimeInterval, Account account, House house,
-			TemporalTickerVariation temporalTickerVariation) {
-		ZonedDateTimeToStringConverter zonedDateTimeToStringConverter = new ZonedDateTimeToStringConverter();
-		Double lastVariation = temporalTickerVariation.getLastVariation();
+			Double lastVariation) {
 		if (lastVariation >= growthPercentageThreshold) {
-			LOGGER.debug(zonedDateTimeToStringConverter.convertTo(simulationTimeInterval.getEnd())
+			LOGGER.debug(new ZonedDateTimeToStringConverter().convertTo(simulationTimeInterval.getEnd())
 					+ ": Growth threshold reached.");
-			if (hasBalance(account)) {
-				LOGGER.debug("Has balance for buy order.");
-				createBuyOrder(simulationTimeInterval, house, account);
-				updateBaseTemporalTicker(house.getTemporalTickers().get(currency));
+			Order order = createBuyOrder(simulationTimeInterval, house, account);
+			if (order != null) {
+				executeOrder(order, account, house);
+			}
+			updateBaseTemporalTicker(house.getTemporalTickers().get(currency));
+		}
+	}
+
+	private Order createBuyOrder(TimeInterval simulationTimeInterval, House house, Account account) {
+		CurrencyAmount currencyAmountBaseValue = calculareCurrencyAmountBaseValue(OrderType.BUY, house);
+		CurrencyAmount currencyAmountToPay = calculateOrderAmount(OrderType.BUY, currencyAmountBaseValue, house,
+				account);
+
+		if (currencyAmountToPay == null) {
+			return null;
+		}
+
+		CurrencyAmount currencyAmountUnitPrice = calculateCurrencyAmountUnitPrice(house);
+		CurrencyAmount currencyAmountToBuy = calculateCurrencyAmountToBuy(currencyAmountToPay, currencyAmountUnitPrice);
+		if (MinimalAmounts.isAmountLowerThanMinimal(currencyAmountToBuy)) {
+			LOGGER.debug("The amount of " + currency + " currency to buy is lower than the minimal limit.");
+			if (!buySellStep.isOnMaxBuyStep()) {
+				LOGGER.debug("Increasing buy step and creating a new order.");
+				buySellStep.updateStep(OrderType.BUY);
+				// return createBuyOrder(simulationTimeInterval, house, account);
+			} else {
+				LOGGER.debug("Buying step is on max. Cancelling order creation.");
+				return null;
 			}
 		}
+
+		Order order = new BuyOrderBuilder().toExecuteOn(simulationTimeInterval.getStart()).buying(currencyAmountToBuy)
+				.payingUnitPriceOf(currencyAmountUnitPrice).build();
+		LOGGER.debug("Order created is " + order + ".");
+		return order;
 	}
 
-	private boolean hasBalance(Account account) {
-		CurrencyAmount currencyAmountBalance = account.getBalance().get(Currency.REAL);
-		Double balanceAmount = currencyAmountBalance.getAmount();
-		LOGGER.debug("Balance amount: " + currencyAmountBalance);
-		return (balanceAmount > 0.0 && balanceAmount > MinimalAmounts.retrieveMinimalAmountFor(Currency.REAL));
-	}
-
-	private void createBuyOrder(TimeInterval simulationTimeInterval, House house, Account account) {
-		CurrencyAmount currencyAmountToPay = calculateOrderAmount(OrderType.BUY, account);
-		if (currencyAmountToPay != null) {
-			CurrencyAmount currencyAmountToBuy = calculateCurrencyAmountToBuy(currencyAmountToPay, house);
-			CurrencyAmount currencyAmountUnitPrice = calculateCurrencyAmountUnitPrice(house);
-			Order order = new BuyOrderBuilder().toExecuteOn(simulationTimeInterval.getStart())
-					.buying(currencyAmountToBuy).payingUnitPriceOf(currencyAmountUnitPrice).build();
-			LOGGER.debug("Buy order created is " + order);
-			executeOrder(order, account, house);
+	private CurrencyAmount calculareCurrencyAmountBaseValue(OrderType orderType, House house) {
+		double operationPercentage = calculateOperationPercentage(orderType);
+		Double baseValueAmount = null;
+		Currency baseValueCurrency = null;
+		switch (orderType) {
+		case BUY:
+			baseValueAmount = baseRealAmount.getAmount() * operationPercentage;
+			baseValueCurrency = Currency.REAL;
+			break;
+		case SELL:
+			TemporalTicker temporalTicker = house.getTemporalTickers().get(currency);
+			Double lastPrice = temporalTicker.getLastPrice();
+			if (lastPrice == null || lastPrice == 0.0) {
+				lastPrice = temporalTicker.getPreviousLastPrice();
+			}
+			baseValueAmount = (baseRealAmount.getAmount() * operationPercentage) / lastPrice;
+			baseValueCurrency = currency;
+			break;
 		}
+		CurrencyAmount currencyAmount = new CurrencyAmount(baseValueCurrency, baseValueAmount);
+		LOGGER.debug("Base value is: " + currencyAmount);
+		return currencyAmount;
 	}
 
 	private CurrencyAmount calculateCurrencyAmountUnitPrice(House house) {
-		Double lastPrice = house.getTemporalTickers().get(currency).getLastPrice();
-		CurrencyAmount currencyAmountUnitPrice = new CurrencyAmount(currency, lastPrice);
+		TemporalTicker temporalTicker = house.getTemporalTickers().get(currency);
+		Double lastPrice = temporalTicker.getLastPrice();
+		if (lastPrice == null || lastPrice == 0.0) {
+			lastPrice = temporalTicker.getPreviousLastPrice();
+		}
+		CurrencyAmount currencyAmountUnitPrice = new CurrencyAmount(Currency.REAL, lastPrice);
 		return currencyAmountUnitPrice;
 	}
 
-	private CurrencyAmount calculateCurrencyAmountToBuy(CurrencyAmount currencyAmountToPay, House house) {
-		TemporalTicker temporalTicker = house.getTemporalTickers().get(currency);
-		Double lastPrice = temporalTicker.getLastPrice();
-		Double amountToPay = currencyAmountToPay.getAmount();
-		Double quantity = amountToPay / lastPrice;
-		return new CurrencyAmount(currency, quantity);
+	private CurrencyAmount calculateCurrencyAmountToBuy(CurrencyAmount currencyAmountToPay,
+			CurrencyAmount currencyAmountUnitPrice) {
+		Double quantity = currencyAmountToPay.getAmount() / currencyAmountUnitPrice.getAmount();
+		Double restoredValue = quantity * currencyAmountUnitPrice.getAmount();
+		Double difference = restoredValue - currencyAmountToPay.getAmount();
+		if (difference > 0) {
+			quantity -= difference / currencyAmountUnitPrice.getAmount();
+		}
+		CurrencyAmount currencyAmountToBuy = new CurrencyAmount(currency, quantity);
+		LOGGER.debug("Currency amount to buy is: " + currencyAmountToBuy);
+		return currencyAmountToBuy;
+	}
+
+	private CurrencyAmount checkMinimalAmount(CurrencyAmount currencyAmount, Account account) {
+		if (MinimalAmounts.isAmountLowerThanMinimal(currencyAmount)) {
+			Double minimalRequired = MinimalAmounts.retrieveMinimalAmountFor(currency);
+			CurrencyAmount minimalCurrencyAmountRequired = new CurrencyAmount(currencyAmount.getCurrency(),
+					minimalRequired);
+			if (hasBalanceFor(minimalCurrencyAmountRequired, account)) {
+				LOGGER.debug("The amount of " + currencyAmount + " is lower than minimal of " + minimalRequired
+						+ " required for an operation. Updating it.");
+				currencyAmount.setAmount(minimalRequired);
+			} else {
+				LOGGER.debug("Not enough balance for execute the minimal operation. Cancelling order execution.");
+				return null;
+			}
+		}
+		return currencyAmount;
 	}
 
 	private void setBase(Account account, House house) {
@@ -192,31 +251,63 @@ public class FirstStrategy extends AbstractStrategy {
 		}
 	}
 
-	private CurrencyAmount calculateOrderAmount(OrderType orderType, Account account) {
-		/*
-		 * Currency balanceCurrency = (orderType == OrderType.SELL ? this.currency :
-		 * Currency.REAL);
-		 */
-		CurrencyAmount balance = account.getBalance().get(Currency.REAL);
-		double balanceAmount = balance.getAmount();
-		LOGGER.debug("Balance amount: " + balance + ".");
-		double operationPercentage = calculateOperationPercentage(orderType);
-		double operationAmount = baseRealAmount.getAmount() * operationPercentage;
-		LOGGER.debug("Initial operation amount: " + new DigitalCurrencyFormatter().format(operationAmount) + ".");
-		Double minimalAmount = MinimalAmounts.retrieveMinimalAmountFor(currency);
+	private CurrencyAmount calculateOrderAmount(OrderType orderType, CurrencyAmount currencyAmountBase, House house,
+			Account account) {
 
-		if (orderType == OrderType.BUY && operationAmount > balanceAmount) {
-			operationAmount = balanceAmount;
-		}
-
-		if (operationAmount < minimalAmount) {
-			LOGGER.debug("No balance for minimal operation. Aborting order.");
+		if (!hasPositiveBalance(currencyAmountBase.getCurrency(), account)) {
+			LOGGER.debug("No " + currency + " balance to execute an order.");
 			return null;
 		}
 
-		CurrencyAmount orderAmount = new CurrencyAmount(Currency.REAL, operationAmount);
-		LOGGER.debug("Order amount is " + orderAmount + ".");
-		return orderAmount;
+		// CurrencyAmount currencyAmountForOperation =
+		// calculateCurrencyAmountInitialOperation(currency, orderType, house);
+		CurrencyAmount currencyAmountForOperation = new CurrencyAmount(currencyAmountBase);
+		currencyAmountForOperation = checkBalance(currencyAmountForOperation, account);
+		currencyAmountForOperation = checkMinimalAmount(currencyAmountForOperation, account);
+
+		if (currencyAmountForOperation != null) {
+			LOGGER.debug("Order amount is " + currencyAmountForOperation + ".");
+		}
+		return currencyAmountForOperation;
+	}
+
+	private boolean hasPositiveBalance(Currency currency, Account account) {
+		CurrencyAmount currencyAmountBalance = account.getBalance().get(currency);
+		LOGGER.debug("Balance: " + currencyAmountBalance + ".");
+		return (currencyAmountBalance.getAmount() > 0);
+	}
+
+	private CurrencyAmount checkBalance(CurrencyAmount currencyAmount, Account account) {
+		CurrencyAmount currencyAmountBalance = account.getBalance().get(currencyAmount.getCurrency());
+		if (currencyAmountBalance.getAmount() <= currencyAmount.getAmount()) {
+			LOGGER.debug("Not enough " + currencyAmount.getCurrency()
+					+ " on balance to complete the initial amount. Using the remaining " + currencyAmountBalance + ".");
+			return new CurrencyAmount(currencyAmountBalance);
+		}
+		return currencyAmount;
+	}
+
+	private CurrencyAmount calculateCurrencyAmountInitialOperation(Currency currency, OrderType orderType,
+			House house) {
+		Double operationAmount = null;
+		double operationPercentage = calculateOperationPercentage(orderType);
+		switch (orderType) {
+		case BUY:
+			operationAmount = baseRealAmount.getAmount() * operationPercentage;
+			break;
+		case SELL:
+			TemporalTicker temporalTicker = house.getTemporalTickers().get(currency);
+			Double lastPrice = temporalTicker.getLastPrice();
+			if (lastPrice == null || lastPrice == 0.0) {
+				lastPrice = temporalTicker.getPreviousLastPrice();
+			}
+			operationAmount = (baseRealAmount.getAmount() * operationPercentage) / lastPrice;
+			break;
+		}
+		CurrencyAmount currencyAmountInitialOperation = new CurrencyAmount(currency, operationAmount);
+		LOGGER.debug("Initial operation amount: " + currencyAmountInitialOperation + ".");
+
+		return currencyAmountInitialOperation;
 	}
 
 	private void setBaseBalance(Balance balance) {

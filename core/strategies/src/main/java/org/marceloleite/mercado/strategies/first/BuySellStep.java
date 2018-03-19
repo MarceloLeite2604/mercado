@@ -76,4 +76,12 @@ public class BuySellStep {
 		LOGGER.debug("Next sell step is " + result + ".");
 		return result;
 	}
+
+	public boolean isOnMinSellStep() {
+		return currentStep <= sellSteps;
+	}
+	
+	public boolean isOnMaxBuyStep() {
+		return currentStep >= buySteps;
+	}
 }

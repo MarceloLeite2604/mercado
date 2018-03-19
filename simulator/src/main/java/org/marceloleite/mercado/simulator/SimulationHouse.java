@@ -81,7 +81,7 @@ public class SimulationHouse implements House {
 	}
 
 	public Map<String, Balance> getComissionBalance() {
-		return new HashMap<>(comissionBalance);
+		return comissionBalance;
 	}
 
 	public Map<Currency, TemporalTicker> getTemporalTickers() {

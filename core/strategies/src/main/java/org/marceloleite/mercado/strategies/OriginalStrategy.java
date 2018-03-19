@@ -10,6 +10,7 @@ import org.marceloleite.mercado.base.model.order.BuyOrderBuilder;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.properties.Property;
+import org.marceloleite.mercado.data.TemporalTicker;
 
 public class OriginalStrategy extends AbstractStrategy {
 
@@ -27,25 +28,23 @@ public class OriginalStrategy extends AbstractStrategy {
 	@Override
 	public void setCurrency(Currency currency) {
 		this.currency = currency;
-	}	
+	}
 
 	@Override
 	public void check(TimeInterval simulationTimeInterval, Account account, House house) {
 		if (house.getTemporalTickers().get(currency) != null) {
-			CurrencyAmount realAmount = account.getBalance().get(Currency.REAL);
-			if (realAmount.getAmount() > 0) {
-				CurrencyAmount currencyAmountToPay = new CurrencyAmount(realAmount);
+			CurrencyAmount realBalance = account.getBalance().get(Currency.REAL);
+			if (realBalance.getAmount() > 0.000000001) {
 				CurrencyAmount currencyAmountUnitPrice = calculateCurrencyAmountUnitPrice(house);
-				CurrencyAmount currencyAmountToBuy = calculateCurrencyAmountToBuy(currencyAmountToPay,
-						currencyAmountUnitPrice);
+				CurrencyAmount currencyAmountToBuy = calculateCurrencyAmountToBuy(realBalance, currencyAmountUnitPrice);
 				Order order = new BuyOrderBuilder().toExecuteOn(simulationTimeInterval.getStart())
 						.buying(currencyAmountToBuy).payingUnitPriceOf(currencyAmountUnitPrice).build();
-				LOGGER.debug("Buy order created is " + order);
+				LOGGER.debug("Order created is " + order);
 				executeOrder(order, account, house);
 			}
 		}
 	}
-	
+
 	private void executeOrder(Order order, Account account, House house) {
 		house.getOrderExecutor().placeOrder(order, house, account);
 
@@ -55,18 +54,23 @@ public class OriginalStrategy extends AbstractStrategy {
 			throw new RuntimeException(
 					"Requested " + order + " execution, but its status returned as \"" + order.getStatus() + "\".");
 		case FILLED:
-			LOGGER.info(order + " executed.");
+			LOGGER.info("Order " + order + " executed.");
 			break;
 		case CANCELLED:
-			LOGGER.info(order + " cancelled.");
+			LOGGER.info("Order " + order + " cancelled.");
 			break;
 		}
 	}
 
-	private CurrencyAmount calculateCurrencyAmountToBuy(CurrencyAmount currencyAmountToPay,
+	private CurrencyAmount calculateCurrencyAmountToBuy(CurrencyAmount realBalance,
 			CurrencyAmount currencyAmountUnitPrice) {
-		Double quantity = currencyAmountToPay.getAmount()/currencyAmountUnitPrice.getAmount();
-				CurrencyAmount currencyAmountToBuy = new CurrencyAmount(currency, quantity);
+		Double quantity = realBalance.getAmount() / currencyAmountUnitPrice.getAmount();
+		Double restoredValue = quantity * currencyAmountUnitPrice.getAmount();
+		Double difference = restoredValue - realBalance.getAmount();
+		if ( difference > 0 ) {
+			quantity -= difference/currencyAmountUnitPrice.getAmount(); 
+		}
+		CurrencyAmount currencyAmountToBuy = new CurrencyAmount(currency, quantity);
 		return currencyAmountToBuy;
 	}
 
@@ -77,17 +81,21 @@ public class OriginalStrategy extends AbstractStrategy {
 
 	@Override
 	protected void defineVariable(Property variable) {
-		
+
 	}
 
 	@Override
 	protected void defineParameter(Property parameter) {
-		
+
 	}
-	
+
 	private CurrencyAmount calculateCurrencyAmountUnitPrice(House house) {
-		Double lastPrice = house.getTemporalTickers().get(currency).getLastPrice();
-		CurrencyAmount currencyAmountUnitPrice = new CurrencyAmount(currency, lastPrice);
+		TemporalTicker temporalTicker = house.getTemporalTickers().get(currency);
+		Double lastPrice = temporalTicker.getLastPrice();
+		if (lastPrice == null || lastPrice == 0.0) {
+			lastPrice = temporalTicker.getPreviousLastPrice();
+		}
+		CurrencyAmount currencyAmountUnitPrice = new CurrencyAmount(Currency.REAL, lastPrice);
 		return currencyAmountUnitPrice;
 	}
 }

@@ -57,7 +57,7 @@ public class BuyOrderBuilder {
 		ZonedDateTime time = ZonedDateTime.from(this.time);
 		this.time = null;
 
-		Currency currencyToBuy = this.secondCurrency;
+		Currency secondCurrency = this.secondCurrency;
 		this.secondCurrency = null;
 
 		Double amountToBuy = this.quantity;
@@ -68,7 +68,7 @@ public class BuyOrderBuilder {
 		Double limitPrice = this.limitPrice;
 		this.limitPrice = null;
 
-		return new Order(firstCurrency, currencyToBuy, OrderType.BUY, amountToBuy, limitPrice, time);
+		return new Order(firstCurrency, secondCurrency, OrderType.BUY, amountToBuy, limitPrice, time);
 	}
 
 	private void checkRules() {
@@ -111,7 +111,8 @@ public class BuyOrderBuilder {
 		}
 
 		if (limitPrice == null) {
-			throw new RuntimeException("Max \""+firstCurrency+"\" unit price to buy  \"" + secondCurrency + "\" was not informed.");
+			throw new RuntimeException(
+					"Max \"" + firstCurrency + "\" unit price to buy  \"" + secondCurrency + "\" was not informed.");
 		}
 	}
 }

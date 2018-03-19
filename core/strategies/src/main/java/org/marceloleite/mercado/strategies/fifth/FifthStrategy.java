@@ -1,5 +1,7 @@
 package org.marceloleite.mercado.strategies.fifth;
 
+import java.util.Optional;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.base.model.Account;
@@ -246,7 +248,8 @@ public class FifthStrategy extends AbstractStrategy {
 	}
 	
 	private CurrencyAmount calculateCurrencyAmountUnitPrice(House house) {
-		Double lastPrice = house.getTemporalTickers().get(currency).getLastPrice();
+		TemporalTicker temporalTicker = house.getTemporalTickers().get(currency);
+		Double lastPrice = Optional.of(temporalTicker.getLastPrice()).orElse(temporalTicker.getPreviousLastPrice());
 		CurrencyAmount currencyAmountUnitPrice = new CurrencyAmount(currency, lastPrice);
 		return currencyAmountUnitPrice;
 	}
