@@ -7,6 +7,7 @@ import org.marceloleite.mercado.base.model.temporalcontroller.AbstractTimedObjec
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.OrderStatus;
 import org.marceloleite.mercado.commons.OrderType;
+import org.marceloleite.mercado.commons.converter.ZonedDateTimeToStringConverter;
 import org.marceloleite.mercado.data.OperationData;
 import org.marceloleite.mercado.data.OrderData;
 
@@ -206,8 +207,10 @@ public class Order extends AbstractTimedObject {
 		switch (type) {
 		case BUY:
 			result = toStringBuyOrder();
+			break;
 		case SELL:
 			result = toStringSellOrder();
+			break;
 		}
 		return result;
 	}
@@ -221,6 +224,7 @@ public class Order extends AbstractTimedObject {
 		stringBuffer.append(currencyAmountToBuy + " ");
 		stringBuffer.append("paying a unit price of ");
 		stringBuffer.append(currencyAmountToPay + " ");
+		stringBuffer.append("at " + new ZonedDateTimeToStringConverter().convertTo(intended));
 		
 		return stringBuffer.toString();
 	}
@@ -234,6 +238,7 @@ public class Order extends AbstractTimedObject {
 		stringBuffer.append(currencyAmountToSell + " ");
 		stringBuffer.append("receiving a unit price of ");
 		stringBuffer.append(currencyAmountToReceive + " ");
+		stringBuffer.append("at " + new ZonedDateTimeToStringConverter().convertTo(intended));
 		
 		return stringBuffer.toString();
 	}

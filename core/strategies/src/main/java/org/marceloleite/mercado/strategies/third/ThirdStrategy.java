@@ -238,7 +238,11 @@ public class ThirdStrategy extends AbstractStrategy {
 	}
 	
 	private CurrencyAmount calculateCurrencyAmountUnitPrice(House house) {
-		Double lastPrice = house.getTemporalTickers().get(currency).getLastPrice();
+		TemporalTicker temporalTicker = house.getTemporalTickers().get(currency);
+		Double lastPrice = temporalTicker.getLastPrice();
+		if ( lastPrice == null || lastPrice == 0.0) {
+			lastPrice = temporalTicker.getPreviousLastPrice();
+		}
 		CurrencyAmount currencyAmountUnitPrice = new CurrencyAmount(currency, lastPrice);
 		return currencyAmountUnitPrice;
 	}

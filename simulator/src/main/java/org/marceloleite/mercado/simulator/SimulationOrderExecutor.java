@@ -20,8 +20,10 @@ public class SimulationOrderExecutor implements OrderExecutor {
 		switch (order.getType()) {
 		case BUY:
 			order = executeBuyOrder(order, house, account);
+			break;
 		case SELL:
 			order = executeSellOrder(order, house, account);
+			break;
 		}
 		return null;
 	}
@@ -41,7 +43,7 @@ public class SimulationOrderExecutor implements OrderExecutor {
 			order.setStatus(OrderStatus.FILLED);
 		} else {
 			LOGGER.info("Account \"" + account.getOwner() + "\" does not have enough "
-					+ currencyAmountToPay.getCurrency() + " balance to execute buy order. Cancelling.");
+					+ currencyAmountToPay.getCurrency() + " balance to execute " + order + ". Cancelling.");
 			order.setStatus(OrderStatus.CANCELLED);
 		}
 		return order;
@@ -52,21 +54,19 @@ public class SimulationOrderExecutor implements OrderExecutor {
 		Currency currencyToPay = order.getFirstCurrency();
 		return new CurrencyAmount(currencyToPay, amountToPay);
 	}
-	
+
 	private CurrencyAmount calculateCurrencyAmountToSell(Order order) {
 		Double quantity = order.getQuantity();
 		Currency currencyToSell = order.getSecondCurrency();
 		return new CurrencyAmount(currencyToSell, quantity);
 	}
 
-	
-
 	public Order executeSellOrder(Order order, House house, Account account) {
 		CurrencyAmount currencyAmountToSell = calculateCurrencyAmountToSell(order);
 		if (hasBalance(account, currencyAmountToSell)) {
 			LOGGER.info("Executing " + order + " on \"" + account.getOwner() + "\" account.");
 			CurrencyAmount currencyAmountCommission = calculateSellOrderCommission(order, house);
-			CurrencyAmount currencyAmountToDeposit = calculateSellOrderDeposit(order, currencyAmountCommission);
+			CurrencyAmount currencyAmountToDeposit = calculateSellOrderDeposit(order, house, currencyAmountCommission);
 			LOGGER.debug("Commission amount is " + currencyAmountCommission + ".");
 			depositComission(currencyAmountCommission, house, account);
 			LOGGER.debug("Amount to withdraw is " + currencyAmountToSell + ".");
@@ -76,7 +76,7 @@ public class SimulationOrderExecutor implements OrderExecutor {
 			order.setStatus(OrderStatus.FILLED);
 		} else {
 			LOGGER.info("Account \"" + account.getOwner() + "\" does not have enough "
-					+ currencyAmountToSell.getCurrency() + " balance to execute sell order. Cancelling.");
+					+ currencyAmountToSell.getCurrency() + " balance to execute sell " + order + ". Cancelling.");
 			order.setStatus(OrderStatus.CANCELLED);
 		}
 		return order;
@@ -107,9 +107,9 @@ public class SimulationOrderExecutor implements OrderExecutor {
 	}
 
 	private CurrencyAmount elaborateCurrencyAmountToReceive(Order order) {
-		Double quantity = order.getQuantity();
-		Currency firstCurrency = order.getFirstCurrency();
-		return new CurrencyAmount(firstCurrency, quantity);
+		Double amount = order.getQuantity() * order.getLimitPrice();
+		Currency currency = order.getFirstCurrency();
+		return new CurrencyAmount(currency, amount);
 	}
 
 	private void depositComission(CurrencyAmount currencyAmountComission, House house, Account account) {
@@ -123,8 +123,8 @@ public class SimulationOrderExecutor implements OrderExecutor {
 		double amountToDeposit = currencyAmountToBuy.getAmount() - currencyAmountComission.getAmount();
 		return new CurrencyAmount(currencyAmountToBuy.getCurrency(), amountToDeposit);
 	}
-	
-	private CurrencyAmount calculateSellOrderDeposit(Order order, CurrencyAmount currencyAmountComission) {
+
+	private CurrencyAmount calculateSellOrderDeposit(Order order, House house, CurrencyAmount currencyAmountComission) {
 		CurrencyAmount currencyAmountToReceive = elaborateCurrencyAmountToReceive(order);
 		double amountToDeposit = currencyAmountToReceive.getAmount() - currencyAmountComission.getAmount();
 		return new CurrencyAmount(currencyAmountToReceive.getCurrency(), amountToDeposit);
