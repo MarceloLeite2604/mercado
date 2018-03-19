@@ -25,9 +25,9 @@ public class XmlAccount {
 
 	private List<XmlDeposit> xmlDeposits;
 	
-	private List<XmlBuyOrder> xmlBuyOrders;
+	private List<XmlOrder> xmlBuyOrders;
 	
-	private List<XmlSellOrder> xmlSellOrders;
+	private List<XmlOrder> xmlSellOrders;
 	
 	private List<XmlStrategy> xmlStrategies;
 
@@ -102,21 +102,21 @@ public class XmlAccount {
 	
 	@XmlElementWrapper(name="buyOrders")
 	@XmlElement(name="buyOrder")
-	public List<XmlBuyOrder> getXmlBuyOrders() {
+	public List<XmlOrder> getXmlBuyOrders() {
 		return xmlBuyOrders;
 	}
 
-	public void setXmlBuyOrders(List<XmlBuyOrder> xmlBuyOrders) {
+	public void setXmlBuyOrders(List<XmlOrder> xmlBuyOrders) {
 		this.xmlBuyOrders = xmlBuyOrders;
 	}
 	
 	@XmlElementWrapper(name="sellOrders")
 	@XmlElement(name="sellOrder")
-	public List<XmlSellOrder> getXmlSellOrders() {
+	public List<XmlOrder> getXmlSellOrders() {
 		return this.xmlSellOrders;
 	}
 	
-	public void setXmlSellOrders(List<XmlSellOrder> xmlSellOrders) {
+	public void setXmlSellOrders(List<XmlOrder> xmlSellOrders) {
 		this.xmlSellOrders = xmlSellOrders;
 	}
 

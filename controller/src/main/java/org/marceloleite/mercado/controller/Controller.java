@@ -13,11 +13,8 @@ import org.marceloleite.mercado.api.negotiation.methods.getaccountinfo.GetAccoun
 import org.marceloleite.mercado.base.model.Account;
 import org.marceloleite.mercado.base.model.Balance;
 import org.marceloleite.mercado.base.model.House;
-import org.marceloleite.mercado.base.model.OrderExecutor;
 import org.marceloleite.mercado.base.model.Strategy;
 import org.marceloleite.mercado.base.model.TapiInformation;
-import org.marceloleite.mercado.base.model.order.BuyOrderBuilder.BuyOrder;
-import org.marceloleite.mercado.base.model.order.SellOrderBuilder.SellOrder;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.utils.ZonedDateTimeUtils;
@@ -88,8 +85,6 @@ public class Controller {
 			for (Currency currency : currenciesStrategies.keySet()) {
 				List<Strategy> strategies = currenciesStrategies.get(currency);
 				checkStrategies(timeInterval, account, strategies);
-				checkBuyOrders(timeInterval, account, house);
-				checkSellOrders(timeInterval, account, house);
 				List<BalanceData> balanceDatas = retrieveAccountBalance(account.retrieveData());
 				account.setBalance(new Balance(balanceDatas));
 			}
@@ -103,26 +98,6 @@ public class Controller {
 				AccountData accountData = account.retrieveData();
 				AccountPO accountPO = accountPOToAccountDataConverter.convertFrom(accountData);
 				accountDAO.merge(accountPO);
-			}
-		}
-	}
-
-	private void checkBuyOrders(TimeInterval currentTimeInterval, Account account, House house) {
-		OrderExecutor orderExecutor = house.getOrderExecutor();
-		List<BuyOrder> buyOrders = account.getBuyOrdersTemporalController().retrieve(currentTimeInterval);
-		if (buyOrders != null && !buyOrders.isEmpty()) {
-			for (BuyOrder buyOrder : buyOrders) {
-				orderExecutor.executeBuyOrder(buyOrder, house, account);
-			}
-		}
-	}
-
-	private void checkSellOrders(TimeInterval currentTimeInterval, Account account, House house) {
-		OrderExecutor orderExecutor = house.getOrderExecutor();
-		List<SellOrder> sellOrders = account.getSellOrdersTemporalController().retrieve(currentTimeInterval);
-		if (sellOrders != null && !sellOrders.isEmpty()) {
-			for (SellOrder sellOrder : sellOrders) {
-				orderExecutor.executeSellOrder(sellOrder, house, account);
 			}
 		}
 	}
