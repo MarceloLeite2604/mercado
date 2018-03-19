@@ -146,7 +146,7 @@
 <domain>EE73E7A5-75C0-513C-08D9-98E102E9D0D5</domain>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="EXECUTE_PRICE_AVERAGE" id="FEFD36D9-1B8D-46B3-48CF-886DBE9D774F">
+<Attribute name="EXECUTED_PRICE_AVERAGE" id="FEFD36D9-1B8D-46B3-48CF-886DBE9D774F">
 <createdBy>marcelo</createdBy>
 <createdTime>2018-03-19 16:20:57 UTC</createdTime>
 <ownerDesignName>mercado</ownerDesignName>
@@ -186,7 +186,7 @@
 <dataTypePrecision>0</dataTypePrecision>
 <ownDataTypeParameters>,0,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="EXECUTED" id="7683E87D-488A-C341-5342-9CB84C7EEBE7">
+<Attribute name="UPDATED" id="7683E87D-488A-C341-5342-9CB84C7EEBE7">
 <createdBy>marcelo</createdBy>
 <createdTime>2018-03-19 16:21:37 UTC</createdTime>
 <ownerDesignName>mercado</ownerDesignName>
@@ -200,7 +200,7 @@
 <dataTypePrecision>0</dataTypePrecision>
 <ownDataTypeParameters>,0,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="INSTANTIATED" id="98465657-E89C-7AA7-4831-024B901B8FDC">
+<Attribute name="INTENDED" id="98465657-E89C-7AA7-4831-024B901B8FDC">
 <createdBy>marcelo</createdBy>
 <createdTime>2018-03-19 16:22:00 UTC</createdTime>
 <ownerDesignName>mercado</ownerDesignName>
@@ -225,9 +225,8 @@
 <item key="8123944D-E6A8-5E86-927A-BB286CA9DEF8" value="false"/>
 </engineerTo>
 <pk>true</pk>
-<newElementsIDs>493A0416-3A2F-7B91-8FF0-6A0120530338,D12E6B85-BF8F-081E-B440-767D1A9D5EB3</newElementsIDs>
+<newElementsIDs>D12E6B85-BF8F-081E-B440-767D1A9D5EB3</newElementsIDs>
 <usedAttributes>
-<attributeRef>5B3D6236-97BE-F745-7243-0CEA5C1A289D</attributeRef>
 <attributeRef>D12E6B85-BF8F-081E-B440-767D1A9D5EB3</attributeRef>
 </usedAttributes>
 </identifier>
