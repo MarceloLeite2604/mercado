@@ -18,6 +18,8 @@ import org.marceloleite.mercado.commons.OrderType;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.converter.ObjectToJsonConverter;
 import org.marceloleite.mercado.commons.converter.ZonedDateTimeToStringConverter;
+import org.marceloleite.mercado.commons.formatter.DigitalCurrencyFormatter;
+import org.marceloleite.mercado.commons.formatter.NonDigitalCurrencyFormatter;
 import org.marceloleite.mercado.commons.formatter.PercentageFormatter;
 import org.marceloleite.mercado.commons.properties.Property;
 import org.marceloleite.mercado.commons.utils.MathUtils;
@@ -43,6 +45,8 @@ public class FirstStrategy extends AbstractStrategy {
 	private double growthPercentageThreshold;
 
 	private double shrinkPercentageThreshold;
+
+	private boolean skipIfLowerThanMinimalValue;
 
 	public FirstStrategy(Currency currency) {
 		this.currency = currency;
@@ -89,32 +93,60 @@ public class FirstStrategy extends AbstractStrategy {
 	}
 
 	private Order createSellOrder(TimeInterval simulationTimeInterval, Account account, House house) {
-		CurrencyAmount currencyAmountBaseValue = calculareCurrencyAmountBaseValue(OrderType.SELL, house);
-		CurrencyAmount currencyAmountToSell = calculateOrderAmount(OrderType.SELL, currencyAmountBaseValue, house,
-				account);
-		if (currencyAmountToSell == null) {
+		OrderProperties orderProperties = new OrderProperties();
+		orderProperties.setFirst(calculareCurrencyAmountBaseValue(OrderType.SELL));
+		orderProperties.setUnitPrice(calculateCurrencyAmountUnitPrice(house));
+		orderProperties
+				.setSecond(calculateCurrencyAmountToSell(orderProperties.getFirst(), orderProperties.getUnitPrice()));
+
+		checkMinimalAmount(orderProperties);
+		if (orderProperties.isCancelled()) {
 			return null;
 		}
-		CurrencyAmount currencyAmountUnitPrice = calculateCurrencyAmountUnitPrice(house);
-		if (!hasBalanceFor(currencyAmountToSell, account)) {
-			if (!buySellStep.isOnMinSellStep()) {
-				LOGGER.debug("Decreasing sell step an creating a new order.");
-				buySellStep.updateStep(OrderType.SELL);
-				return createSellOrder(simulationTimeInterval, account, house);
+
+		if (orderProperties.isSecondAdjusted()) {
+			orderProperties.setFirst(
+					updateCurrencyAmountToReceive(orderProperties.getSecond(), orderProperties.getUnitPrice()));
+		}
+
+		if (!account.hasBallance(orderProperties.getSecond())) {
+			LOGGER.debug("No balance to execute sell order of " + orderProperties.getSecond() + ".");
+			if (orderProperties.isSecondAdjusted()) {
+				LOGGER.debug("Amount to sell has already been adjusted. Cancelling order.");
 			} else {
-				LOGGER.debug("Sell step is on min. Cancelling order creation.");
-				return null;
+				orderProperties.getSecond()
+						.setAmount(account.getBalance().get(orderProperties.getSecond().getCurrency()).getAmount());
+				LOGGER.debug("Selling the remaining value of " + orderProperties.getSecond() + ".");
 			}
 		}
 		Order order = new SellOrderBuilder().toExecuteOn(simulationTimeInterval.getStart())
-				.selling(currencyAmountToSell).receivingUnitPriceOf(currencyAmountUnitPrice).build();
+				.selling(orderProperties.getSecond()).receivingUnitPriceOf(orderProperties.getUnitPrice()).build();
 		LOGGER.debug("Order created is " + order + ".");
 		return order;
 	}
 
-	private boolean hasBalanceFor(CurrencyAmount currencyAmount, Account account) {
-		CurrencyAmount currencyAmountBalance = account.getBalance().get(currencyAmount.getCurrency());
-		return (currencyAmountBalance.getAmount() > currencyAmount.getAmount());
+	private void checkMinimalAmount(OrderProperties orderProperties) {
+		CurrencyAmount currencyAmount = orderProperties.getSecond();
+		if (MinimalAmounts.isAmountLowerThanMinimal(currencyAmount)) {
+			if (!orderProperties.isFirstAdjusted()) {
+				if (skipIfLowerThanMinimalValue) {
+					LOGGER.debug(currencyAmount + " is lower than minimal value. Cancelling order.");
+					buySellStep.updateStep(orderProperties.getOrderType());
+					orderProperties.setCancelled(true);
+				} else {
+					Double minimalAmount = MinimalAmounts.retrieveMinimalAmountFor(currencyAmount.getCurrency());
+					LOGGER.debug(currencyAmount + " is lower than minimal value. Increasing it to "
+							+ new DigitalCurrencyFormatter().format(minimalAmount));
+					currencyAmount.setAmount(minimalAmount);
+					orderProperties.setSecondAdjusted(true);
+				}
+			} else {
+				String action = (orderProperties.getOrderType() == OrderType.BUY ? "pay" : "receive");
+				LOGGER.debug("Currency amount to " + action + " already adjusted. Cancelling order.");
+				orderProperties.setCancelled(true);
+			}
+		}
+		;
 	}
 
 	private void executeOrder(Order order, Account account, House house) {
@@ -148,56 +180,71 @@ public class FirstStrategy extends AbstractStrategy {
 	}
 
 	private Order createBuyOrder(TimeInterval simulationTimeInterval, House house, Account account) {
-		CurrencyAmount currencyAmountBaseValue = calculareCurrencyAmountBaseValue(OrderType.BUY, house);
-		CurrencyAmount currencyAmountToPay = calculateOrderAmount(OrderType.BUY, currencyAmountBaseValue, house,
-				account);
+		OrderProperties orderProperties = new OrderProperties();
+		orderProperties.setFirst(calculareCurrencyAmountBaseValue(OrderType.BUY));
+		orderProperties.setUnitPrice(calculateCurrencyAmountUnitPrice(house));
 
-		if (currencyAmountToPay == null) {
+		orderProperties
+				.setSecond(calculateCurrencyAmountToBuy(orderProperties.getFirst(), orderProperties.getUnitPrice()));
+		checkMinimalAmount(orderProperties);
+		if (orderProperties.isCancelled()) {
 			return null;
 		}
 
-		CurrencyAmount currencyAmountUnitPrice = calculateCurrencyAmountUnitPrice(house);
-		CurrencyAmount currencyAmountToBuy = calculateCurrencyAmountToBuy(currencyAmountToPay, currencyAmountUnitPrice);
-		if (MinimalAmounts.isAmountLowerThanMinimal(currencyAmountToBuy)) {
-			LOGGER.debug("The amount of " + currency + " currency to buy is lower than the minimal limit.");
-			if (!buySellStep.isOnMaxBuyStep()) {
-				LOGGER.debug("Increasing buy step and creating a new order.");
-				buySellStep.updateStep(OrderType.BUY);
-				// return createBuyOrder(simulationTimeInterval, house, account);
-			} else {
-				LOGGER.debug("Buying step is on max. Cancelling order creation.");
+		if (orderProperties.isSecondAdjusted()) {
+			orderProperties
+					.setFirst(updateCurrencyAmountToPay(orderProperties.getSecond(), orderProperties.getUnitPrice()));
+		}
+
+		if (!account.hasBallance(orderProperties.getFirst())) {
+			LOGGER.debug("Not enough balance to execute an order paying " + orderProperties.getFirst() + ".");
+
+			if (orderProperties.isSecondAdjusted()) {
+				LOGGER.debug("Amount to buy has already been adjusted. Cancelling order.");
 				return null;
+			} else {
+				Double balanceAmount = account.getBalance().get(orderProperties.getFirst().getCurrency()).getAmount();
+				LOGGER.debug("Descreasing paying amount to " + new NonDigitalCurrencyFormatter().format(balanceAmount));
+				orderProperties.getFirst().setAmount(balanceAmount);
+				orderProperties.setSecond(
+						calculateCurrencyAmountToBuy(orderProperties.getFirst(), orderProperties.getUnitPrice()));
+				checkMinimalAmount(orderProperties);
+				if (orderProperties.isCancelled()) {
+					return null;
+				}
 			}
 		}
 
-		Order order = new BuyOrderBuilder().toExecuteOn(simulationTimeInterval.getStart()).buying(currencyAmountToBuy)
-				.payingUnitPriceOf(currencyAmountUnitPrice).build();
+		Order order = new BuyOrderBuilder().toExecuteOn(simulationTimeInterval.getStart())
+				.buying(orderProperties.getSecond()).payingUnitPriceOf(orderProperties.getUnitPrice()).build();
 		LOGGER.debug("Order created is " + order + ".");
 		return order;
 	}
 
-	private CurrencyAmount calculareCurrencyAmountBaseValue(OrderType orderType, House house) {
+	private CurrencyAmount updateCurrencyAmountToReceive(CurrencyAmount currencyAmountToSell,
+			CurrencyAmount currencyAmountUnitPrice) {
+		double amountToReceive = currencyAmountUnitPrice.getAmount() * currencyAmountToSell.getAmount();
+		CurrencyAmount currencyAmountToReceive = new CurrencyAmount(Currency.REAL, amountToReceive);
+		LOGGER.debug("Currency amount to receive updated to " + currencyAmountToReceive + ".");
+		return currencyAmountToReceive;
+	}
+
+	private CurrencyAmount updateCurrencyAmountToPay(CurrencyAmount currencyAmountToBuy,
+			CurrencyAmount currencyAmountUnitPrice) {
+		double amountToPay = currencyAmountUnitPrice.getAmount() * currencyAmountToBuy.getAmount();
+		CurrencyAmount currencyAmountToPay = new CurrencyAmount(Currency.REAL, amountToPay);
+		LOGGER.debug("Currency amount to pay updated to " + currencyAmountToPay + ".");
+		return currencyAmountToPay;
+	}
+
+	private CurrencyAmount calculareCurrencyAmountBaseValue(OrderType orderType) {
+
 		double operationPercentage = calculateOperationPercentage(orderType);
-		Double baseValueAmount = null;
-		Currency baseValueCurrency = null;
-		switch (orderType) {
-		case BUY:
-			baseValueAmount = baseRealAmount.getAmount() * operationPercentage;
-			baseValueCurrency = Currency.REAL;
-			break;
-		case SELL:
-			TemporalTicker temporalTicker = house.getTemporalTickers().get(currency);
-			Double lastPrice = temporalTicker.getLastPrice();
-			if (lastPrice == null || lastPrice == 0.0) {
-				lastPrice = temporalTicker.getPreviousLastPrice();
-			}
-			baseValueAmount = (baseRealAmount.getAmount() * operationPercentage) / lastPrice;
-			baseValueCurrency = currency;
-			break;
-		}
-		CurrencyAmount currencyAmount = new CurrencyAmount(baseValueCurrency, baseValueAmount);
-		LOGGER.debug("Base value is: " + currencyAmount);
-		return currencyAmount;
+		double baseValueAmount = baseRealAmount.getAmount() * operationPercentage;
+
+		CurrencyAmount currencyAmountBaseValue = new CurrencyAmount(Currency.REAL, baseValueAmount);
+		LOGGER.debug("Base value is: " + currencyAmountBaseValue);
+		return currencyAmountBaseValue;
 	}
 
 	private CurrencyAmount calculateCurrencyAmountUnitPrice(House house) {
@@ -213,31 +260,14 @@ public class FirstStrategy extends AbstractStrategy {
 	private CurrencyAmount calculateCurrencyAmountToBuy(CurrencyAmount currencyAmountToPay,
 			CurrencyAmount currencyAmountUnitPrice) {
 		Double quantity = currencyAmountToPay.getAmount() / currencyAmountUnitPrice.getAmount();
-		Double restoredValue = quantity * currencyAmountUnitPrice.getAmount();
-		Double difference = restoredValue - currencyAmountToPay.getAmount();
-		if (difference > 0) {
-			quantity -= difference / currencyAmountUnitPrice.getAmount();
-		}
+		// Double restoredValue = quantity * currencyAmountUnitPrice.getAmount();
+		// Double difference = restoredValue - currencyAmountToPay.getAmount();
+		// if (difference > 0) {
+		// quantity -= difference / currencyAmountUnitPrice.getAmount();
+		// }
 		CurrencyAmount currencyAmountToBuy = new CurrencyAmount(currency, quantity);
 		LOGGER.debug("Currency amount to buy is: " + currencyAmountToBuy);
 		return currencyAmountToBuy;
-	}
-
-	private CurrencyAmount checkMinimalAmount(CurrencyAmount currencyAmount, Account account) {
-		if (MinimalAmounts.isAmountLowerThanMinimal(currencyAmount)) {
-			Double minimalRequired = MinimalAmounts.retrieveMinimalAmountFor(currency);
-			CurrencyAmount minimalCurrencyAmountRequired = new CurrencyAmount(currencyAmount.getCurrency(),
-					minimalRequired);
-			if (hasBalanceFor(minimalCurrencyAmountRequired, account)) {
-				LOGGER.debug("The amount of " + currencyAmount + " is lower than minimal of " + minimalRequired
-						+ " required for an operation. Updating it.");
-				currencyAmount.setAmount(minimalRequired);
-			} else {
-				LOGGER.debug("Not enough balance for execute the minimal operation. Cancelling order execution.");
-				return null;
-			}
-		}
-		return currencyAmount;
 	}
 
 	private void setBase(Account account, House house) {
@@ -251,63 +281,12 @@ public class FirstStrategy extends AbstractStrategy {
 		}
 	}
 
-	private CurrencyAmount calculateOrderAmount(OrderType orderType, CurrencyAmount currencyAmountBase, House house,
-			Account account) {
-
-		if (!hasPositiveBalance(currencyAmountBase.getCurrency(), account)) {
-			LOGGER.debug("No " + currency + " balance to execute an order.");
-			return null;
-		}
-
-		// CurrencyAmount currencyAmountForOperation =
-		// calculateCurrencyAmountInitialOperation(currency, orderType, house);
-		CurrencyAmount currencyAmountForOperation = new CurrencyAmount(currencyAmountBase);
-		currencyAmountForOperation = checkBalance(currencyAmountForOperation, account);
-		currencyAmountForOperation = checkMinimalAmount(currencyAmountForOperation, account);
-
-		if (currencyAmountForOperation != null) {
-			LOGGER.debug("Order amount is " + currencyAmountForOperation + ".");
-		}
-		return currencyAmountForOperation;
-	}
-
-	private boolean hasPositiveBalance(Currency currency, Account account) {
-		CurrencyAmount currencyAmountBalance = account.getBalance().get(currency);
-		LOGGER.debug("Balance: " + currencyAmountBalance + ".");
-		return (currencyAmountBalance.getAmount() > 0);
-	}
-
-	private CurrencyAmount checkBalance(CurrencyAmount currencyAmount, Account account) {
-		CurrencyAmount currencyAmountBalance = account.getBalance().get(currencyAmount.getCurrency());
-		if (currencyAmountBalance.getAmount() <= currencyAmount.getAmount()) {
-			LOGGER.debug("Not enough " + currencyAmount.getCurrency()
-					+ " on balance to complete the initial amount. Using the remaining " + currencyAmountBalance + ".");
-			return new CurrencyAmount(currencyAmountBalance);
-		}
-		return currencyAmount;
-	}
-
-	private CurrencyAmount calculateCurrencyAmountInitialOperation(Currency currency, OrderType orderType,
-			House house) {
-		Double operationAmount = null;
-		double operationPercentage = calculateOperationPercentage(orderType);
-		switch (orderType) {
-		case BUY:
-			operationAmount = baseRealAmount.getAmount() * operationPercentage;
-			break;
-		case SELL:
-			TemporalTicker temporalTicker = house.getTemporalTickers().get(currency);
-			Double lastPrice = temporalTicker.getLastPrice();
-			if (lastPrice == null || lastPrice == 0.0) {
-				lastPrice = temporalTicker.getPreviousLastPrice();
-			}
-			operationAmount = (baseRealAmount.getAmount() * operationPercentage) / lastPrice;
-			break;
-		}
-		CurrencyAmount currencyAmountInitialOperation = new CurrencyAmount(currency, operationAmount);
-		LOGGER.debug("Initial operation amount: " + currencyAmountInitialOperation + ".");
-
-		return currencyAmountInitialOperation;
+	private CurrencyAmount calculateCurrencyAmountToSell(CurrencyAmount currencyAmountToReceive,
+			CurrencyAmount currencyAmountUnitPrice) {
+		Double amountToSell = currencyAmountToReceive.getAmount() / currencyAmountUnitPrice.getAmount();
+		CurrencyAmount currencyAmountToSell = new CurrencyAmount(currency, amountToSell);
+		LOGGER.debug("Currency amount to sell is " + currencyAmountToSell + ".");
+		return currencyAmountToSell;
 	}
 
 	private void setBaseBalance(Balance balance) {
@@ -370,16 +349,19 @@ public class FirstStrategy extends AbstractStrategy {
 
 		switch (firstStrategyParameter) {
 		case BUY_STEP_FACTORIAL_NUMBER:
-			buySteps = MathUtils.factorial(Long.parseLong(parameter.getValue()));
+			buySteps = Long.parseLong(parameter.getValue());
 			break;
 		case GROWTH_PERCENTAGE_THRESHOLD:
 			growthPercentageThreshold = Double.parseDouble(parameter.getValue());
 			break;
 		case SELL_STEP_FACTORIAL_NUMBER:
-			sellSteps = MathUtils.factorial(Long.parseLong(parameter.getValue()));
+			sellSteps = Long.parseLong(parameter.getValue());
 			break;
 		case SHRINK_PERCENTAGE_THRESHOLD:
 			shrinkPercentageThreshold = Double.parseDouble(parameter.getValue());
+			break;
+		case SKIP_IF_LOWER_THAN_MINIMAL_VALUE:
+			skipIfLowerThanMinimalValue = Boolean.parseBoolean(parameter.getValue());
 			break;
 		}
 

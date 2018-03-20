@@ -262,4 +262,10 @@ public class Account {
 		}
 		return strategyDatas;
 	}
+	
+	public boolean hasBallance(CurrencyAmount currencyAmount) {
+		Currency currency = currencyAmount.getCurrency();
+		CurrencyAmount currencyAmountBalance = balance.get(currency);
+		return (currencyAmountBalance.getAmount() >= currencyAmount.getAmount());
+	}
 }

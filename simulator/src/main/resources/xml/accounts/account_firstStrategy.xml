@@ -9,7 +9,7 @@
 	<balances>
 		<balance>
 			<currency>BRL</currency>
-			<amount>100000</amount>
+			<amount>1000</amount>
 		</balance>
 	</balances>
 	<deposits />
@@ -36,6 +36,10 @@
 						<parameter>
 							<name>sellStepFactorialNumber</name>
 							<value>6</value>
+						</parameter>
+						<parameter>
+							<name>skipIfLowerThanMinimalValue</name>
+							<value>true</value>
 						</parameter>
 					</parameters>
 				</class>
