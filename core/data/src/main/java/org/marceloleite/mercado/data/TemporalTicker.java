@@ -166,6 +166,14 @@ public class TemporalTicker {
 	public Double getLastPrice() {
 		return lastPrice;
 	}
+	
+	public Double getCurrentOrPreviousLastPrice() {
+		if (lastPrice != null && lastPrice != 0.0) {
+			return lastPrice;
+		} else {
+			return previousLastPrice;
+		}
+	}
 
 	public void setLastPrice(Double lastPrice) {
 		this.lastPrice = lastPrice;
