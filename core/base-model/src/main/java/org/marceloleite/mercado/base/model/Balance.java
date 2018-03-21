@@ -9,6 +9,7 @@ import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.base.model.converter.CurrencyAmountToBalanceDataConverter;
+import org.marceloleite.mercado.base.model.order.MinimalAmounts;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.data.BalanceData;
 
@@ -66,5 +67,21 @@ public class Balance extends EnumMap<Currency, CurrencyAmount> {
 			}
 		}
 		return balanceDatas;
+	}
+	
+	public boolean hasBalance(CurrencyAmount currencyAmount) {
+		Currency currency = currencyAmount.getCurrency();
+		CurrencyAmount currencyAmountBalance = get(currency);
+		return (currencyAmountBalance.getAmount() >= currencyAmount.getAmount());
+	}
+	
+	public boolean hasMinimalAmount(Currency currency) {
+		CurrencyAmount currencyAmountBalance = get(currency);
+		Double minimalAmount = MinimalAmounts.retrieveMinimalAmountFor(currency);
+		return (currencyAmountBalance.getAmount() >= minimalAmount);
+	}
+
+	public boolean hasPositiveBalance(Currency currency) {
+		return (get(currency).getAmount() > 0);
 	}
 }

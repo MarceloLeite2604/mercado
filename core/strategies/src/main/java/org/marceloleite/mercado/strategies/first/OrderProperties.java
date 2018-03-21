@@ -19,10 +19,11 @@ public class OrderProperties {
 
 	private boolean cancelled;
 	
-	public OrderProperties() {
-		firstAdjusted = false;
-		secondAdjusted = false;
-		cancelled = false;
+	public OrderProperties(OrderType orderType) {
+		this.firstAdjusted = false;
+		this.secondAdjusted = false;
+		this.cancelled = false;
+		this.orderType = orderType;
 	}
 
 	public CurrencyAmount getFirst() {

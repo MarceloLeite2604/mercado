@@ -12,9 +12,7 @@ public class Main {
 	public static void main(String[] args) {
 		simulator();
 		// circularArrayList();
-	}
-
-	
+	}	
 
 	@SuppressWarnings("unused")
 	private static void timeDivisionController() {

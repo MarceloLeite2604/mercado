@@ -9,7 +9,7 @@
 	<balances>
 		<balance>
 			<currency>BRL</currency>
-			<amount>1000</amount>
+			<amount>100</amount>
 		</balance>
 	</balances>
 	<deposits />
