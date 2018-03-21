@@ -44,12 +44,12 @@ public class OrderAnalyser {
 	}
 
 	public void setFirst(CurrencyAmount first)
-			throws NoBalanceOrderAnalyserException, MinimalValueOrderAnalyserException {
+			throws NoBalanceOrderAnalyserException, NoBalanceForMinimalValueOrderAnalyserException {
 		setFirst(first, false);
 	}
 
 	private void setFirst(CurrencyAmount first, boolean adjustingFromSecond)
-			throws NoBalanceOrderAnalyserException, MinimalValueOrderAnalyserException {
+			throws NoBalanceOrderAnalyserException, NoBalanceForMinimalValueOrderAnalyserException {
 		CurrencyAmount firstAdjusted = first;
 		if (orderType == OrderType.BUY) {
 			firstAdjusted = checkBalance(first);
@@ -67,12 +67,12 @@ public class OrderAnalyser {
 	}
 
 	public void setSecond(CurrencyAmount second)
-			throws MinimalValueOrderAnalyserException, NoBalanceOrderAnalyserException {
+			throws NoBalanceForMinimalValueOrderAnalyserException, NoBalanceOrderAnalyserException {
 		setSecond(second, false);
 	}
 
 	private void setSecond(CurrencyAmount second, boolean adjustingFromFirst)
-			throws MinimalValueOrderAnalyserException, NoBalanceOrderAnalyserException {
+			throws NoBalanceForMinimalValueOrderAnalyserException, NoBalanceOrderAnalyserException {
 		CurrencyAmount secondAdjusted = checkMinimal(second);
 		if (orderType == OrderType.SELL) {
 			secondAdjusted = checkBalance(secondAdjusted);
@@ -84,7 +84,7 @@ public class OrderAnalyser {
 		this.second = secondAdjusted;
 	}
 
-	private CurrencyAmount checkMinimal(CurrencyAmount currencyAmount) throws MinimalValueOrderAnalyserException {
+	private CurrencyAmount checkMinimal(CurrencyAmount currencyAmount) throws NoBalanceForMinimalValueOrderAnalyserException {
 		if (MinimalAmounts.isAmountLowerThanMinimal(currencyAmount)) {
 			Double minimalAmount = MinimalAmounts.retrieveMinimalAmountFor(currencyAmount.getCurrency());
 			CurrencyAmount minimal = new CurrencyAmount(currencyAmount.getCurrency(), minimalAmount);
@@ -94,7 +94,7 @@ public class OrderAnalyser {
 				LOGGER.debug("Increasing value to " + minimal + ".");
 				return minimal;
 			} else {
-				throw new MinimalValueOrderAnalyserException(currencyAmount + " is lower than minimal "
+				throw new NoBalanceForMinimalValueOrderAnalyserException(currencyAmount + " is lower than minimal "
 						+ new NonDigitalCurrencyFormatter().format(minimalAmount) + ".");
 			}
 		}

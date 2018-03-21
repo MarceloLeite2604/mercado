@@ -8,8 +8,7 @@ public enum FirstStrategyParameter implements Property {
 	GROWTH_PERCENTAGE_THRESHOLD("growthPercentageThreshold"),
 	SHRINK_PERCENTAGE_THRESHOLD("shrinkPercentageThreshold"),
 	BUY_STEP_FACTORIAL_NUMBER("buyStepFactorialNumber"),
-	SELL_STEP_FACTORIAL_NUMBER("sellStepFactorialNumber"),
-	SKIP_IF_LOWER_THAN_MINIMAL_VALUE("skipIfLowerThanMinimalValue");;
+	SELL_STEP_FACTORIAL_NUMBER("sellStepFactorialNumber");
 
 	private String name;
 

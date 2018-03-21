@@ -12,14 +12,13 @@ import org.marceloleite.mercado.base.model.Order;
 import org.marceloleite.mercado.base.model.TemporalTickerVariation;
 import org.marceloleite.mercado.base.model.order.BuyOrderBuilder;
 import org.marceloleite.mercado.base.model.order.SellOrderBuilder;
-import org.marceloleite.mercado.base.model.order.analyser.MinimalValueOrderAnalyserException;
+import org.marceloleite.mercado.base.model.order.analyser.NoBalanceForMinimalValueOrderAnalyserException;
 import org.marceloleite.mercado.base.model.order.analyser.NoBalanceOrderAnalyserException;
 import org.marceloleite.mercado.base.model.order.analyser.OrderAnalyser;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.OrderType;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.converter.ObjectToJsonConverter;
-import org.marceloleite.mercado.commons.converter.ZonedDateTimeToStringConverter;
 import org.marceloleite.mercado.commons.formatter.PercentageFormatter;
 import org.marceloleite.mercado.commons.properties.Property;
 import org.marceloleite.mercado.commons.utils.MathUtils;
@@ -45,8 +44,6 @@ public class FirstStrategy extends AbstractStrategy {
 	private double growthPercentageThreshold;
 
 	private double shrinkPercentageThreshold;
-
-	private boolean skipIfLowerThanMinimalValue;
 
 	public FirstStrategy(Currency currency) {
 		super(FirstStrategyParameter.class, FirstStrategyVariable.class);
@@ -101,9 +98,9 @@ public class FirstStrategy extends AbstractStrategy {
 		
 		try {
 			orderValuesAnalyser.setFirst(calculareCurrencyAmountBaseValue(orderValuesAnalyser.getOrderType()));
-		} catch (MinimalValueOrderAnalyserException | NoBalanceOrderAnalyserException exception) {
+		} catch (NoBalanceForMinimalValueOrderAnalyserException | NoBalanceOrderAnalyserException exception) {
 			LOGGER.warn(exception.getMessage());
-			if (exception instanceof MinimalValueOrderAnalyserException) {
+			if (exception instanceof NoBalanceForMinimalValueOrderAnalyserException) {
 				buySellStep.updateStep(orderValuesAnalyser.getOrderType());
 			}
 			return null;
@@ -112,9 +109,9 @@ public class FirstStrategy extends AbstractStrategy {
 		try {
 			orderValuesAnalyser.setSecond(
 						calculateCurrencyAmountToSell(orderValuesAnalyser.getFirst(), orderValuesAnalyser.getUnitPrice()));
-		} catch (MinimalValueOrderAnalyserException | NoBalanceOrderAnalyserException exception) {
+		} catch (NoBalanceForMinimalValueOrderAnalyserException | NoBalanceOrderAnalyserException exception) {
 			LOGGER.warn(exception.getMessage());
-			if (exception instanceof MinimalValueOrderAnalyserException) {
+			if (exception instanceof NoBalanceForMinimalValueOrderAnalyserException) {
 				buySellStep.updateStep(orderValuesAnalyser.getOrderType());
 			}
 			return null;
@@ -167,9 +164,9 @@ public class FirstStrategy extends AbstractStrategy {
 
 		try {
 			orderValuesAnalyser.setFirst(calculareCurrencyAmountBaseValue(orderValuesAnalyser.getOrderType()));
-		} catch (MinimalValueOrderAnalyserException | NoBalanceOrderAnalyserException exception) {
+		} catch (NoBalanceForMinimalValueOrderAnalyserException | NoBalanceOrderAnalyserException exception) {
 			LOGGER.warn(exception.getMessage());
-			if (exception instanceof MinimalValueOrderAnalyserException) {
+			if (exception instanceof NoBalanceForMinimalValueOrderAnalyserException) {
 				buySellStep.updateStep(orderValuesAnalyser.getOrderType());
 			}
 			return null;
@@ -178,9 +175,9 @@ public class FirstStrategy extends AbstractStrategy {
 		try {
 			orderValuesAnalyser.setSecond(
 					calculateCurrencyAmountToBuy(orderValuesAnalyser.getFirst(), orderValuesAnalyser.getUnitPrice()));
-		} catch (NoBalanceOrderAnalyserException | MinimalValueOrderAnalyserException exception) {
+		} catch (NoBalanceOrderAnalyserException | NoBalanceForMinimalValueOrderAnalyserException exception) {
 			LOGGER.warn(exception.getMessage());
-			if (exception instanceof MinimalValueOrderAnalyserException) {
+			if (exception instanceof NoBalanceForMinimalValueOrderAnalyserException) {
 				buySellStep.updateStep(orderValuesAnalyser.getOrderType());
 			}
 			return null;
@@ -314,9 +311,6 @@ public class FirstStrategy extends AbstractStrategy {
 			break;
 		case SHRINK_PERCENTAGE_THRESHOLD:
 			shrinkPercentageThreshold = Double.parseDouble(parameter.getValue());
-			break;
-		case SKIP_IF_LOWER_THAN_MINIMAL_VALUE:
-			skipIfLowerThanMinimalValue = Boolean.parseBoolean(parameter.getValue());
 			break;
 		}
 
