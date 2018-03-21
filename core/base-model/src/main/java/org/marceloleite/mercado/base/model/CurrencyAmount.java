@@ -14,7 +14,7 @@ public class CurrencyAmount {
 	public CurrencyAmount(Currency currency, Double amount) {
 		super();
 		this.currency = currency;
-		this.amount = amount;
+		this.amount = new Double(amount);
 	}
 
 	public CurrencyAmount(CurrencyAmountData currencyAmountData) {
