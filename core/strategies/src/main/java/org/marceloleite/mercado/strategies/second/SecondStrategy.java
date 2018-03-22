@@ -1,5 +1,6 @@
 package org.marceloleite.mercado.strategies.second;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -31,10 +32,10 @@ public class SecondStrategy extends AbstractStrategy {
 	private CircularArray<TemporalTicker> temporalTickerCircularArray;
 
 	/* B.O.S.O (Buy order sell order) - Ratio between buy and sell orders */ 
-	private CircularArray<Double> bosoCircularArray;
+	private CircularArray<BigDecimal> bosoCircularArray;
 	// private CircularArray<Double> bosoVariationCircularArray;
 	
-	private CircularArray<Double> lastFirstRatioCircularArray;
+	private CircularArray<BigDecimal> lastFirstRatioCircularArray;
 
 	public SecondStrategy(Currency currency) {
 		this.currency = currency;
@@ -72,15 +73,15 @@ public class SecondStrategy extends AbstractStrategy {
 		lastFirstRatioCircularArray.add(calculateLastFirstRatio(currentTemporalTicker));
 	}
 
-	private Double calculateLastFirstRatio(TemporalTicker currentTemporalTicker) {
-		double first = currentTemporalTicker.getFirstPrice();
-		double last = currentTemporalTicker.getLastPrice();
+	private BigDecimal calculateLastFirstRatio(TemporalTicker currentTemporalTicker) {
+		BigDecimal first = currentTemporalTicker.getFirstPrice();
+		BigDecimal last = currentTemporalTicker.getLastPrice();
 		return new RatioCalculator().calculate(last, first);
 	}
 
-	private double calulateBuySellRatio(TemporalTicker temporalTicker) {
-		long buyOrders = temporalTicker.getBuyOrders();
-		long sellOrders = temporalTicker.getSellOrders();
+	private BigDecimal calulateBuySellRatio(TemporalTicker temporalTicker) {
+		BigDecimal buyOrders = new BigDecimal(temporalTicker.getBuyOrders());
+		BigDecimal sellOrders = new BigDecimal(temporalTicker.getSellOrders());
 		return new RatioCalculator().calculate(buyOrders, sellOrders);
 	}
 
@@ -92,25 +93,25 @@ public class SecondStrategy extends AbstractStrategy {
 		System.out.println("Current status: ");
 		System.out.println("               Time    Order variation     Buy/sell ratio     Last/first ratio\n");
 		for (int counter = 0; counter < temporalTickerCircularArray.getSize(); counter++) {
-			double orderVariation = 0.0;
+			BigDecimal orderVariation = new BigDecimal("0.0");
 			if ( counter > 0 ) {
 				orderVariation = temporalTickerVariationCircularArray.get(counter-1).getOrderVariation();
 			}
-			Double buySellRatio = bosoCircularArray.get(counter);
-			Double lastFirstRatio = lastFirstRatioCircularArray.get(counter);
+			BigDecimal buySellRatio = bosoCircularArray.get(counter);
+			BigDecimal lastFirstRatio = lastFirstRatioCircularArray.get(counter);
 			StringBuffer stringBuffer = new StringBuffer();
 			stringBuffer.append(zonedDateTimeToStringConverter
 					.convertTo(temporalTickerCircularArray.get(counter).getStart()) + "  | ");
 			stringBuffer.append(String.format("%15s", percentageFormatter.format(orderVariation)) + "  | ");
-			stringBuffer.append(String.format("%15s", digitalCurrencyFormatter.format(buySellRatio - 1)) + "  | ");
-			stringBuffer.append(String.format("%7s", digitalCurrencyFormatter.format(lastFirstRatio - 1)) + "  ");
+			stringBuffer.append(String.format("%15s", digitalCurrencyFormatter.format(buySellRatio.subtract(BigDecimal.ONE))) + "  | ");
+			stringBuffer.append(String.format("%7s", digitalCurrencyFormatter.format(lastFirstRatio.subtract(BigDecimal.ONE))) + "  ");
 			System.out.println(stringBuffer.toString());
 		}
 
 		VariationCircularArrayPivot variationCircularArrayPivot = new VariationCircularArrayPivot(
 				temporalTickerVariationCircularArray);
 		PositiveNegativeCounter positiveNegativeCounter = new PositiveNegativeCounter();
-		List<Double> orderVariations = variationCircularArrayPivot.getOrderVariations();
+		List<BigDecimal> orderVariations = variationCircularArrayPivot.getOrderVariations();
 		System.out.println("\tPositive order variations: " + positiveNegativeCounter.countPositives(orderVariations));
 		System.out.println("\tNegative order variations: " + positiveNegativeCounter.countNegatives(orderVariations));
 	}

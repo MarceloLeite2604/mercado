@@ -1,20 +1,23 @@
 package org.marceloleite.mercado.strategies.second;
 
+import java.math.BigDecimal;
+
 public class RatioCalculator {
 
-	public double calculate(double firstValue, double secondValue) {
-		double result;
-		if ( firstValue == 0l ) {
-			if ( secondValue == 0l) {
-				result = 1.0;
+	public BigDecimal calculate(BigDecimal firstValue, BigDecimal secondValue) {
+		BigDecimal result;
+		if ( firstValue.compareTo(BigDecimal.ZERO) == 0 ) {
+			if ( secondValue.compareTo(BigDecimal.ZERO) == 0) {
+				result = new BigDecimal("1.0");
 			} else {
-				result = 0.0;
+				result = new BigDecimal("0.0");
 			}
 		} else {
-			if ( secondValue == 0l ) {
-				result = Double.POSITIVE_INFINITY;
+			if ( secondValue.compareTo(BigDecimal.ZERO) == 0 ) {
+				/* TODO: Create a constant for positive infinity. */
+				result = new BigDecimal("10E20");
 			} else {
-				result = (double)firstValue/(double)secondValue; 
+				result = firstValue.divide(secondValue); 
 			}
 		}
 		return result;

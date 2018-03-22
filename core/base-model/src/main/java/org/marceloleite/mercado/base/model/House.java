@@ -1,5 +1,6 @@
 package org.marceloleite.mercado.base.model;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 import org.marceloleite.mercado.commons.Currency;
@@ -14,7 +15,7 @@ public interface House {
 	
 	OrderExecutor getOrderExecutor();
 	
-	public double getComissionPercentage();
+	public BigDecimal getComissionPercentage();
 	
 	Map<String, Balance> getComissionBalance();
 }
