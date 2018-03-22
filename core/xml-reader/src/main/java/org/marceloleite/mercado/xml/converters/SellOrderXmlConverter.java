@@ -1,5 +1,7 @@
 package org.marceloleite.mercado.xml.converters;
 
+import java.math.BigDecimal;
+
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.data.CurrencyAmountData;
 import org.marceloleite.mercado.data.SellOrderData;
@@ -26,10 +28,10 @@ public class SellOrderXmlConverter implements XmlConverter<XmlSellOrder, SellOrd
 		SellOrderData sellOrderData = new SellOrderData();
 		sellOrderData.setTime(xmlSellOrder.getTime());
 
-		Double amountToSell = xmlSellOrder.getAmountToSell();
+		BigDecimal amountToSell = xmlSellOrder.getAmountToSell();
 		Currency currencyToSell = xmlSellOrder.getCurrencyToSell();
 		CurrencyAmountData currencyAmountToSell = new CurrencyAmountData(currencyToSell, amountToSell);
-		Double amountToReceive = xmlSellOrder.getAmountToReceive();
+		BigDecimal amountToReceive = xmlSellOrder.getAmountToReceive();
 		Currency currencyToReceive = xmlSellOrder.getCurrencyToReceive();
 		CurrencyAmountData currencyAmountToReceive = new CurrencyAmountData(currencyToReceive, amountToReceive);
 		sellOrderData.setCurrencyAmountToSell(currencyAmountToSell);

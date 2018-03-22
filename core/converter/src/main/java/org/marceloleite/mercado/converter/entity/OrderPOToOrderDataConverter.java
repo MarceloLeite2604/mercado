@@ -19,16 +19,16 @@ public class OrderPOToOrderDataConverter implements Converter<OrderPO, OrderData
 		orderData.setId(orderPO.getId().getId().longValue());
 		orderData.setCreated(orderPO.getCreated());
 		orderData.setUpdated(orderPO.getUpdated());
-		orderData.setExecutedPriceAverage(orderPO.getExecutedPriceAverage().doubleValue());
-		orderData.setExecutedQuantity(orderPO.getExecutedQuantity().doubleValue());
-		orderData.setFee(orderPO.getFee().doubleValue());
+		orderData.setExecutedPriceAverage(new BigDecimal(orderPO.getExecutedPriceAverage().toString()));
+		orderData.setExecutedQuantity(new BigDecimal(orderPO.getExecutedQuantity().toString()));
+		orderData.setFee(new BigDecimal(orderPO.getFee().toString()));
 		orderData.setFirstCurrency(orderPO.getFirstCurrency());
 		orderData.setSecondCurrency(orderPO.getSecondCurrency());
 		orderData.setStatus(orderPO.getStatus());
 		orderData.setType(orderPO.getType());
 		orderData.setHasFills(orderPO.getHasFills());
-		orderData.setLimitPrice(orderPO.getLimitPrice().doubleValue());
-		orderData.setQuantity(orderPO.getQuantity().doubleValue());
+		orderData.setLimitPrice(new BigDecimal(orderPO.getLimitPrice().toString()));
+		orderData.setQuantity(new BigDecimal(orderPO.getQuantity().toString()));
 
 		List<OperationPO> operationPOs = orderPO.getOperationPOs();
 		List<OperationData> operationDatas = new ListOperationPOToListOperationDataConverter().convertTo(operationPOs);
@@ -48,16 +48,16 @@ public class OrderPOToOrderDataConverter implements Converter<OrderPO, OrderData
 		orderPO.setId(orderIdPO);
 		orderPO.setCreated(orderData.getCreated());
 		orderPO.setUpdated(orderData.getUpdated());
-		orderPO.setExecutedPriceAverage(new BigDecimal(orderData.getExecutedPriceAverage()));
-		orderPO.setExecutedQuantity(new BigDecimal(orderData.getExecutedQuantity()));
-		orderPO.setFee(new BigDecimal(orderData.getFee()));
+		orderPO.setExecutedPriceAverage(new BigDecimal(orderData.getExecutedPriceAverage().toString()));
+		orderPO.setExecutedQuantity(new BigDecimal(orderData.getExecutedQuantity().toString()));
+		orderPO.setFee(new BigDecimal(orderData.getFee().toString()));
 		orderPO.setFirstCurrency(orderData.getFirstCurrency());
 		orderPO.setSecondCurrency(orderData.getSecondCurrency());
 		orderPO.setStatus(orderData.getStatus());
 		orderPO.setType(orderData.getType());
 		orderPO.setHasFills(orderData.getHasFills());
-		orderPO.setLimitPrice(new BigDecimal(orderData.getLimitPrice()));
-		orderPO.setQuantity(new BigDecimal(orderData.getQuantity()));
+		orderPO.setLimitPrice(new BigDecimal(orderData.getLimitPrice().toString()));
+		orderPO.setQuantity(new BigDecimal(orderData.getQuantity().toString()));
 		
 		List<OperationPO> operationPOs = new ListOperationPOToListOperationDataConverter().convertFrom(orderData.getOperationDatas());
 		operationPOs.forEach(operationPO -> operationPO.setOrder(orderPO));

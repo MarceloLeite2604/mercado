@@ -1,14 +1,16 @@
 package org.marceloleite.mercado.negotiationapi.model.getaccountinfo;
 
+import java.math.BigDecimal;
+
 public class CurrencyAvailable {
 
-	private double available;
+	private BigDecimal available;
 
-	private double total;
+	private BigDecimal total;
 
 	private long amountOpenOrders;
 
-	public CurrencyAvailable(double available, double total, long amountOpenOrders) {
+	public CurrencyAvailable(BigDecimal available, BigDecimal total, long amountOpenOrders) {
 		super();
 		this.available = available;
 		this.total = total;
@@ -16,22 +18,22 @@ public class CurrencyAvailable {
 	}
 
 	public CurrencyAvailable() {
-		this(0.0, 0.0, 0l);
+		this(new BigDecimal("0.0"), new BigDecimal("0.0"), 0l);
 	}
 
-	public double getAvailable() {
+	public BigDecimal getAvailable() {
 		return available;
 	}
 
-	public void setAvailable(double available) {
+	public void setAvailable(BigDecimal available) {
 		this.available = available;
 	}
 
-	public double getTotal() {
+	public BigDecimal getTotal() {
 		return total;
 	}
 
-	public void setTotal(double total) {
+	public void setTotal(BigDecimal total) {
 		this.total = total;
 	}
 

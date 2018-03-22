@@ -1,5 +1,7 @@
 package org.marceloleite.mercado.converter;
 
+import java.math.BigDecimal;
+
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.converter.ObjectToJsonConverter;
 import org.marceloleite.mercado.converter.json.CurrencyJsonSerializer;
@@ -61,9 +63,9 @@ public class Main {
 	private static void jsonBalanceDeserializer() {
 		JsonBalance jsonBalance = new JsonBalance();
 
-		JsonCurrencyAvailable jsonCurrencyBalance = new JsonCurrencyAvailable(123.456, 234.567, null);
+		JsonCurrencyAvailable jsonCurrencyBalance = new JsonCurrencyAvailable(new BigDecimal("123.456"), new BigDecimal("234.567"), null);
 		jsonBalance.put(Currency.BITCOIN, jsonCurrencyBalance);
-		jsonCurrencyBalance = new JsonCurrencyAvailable(567.123, 879.345, 3l);
+		jsonCurrencyBalance = new JsonCurrencyAvailable(new BigDecimal("567.123"), new BigDecimal("879.345"), 3l);
 		jsonBalance.put(Currency.BCASH, jsonCurrencyBalance);
 
 		ObjectToJsonConverter objectToJsonConverter = new ObjectToJsonConverter(JsonBalance.class);

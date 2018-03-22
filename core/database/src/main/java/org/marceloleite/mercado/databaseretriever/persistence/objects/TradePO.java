@@ -1,6 +1,7 @@
 package org.marceloleite.mercado.databaseretriever.persistence.objects;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 
 import javax.persistence.Column;
@@ -25,10 +26,10 @@ public class TradePO implements Serializable, PersistenceObject<TradeIdPO> {
 	private TradeIdPO id;
 
 	@Column(name="AMOUNT")
-	private double amount;
+	private BigDecimal amount;
 
 	@Column(name="PRICE")
-	private double price;
+	private BigDecimal price;
 
 	@Column(name="TRADE_DATE")
 	private ZonedDateTime tradeDate;
@@ -47,19 +48,19 @@ public class TradePO implements Serializable, PersistenceObject<TradeIdPO> {
 		this.id = id;
 	}
 
-	public double getAmount() {
+	public BigDecimal getAmount() {
 		return this.amount;
 	}
 
-	public void setAmount(double amount) {
+	public void setAmount(BigDecimal amount) {
 		this.amount = amount;
 	}
 
-	public double getPrice() {
+	public BigDecimal getPrice() {
 		return this.price;
 	}
 
-	public void setPrice(double price) {
+	public void setPrice(BigDecimal price) {
 		this.price = price;
 	}
 

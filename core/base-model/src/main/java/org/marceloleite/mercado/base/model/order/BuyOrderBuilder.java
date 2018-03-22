@@ -1,5 +1,6 @@
 package org.marceloleite.mercado.base.model.order;
 
+import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 
 import org.apache.logging.log4j.LogManager;
@@ -20,9 +21,9 @@ public class BuyOrderBuilder {
 
 	private Currency firstCurrency;
 
-	private Double quantity;
+	private BigDecimal quantity;
 
-	private Double limitPrice;
+	private BigDecimal limitPrice;
 
 	public BuyOrderBuilder() {
 		this.firstCurrency = Currency.REAL;
@@ -60,12 +61,12 @@ public class BuyOrderBuilder {
 		Currency secondCurrency = this.secondCurrency;
 		this.secondCurrency = null;
 
-		Double amountToBuy = this.quantity;
+		BigDecimal amountToBuy = new BigDecimal(quantity.toString());
 		this.quantity = null;
 
 		Currency firstCurrency = this.firstCurrency;
 
-		Double limitPrice = this.limitPrice;
+		BigDecimal limitPrice = new BigDecimal(this.limitPrice.toString());
 		this.limitPrice = null;
 
 		return new Order(firstCurrency, secondCurrency, OrderType.BUY, amountToBuy, limitPrice, time);

@@ -1,5 +1,7 @@
 package org.marceloleite.mercado.base.model.order.analyser;
 
+import java.math.BigDecimal;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.base.model.Balance;
@@ -31,8 +33,8 @@ public class OrderAnalyser {
 		this.cancelled = false;
 		this.orderType = orderType;
 		this.unitPrice = unitPrice;
-		this.first = new CurrencyAmount(firstCurrency, 0.0);
-		this.second = new CurrencyAmount(secondCurrency, 0.0);
+		this.first = new CurrencyAmount(firstCurrency, new BigDecimal("0.0"));
+		this.second = new CurrencyAmount(secondCurrency, new BigDecimal("0.0"));
 	}
 
 	public CurrencyAmount getFirst() {
@@ -84,12 +86,13 @@ public class OrderAnalyser {
 		this.second = secondAdjusted;
 	}
 
-	private CurrencyAmount checkMinimal(CurrencyAmount currencyAmount) throws NoBalanceForMinimalValueOrderAnalyserException {
+	private CurrencyAmount checkMinimal(CurrencyAmount currencyAmount)
+			throws NoBalanceForMinimalValueOrderAnalyserException {
 		if (MinimalAmounts.isAmountLowerThanMinimal(currencyAmount)) {
-			Double minimalAmount = MinimalAmounts.retrieveMinimalAmountFor(currencyAmount.getCurrency());
+			BigDecimal minimalAmount = MinimalAmounts.retrieveMinimalAmountFor(currencyAmount.getCurrency());
 			CurrencyAmount minimal = new CurrencyAmount(currencyAmount.getCurrency(), minimalAmount);
 			LOGGER.debug(currencyAmount + " is lower than minimal of " + minimal + ".");
-			
+
 			if (balance.hasBalance(currencyAmount)) {
 				LOGGER.debug("Increasing value to " + minimal + ".");
 				return minimal;
@@ -118,12 +121,12 @@ public class OrderAnalyser {
 	}
 
 	private CurrencyAmount calculateSecondFor(CurrencyAmount currencyAmount) {
-		double amount = currencyAmount.getAmount() / unitPrice.getAmount();
+		BigDecimal amount = currencyAmount.getAmount().divide(unitPrice.getAmount());
 		return new CurrencyAmount(second.getCurrency(), amount);
 	}
 
 	private CurrencyAmount calculateFirstFor(CurrencyAmount currencyAmount) {
-		double amount = currencyAmount.getAmount() * unitPrice.getAmount();
+		BigDecimal amount = currencyAmount.getAmount().multiply(unitPrice.getAmount());
 		return new CurrencyAmount(first.getCurrency(), amount);
 	}
 

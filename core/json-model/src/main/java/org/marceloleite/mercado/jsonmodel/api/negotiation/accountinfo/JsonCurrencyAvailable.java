@@ -1,5 +1,7 @@
 package org.marceloleite.mercado.jsonmodel.api.negotiation.accountinfo;
 
+import java.math.BigDecimal;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -8,15 +10,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class JsonCurrencyAvailable {
 
 	@JsonProperty("available")
-	private Double avaliable;
+	private BigDecimal avaliable;
 
 	@JsonProperty("total")
-	private Double total;
+	private BigDecimal total;
 
 	@JsonProperty("amount_open_orders")
 	private Long amountOpenOrders;
 
-	public JsonCurrencyAvailable(Double avaliable, Double total, Long amountOpenOrders) {
+	public JsonCurrencyAvailable(BigDecimal avaliable, BigDecimal total, Long amountOpenOrders) {
 		super();
 		this.avaliable = avaliable;
 		this.total = total;
@@ -24,26 +26,26 @@ public class JsonCurrencyAvailable {
 	}
 
 	public JsonCurrencyAvailable() {
-		this(0.0, 0.0, 0l);
+		this(new BigDecimal("0.0"), new BigDecimal("0.0"), 0l);
 	}
 
 	@JsonProperty("available")
-	public Double getAvaliable() {
+	public BigDecimal getAvaliable() {
 		return avaliable;
 	}
 
 	@JsonProperty("available")
-	public void setAvaliable(Double avaliable) {
+	public void setAvaliable(BigDecimal avaliable) {
 		this.avaliable = avaliable;
 	}
 
 	@JsonProperty("total")
-	public Double getTotal() {
+	public BigDecimal getTotal() {
 		return total;
 	}
 
 	@JsonProperty("total")
-	public void setTotal(Double total) {
+	public void setTotal(BigDecimal total) {
 		this.total = total;
 	}
 

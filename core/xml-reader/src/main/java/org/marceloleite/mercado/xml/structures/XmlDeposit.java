@@ -1,5 +1,6 @@
 package org.marceloleite.mercado.xml.structures;
 
+import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -20,9 +21,9 @@ public class XmlDeposit {
 
 	private Currency currency;
 
-	private Double amount;
+	private BigDecimal amount;
 
-	public XmlDeposit(ZonedDateTime time, Currency currency, Double amount) {
+	public XmlDeposit(ZonedDateTime time, Currency currency, BigDecimal amount) {
 		super();
 		this.time = time;
 		this.currency = currency;
@@ -54,11 +55,11 @@ public class XmlDeposit {
 	}
 
 	@XmlElement
-	public Double getAmount() {
+	public BigDecimal getAmount() {
 		return amount;
 	}
 
-	public void setAmount(Double amount) {
+	public void setAmount(BigDecimal amount) {
 		this.amount = amount;
 	}
 }

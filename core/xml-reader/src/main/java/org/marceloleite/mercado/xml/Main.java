@@ -1,6 +1,7 @@
 package org.marceloleite.mercado.xml;
 
 import java.io.File;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -62,8 +63,8 @@ public class Main {
 
 	private static JAXBContext createJaxbContext() throws JAXBException {
 		JAXBContext jaxbContext = JAXBContext.newInstance(XmlBuyOrder.class, XmlAccount.class,
-				XmlBalanceEntryList.class, XmlBalances.class, XmlDeposit.class, XmlCurrencyAmount.class,
-				XmlClass.class, XmlStrategy.class, XmlParameter.class);
+				XmlBalanceEntryList.class, XmlBalances.class, XmlDeposit.class, XmlCurrencyAmount.class, XmlClass.class,
+				XmlStrategy.class, XmlParameter.class);
 		return jaxbContext;
 	}
 
@@ -79,41 +80,40 @@ public class Main {
 	}
 
 	private static void createObjects() {
-		xmlCurrencyAmount = new XmlCurrencyAmount(Currency.BITCOIN, 0.123);
-		xmlDeposit = new XmlDeposit(ZonedDateTimeUtils.now(), Currency.BITCOIN, 0.2236);
+		xmlCurrencyAmount = new XmlCurrencyAmount(Currency.BITCOIN, new BigDecimal("0.123"));
+		xmlDeposit = new XmlDeposit(ZonedDateTimeUtils.now(), Currency.BITCOIN, new BigDecimal("0.2236"));
 		xmlBalances = new XmlBalances();
-		xmlBalances.put(Currency.BITCOIN, 0.123);
-		xmlOrder = new XmlOrder(Currency.REAL, Currency.BITCOIN, 1.0, 20000.0);
+		xmlBalances.put(Currency.BITCOIN, new BigDecimal("0.123"));
+		xmlOrder = new XmlOrder(Currency.REAL, Currency.BITCOIN, new BigDecimal("1.0"), new BigDecimal("20000.0"));
 		xmlAccount = new XmlAccount();
 		xmlAccount.setOwner("Marcelo");
 		xmlAccount.setXmlDeposits(Arrays.asList(xmlDeposit));
 		xmlAccount.setXmlBalances(xmlBalances);
 		xmlAccount.setXmlBuyOrders(Arrays.asList(xmlOrder));
-		
+
 		List<XmlParameter> xmlParameters = new ArrayList<>();
 		xmlParameter = new XmlParameter();
 		xmlParameter.setName("growthPercentageThreshold");
 		xmlParameter.setValue("0.0496");
 		xmlParameters.add(xmlParameter);
-		
+
 		xmlParameter = new XmlParameter();
 		xmlParameter.setName("shrinkPercentageThreshold");
 		xmlParameter.setValue("-0.05");
 		xmlParameters.add(xmlParameter);
-		
+
 		List<XmlClass> xmlClasses = new ArrayList<>();
 		xmlClass = new XmlClass();
 		xmlClass.setName("org.marceloleite.mercado.simulator.strategies.third.ThirdStrategy");
 		xmlClass.setXmlParameters(xmlParameters);
 		xmlClasses.add(xmlClass);
-		
-		
+
 		List<XmlStrategy> xmlStrategies = new ArrayList<>();
 		xmlStrategy = new XmlStrategy();
 		xmlStrategy.setCurrency(Currency.BITCOIN);
 		xmlStrategy.setXmlClasses(xmlClasses);
 		xmlStrategies.add(xmlStrategy);
-		
+
 		xmlAccount.setXmlStrategies(xmlStrategies);
 	}
 

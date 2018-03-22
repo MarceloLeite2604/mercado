@@ -1,5 +1,7 @@
 package org.marceloleite.mercado.xml.structures;
 
+import java.math.BigDecimal;
+
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
@@ -14,13 +16,13 @@ public class XmlCurrencyAmount {
 
 	private Currency currency;
 
-	private double amount;
+	private BigDecimal amount;
 	
 	public XmlCurrencyAmount() {
-		this(null, 0);
+		this(null, new BigDecimal("0.0"));
 	}
 
-	public XmlCurrencyAmount(Currency currency, double amount) {
+	public XmlCurrencyAmount(Currency currency, BigDecimal amount) {
 		super();
 		this.currency = currency;
 		this.amount = amount;
@@ -37,12 +39,12 @@ public class XmlCurrencyAmount {
 		this.currency = currency;
 	}
 
-	public double getAmount() {
+	public BigDecimal getAmount() {
 		return amount;
 	}
 
 	@XmlElement
-	public void setAmount(double amount) {
+	public void setAmount(BigDecimal amount) {
 		this.amount = amount;
 	}
 

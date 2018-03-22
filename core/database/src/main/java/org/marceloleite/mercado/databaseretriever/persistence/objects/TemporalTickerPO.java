@@ -23,40 +23,40 @@ public class TemporalTickerPO implements Serializable, PersistenceObject<Tempora
 	private TemporalTickerIdPO id;
 
 	@Column(name="AVERAGE_PRICE")
-	private double averagePrice;
+	private BigDecimal averagePrice;
 
 	@Column(name="BUY")
-	private double buy;
+	private BigDecimal buy;
 
 	@Column(name="BUY_ORDERS")
 	private BigDecimal buyOrders;
 
 	@Column(name="FIRST_PRICE")
-	private double firstPrice;
+	private BigDecimal firstPrice;
 
 	@Column(name="HIGHEST_PRICE")
-	private double highestPrice;
+	private BigDecimal highestPrice;
 
 	@Column(name="LAST_PRICE")
-	private double lastPrice;
+	private BigDecimal lastPrice;
 
 	@Column(name="LOWEST_PRICE")
-	private double lowestPrice;
+	private BigDecimal lowestPrice;
 
 	@Column(name="ORDERS")
 	private BigDecimal orders;
 
 	@Column(name="PREVIOUS_BUY")
-	private double previousBuy;
+	private BigDecimal previousBuy;
 
 	@Column(name="PREVIOUS_LAST_PRICE")
-	private double previousLastPrice;
+	private BigDecimal previousLastPrice;
 
 	@Column(name="PREVIOUS_SELL")
-	private double previousSell;
+	private BigDecimal previousSell;
 
 	@Column(name="SELL")
-	private double sell;
+	private BigDecimal sell;
 
 	@Column(name="SELL_ORDERS")
 	private BigDecimal sellOrders;
@@ -65,7 +65,7 @@ public class TemporalTickerPO implements Serializable, PersistenceObject<Tempora
 	private BigDecimal timeDuration;
 
 	@Column(name="VOLUME_TRADED")
-	private double volumeTraded;
+	private BigDecimal volumeTraded;
 
 	public TemporalTickerPO() {
 	}
@@ -78,19 +78,19 @@ public class TemporalTickerPO implements Serializable, PersistenceObject<Tempora
 		this.id = id;
 	}
 
-	public double getAveragePrice() {
+	public BigDecimal getAveragePrice() {
 		return this.averagePrice;
 	}
 
-	public void setAveragePrice(double averagePrice) {
+	public void setAveragePrice(BigDecimal averagePrice) {
 		this.averagePrice = averagePrice;
 	}
 
-	public double getBuy() {
+	public BigDecimal getBuy() {
 		return this.buy;
 	}
 
-	public void setBuy(double buy) {
+	public void setBuy(BigDecimal buy) {
 		this.buy = buy;
 	}
 
@@ -102,35 +102,35 @@ public class TemporalTickerPO implements Serializable, PersistenceObject<Tempora
 		this.buyOrders = buyOrders;
 	}
 
-	public double getFirstPrice() {
+	public BigDecimal getFirstPrice() {
 		return this.firstPrice;
 	}
 
-	public void setFirstPrice(double firstPrice) {
+	public void setFirstPrice(BigDecimal firstPrice) {
 		this.firstPrice = firstPrice;
 	}
 
-	public double getHighestPrice() {
+	public BigDecimal getHighestPrice() {
 		return this.highestPrice;
 	}
 
-	public void setHighestPrice(double highestPrice) {
+	public void setHighestPrice(BigDecimal highestPrice) {
 		this.highestPrice = highestPrice;
 	}
 
-	public double getLastPrice() {
+	public BigDecimal getLastPrice() {
 		return this.lastPrice;
 	}
 
-	public void setLastPrice(double lastPrice) {
+	public void setLastPrice(BigDecimal lastPrice) {
 		this.lastPrice = lastPrice;
 	}
 
-	public double getLowestPrice() {
+	public BigDecimal getLowestPrice() {
 		return this.lowestPrice;
 	}
 
-	public void setLowestPrice(double lowestPrice) {
+	public void setLowestPrice(BigDecimal lowestPrice) {
 		this.lowestPrice = lowestPrice;
 	}
 
@@ -142,35 +142,35 @@ public class TemporalTickerPO implements Serializable, PersistenceObject<Tempora
 		this.orders = orders;
 	}
 
-	public double getPreviousBuy() {
+	public BigDecimal getPreviousBuy() {
 		return this.previousBuy;
 	}
 
-	public void setPreviousBuy(double previousBuy) {
+	public void setPreviousBuy(BigDecimal previousBuy) {
 		this.previousBuy = previousBuy;
 	}
 
-	public double getPreviousLastPrice() {
+	public BigDecimal getPreviousLastPrice() {
 		return this.previousLastPrice;
 	}
 
-	public void setPreviousLastPrice(double previousLastPrice) {
+	public void setPreviousLastPrice(BigDecimal previousLastPrice) {
 		this.previousLastPrice = previousLastPrice;
 	}
 
-	public double getPreviousSell() {
+	public BigDecimal getPreviousSell() {
 		return this.previousSell;
 	}
 
-	public void setPreviousSell(double previousSell) {
+	public void setPreviousSell(BigDecimal previousSell) {
 		this.previousSell = previousSell;
 	}
 
-	public double getSell() {
+	public BigDecimal getSell() {
 		return this.sell;
 	}
 
-	public void setSell(double sell) {
+	public void setSell(BigDecimal sell) {
 		this.sell = sell;
 	}
 
@@ -190,11 +190,11 @@ public class TemporalTickerPO implements Serializable, PersistenceObject<Tempora
 		this.timeDuration = timeDuration;
 	}
 
-	public double getVolumeTraded() {
+	public BigDecimal getVolumeTraded() {
 		return this.volumeTraded;
 	}
 
-	public void setVolumeTraded(double volumeTraded) {
+	public void setVolumeTraded(BigDecimal volumeTraded) {
 		this.volumeTraded = volumeTraded;
 	}
 

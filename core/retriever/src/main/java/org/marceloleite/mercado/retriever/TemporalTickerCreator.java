@@ -1,5 +1,6 @@
 package org.marceloleite.mercado.retriever;
 
+import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -19,17 +20,17 @@ public class TemporalTickerCreator {
 
 		TemporalTicker temporalTicker = null;
 
-		double high = 0.0;
-		double average = 0.0;
-		double low = 0.0;
-		double vol = 0.0;
-		double first = 0.0;
-		double last = 0.0;
-		double previousLast = 0.0;
-		double buy = 0.0;
-		double previousBuy = 0.0;
-		double sell = 0.0;
-		double previousSell = 0.0;
+		BigDecimal high = new BigDecimal("0.0");
+		BigDecimal average = new BigDecimal("0.0");
+		BigDecimal low = new BigDecimal("0.0");
+		BigDecimal vol = new BigDecimal("0.0");
+		BigDecimal first = new BigDecimal("0.0");
+		BigDecimal last = new BigDecimal("0.0");
+		BigDecimal previousLast = new BigDecimal("0.0");
+		BigDecimal buy = new BigDecimal("0.0");
+		BigDecimal previousBuy = new BigDecimal("0.0");
+		BigDecimal sell = new BigDecimal("0.0");
+		BigDecimal previousSell = new BigDecimal("0.0");
 		long buyOrders = 0;
 		long sellOrders = 0;
 
@@ -40,17 +41,17 @@ public class TemporalTickerCreator {
 			Map<Long, Trade> sellingTrades = new TradeTypeFilter(TradeType.SELL).filter(trades);
 			buyOrders = sellingTrades.size();
 
-			high = trades.entrySet().stream().map(Entry<Long, Trade>::getValue)
-					.mapToDouble(Trade::getPrice).max().orElse(0.0);
+			high = new BigDecimal(trades.entrySet().stream().map(Entry<Long, Trade>::getValue)
+					.mapToDouble(trade -> trade.getPrice().doubleValue()).max().orElse(0.0));
 
-			average = trades.entrySet().stream().map(Entry<Long, Trade>::getValue)
-					.mapToDouble(Trade::getPrice).average().orElse(0.0);
+			average = new BigDecimal(trades.entrySet().stream().map(Entry<Long, Trade>::getValue)
+					.mapToDouble(trade -> trade.getPrice().doubleValue()).average().orElse(0.0));
 
-			low = trades.entrySet().stream().map(Entry<Long, Trade>::getValue)
-					.mapToDouble(Trade::getPrice).min().orElse(0.0);
+			low = new BigDecimal(trades.entrySet().stream().map(Entry<Long, Trade>::getValue)
+					.mapToDouble(trade -> trade.getPrice().doubleValue()).min().orElse(0.0));
 
-			vol = trades.entrySet().stream().map(Entry<Long, Trade>::getValue)
-					.mapToDouble(Trade::getAmount).sum();
+			vol = new BigDecimal(trades.entrySet().stream().map(Entry<Long, Trade>::getValue)
+					.mapToDouble(trade -> trade.getAmount().doubleValue()).sum());
 
 			long lastTradeId = trades.entrySet().stream().map(Entry<Long, Trade>::getValue)
 					.mapToLong(trade -> trade.getId()).max().orElse(0);
