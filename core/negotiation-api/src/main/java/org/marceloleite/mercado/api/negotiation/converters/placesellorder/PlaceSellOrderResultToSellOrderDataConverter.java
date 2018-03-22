@@ -1,5 +1,7 @@
 package org.marceloleite.mercado.api.negotiation.converters.placesellorder;
 
+import java.math.BigDecimal;
+
 import org.marceloleite.mercado.api.negotiation.methods.placesellorder.PlaceSellOrderResponse;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.converter.Converter;
@@ -15,11 +17,11 @@ public class PlaceSellOrderResultToSellOrderDataConverter implements Converter <
 		OrderData orderData = placeSellOrderResponse.getOrderData();
 		
 		Currency currencyToReceive = orderData.getFirstCurrency();
-		double amountToReceive = orderData.getLimitPrice();
+		BigDecimal amountToReceive = orderData.getLimitPrice();
 		CurrencyAmountData currencyAmountDataToReceive = new CurrencyAmountData(currencyToReceive, amountToReceive);
 		
 		Currency currencyToSell = orderData.getSecondCurrency();
-		double amountToSell = orderData.getExecutedQuantity();
+		BigDecimal amountToSell = orderData.getExecutedQuantity();
 		CurrencyAmountData currencyAmountDataToSell = new CurrencyAmountData(currencyToSell, amountToSell);
 		
 		sellOrderData.setCurrencyAmountToReceive(currencyAmountDataToReceive);

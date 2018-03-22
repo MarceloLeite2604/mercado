@@ -1,5 +1,7 @@
 package org.marceloleite.mercado.xml.adapters;
 
+import java.math.BigDecimal;
+
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 import org.marceloleite.mercado.commons.Currency;
@@ -22,7 +24,7 @@ public class XmlBalancesXmlAdapter extends XmlAdapter<XmlBalanceEntryList, XmlBa
 	public XmlBalanceEntryList marshal(XmlBalances balances) throws Exception {
 		XmlBalanceEntryList balanceEntryList = new XmlBalanceEntryList();
 		for (Currency currency : balances.keySet()) {
-			Double amount = balances.get(currency);
+			BigDecimal amount = balances.get(currency);
 			balanceEntryList.getCurrencyAmounts().add(new XmlCurrencyAmount(currency, amount));
 		}
 		return balanceEntryList;

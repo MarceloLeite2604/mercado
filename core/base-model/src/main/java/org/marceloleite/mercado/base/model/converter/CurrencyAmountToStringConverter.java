@@ -1,5 +1,7 @@
 package org.marceloleite.mercado.base.model.converter;
 
+import java.math.BigDecimal;
+
 import org.marceloleite.mercado.base.model.CurrencyAmount;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.converter.Converter;
@@ -12,7 +14,7 @@ public class CurrencyAmountToStringConverter implements Converter<CurrencyAmount
 	public String convertTo(CurrencyAmount currencyAmount) {
 
 		Currency currency = currencyAmount.getCurrency();
-		double amount = currencyAmount.getAmount();
+		BigDecimal amount = currencyAmount.getAmount();
 		String stringAmount;
 		if (currency.isDigital()) {
 			stringAmount = new DigitalCurrencyFormatter().format(amount);

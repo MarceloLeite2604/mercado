@@ -1,5 +1,6 @@
 package org.marceloleite.mercado.xml.structures;
 
+import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -31,15 +32,15 @@ public class XmlOrder {
 
 	private Boolean hasFills;
 
-	private Double quantity;
+	private BigDecimal quantity;
 
-	private Double limitPrice;
+	private BigDecimal limitPrice;
 
-	private Double executedQuantity;
+	private BigDecimal executedQuantity;
 
-	private Double executedPriceAverage;
+	private BigDecimal executedPriceAverage;
 
-	private Double fee;
+	private BigDecimal fee;
 
 	private ZonedDateTime created;
 
@@ -52,8 +53,8 @@ public class XmlOrder {
 	
 
 	public XmlOrder(Long id, Currency firstCurrency, Currency secondCurrency, OrderType type, OrderStatus status,
-			Boolean hasFills, Double quantity, Double limitPrice, Double executedQuantity, Double executedPriceAverage,
-			Double fee, ZonedDateTime created, ZonedDateTime updated, ZonedDateTime intended,
+			Boolean hasFills, BigDecimal quantity, BigDecimal limitPrice, BigDecimal executedQuantity, BigDecimal executedPriceAverage,
+			BigDecimal fee, ZonedDateTime created, ZonedDateTime updated, ZonedDateTime intended,
 			List<XmlOperation> xmlOperations) {
 		super();
 		this.id = id;
@@ -77,7 +78,7 @@ public class XmlOrder {
 		this(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
 	}
 	
-	public XmlOrder(Currency firstCurrency, Currency secondCurrency, Double quantity, Double limitPrice) {
+	public XmlOrder(Currency firstCurrency, Currency secondCurrency, BigDecimal quantity, BigDecimal limitPrice) {
 		super();
 		this.firstCurrency = firstCurrency;
 		this.secondCurrency = secondCurrency;
@@ -144,47 +145,47 @@ public class XmlOrder {
 	}
 
 	@XmlElement
-	public Double getQuantity() {
+	public BigDecimal getQuantity() {
 		return quantity;
 	}
 
-	public void setQuantity(Double quantity) {
+	public void setQuantity(BigDecimal quantity) {
 		this.quantity = quantity;
 	}
 
 	@XmlElement
-	public Double getLimitPrice() {
+	public BigDecimal getLimitPrice() {
 		return limitPrice;
 	}
 
-	public void setLimitPrice(Double limitPrice) {
+	public void setLimitPrice(BigDecimal limitPrice) {
 		this.limitPrice = limitPrice;
 	}
 
 	@XmlElement
-	public Double getExecutedQuantity() {
+	public BigDecimal getExecutedQuantity() {
 		return executedQuantity;
 	}
 
-	public void setExecutedQuantity(Double executedQuantity) {
+	public void setExecutedQuantity(BigDecimal executedQuantity) {
 		this.executedQuantity = executedQuantity;
 	}
 
 	@XmlElement
-	public Double getExecutedPriceAverage() {
+	public BigDecimal getExecutedPriceAverage() {
 		return executedPriceAverage;
 	}
 
-	public void setExecutedPriceAverage(Double executedPriceAverage) {
+	public void setExecutedPriceAverage(BigDecimal executedPriceAverage) {
 		this.executedPriceAverage = executedPriceAverage;
 	}
 
 	@XmlElement
-	public Double getFee() {
+	public BigDecimal getFee() {
 		return fee;
 	}
 
-	public void setFee(Double fee) {
+	public void setFee(BigDecimal fee) {
 		this.fee = fee;
 	}
 

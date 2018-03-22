@@ -1,5 +1,6 @@
 package org.marceloleite.mercado.converter.json.api.negotiation;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.marceloleite.mercado.commons.OrderStatus;
@@ -24,11 +25,11 @@ public class JsonOrderToOrderDataConverter implements Converter<JsonOrder, Order
 		order.setType(OrderType.getByValue(jsonOrder.getOrderType()));
 		order.setStatus(OrderStatus.getByValue(jsonOrder.getStatus()));
 		order.setHasFills(jsonOrder.getHasFills());
-		order.setQuantity(Double.parseDouble(jsonOrder.getQuantity()));
-		order.setLimitPrice(Double.parseDouble(jsonOrder.getLimitPrice()));
-		order.setExecutedQuantity(Double.parseDouble(jsonOrder.getExecutedQuantity()));
-		order.setExecutedPriceAverage(Double.parseDouble(jsonOrder.getExecutedPriceAvg()));
-		order.setFee(Double.parseDouble(jsonOrder.getFee()));
+		order.setQuantity(new BigDecimal(jsonOrder.getQuantity()));
+		order.setLimitPrice(new BigDecimal(jsonOrder.getLimitPrice()));
+		order.setExecutedQuantity(new BigDecimal(jsonOrder.getExecutedQuantity()));
+		order.setExecutedPriceAverage(new BigDecimal(jsonOrder.getExecutedPriceAvg()));
+		order.setFee(new BigDecimal(jsonOrder.getFee()));
 		LongToZonedDateTimeConverter longToZonedDateTimeConverter = new LongToZonedDateTimeConverter();
 		long longCreatedTimestamp = Long.parseLong(jsonOrder.getCreatedTimestamp());
 		order.setCreated(longToZonedDateTimeConverter.convertTo(longCreatedTimestamp));

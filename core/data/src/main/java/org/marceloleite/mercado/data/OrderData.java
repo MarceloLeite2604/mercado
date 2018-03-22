@@ -1,5 +1,6 @@
 package org.marceloleite.mercado.data;
 
+import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -23,15 +24,15 @@ public class OrderData {
 
 	private Boolean hasFills;
 
-	private Double quantity;
+	private BigDecimal quantity;
 
-	private Double limitPrice;
+	private BigDecimal limitPrice;
 
-	private Double executedQuantity;
+	private BigDecimal executedQuantity;
 
-	private Double executedPriceAverage;
+	private BigDecimal executedPriceAverage;
 
-	private Double fee;
+	private BigDecimal fee;
 
 	private ZonedDateTime created;
 
@@ -101,43 +102,43 @@ public class OrderData {
 		this.hasFills = hasFills;
 	}
 
-	public Double getQuantity() {
+	public BigDecimal getQuantity() {
 		return quantity;
 	}
 
-	public void setQuantity(Double quantity) {
+	public void setQuantity(BigDecimal quantity) {
 		this.quantity = quantity;
 	}
 
-	public Double getLimitPrice() {
+	public BigDecimal getLimitPrice() {
 		return limitPrice;
 	}
 
-	public void setLimitPrice(Double limitPrice) {
+	public void setLimitPrice(BigDecimal limitPrice) {
 		this.limitPrice = limitPrice;
 	}
 
-	public Double getExecutedQuantity() {
+	public BigDecimal getExecutedQuantity() {
 		return executedQuantity;
 	}
 
-	public void setExecutedQuantity(Double executedQuantity) {
+	public void setExecutedQuantity(BigDecimal executedQuantity) {
 		this.executedQuantity = executedQuantity;
 	}
 
-	public Double getExecutedPriceAverage() {
+	public BigDecimal getExecutedPriceAverage() {
 		return executedPriceAverage;
 	}
 
-	public void setExecutedPriceAverage(Double executedPriceAverage) {
+	public void setExecutedPriceAverage(BigDecimal executedPriceAverage) {
 		this.executedPriceAverage = executedPriceAverage;
 	}
 
-	public Double getFee() {
+	public BigDecimal getFee() {
 		return fee;
 	}
 
-	public void setFee(Double fee) {
+	public void setFee(BigDecimal fee) {
 		this.fee = fee;
 	}
 

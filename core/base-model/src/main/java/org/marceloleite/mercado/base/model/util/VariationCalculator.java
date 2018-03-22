@@ -1,12 +1,15 @@
 package org.marceloleite.mercado.base.model.util;
 
+import java.math.BigDecimal;
+
 public class VariationCalculator {
 
-	public Double calculate(double firstValue, double secondValue) {
-		if (secondValue == 0) {
-			return Double.POSITIVE_INFINITY;
+	public BigDecimal calculate(BigDecimal  firstValue, BigDecimal  secondValue) {
+		if (secondValue.compareTo(BigDecimal.ZERO) == 0) {
+			/* TODO: Representing a positive infinity (?) */
+			return new BigDecimal("10E20") ;
 		} else {
-			return (firstValue / secondValue) - 1.0;
+			return (firstValue.divide(secondValue).subtract(BigDecimal.ONE));
 		}
 	}
 }

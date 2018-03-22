@@ -1,5 +1,6 @@
 package org.marceloleite.mercado.xml.converters;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class BalanceXmlConverter implements XmlConverter<XmlBalances, List<Balan
 	public List<BalanceData> convertToObject(XmlBalances xmlBalances) {
 		List<BalanceData> balanceDatas = new ArrayList<>();
 		for (Currency currency : Currency.values()) {
-			Double amount = xmlBalances.getOrDefault(currency, 0.0);
+			BigDecimal amount = xmlBalances.getOrDefault(currency, new BigDecimal("0.0"));
 			BalanceData balanceData = new BalanceData();
 			balanceData.setCurrency(currency);
 			balanceData.setAmount(amount);

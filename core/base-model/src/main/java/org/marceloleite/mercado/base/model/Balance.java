@@ -1,5 +1,6 @@
 package org.marceloleite.mercado.base.model;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
@@ -39,9 +40,9 @@ public class Balance extends EnumMap<Currency, CurrencyAmount> {
 	public void deposit(CurrencyAmount currencyAmount) {
 		LOGGER.debug("Depositing " + currencyAmount + ".");
 		Currency currency = currencyAmount.getCurrency();
-		CurrencyAmount retrievedCurrency = getOrDefault(currency, new CurrencyAmount(currency, 0.0));
+		CurrencyAmount retrievedCurrency = getOrDefault(currency, new CurrencyAmount(currency, new BigDecimal("0.0")));
 		LOGGER.debug("Previous balance was " + retrievedCurrency + ".");
-		retrievedCurrency.setAmount(retrievedCurrency.getAmount() + currencyAmount.getAmount());
+		retrievedCurrency.setAmount(retrievedCurrency.getAmount().add(currencyAmount.getAmount()));
 		LOGGER.debug("New balance is " + retrievedCurrency + ".");
 		put(currency, retrievedCurrency);
 	}
@@ -49,9 +50,9 @@ public class Balance extends EnumMap<Currency, CurrencyAmount> {
 	public void withdraw(CurrencyAmount currencyAmount) {
 		LOGGER.debug("Withdrawing " + currencyAmount + ".");
 		Currency currency = currencyAmount.getCurrency();
-		CurrencyAmount retrievedCurrency = Optional.ofNullable(get(currency)).orElse(new CurrencyAmount(currency, 0.0));
+		CurrencyAmount retrievedCurrency = Optional.ofNullable(get(currency)).orElse(new CurrencyAmount(currency, new BigDecimal("0.0")));
 		LOGGER.debug("Previous balance was " + retrievedCurrency + ".");
-		retrievedCurrency.setAmount(retrievedCurrency.getAmount() - currencyAmount.getAmount());
+		retrievedCurrency.setAmount(retrievedCurrency.getAmount().subtract(currencyAmount.getAmount()));
 		LOGGER.debug("New balance is " + retrievedCurrency + ".");
 		put(currency, retrievedCurrency);
 	}
@@ -72,16 +73,16 @@ public class Balance extends EnumMap<Currency, CurrencyAmount> {
 	public boolean hasBalance(CurrencyAmount currencyAmount) {
 		Currency currency = currencyAmount.getCurrency();
 		CurrencyAmount currencyAmountBalance = get(currency);
-		return (currencyAmountBalance.getAmount() >= currencyAmount.getAmount());
+		return (currencyAmountBalance.getAmount().compareTo(currencyAmount.getAmount()) >= 0 );
 	}
 	
 	public boolean hasMinimalAmount(Currency currency) {
 		CurrencyAmount currencyAmountBalance = get(currency);
-		Double minimalAmount = MinimalAmounts.retrieveMinimalAmountFor(currency);
-		return (currencyAmountBalance.getAmount() >= minimalAmount);
+		BigDecimal minimalAmount = MinimalAmounts.retrieveMinimalAmountFor(currency);
+		return (currencyAmountBalance.getAmount().compareTo(minimalAmount) >= 0);
 	}
 
 	public boolean hasPositiveBalance(Currency currency) {
-		return (get(currency).getAmount() > 0);
+		return (get(currency).getAmount().compareTo(BigDecimal.ZERO) > 0);
 	}
 }

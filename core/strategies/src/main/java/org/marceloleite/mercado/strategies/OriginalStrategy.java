@@ -1,8 +1,11 @@
 package org.marceloleite.mercado.strategies;
 
+import java.math.BigDecimal;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.base.model.Account;
+import org.marceloleite.mercado.base.model.Balance;
 import org.marceloleite.mercado.base.model.CurrencyAmount;
 import org.marceloleite.mercado.base.model.House;
 import org.marceloleite.mercado.base.model.Order;
@@ -33,10 +36,11 @@ public class OriginalStrategy extends AbstractStrategy {
 	@Override
 	public void check(TimeInterval simulationTimeInterval, Account account, House house) {
 		if (house.getTemporalTickers().get(currency) != null) {
-			CurrencyAmount realBalance = account.getBalance().get(Currency.REAL);
-			if (realBalance.getAmount() > 0.000000001) {
+			Balance balance = account.getBalance();
+			if (balance.hasPositiveBalance(Currency.REAL)) {
+				CurrencyAmount currencyAmountToPay = balance.get(Currency.REAL);
 				CurrencyAmount currencyAmountUnitPrice = calculateCurrencyAmountUnitPrice(house);
-				CurrencyAmount currencyAmountToBuy = calculateCurrencyAmountToBuy(realBalance, currencyAmountUnitPrice);
+				CurrencyAmount currencyAmountToBuy = calculateCurrencyAmountToBuy(currencyAmountToPay, currencyAmountUnitPrice);
 				Order order = new BuyOrderBuilder().toExecuteOn(simulationTimeInterval.getStart())
 						.buying(currencyAmountToBuy).payingUnitPriceOf(currencyAmountUnitPrice).build();
 				LOGGER.debug("Order created is " + order);
@@ -64,12 +68,7 @@ public class OriginalStrategy extends AbstractStrategy {
 
 	private CurrencyAmount calculateCurrencyAmountToBuy(CurrencyAmount realBalance,
 			CurrencyAmount currencyAmountUnitPrice) {
-		Double quantity = realBalance.getAmount() / currencyAmountUnitPrice.getAmount();
-		Double restoredValue = quantity * currencyAmountUnitPrice.getAmount();
-		Double difference = restoredValue - realBalance.getAmount();
-		if ( difference > 0 ) {
-			quantity -= difference/currencyAmountUnitPrice.getAmount(); 
-		}
+		BigDecimal quantity = realBalance.getAmount().divide(currencyAmountUnitPrice.getAmount());
 		CurrencyAmount currencyAmountToBuy = new CurrencyAmount(currency, quantity);
 		return currencyAmountToBuy;
 	}
@@ -91,8 +90,8 @@ public class OriginalStrategy extends AbstractStrategy {
 
 	private CurrencyAmount calculateCurrencyAmountUnitPrice(House house) {
 		TemporalTicker temporalTicker = house.getTemporalTickers().get(currency);
-		Double lastPrice = temporalTicker.getLastPrice();
-		if (lastPrice == null || lastPrice == 0.0) {
+		BigDecimal lastPrice = temporalTicker.getLastPrice();
+		if (lastPrice == null || lastPrice.compareTo(BigDecimal.ZERO) == 0) {
 			lastPrice = temporalTicker.getPreviousLastPrice();
 		}
 		CurrencyAmount currencyAmountUnitPrice = new CurrencyAmount(Currency.REAL, lastPrice);

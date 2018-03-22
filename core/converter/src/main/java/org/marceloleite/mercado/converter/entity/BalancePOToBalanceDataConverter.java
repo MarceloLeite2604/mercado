@@ -12,7 +12,7 @@ public class BalancePOToBalanceDataConverter implements Converter<BalancePO, Bal
 	@Override
 	public BalanceData convertTo(BalancePO balancePO) {
 		BalanceData balanceData = new BalanceData();
-		balanceData.setAmount(balancePO.getAmount().doubleValue());
+		balanceData.setAmount(balancePO.getAmount());
 		balanceData.setCurrency(balancePO.getId().getCurrency());
 		return balanceData;
 	}
@@ -24,7 +24,7 @@ public class BalancePOToBalanceDataConverter implements Converter<BalancePO, Bal
 		balanceIdPO.setAccoOwner(balanceData.getAccountData().getOwner());
 		balanceIdPO.setCurrency(balanceData.getCurrency());
 		balancePO.setId(balanceIdPO);
-		balancePO.setAmount(new BigDecimal(balanceData.getAmount()));
+		balancePO.setAmount(new BigDecimal(balanceData.getAmount().toString()));
 		return balancePO;
 	}
 

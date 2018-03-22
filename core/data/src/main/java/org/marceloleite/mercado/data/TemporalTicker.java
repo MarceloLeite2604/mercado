@@ -1,5 +1,6 @@
 package org.marceloleite.mercado.data;
 
+import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.ZonedDateTime;
 
@@ -21,38 +22,38 @@ public class TemporalTicker {
 
 	private Long sellOrders;
 
-	private Double buy;
+	private BigDecimal buy;
 
-	private Double previousBuy;
+	private BigDecimal previousBuy;
 
-	private Double sell;
+	private BigDecimal sell;
 
-	private Double previousSell;
+	private BigDecimal previousSell;
 
-	private Double lastPrice;
+	private BigDecimal lastPrice;
 
-	private Double previousLastPrice;
+	private BigDecimal previousLastPrice;
 
-	private Double firstPrice;
+	private BigDecimal firstPrice;
 
-	private Double highestPrice;
+	private BigDecimal highestPrice;
 
-	private Double lowestPrice;
+	private BigDecimal lowestPrice;
 
-	private Double averagePrice;
+	private BigDecimal averagePrice;
 
 	private Duration timeDuration;
 
-	private Double volumeTrades;
+	private BigDecimal volumeTrades;
 
 	public TemporalTicker() {
 		super();
 	}
 
 	private TemporalTicker(Currency currency, ZonedDateTime start, ZonedDateTime end, Long orders, Long buyOrders,
-			Long sellOrders, Double buy, Double previousBuy, Double sell, Double previousSell, Double lastPrice,
-			Double previousLastPrice, Double firstPrice, Double highestPrice, Double lowestPrice, Double averagePrice,
-			Duration timeDuration, Double volumeTrades) {
+			Long sellOrders, BigDecimal buy, BigDecimal previousBuy, BigDecimal sell, BigDecimal previousSell,
+			BigDecimal lastPrice, BigDecimal previousLastPrice, BigDecimal firstPrice, BigDecimal highestPrice,
+			BigDecimal lowestPrice, BigDecimal averagePrice, Duration timeDuration, BigDecimal volumeTrades) {
 		super();
 		this.currency = currency;
 		this.start = start;
@@ -131,91 +132,91 @@ public class TemporalTicker {
 		this.sellOrders = sellOrders;
 	}
 
-	public Double getBuy() {
+	public BigDecimal getBuy() {
 		return buy;
 	}
 
-	public void setBuy(Double buy) {
+	public void setBuy(BigDecimal buy) {
 		this.buy = buy;
 	}
 
-	public Double getPreviousBuy() {
+	public BigDecimal getPreviousBuy() {
 		return previousBuy;
 	}
 
-	public void setPreviousBuy(Double previousBuy) {
+	public void setPreviousBuy(BigDecimal previousBuy) {
 		this.previousBuy = previousBuy;
 	}
 
-	public Double getSell() {
+	public BigDecimal getSell() {
 		return sell;
 	}
 
-	public void setSell(Double sell) {
+	public void setSell(BigDecimal sell) {
 		this.sell = sell;
 	}
 
-	public Double getPreviousSell() {
+	public BigDecimal getPreviousSell() {
 		return previousSell;
 	}
 
-	public void setPreviousSell(Double previousSell) {
+	public void setPreviousSell(BigDecimal previousSell) {
 		this.previousSell = previousSell;
 	}
 
-	public Double getLastPrice() {
+	public BigDecimal getLastPrice() {
 		return lastPrice;
 	}
-	
-	public Double getCurrentOrPreviousLastPrice() {
-		if (lastPrice != null && lastPrice != 0.0) {
+
+	public BigDecimal getCurrentOrPreviousLastPrice() {
+		if (lastPrice != null && lastPrice.compareTo(BigDecimal.ZERO) != 0) {
 			return lastPrice;
 		} else {
 			return previousLastPrice;
 		}
 	}
 
-	public void setLastPrice(Double lastPrice) {
+	public void setLastPrice(BigDecimal lastPrice) {
 		this.lastPrice = lastPrice;
 	}
 
-	public Double getPreviousLastPrice() {
+	public BigDecimal getPreviousLastPrice() {
 		return previousLastPrice;
 	}
 
-	public void setPreviousLastPrice(Double previousLastPrice) {
+	public void setPreviousLastPrice(BigDecimal previousLastPrice) {
 		this.previousLastPrice = previousLastPrice;
 	}
 
-	public Double getFirstPrice() {
+	public BigDecimal getFirstPrice() {
 		return firstPrice;
 	}
 
-	public void setFirstPrice(Double firstPrice) {
+	public void setFirstPrice(BigDecimal firstPrice) {
 		this.firstPrice = firstPrice;
 	}
 
-	public Double getHighestPrice() {
+	public BigDecimal getHighestPrice() {
 		return highestPrice;
 	}
 
-	public void setHighestPrice(Double highestPrice) {
+	public void setHighestPrice(BigDecimal highestPrice) {
 		this.highestPrice = highestPrice;
 	}
 
-	public Double getLowestPrice() {
+	public BigDecimal getLowestPrice() {
 		return lowestPrice;
 	}
 
-	public void setLowestPrice(Double lowestPrice) {
+	public void setLowestPrice(BigDecimal lowestPrice) {
 		this.lowestPrice = lowestPrice;
 	}
 
-	public Double getAveragePrice() {
+	public BigDecimal getAveragePrice() {
 		return averagePrice;
 	}
 
-	public void setAveragePrice(Double averagePrice) {
+	public void setAveragePrice(BigDecimal averagePrice) {
 		this.averagePrice = averagePrice;
 	}
 
@@ -227,11 +228,11 @@ public class TemporalTicker {
 		this.timeDuration = timeDuration;
 	}
 
-	public Double getVolumeTrades() {
+	public BigDecimal getVolumeTrades() {
 		return volumeTrades;
 	}
 
-	public void setVolumeTrades(Double volumeTrades) {
+	public void setVolumeTrades(BigDecimal volumeTrades) {
 		this.volumeTrades = volumeTrades;
 	}
 
@@ -282,13 +283,13 @@ public class TemporalTicker {
 		stringBuilder.append(", sell orders: " + sellOrders);
 		stringBuilder.append(", volume: " + volumeTrades);
 
-		double buy = (this.buy != null ? this.buy : this.previousBuy);
+		BigDecimal buy = (this.buy != null ? this.buy : this.previousBuy);
 		stringBuilder.append(", buy: " + digitalCurrencyFormatter.format(buy));
 
-		double sell = (this.sell != null ? this.sell : this.previousSell);
+		BigDecimal sell = (this.sell != null ? this.sell : this.previousSell);
 		stringBuilder.append(", sell: " + digitalCurrencyFormatter.format(sell));
 
-		double lastPrice = (this.lastPrice != null ? this.lastPrice : this.previousLastPrice);
+		BigDecimal lastPrice = (this.lastPrice != null ? this.lastPrice : this.previousLastPrice);
 		stringBuilder.append(", last: " + digitalCurrencyFormatter.format(lastPrice));
 
 		stringBuilder.append(", first: " + digitalCurrencyFormatter.format(firstPrice));

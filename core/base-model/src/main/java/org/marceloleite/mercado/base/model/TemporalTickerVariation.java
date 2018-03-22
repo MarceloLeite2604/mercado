@@ -1,5 +1,7 @@
 package org.marceloleite.mercado.base.model;
 
+import java.math.BigDecimal;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.base.model.util.VariationCalculator;
@@ -14,72 +16,76 @@ public class TemporalTickerVariation {
 
 	private Currency currency;
 
-	private Double orderVariation;
+	private BigDecimal orderVariation;
 
-	private Double highVariation;
+	private BigDecimal highVariation;
 
-	private Double averageVariation;
+	private BigDecimal averageVariation;
 
-	private Double lowVariation;
+	private BigDecimal lowVariation;
 
-	private Double volVariation;
+	private BigDecimal volVariation;
 
-	private Double firstVariation;
+	private BigDecimal firstVariation;
 
-	private Double lastVariation;
+	private BigDecimal lastVariation;
 
-	private Double buyVariation;
+	private BigDecimal buyVariation;
 
-	private Double sellVariation;
+	private BigDecimal sellVariation;
 
-	public TemporalTickerVariation(TemporalTicker previousTemporalTicker,
-			TemporalTicker currentTemporalTicker) {
-		this.orderVariation = Double.NaN;
-		this.highVariation = Double.NaN;
-		this.averageVariation = Double.NaN;
-		this.lowVariation = Double.NaN;
-		this.volVariation = Double.NaN;
-		this.firstVariation = Double.NaN;
-		this.lastVariation = Double.NaN;
+	public TemporalTickerVariation(TemporalTicker previousTemporalTicker, TemporalTicker currentTemporalTicker) {
+		/* TODO: Replaced NaN values. */
+		this.orderVariation = null;
+		this.highVariation = null;
+		this.averageVariation = null;
+		this.lowVariation = null;
+		this.volVariation = null;
+		this.firstVariation = null;
+		this.lastVariation = null;
 		this.currency = null;
 
 		if (previousTemporalTicker == null) {
-			/*LOGGER.debug("Previous temporal ticker is null.");*/
+			/* LOGGER.debug("Previous temporal ticker is null."); */
 		} else if (currentTemporalTicker == null) {
-			/*LOGGER.debug("Current temporal ticker is null.");*/
+			/* LOGGER.debug("Current temporal ticker is null."); */
 
 		} else {
-			/*LOGGER.debug("Previous temporal ticker: " + previousTemporalTicker);
-			LOGGER.debug("Current temporal ticker: " + currentTemporalTicker);*/
+			/*
+			 * LOGGER.debug("Previous temporal ticker: " + previousTemporalTicker);
+			 * LOGGER.debug("Current temporal ticker: " + currentTemporalTicker);
+			 */
 			this.orderVariation = calculateVariation(previousTemporalTicker.getOrders(),
 					currentTemporalTicker.getOrders());
 			this.highVariation = calculateVariation(previousTemporalTicker.getHighestPrice(),
 					currentTemporalTicker.getHighestPrice());
 			this.averageVariation = calculateVariation(previousTemporalTicker.getAveragePrice(),
 					currentTemporalTicker.getAveragePrice());
-			this.lowVariation = calculateVariation(previousTemporalTicker.getLowestPrice(), currentTemporalTicker.getLowestPrice());
-			this.volVariation = calculateVariation(previousTemporalTicker.getVolumeTrades(), currentTemporalTicker.getVolumeTrades());
+			this.lowVariation = calculateVariation(previousTemporalTicker.getLowestPrice(),
+					currentTemporalTicker.getLowestPrice());
+			this.volVariation = calculateVariation(previousTemporalTicker.getVolumeTrades(),
+					currentTemporalTicker.getVolumeTrades());
 			this.firstVariation = calculateVariation(previousTemporalTicker.getFirstPrice(),
 					currentTemporalTicker.getFirstPrice());
-			
-			double previousLast = previousTemporalTicker.getLastPrice();
-			if (previousTemporalTicker.getLastPrice() == 0.0) {
+
+			BigDecimal previousLast = previousTemporalTicker.getLastPrice();
+			if (previousTemporalTicker.getLastPrice().compareTo(BigDecimal.ZERO) == 0) {
 				previousLast = previousTemporalTicker.getPreviousLastPrice();
 			}
-			
-			double currentLast = currentTemporalTicker.getLastPrice();
-			if (currentTemporalTicker.getLastPrice() == 0.0) {
+
+			BigDecimal currentLast = currentTemporalTicker.getLastPrice();
+			if (currentTemporalTicker.getLastPrice().compareTo(BigDecimal.ZERO) == 0) {
 				currentLast = currentTemporalTicker.getPreviousLastPrice();
 			}
-			
+
 			this.lastVariation = calculateVariation(previousLast, currentLast);
 			this.currency = previousTemporalTicker.getCurrency();
 		}
 	}
 
-	private TemporalTickerVariation(Currency currency, double orderVariation, double highVariation,
-			double averageVariation, double lowVariation, double volVariation, double firstVariation,
-			double lastVariation, double buyVariation, double sellVariation) {
+	private TemporalTickerVariation(Currency currency, BigDecimal orderVariation, BigDecimal highVariation,
+			BigDecimal averageVariation, BigDecimal lowVariation, BigDecimal volVariation, BigDecimal firstVariation,
+			BigDecimal lastVariation, BigDecimal buyVariation, BigDecimal sellVariation) {
 		super();
 		this.currency = currency;
 		this.orderVariation = orderVariation;
@@ -101,11 +107,11 @@ public class TemporalTickerVariation {
 				temporalTickerVariation.getBuyVariation(), temporalTickerVariation.getSellVariation());
 	}
 
-	private double calculateVariation(long previous, long current) {
-		return calculateVariation((double) previous, (double) current);
+	private BigDecimal calculateVariation(long previous, long current) {
+		return calculateVariation(new BigDecimal(previous), new BigDecimal(current));
 	}
 
-	private double calculateVariation(double previous, double current) {
+	private BigDecimal calculateVariation(BigDecimal previous, BigDecimal current) {
 		return new VariationCalculator().calculate(current, previous);
 	}
 
@@ -113,49 +119,49 @@ public class TemporalTickerVariation {
 		return currency;
 	}
 
-	public double getOrderVariation() {
+	public BigDecimal getOrderVariation() {
 		return orderVariation;
 	}
 
-	public double getHighVariation() {
+	public BigDecimal getHighVariation() {
 		return highVariation;
 	}
 
-	public double getAverageVariation() {
+	public BigDecimal getAverageVariation() {
 		return averageVariation;
 	}
 
-	public double getLowVariation() {
+	public BigDecimal getLowVariation() {
 		return lowVariation;
 	}
 
-	public double getVolVariation() {
+	public BigDecimal getVolVariation() {
 		return volVariation;
 	}
 
-	public double getFirstVariation() {
+	public BigDecimal getFirstVariation() {
 		return firstVariation;
 	}
 
-	public double getLastVariation() {
+	public BigDecimal getLastVariation() {
 		return lastVariation;
 	}
 
-	public double getBuyVariation() {
+	public BigDecimal getBuyVariation() {
 		return buyVariation;
 	}
 
-	public double getSellVariation() {
+	public BigDecimal getSellVariation() {
 		return sellVariation;
 	}
-	
+
 	@Override
 	public String toString() {
 		StringBuilder stringBuilder = new StringBuilder();
-		
+
 		stringBuilder.append("[ ");
 		stringBuilder.append(currency);
-		
+
 		stringBuilder.append(", orders: " + printPercentage(orderVariation));
 		stringBuilder.append(", volume: " + printPercentage(volVariation));
 		stringBuilder.append(", buy: " + printPercentage(buyVariation));
@@ -170,8 +176,8 @@ public class TemporalTickerVariation {
 		return stringBuilder.toString();
 	}
 
-	private String printPercentage(Double percentage) {
-		if ( percentage != null ) {
+	private String printPercentage(BigDecimal percentage) {
+		if (percentage != null) {
 			return new PercentageFormatter().format(percentage);
 		} else {
 			return "null";

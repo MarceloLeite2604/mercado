@@ -1,5 +1,6 @@
 package org.marceloleite.mercado.strategies.first;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
@@ -41,9 +42,9 @@ public class FirstStrategy extends AbstractStrategy {
 
 	private CurrencyAmount baseRealAmount;
 
-	private double growthPercentageThreshold;
+	private BigDecimal growthPercentageThreshold;
 
-	private double shrinkPercentageThreshold;
+	private BigDecimal shrinkPercentageThreshold;
 
 	public FirstStrategy(Currency currency) {
 		super(FirstStrategyParameter.class, FirstStrategyVariable.class);
@@ -66,8 +67,9 @@ public class FirstStrategy extends AbstractStrategy {
 				house.getTemporalTickers().get(currency));
 
 		if (temporalTickerVariation != null) {
-			Double lastVariation = temporalTickerVariation.getLastVariation();
-			if (lastVariation != null && lastVariation != Double.POSITIVE_INFINITY) {
+			BigDecimal lastVariation = temporalTickerVariation.getLastVariation();
+			/* TODO: Create a positive and negative infity BigDecimal. */
+			if (lastVariation != null && lastVariation.compareTo(new BigDecimal("10E20")) != 0) {
 				checkGrowthPercentage(simulationTimeInterval, account, house, lastVariation);
 				checkShrinkPercentage(simulationTimeInterval, account, house, temporalTickerVariation);
 			}
@@ -76,8 +78,8 @@ public class FirstStrategy extends AbstractStrategy {
 
 	private void checkShrinkPercentage(TimeInterval simulationTimeInterval, Account account, House house,
 			TemporalTickerVariation temporalTickerVariation) {
-		Double lastVariation = temporalTickerVariation.getLastVariation();
-		if (lastVariation <= shrinkPercentageThreshold) {
+		BigDecimal lastVariation = temporalTickerVariation.getLastVariation();
+		if (lastVariation.compareTo(shrinkPercentageThreshold) <= 0) {
 			if (account.getBalance().hasPositiveBalance(currency)) {
 				/*LOGGER.debug(new ZonedDateTimeToStringConverter().convertTo(simulationTimeInterval.getEnd())
 						+ ": Shrink threshold reached.");*/
@@ -142,8 +144,8 @@ public class FirstStrategy extends AbstractStrategy {
 	}
 
 	private void checkGrowthPercentage(TimeInterval simulationTimeInterval, Account account, House house,
-			Double lastVariation) {
-		if (lastVariation >= growthPercentageThreshold) {
+			BigDecimal lastVariation) {
+		if (lastVariation.compareTo(growthPercentageThreshold) >= 0) {
 /*			LOGGER.debug(new ZonedDateTimeToStringConverter().convertTo(simulationTimeInterval.getEnd())
 					+ ": Growth threshold reached.");*/
 			if (account.getBalance().hasPositiveBalance(Currency.REAL)) {
@@ -191,8 +193,8 @@ public class FirstStrategy extends AbstractStrategy {
 
 	private CurrencyAmount calculareCurrencyAmountBaseValue(OrderType orderType) {
 
-		double operationPercentage = calculateOperationPercentage(orderType);
-		double baseValueAmount = baseRealAmount.getAmount() * operationPercentage;
+		BigDecimal operationPercentage = calculateOperationPercentage(orderType);
+		BigDecimal baseValueAmount = baseRealAmount.getAmount().multiply(operationPercentage);
 
 		CurrencyAmount currencyAmountBaseValue = new CurrencyAmount(Currency.REAL, baseValueAmount);
 		LOGGER.debug("Base value is: " + currencyAmountBaseValue);
@@ -201,8 +203,8 @@ public class FirstStrategy extends AbstractStrategy {
 
 	private CurrencyAmount calculateCurrencyAmountUnitPrice(House house) {
 		TemporalTicker temporalTicker = house.getTemporalTickers().get(currency);
-		Double lastPrice = temporalTicker.getLastPrice();
-		if (lastPrice == null || lastPrice == 0.0) {
+		BigDecimal lastPrice = temporalTicker.getLastPrice();
+		if (lastPrice == null || lastPrice.compareTo(BigDecimal.ZERO) == 0) {
 			lastPrice = temporalTicker.getPreviousLastPrice();
 		}
 		CurrencyAmount currencyAmountUnitPrice = new CurrencyAmount(Currency.REAL, lastPrice);
@@ -211,12 +213,7 @@ public class FirstStrategy extends AbstractStrategy {
 
 	private CurrencyAmount calculateCurrencyAmountToBuy(CurrencyAmount currencyAmountToPay,
 			CurrencyAmount currencyAmountUnitPrice) {
-		Double quantity = currencyAmountToPay.getAmount() / currencyAmountUnitPrice.getAmount();
-		// Double restoredValue = quantity * currencyAmountUnitPrice.getAmount();
-		// Double difference = restoredValue - currencyAmountToPay.getAmount();
-		// if (difference > 0) {
-		// quantity -= difference / currencyAmountUnitPrice.getAmount();
-		// }
+		BigDecimal quantity = currencyAmountToPay.getAmount().divide(currencyAmountUnitPrice.getAmount());
 		CurrencyAmount currencyAmountToBuy = new CurrencyAmount(currency, quantity);
 		LOGGER.debug("Currency amount to buy is: " + currencyAmountToBuy);
 		return currencyAmountToBuy;
@@ -235,7 +232,7 @@ public class FirstStrategy extends AbstractStrategy {
 
 	private CurrencyAmount calculateCurrencyAmountToSell(CurrencyAmount currencyAmountToReceive,
 			CurrencyAmount currencyAmountUnitPrice) {
-		Double amountToSell = currencyAmountToReceive.getAmount() / currencyAmountUnitPrice.getAmount();
+		BigDecimal amountToSell = currencyAmountToReceive.getAmount().divide(currencyAmountUnitPrice.getAmount());
 		CurrencyAmount currencyAmountToSell = new CurrencyAmount(currency, amountToSell);
 		LOGGER.debug("Currency amount to sell is " + currencyAmountToSell + ".");
 		return currencyAmountToSell;
@@ -249,13 +246,13 @@ public class FirstStrategy extends AbstractStrategy {
 
 	}
 
-	private double calculateOperationPercentage(OrderType orderType) {
-		double result;
+	private BigDecimal calculateOperationPercentage(OrderType orderType) {
+		BigDecimal result;
 		long checkStep = buySellStep.calculateStep(orderType);
 		if (checkStep > 0) {
-			result = (double) MathUtils.factorial(checkStep) / (double) MathUtils.factorial(buySteps);
+			result = new BigDecimal((double) MathUtils.factorial(checkStep) / (double) MathUtils.factorial(buySteps));
 		} else {
-			result = (double) MathUtils.factorial(Math.abs(checkStep)) / (double) MathUtils.factorial(sellSteps);
+			result = new BigDecimal((double) MathUtils.factorial(Math.abs(checkStep)) / (double) MathUtils.factorial(sellSteps));
 		}
 		LOGGER.debug("Operation percentage is " + new PercentageFormatter().format(result) + ".");
 		return result;
@@ -304,13 +301,13 @@ public class FirstStrategy extends AbstractStrategy {
 			buySteps = Long.parseLong(parameter.getValue());
 			break;
 		case GROWTH_PERCENTAGE_THRESHOLD:
-			growthPercentageThreshold = Double.parseDouble(parameter.getValue());
+			growthPercentageThreshold = new BigDecimal(parameter.getValue());
 			break;
 		case SELL_STEP_FACTORIAL_NUMBER:
 			sellSteps = Long.parseLong(parameter.getValue());
 			break;
 		case SHRINK_PERCENTAGE_THRESHOLD:
-			shrinkPercentageThreshold = Double.parseDouble(parameter.getValue());
+			shrinkPercentageThreshold = new BigDecimal(parameter.getValue());
 			break;
 		}
 

@@ -1,5 +1,6 @@
 package org.marceloleite.mercado.xml.converters;
 
+import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 
 import org.marceloleite.mercado.commons.Currency;
@@ -13,13 +14,13 @@ public class DepositXmlConverter implements XmlConverter<XmlDeposit, DepositData
 	public XmlDeposit convertToXml(DepositData deposit) {
 		ZonedDateTime time = deposit.getTime();
 		Currency currency = deposit.getCurrencyAmount().getCurrency();
-		double amount = deposit.getCurrencyAmount().getAmount();
+		BigDecimal amount = deposit.getCurrencyAmount().getAmount();
 		return new XmlDeposit(time, currency, amount);
 	}
 
 	@Override
 	public DepositData convertToObject(XmlDeposit xmlDeposit) {
-		Double amount = xmlDeposit.getAmount();
+		BigDecimal amount = xmlDeposit.getAmount();
 		Currency currency = xmlDeposit.getCurrency();
 		ZonedDateTime time = xmlDeposit.getTime();
 		CurrencyAmountData currencyAmount = new CurrencyAmountData(currency, amount);

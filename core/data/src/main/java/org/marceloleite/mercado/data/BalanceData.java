@@ -1,5 +1,7 @@
 package org.marceloleite.mercado.data;
 
+import java.math.BigDecimal;
+
 import org.marceloleite.mercado.commons.Currency;
 
 public class BalanceData {
@@ -8,7 +10,7 @@ public class BalanceData {
 
 	private Currency currency;
 
-	private Double amount;
+	private BigDecimal amount;
 
 	public AccountData getAccountData() {
 		return accountData;
@@ -26,11 +28,11 @@ public class BalanceData {
 		this.currency = currency;
 	}
 
-	public Double getAmount() {
+	public BigDecimal getAmount() {
 		return amount;
 	}
 
-	public void setAmount(Double amount) {
+	public void setAmount(BigDecimal amount) {
 		this.amount = amount;
 	}
 }

@@ -1,5 +1,6 @@
 package org.marceloleite.mercado.xml.structures;
 
+import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -17,18 +18,18 @@ public class XmlSellOrder {
 
 	private Currency currencyToSell;
 
-	private Double amountToSell;
+	private BigDecimal amountToSell;
 
 	private Currency currencyToReceive;
 
-	private Double amountToReceive;
+	private BigDecimal amountToReceive;
 
 	public XmlSellOrder() {
 		this(null, null, null, null, null);
 	}
 
-	private XmlSellOrder(ZonedDateTime time, Currency currencyToSell, Double amountToSell, Currency currencyToReceive,
-			Double amountToReceive) {
+	private XmlSellOrder(ZonedDateTime time, Currency currencyToSell, BigDecimal amountToSell, Currency currencyToReceive,
+			BigDecimal amountToReceive) {
 		super();
 		this.time = time;
 		this.currencyToSell = currencyToSell;
@@ -37,11 +38,11 @@ public class XmlSellOrder {
 		this.amountToReceive = amountToReceive;
 	}
 
-	public XmlSellOrder(ZonedDateTime time, Currency currencyToSell, Double amountToSell, Currency currencyToReceive) {
+	public XmlSellOrder(ZonedDateTime time, Currency currencyToSell, BigDecimal amountToSell, Currency currencyToReceive) {
 		this(time, currencyToSell, amountToSell, currencyToReceive, null);
 	}
 
-	public XmlSellOrder(ZonedDateTime time, Currency currencyToSell, Currency currencyToReceive, Double amountToReceive) {
+	public XmlSellOrder(ZonedDateTime time, Currency currencyToSell, Currency currencyToReceive, BigDecimal amountToReceive) {
 		this(time, currencyToSell, null, currencyToReceive, amountToReceive);
 	}
 
@@ -64,11 +65,11 @@ public class XmlSellOrder {
 	}
 
 	@XmlElement(required = false)
-	public Double getAmountToSell() {
+	public BigDecimal getAmountToSell() {
 		return amountToSell;
 	}
 
-	public void setAmountToSell(Double amountToSell) {
+	public void setAmountToSell(BigDecimal amountToSell) {
 		this.amountToSell = amountToSell;
 	}
 
@@ -82,11 +83,11 @@ public class XmlSellOrder {
 	}
 
 	@XmlElement(required = false)
-	public Double getAmountToReceive() {
+	public BigDecimal getAmountToReceive() {
 		return amountToReceive;
 	}
 
-	public void setAmountToReceive(Double amountToReceive) {
+	public void setAmountToReceive(BigDecimal amountToReceive) {
 		this.amountToReceive = amountToReceive;
 	}
 }

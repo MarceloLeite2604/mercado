@@ -1,5 +1,6 @@
 package org.marceloleite.mercado.xml.structures;
 
+import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -17,18 +18,18 @@ public class XmlBuyOrder {
 
 	private Currency currencyToBuy;
 
-	private Double amountToBuy;
+	private BigDecimal amountToBuy;
 
 	private Currency currencyToPay;
 
-	private Double amountToPay;
+	private BigDecimal amountToPay;
 
 	public XmlBuyOrder() {
 		this(null, null, null, null, null);
 	}
 
-	private XmlBuyOrder(ZonedDateTime time, Currency currencyToBuy, Double amountToBuy, Currency currencyToPay,
-			Double amountToPay) {
+	private XmlBuyOrder(ZonedDateTime time, Currency currencyToBuy, BigDecimal amountToBuy, Currency currencyToPay,
+			BigDecimal amountToPay) {
 		super();
 		this.time = time;
 		this.currencyToBuy = currencyToBuy;
@@ -37,11 +38,11 @@ public class XmlBuyOrder {
 		this.amountToPay = amountToPay;
 	}
 
-	public XmlBuyOrder(ZonedDateTime time, Currency currencyToBuy, Double amountToBuy, Currency currencyToPay) {
+	public XmlBuyOrder(ZonedDateTime time, Currency currencyToBuy, BigDecimal amountToBuy, Currency currencyToPay) {
 		this(time, currencyToBuy, amountToBuy, currencyToPay, null);
 	}
 
-	public XmlBuyOrder(ZonedDateTime time, Currency currencyToBuy, Currency currencyToPay, Double amountToPay) {
+	public XmlBuyOrder(ZonedDateTime time, Currency currencyToBuy, Currency currencyToPay, BigDecimal amountToPay) {
 		this(time, currencyToBuy, null, currencyToPay, amountToPay);
 	}
 
@@ -64,11 +65,11 @@ public class XmlBuyOrder {
 	}
 
 	@XmlElement(required = false)
-	public Double getAmountToBuy() {
+	public BigDecimal getAmountToBuy() {
 		return amountToBuy;
 	}
 
-	public void setAmountToBuy(Double amountToBuy) {
+	public void setAmountToBuy(BigDecimal amountToBuy) {
 		this.amountToBuy = amountToBuy;
 	}
 
@@ -77,16 +78,14 @@ public class XmlBuyOrder {
 		return currencyToPay;
 	}
 
-	public void setCurrencyToPay(Currency currencyToPay) {
-		this.currencyToPay = currencyToPay;
-	}
+	public void setCurrencyToPay(Currency currencyToPay) {}
 
 	@XmlElement(required = false)
-	public Double getAmountToPay() {
+	public BigDecimal getAmountToPay() {
 		return amountToPay;
 	}
 
-	public void setAmountToPay(Double amountToPay) {
+	public void setAmountToPay(BigDecimal amountToPay) {
 		this.amountToPay = amountToPay;
 	}
 }

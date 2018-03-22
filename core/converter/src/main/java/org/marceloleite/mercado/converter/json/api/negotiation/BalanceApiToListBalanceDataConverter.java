@@ -1,5 +1,6 @@
 package org.marceloleite.mercado.converter.json.api.negotiation;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +20,7 @@ public class BalanceApiToListBalanceDataConverter implements Converter<BalanceAp
 				CurrencyAvailable currencyAvailable = balanceApi.get(currency);
 				BalanceData balanceData = new BalanceData();
 				balanceData.setCurrency(currency);
-				balanceData.setAmount(currencyAvailable.getAvailable());
+				balanceData.setAmount(new BigDecimal(currencyAvailable.getAvailable().toString()));
 				balanceDatas.add(balanceData);
 			}
 		}
