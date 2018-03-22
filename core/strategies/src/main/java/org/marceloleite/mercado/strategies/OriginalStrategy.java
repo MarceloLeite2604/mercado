@@ -1,6 +1,7 @@
 package org.marceloleite.mercado.strategies;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -68,7 +69,7 @@ public class OriginalStrategy extends AbstractStrategy {
 
 	private CurrencyAmount calculateCurrencyAmountToBuy(CurrencyAmount realBalance,
 			CurrencyAmount currencyAmountUnitPrice) {
-		BigDecimal quantity = realBalance.getAmount().divide(currencyAmountUnitPrice.getAmount());
+		BigDecimal quantity = realBalance.getAmount().divide(currencyAmountUnitPrice.getAmount(), 16, RoundingMode.HALF_UP);
 		CurrencyAmount currencyAmountToBuy = new CurrencyAmount(currency, quantity);
 		return currencyAmountToBuy;
 	}

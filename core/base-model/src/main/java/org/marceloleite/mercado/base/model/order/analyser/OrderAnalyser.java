@@ -1,6 +1,7 @@
 package org.marceloleite.mercado.base.model.order.analyser;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -121,7 +122,7 @@ public class OrderAnalyser {
 	}
 
 	private CurrencyAmount calculateSecondFor(CurrencyAmount currencyAmount) {
-		BigDecimal amount = currencyAmount.getAmount().divide(unitPrice.getAmount());
+		BigDecimal amount = currencyAmount.getAmount().divide(unitPrice.getAmount(), 16, RoundingMode.HALF_UP);
 		return new CurrencyAmount(second.getCurrency(), amount);
 	}
 

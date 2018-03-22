@@ -1,5 +1,7 @@
 package org.marceloleite.mercado.strategies.fourth;
 
+import java.math.BigDecimal;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.base.model.Account;
@@ -33,9 +35,9 @@ public class FourthStrategy extends AbstractStrategy {
 
 	private Currency currency;
 
-	private double growthPercentageThreshold;
+	private BigDecimal growthPercentageThreshold;
 
-	private double shrinkPercentageThreshold;
+	private BigDecimal shrinkPercentageThreshold;
 
 	private TemporalTicker baseTemporalTicker;
 
@@ -65,10 +67,10 @@ public class FourthStrategy extends AbstractStrategy {
 				house.getTemporalTickers().get(currency));
 
 		if (temporalTickerVariation != null) {
-			double lastVariation = temporalTickerVariation.getLastVariation();
+			BigDecimal lastVariation = temporalTickerVariation.getLastVariation();
 			switch (status) {
 			case UNDEFINED:
-				if (lastVariation != Double.NaN && lastVariation > 0) {
+				if (lastVariation != null && lastVariation.compareTo(BigDecimal.ZERO) > 0) {
 					LOGGER.debug(simulationTimeInterval + ": Last variation is "
 							+ new PercentageFormatter().format(lastVariation));
 					updateBase(house);
@@ -76,17 +78,17 @@ public class FourthStrategy extends AbstractStrategy {
 				}
 				break;
 			case SAVED:
-				if (lastVariation != Double.NaN && lastVariation < 0) {
+				if (lastVariation != null && lastVariation.compareTo(BigDecimal.ZERO) < 0) {
 					updateBase(house);
-				} else if (lastVariation != Double.NaN && lastVariation >= growthPercentageThreshold) {
+				} else if (lastVariation != null && lastVariation.compareTo(growthPercentageThreshold) >= 0 ) {
 					updateBase(house);
 					createBuyOrder(simulationTimeInterval, account, house);
 				}
 				break;
 			case APPLIED:
-				if (lastVariation != Double.NaN && lastVariation > 0) {
+				if (lastVariation != null && lastVariation.compareTo(BigDecimal.ZERO) > 0) {
 					updateBase(house);
-				} else if (lastVariation != Double.NaN && lastVariation <= shrinkPercentageThreshold) {
+				} else if (lastVariation != null && lastVariation.compareTo(shrinkPercentageThreshold) <= 0) {
 					updateBase(house);
 					createSellOrder(simulationTimeInterval, account, house);
 				}
@@ -211,17 +213,17 @@ public class FourthStrategy extends AbstractStrategy {
 			circularArray = new CircularArray<>(Integer.parseInt(parameter.getValue()));
 			break;
 		case GROWTH_PERCENTAGE_THRESHOLD:
-			growthPercentageThreshold = Double.parseDouble(parameter.getValue());
+			growthPercentageThreshold = new BigDecimal(parameter.getValue());
 			break;
 		case SHRINK_PERCENTAGE_THRESHOLD:
-			shrinkPercentageThreshold = Double.parseDouble(parameter.getValue());
+			shrinkPercentageThreshold = new BigDecimal(parameter.getValue());
 			break;
 
 		}
 	}
 
 	private CurrencyAmount calculateCurrencyAmountUnitPrice(House house) {
-		Double lastPrice = house.getTemporalTickers().get(currency).getLastPrice();
+		BigDecimal lastPrice = house.getTemporalTickers().get(currency).getLastPrice();
 		CurrencyAmount currencyAmountUnitPrice = new CurrencyAmount(currency, lastPrice);
 		return currencyAmountUnitPrice;
 	}

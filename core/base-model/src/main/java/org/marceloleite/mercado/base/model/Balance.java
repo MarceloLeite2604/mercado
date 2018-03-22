@@ -83,6 +83,6 @@ public class Balance extends EnumMap<Currency, CurrencyAmount> {
 	}
 
 	public boolean hasPositiveBalance(Currency currency) {
-		return (get(currency).getAmount().compareTo(BigDecimal.ZERO) > 0);
+		return (get(currency).getAmount().compareTo(new BigDecimal("10E-8")) > 0);
 	}
 }

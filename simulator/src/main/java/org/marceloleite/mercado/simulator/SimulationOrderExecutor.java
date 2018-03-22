@@ -1,5 +1,7 @@
 package org.marceloleite.mercado.simulator;
 
+import java.math.BigDecimal;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.base.model.Account;
@@ -50,13 +52,13 @@ public class SimulationOrderExecutor implements OrderExecutor {
 	}
 
 	private CurrencyAmount calculateCurrencyAmountToPay(Order order) {
-		Double amountToPay = order.getLimitPrice() * order.getQuantity();
+		BigDecimal amountToPay = order.getLimitPrice().multiply(order.getQuantity());
 		Currency currencyToPay = order.getFirstCurrency();
 		return new CurrencyAmount(currencyToPay, amountToPay);
 	}
 
 	private CurrencyAmount calculateCurrencyAmountToSell(Order order) {
-		Double quantity = order.getQuantity();
+		BigDecimal quantity = order.getQuantity();
 		Currency currencyToSell = order.getSecondCurrency();
 		return new CurrencyAmount(currencyToSell, quantity);
 	}
@@ -85,29 +87,29 @@ public class SimulationOrderExecutor implements OrderExecutor {
 	private boolean hasBalance(Account account, CurrencyAmount amountToHave) {
 		Currency currency = amountToHave.getCurrency();
 		CurrencyAmount balanceAmount = account.getBalance().get(currency);
-		return (balanceAmount.getAmount() >= amountToHave.getAmount());
+		return (balanceAmount.getAmount().compareTo(amountToHave.getAmount()) >= 0);
 	}
 
 	private CurrencyAmount calculateBuyOrderComission(Order order, House house) {
 		CurrencyAmount currencyAmountToBuy = elaborateCurrencyAmountToBuy(order);
-		double comissionAmount = currencyAmountToBuy.getAmount() * house.getComissionPercentage();
+		BigDecimal comissionAmount = currencyAmountToBuy.getAmount().multiply(house.getComissionPercentage());
 		return new CurrencyAmount(currencyAmountToBuy.getCurrency(), comissionAmount);
 	}
 
 	private CurrencyAmount elaborateCurrencyAmountToBuy(Order order) {
-		Double quantity = order.getQuantity();
+		BigDecimal quantity = order.getQuantity();
 		Currency currencyToBuy = order.getSecondCurrency();
 		return new CurrencyAmount(currencyToBuy, quantity);
 	}
 
 	private CurrencyAmount calculateSellOrderCommission(Order order, House house) {
 		CurrencyAmount currencyAmountToReceive = elaborateCurrencyAmountToReceive(order);
-		double comissionAmount = currencyAmountToReceive.getAmount() * house.getComissionPercentage();
+		BigDecimal comissionAmount = currencyAmountToReceive.getAmount().multiply(house.getComissionPercentage());
 		return new CurrencyAmount(currencyAmountToReceive.getCurrency(), comissionAmount);
 	}
 
 	private CurrencyAmount elaborateCurrencyAmountToReceive(Order order) {
-		Double amount = order.getQuantity() * order.getLimitPrice();
+		BigDecimal amount = order.getQuantity().multiply(order.getLimitPrice());
 		Currency currency = order.getFirstCurrency();
 		return new CurrencyAmount(currency, amount);
 	}
@@ -120,13 +122,13 @@ public class SimulationOrderExecutor implements OrderExecutor {
 
 	private CurrencyAmount calculateBuyOrderDeposit(Order order, CurrencyAmount currencyAmountComission) {
 		CurrencyAmount currencyAmountToBuy = elaborateCurrencyAmountToBuy(order);
-		double amountToDeposit = currencyAmountToBuy.getAmount() - currencyAmountComission.getAmount();
+		BigDecimal amountToDeposit = currencyAmountToBuy.getAmount().subtract(currencyAmountComission.getAmount());
 		return new CurrencyAmount(currencyAmountToBuy.getCurrency(), amountToDeposit);
 	}
 
 	private CurrencyAmount calculateSellOrderDeposit(Order order, House house, CurrencyAmount currencyAmountComission) {
 		CurrencyAmount currencyAmountToReceive = elaborateCurrencyAmountToReceive(order);
-		double amountToDeposit = currencyAmountToReceive.getAmount() - currencyAmountComission.getAmount();
+		BigDecimal amountToDeposit = currencyAmountToReceive.getAmount().subtract(currencyAmountComission.getAmount());
 		return new CurrencyAmount(currencyAmountToReceive.getCurrency(), amountToDeposit);
 	}
 }

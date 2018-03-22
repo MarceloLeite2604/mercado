@@ -1,5 +1,6 @@
 package org.marceloleite.mercado.simulator;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -31,13 +32,13 @@ public class SimulationHouse implements House {
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = LogManager.getLogger(SimulationHouse.class);
 
-	private static final double DEFAULT_COMISSION_PERCENTAGE = 0.007;
+	private static final BigDecimal DEFAULT_COMISSION_PERCENTAGE = new BigDecimal("0.007");
 
 	private List<Account> accounts;
 
 	private Map<String, Balance> comissionBalance;
 
-	private double comissionPercentage;
+	private BigDecimal comissionPercentage;
 
 	private Map<Currency, TemporalTicker> temporalTickers;
 
@@ -47,7 +48,7 @@ public class SimulationHouse implements House {
 	
 	private OrderExecutor orderExecutor;
 
-	private SimulationHouse(List<Account> accounts, Map<String, Balance> comissionBalance, double comissionPercentage,
+	private SimulationHouse(List<Account> accounts, Map<String, Balance> comissionBalance, BigDecimal comissionPercentage,
 			Map<Currency, TemporalTicker> temporalTickers,
 			Map<Currency, TemporalTickerVariation> temporalTickerVariations,
 			TemporalTickerRetriever temporalTickerRetriever) {
@@ -101,15 +102,15 @@ public class SimulationHouse implements House {
 		return accounts;
 	}
 
-	public static double getDefaultComissionPercentage() {
+	public static BigDecimal getDefaultComissionPercentage() {
 		return DEFAULT_COMISSION_PERCENTAGE;
 	}
 
-	public double getComissionPercentage() {
+	public BigDecimal getComissionPercentage() {
 		return comissionPercentage;
 	}
 
-	public void setComissionPercentage(double comissionPercentage) {
+	public void setComissionPercentage(BigDecimal comissionPercentage) {
 		this.comissionPercentage = comissionPercentage;
 	}
 
