@@ -6,14 +6,16 @@ import java.time.ZonedDateTime;
 
 import org.marceloleite.mercado.commons.converter.DurationToStringConverter;
 import org.marceloleite.mercado.commons.encryption.Encrypt;
+import org.marceloleite.mercado.commons.properties.SystemProperty;
 
 public class Main {
 
 	public static void main(String[] args) {
 		// daylightSavingTime();
 		// durationToStringConverter();
-		encrypt();
+		// encrypt();
 		// createEncryptKey();
+		mercadoBigDecimal();
 	}
 
 	@SuppressWarnings("unused")
@@ -51,5 +53,15 @@ public class Main {
 		System.out.println(new Encrypt().generateKey());
 	}
 
-	
+
+	private static void mercadoBigDecimal() {
+		MercadoBigDecimal unitPrice = new MercadoBigDecimal("3475.00000");
+		MercadoBigDecimal balance = new MercadoBigDecimal("1000.00000");
+		
+		MercadoBigDecimal amount = balance.divide(unitPrice);
+		System.out.println("Amount: " + amount);
+		System.out.println("Balance: " + amount.multiply(unitPrice));
+		
+		
+	}	
 }

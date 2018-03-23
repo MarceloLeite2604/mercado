@@ -22,11 +22,11 @@
 					<parameters>
 						<parameter>
 							<name>growthPercentageThreshold</name>
-							<value>0.0496</value>
+							<value>0.10</value>
 						</parameter>
 						<parameter>
 							<name>shrinkPercentageThreshold</name>
-							<value>-0.05</value>
+							<value>-0.10</value>
 						</parameter>
 					</parameters>
 				</class>
