@@ -70,17 +70,17 @@ public class ThirdStrategy extends AbstractStrategy {
 				}
 				break;
 			case SAVED:
-				if (lastVariation.compareTo(MercadoBigDecimal.NOT_A_NUMBER) != 0 && lastVariation.compareTo(MercadoBigDecimal.ZERO) < 0) {
+				if (!lastVariation.equals(MercadoBigDecimal.NOT_A_NUMBER) && lastVariation.compareTo(MercadoBigDecimal.ZERO) < 0) {
 					updateBase(house);
-				} else if (lastVariation.compareTo(MercadoBigDecimal.NOT_A_NUMBER) != 0 && lastVariation.compareTo(growthPercentageThreshold) >= 0) {
+				} else if (!lastVariation.equals(MercadoBigDecimal.NOT_A_NUMBER) && lastVariation.compareTo(growthPercentageThreshold) >= 0) {
 					updateBase(house);
 					order = createBuyOrder(simulationTimeInterval, account, house);
 				}
 				break;
 			case APPLIED:
-				if (lastVariation.compareTo(MercadoBigDecimal.NOT_A_NUMBER) != 0 && lastVariation.compareTo(MercadoBigDecimal.ZERO) > 0) {
+				if (!lastVariation.equals(MercadoBigDecimal.NOT_A_NUMBER) && lastVariation.compareTo(MercadoBigDecimal.ZERO) > 0) {
 					updateBase(house);
-				} else if (lastVariation.compareTo(MercadoBigDecimal.NOT_A_NUMBER) != 0 && lastVariation.compareTo(shrinkPercentageThreshold) <= 0) {
+				} else if (!lastVariation.equals(MercadoBigDecimal.NOT_A_NUMBER) && lastVariation.compareTo(shrinkPercentageThreshold) <= 0) {
 					updateBase(house);
 					order = createSellOrder(simulationTimeInterval, account, house);
 				}
