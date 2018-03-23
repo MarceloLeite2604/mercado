@@ -1,21 +1,21 @@
 package org.marceloleite.mercado.strategies.second;
 
-import java.math.BigDecimal;
+import org.marceloleite.mercado.commons.MercadoBigDecimal;
 
 public class RatioCalculator {
 
-	public BigDecimal calculate(BigDecimal firstValue, BigDecimal secondValue) {
-		BigDecimal result;
-		if ( firstValue.compareTo(BigDecimal.ZERO) == 0 ) {
-			if ( secondValue.compareTo(BigDecimal.ZERO) == 0) {
-				result = new BigDecimal("1.0");
+	public MercadoBigDecimal calculate(MercadoBigDecimal firstValue, MercadoBigDecimal secondValue) {
+		MercadoBigDecimal result;
+		if ( firstValue.compareTo(MercadoBigDecimal.ZERO) == 0 ) {
+			if ( secondValue.compareTo(MercadoBigDecimal.ZERO) == 0) {
+				result = new MercadoBigDecimal("1.0");
 			} else {
-				result = new BigDecimal("0.0");
+				result = new MercadoBigDecimal("0.0");
 			}
 		} else {
-			if ( secondValue.compareTo(BigDecimal.ZERO) == 0 ) {
+			if ( secondValue.compareTo(MercadoBigDecimal.ZERO) == 0 ) {
 				/* TODO: Create a constant for positive infinity. */
-				result = new BigDecimal("10E20");
+				result = MercadoBigDecimal.POSITIVE_INFINITY;
 			} else {
 				result = firstValue.divide(secondValue); 
 			}

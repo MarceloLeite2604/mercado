@@ -1,8 +1,8 @@
 package org.marceloleite.mercado.converter.entity;
 
-import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 
+import org.marceloleite.mercado.commons.MercadoBigDecimal;
 import org.marceloleite.mercado.commons.converter.Converter;
 import org.marceloleite.mercado.data.OperationData;
 import org.marceloleite.mercado.databaseretriever.persistence.objects.OperationIdPO;
@@ -25,12 +25,12 @@ public class OperationPOToOperationDataConverter implements Converter<OperationP
 	public OperationPO convertFrom(OperationData operationData) {
 		OperationPO operationPO = new OperationPO();
 		OperationIdPO operationIdPO = new OperationIdPO();
-		operationIdPO.setId(new BigDecimal(operationData.getId()));
+		operationIdPO.setId(new MercadoBigDecimal(operationData.getId()));
 		operationPO.setId(operationIdPO);
 		operationPO.setExecuted(ZonedDateTime.from(operationData.getExecuted()));
-		operationPO.setFeeRate(new BigDecimal(operationData.getFeeRate()));
-		operationPO.setPrice(new BigDecimal(operationData.getPrice()));
-		operationPO.setQuantity(new BigDecimal(operationData.getQuantity()));
+		operationPO.setFeeRate(new MercadoBigDecimal(operationData.getFeeRate()));
+		operationPO.setPrice(new MercadoBigDecimal(operationData.getPrice()));
+		operationPO.setQuantity(new MercadoBigDecimal(operationData.getQuantity()));
 		return operationPO;
 	}
 

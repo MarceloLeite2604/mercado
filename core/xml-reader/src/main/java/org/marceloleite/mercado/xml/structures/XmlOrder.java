@@ -1,6 +1,5 @@
 package org.marceloleite.mercado.xml.structures;
 
-import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -10,6 +9,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.commons.MercadoBigDecimal;
 import org.marceloleite.mercado.commons.OrderStatus;
 import org.marceloleite.mercado.commons.OrderType;
 import org.marceloleite.mercado.xml.adapters.CurrencyXmlAdapter;
@@ -17,7 +17,7 @@ import org.marceloleite.mercado.xml.adapters.OrderStatusXmlAdapter;
 import org.marceloleite.mercado.xml.adapters.OrderTypeXmlAdapter;
 import org.marceloleite.mercado.xml.adapters.ZonedDateTimeXmlAdapter;
 
-@XmlRootElement(name="order")
+@XmlRootElement(name = "order")
 public class XmlOrder {
 
 	private Long id;
@@ -32,15 +32,15 @@ public class XmlOrder {
 
 	private Boolean hasFills;
 
-	private BigDecimal quantity;
+	private MercadoBigDecimal quantity;
 
-	private BigDecimal limitPrice;
+	private MercadoBigDecimal limitPrice;
 
-	private BigDecimal executedQuantity;
+	private MercadoBigDecimal executedQuantity;
 
-	private BigDecimal executedPriceAverage;
+	private MercadoBigDecimal executedPriceAverage;
 
-	private BigDecimal fee;
+	private MercadoBigDecimal fee;
 
 	private ZonedDateTime created;
 
@@ -49,13 +49,11 @@ public class XmlOrder {
 	private ZonedDateTime intended;
 
 	List<XmlOperation> xmlOperations;
-	
-	
 
 	public XmlOrder(Long id, Currency firstCurrency, Currency secondCurrency, OrderType type, OrderStatus status,
-			Boolean hasFills, BigDecimal quantity, BigDecimal limitPrice, BigDecimal executedQuantity, BigDecimal executedPriceAverage,
-			BigDecimal fee, ZonedDateTime created, ZonedDateTime updated, ZonedDateTime intended,
-			List<XmlOperation> xmlOperations) {
+			Boolean hasFills, MercadoBigDecimal quantity, MercadoBigDecimal limitPrice,
+			MercadoBigDecimal executedQuantity, MercadoBigDecimal executedPriceAverage, MercadoBigDecimal fee,
+			ZonedDateTime created, ZonedDateTime updated, ZonedDateTime intended, List<XmlOperation> xmlOperations) {
 		super();
 		this.id = id;
 		this.firstCurrency = firstCurrency;
@@ -77,8 +75,8 @@ public class XmlOrder {
 	public XmlOrder() {
 		this(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
 	}
-	
-	public XmlOrder(Currency firstCurrency, Currency secondCurrency, BigDecimal quantity, BigDecimal limitPrice) {
+
+	public XmlOrder(Currency firstCurrency, Currency secondCurrency, MercadoBigDecimal quantity, MercadoBigDecimal limitPrice) {
 		super();
 		this.firstCurrency = firstCurrency;
 		this.secondCurrency = secondCurrency;
@@ -145,47 +143,47 @@ public class XmlOrder {
 	}
 
 	@XmlElement
-	public BigDecimal getQuantity() {
+	public MercadoBigDecimal getQuantity() {
 		return quantity;
 	}
 
-	public void setQuantity(BigDecimal quantity) {
+	public void setQuantity(MercadoBigDecimal quantity) {
 		this.quantity = quantity;
 	}
 
 	@XmlElement
-	public BigDecimal getLimitPrice() {
+	public MercadoBigDecimal getLimitPrice() {
 		return limitPrice;
 	}
 
-	public void setLimitPrice(BigDecimal limitPrice) {
+	public void setLimitPrice(MercadoBigDecimal limitPrice) {
 		this.limitPrice = limitPrice;
 	}
 
 	@XmlElement
-	public BigDecimal getExecutedQuantity() {
+	public MercadoBigDecimal getExecutedQuantity() {
 		return executedQuantity;
 	}
 
-	public void setExecutedQuantity(BigDecimal executedQuantity) {
+	public void setExecutedQuantity(MercadoBigDecimal executedQuantity) {
 		this.executedQuantity = executedQuantity;
 	}
 
 	@XmlElement
-	public BigDecimal getExecutedPriceAverage() {
+	public MercadoBigDecimal getExecutedPriceAverage() {
 		return executedPriceAverage;
 	}
 
-	public void setExecutedPriceAverage(BigDecimal executedPriceAverage) {
+	public void setExecutedPriceAverage(MercadoBigDecimal executedPriceAverage) {
 		this.executedPriceAverage = executedPriceAverage;
 	}
 
 	@XmlElement
-	public BigDecimal getFee() {
+	public MercadoBigDecimal getFee() {
 		return fee;
 	}
 
-	public void setFee(BigDecimal fee) {
+	public void setFee(MercadoBigDecimal fee) {
 		this.fee = fee;
 	}
 
@@ -220,7 +218,7 @@ public class XmlOrder {
 	}
 
 	@XmlElement
-	@XmlElementWrapper(name="operations")
+	@XmlElementWrapper(name = "operations")
 	public List<XmlOperation> getXmlOperations() {
 		return xmlOperations;
 	}

@@ -1,11 +1,10 @@
 package org.marceloleite.mercado.base.model;
 
-import java.math.BigDecimal;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.base.model.util.VariationCalculator;
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.commons.MercadoBigDecimal;
 import org.marceloleite.mercado.commons.formatter.PercentageFormatter;
 import org.marceloleite.mercado.data.TemporalTicker;
 
@@ -16,23 +15,23 @@ public class TemporalTickerVariation {
 
 	private Currency currency;
 
-	private BigDecimal orderVariation;
+	private MercadoBigDecimal orderVariation;
 
-	private BigDecimal highVariation;
+	private MercadoBigDecimal highVariation;
 
-	private BigDecimal averageVariation;
+	private MercadoBigDecimal averageVariation;
 
-	private BigDecimal lowVariation;
+	private MercadoBigDecimal lowVariation;
 
-	private BigDecimal volVariation;
+	private MercadoBigDecimal volVariation;
 
-	private BigDecimal firstVariation;
+	private MercadoBigDecimal firstVariation;
 
-	private BigDecimal lastVariation;
+	private MercadoBigDecimal lastVariation;
 
-	private BigDecimal buyVariation;
+	private MercadoBigDecimal buyVariation;
 
-	private BigDecimal sellVariation;
+	private MercadoBigDecimal sellVariation;
 
 	public TemporalTickerVariation(TemporalTicker previousTemporalTicker, TemporalTicker currentTemporalTicker) {
 		/* TODO: Replaced NaN values. */
@@ -68,13 +67,13 @@ public class TemporalTickerVariation {
 			this.firstVariation = calculateVariation(previousTemporalTicker.getFirstPrice(),
 					currentTemporalTicker.getFirstPrice());
 
-			BigDecimal previousLast = previousTemporalTicker.getLastPrice();
-			if (previousTemporalTicker.getLastPrice().compareTo(BigDecimal.ZERO) == 0) {
+			MercadoBigDecimal previousLast = previousTemporalTicker.getLastPrice();
+			if (previousTemporalTicker.getLastPrice().compareTo(MercadoBigDecimal.ZERO) == 0) {
 				previousLast = previousTemporalTicker.getPreviousLastPrice();
 			}
 
-			BigDecimal currentLast = currentTemporalTicker.getLastPrice();
-			if (currentTemporalTicker.getLastPrice().compareTo(BigDecimal.ZERO) == 0) {
+			MercadoBigDecimal currentLast = currentTemporalTicker.getLastPrice();
+			if (currentTemporalTicker.getLastPrice().compareTo(MercadoBigDecimal.ZERO) == 0) {
 				currentLast = currentTemporalTicker.getPreviousLastPrice();
 			}
 
@@ -83,9 +82,9 @@ public class TemporalTickerVariation {
 		}
 	}
 
-	private TemporalTickerVariation(Currency currency, BigDecimal orderVariation, BigDecimal highVariation,
-			BigDecimal averageVariation, BigDecimal lowVariation, BigDecimal volVariation, BigDecimal firstVariation,
-			BigDecimal lastVariation, BigDecimal buyVariation, BigDecimal sellVariation) {
+	private TemporalTickerVariation(Currency currency, MercadoBigDecimal orderVariation, MercadoBigDecimal highVariation,
+			MercadoBigDecimal averageVariation, MercadoBigDecimal lowVariation, MercadoBigDecimal volVariation, MercadoBigDecimal firstVariation,
+			MercadoBigDecimal lastVariation, MercadoBigDecimal buyVariation, MercadoBigDecimal sellVariation) {
 		super();
 		this.currency = currency;
 		this.orderVariation = orderVariation;
@@ -107,11 +106,11 @@ public class TemporalTickerVariation {
 				temporalTickerVariation.getBuyVariation(), temporalTickerVariation.getSellVariation());
 	}
 
-	private BigDecimal calculateVariation(long previous, long current) {
-		return calculateVariation(new BigDecimal(previous), new BigDecimal(current));
+	private MercadoBigDecimal calculateVariation(long previous, long current) {
+		return calculateVariation(new MercadoBigDecimal(previous), new MercadoBigDecimal(current));
 	}
 
-	private BigDecimal calculateVariation(BigDecimal previous, BigDecimal current) {
+	private MercadoBigDecimal calculateVariation(MercadoBigDecimal previous, MercadoBigDecimal current) {
 		return new VariationCalculator().calculate(current, previous);
 	}
 
@@ -119,39 +118,39 @@ public class TemporalTickerVariation {
 		return currency;
 	}
 
-	public BigDecimal getOrderVariation() {
+	public MercadoBigDecimal getOrderVariation() {
 		return orderVariation;
 	}
 
-	public BigDecimal getHighVariation() {
+	public MercadoBigDecimal getHighVariation() {
 		return highVariation;
 	}
 
-	public BigDecimal getAverageVariation() {
+	public MercadoBigDecimal getAverageVariation() {
 		return averageVariation;
 	}
 
-	public BigDecimal getLowVariation() {
+	public MercadoBigDecimal getLowVariation() {
 		return lowVariation;
 	}
 
-	public BigDecimal getVolVariation() {
+	public MercadoBigDecimal getVolVariation() {
 		return volVariation;
 	}
 
-	public BigDecimal getFirstVariation() {
+	public MercadoBigDecimal getFirstVariation() {
 		return firstVariation;
 	}
 
-	public BigDecimal getLastVariation() {
+	public MercadoBigDecimal getLastVariation() {
 		return lastVariation;
 	}
 
-	public BigDecimal getBuyVariation() {
+	public MercadoBigDecimal getBuyVariation() {
 		return buyVariation;
 	}
 
-	public BigDecimal getSellVariation() {
+	public MercadoBigDecimal getSellVariation() {
 		return sellVariation;
 	}
 
@@ -176,7 +175,7 @@ public class TemporalTickerVariation {
 		return stringBuilder.toString();
 	}
 
-	private String printPercentage(BigDecimal percentage) {
+	private String printPercentage(MercadoBigDecimal percentage) {
 		if (percentage != null) {
 			return new PercentageFormatter().format(percentage);
 		} else {

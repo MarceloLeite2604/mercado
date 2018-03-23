@@ -1,9 +1,9 @@
 package org.marceloleite.mercado.base.model;
 
-import java.math.BigDecimal;
 import java.util.Map;
 
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.commons.MercadoBigDecimal;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.data.TemporalTicker;
 
@@ -15,7 +15,7 @@ public interface House {
 	
 	OrderExecutor getOrderExecutor();
 	
-	public BigDecimal getComissionPercentage();
+	public MercadoBigDecimal getComissionPercentage();
 	
 	Map<String, Balance> getComissionBalance();
 }

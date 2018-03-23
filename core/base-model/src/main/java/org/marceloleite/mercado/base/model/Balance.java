@@ -1,6 +1,5 @@
 package org.marceloleite.mercado.base.model;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
@@ -12,6 +11,7 @@ import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.base.model.converter.CurrencyAmountToBalanceDataConverter;
 import org.marceloleite.mercado.base.model.order.MinimalAmounts;
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.commons.MercadoBigDecimal;
 import org.marceloleite.mercado.data.BalanceData;
 
 public class Balance extends EnumMap<Currency, CurrencyAmount> {
@@ -40,7 +40,7 @@ public class Balance extends EnumMap<Currency, CurrencyAmount> {
 	public void deposit(CurrencyAmount currencyAmount) {
 		LOGGER.debug("Depositing " + currencyAmount + ".");
 		Currency currency = currencyAmount.getCurrency();
-		CurrencyAmount retrievedCurrency = getOrDefault(currency, new CurrencyAmount(currency, new BigDecimal("0.0")));
+		CurrencyAmount retrievedCurrency = getOrDefault(currency, new CurrencyAmount(currency, new MercadoBigDecimal("0.0")));
 		LOGGER.debug("Previous balance was " + retrievedCurrency + ".");
 		retrievedCurrency.setAmount(retrievedCurrency.getAmount().add(currencyAmount.getAmount()));
 		LOGGER.debug("New balance is " + retrievedCurrency + ".");
@@ -50,7 +50,7 @@ public class Balance extends EnumMap<Currency, CurrencyAmount> {
 	public void withdraw(CurrencyAmount currencyAmount) {
 		LOGGER.debug("Withdrawing " + currencyAmount + ".");
 		Currency currency = currencyAmount.getCurrency();
-		CurrencyAmount retrievedCurrency = Optional.ofNullable(get(currency)).orElse(new CurrencyAmount(currency, new BigDecimal("0.0")));
+		CurrencyAmount retrievedCurrency = Optional.ofNullable(get(currency)).orElse(new CurrencyAmount(currency, new MercadoBigDecimal("0.0")));
 		LOGGER.debug("Previous balance was " + retrievedCurrency + ".");
 		retrievedCurrency.setAmount(retrievedCurrency.getAmount().subtract(currencyAmount.getAmount()));
 		LOGGER.debug("New balance is " + retrievedCurrency + ".");
@@ -78,11 +78,13 @@ public class Balance extends EnumMap<Currency, CurrencyAmount> {
 	
 	public boolean hasMinimalAmount(Currency currency) {
 		CurrencyAmount currencyAmountBalance = get(currency);
-		BigDecimal minimalAmount = MinimalAmounts.retrieveMinimalAmountFor(currency);
+		MercadoBigDecimal minimalAmount = MinimalAmounts.retrieveMinimalAmountFor(currency);
 		return (currencyAmountBalance.getAmount().compareTo(minimalAmount) >= 0);
 	}
 
 	public boolean hasPositiveBalance(Currency currency) {
-		return (get(currency).getAmount().compareTo(new BigDecimal("10E-8")) > 0);
+		
+		MercadoBigDecimal amount = get(currency).getAmount().setScale(currency.getScale());
+		return (amount.compareTo(MercadoBigDecimal.ZERO) > 0);
 	}
 }

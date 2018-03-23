@@ -1,8 +1,7 @@
 package org.marceloleite.mercado.xml.converters;
 
-import java.math.BigDecimal;
-
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.commons.MercadoBigDecimal;
 import org.marceloleite.mercado.data.BuyOrderData;
 import org.marceloleite.mercado.data.CurrencyAmountData;
 import org.marceloleite.mercado.xml.structures.XmlBuyOrder;
@@ -28,10 +27,10 @@ public class BuyOrderXmlConverter implements XmlConverter<XmlBuyOrder, BuyOrderD
 		BuyOrderData buyOrderData = new BuyOrderData();
 		buyOrderData.setTime(xmlBuyOrder.getTime());
 
-		BigDecimal amountToBuy = xmlBuyOrder.getAmountToBuy();
+		MercadoBigDecimal amountToBuy = xmlBuyOrder.getAmountToBuy();
 		Currency currencyToBuy = xmlBuyOrder.getCurrencyToBuy();
 		CurrencyAmountData currencyAmountToBuy = new CurrencyAmountData(currencyToBuy, amountToBuy);
-		BigDecimal amountToPay = xmlBuyOrder.getAmountToPay();
+		MercadoBigDecimal amountToPay = xmlBuyOrder.getAmountToPay();
 		Currency currencyToPay = xmlBuyOrder.getCurrencyToPay();
 		CurrencyAmountData currencyAmountToPay = new CurrencyAmountData(currencyToPay, amountToPay);
 		buyOrderData.setCurrencyAmountToBuy(currencyAmountToBuy);

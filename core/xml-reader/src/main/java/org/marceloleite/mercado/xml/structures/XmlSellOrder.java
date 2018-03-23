@@ -1,6 +1,5 @@
 package org.marceloleite.mercado.xml.structures;
 
-import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -8,6 +7,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.commons.MercadoBigDecimal;
 import org.marceloleite.mercado.xml.adapters.CurrencyXmlAdapter;
 import org.marceloleite.mercado.xml.adapters.ZonedDateTimeXmlAdapter;
 
@@ -18,18 +18,18 @@ public class XmlSellOrder {
 
 	private Currency currencyToSell;
 
-	private BigDecimal amountToSell;
+	private MercadoBigDecimal amountToSell;
 
 	private Currency currencyToReceive;
 
-	private BigDecimal amountToReceive;
+	private MercadoBigDecimal amountToReceive;
 
 	public XmlSellOrder() {
 		this(null, null, null, null, null);
 	}
 
-	private XmlSellOrder(ZonedDateTime time, Currency currencyToSell, BigDecimal amountToSell, Currency currencyToReceive,
-			BigDecimal amountToReceive) {
+	private XmlSellOrder(ZonedDateTime time, Currency currencyToSell, MercadoBigDecimal amountToSell, Currency currencyToReceive,
+			MercadoBigDecimal amountToReceive) {
 		super();
 		this.time = time;
 		this.currencyToSell = currencyToSell;
@@ -38,11 +38,11 @@ public class XmlSellOrder {
 		this.amountToReceive = amountToReceive;
 	}
 
-	public XmlSellOrder(ZonedDateTime time, Currency currencyToSell, BigDecimal amountToSell, Currency currencyToReceive) {
+	public XmlSellOrder(ZonedDateTime time, Currency currencyToSell, MercadoBigDecimal amountToSell, Currency currencyToReceive) {
 		this(time, currencyToSell, amountToSell, currencyToReceive, null);
 	}
 
-	public XmlSellOrder(ZonedDateTime time, Currency currencyToSell, Currency currencyToReceive, BigDecimal amountToReceive) {
+	public XmlSellOrder(ZonedDateTime time, Currency currencyToSell, Currency currencyToReceive, MercadoBigDecimal amountToReceive) {
 		this(time, currencyToSell, null, currencyToReceive, amountToReceive);
 	}
 
@@ -65,11 +65,11 @@ public class XmlSellOrder {
 	}
 
 	@XmlElement(required = false)
-	public BigDecimal getAmountToSell() {
+	public MercadoBigDecimal getAmountToSell() {
 		return amountToSell;
 	}
 
-	public void setAmountToSell(BigDecimal amountToSell) {
+	public void setAmountToSell(MercadoBigDecimal amountToSell) {
 		this.amountToSell = amountToSell;
 	}
 
@@ -83,11 +83,11 @@ public class XmlSellOrder {
 	}
 
 	@XmlElement(required = false)
-	public BigDecimal getAmountToReceive() {
+	public MercadoBigDecimal getAmountToReceive() {
 		return amountToReceive;
 	}
 
-	public void setAmountToReceive(BigDecimal amountToReceive) {
+	public void setAmountToReceive(MercadoBigDecimal amountToReceive) {
 		this.amountToReceive = amountToReceive;
 	}
 }

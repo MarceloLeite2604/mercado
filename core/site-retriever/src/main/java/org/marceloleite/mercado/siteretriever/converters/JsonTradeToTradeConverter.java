@@ -1,7 +1,6 @@
 package org.marceloleite.mercado.siteretriever.converters;
 
-import java.math.BigDecimal;
-
+import org.marceloleite.mercado.commons.MercadoBigDecimal;
 import org.marceloleite.mercado.commons.TradeType;
 import org.marceloleite.mercado.commons.converter.Converter;
 import org.marceloleite.mercado.commons.converter.LongToZonedDateTimeConverter;
@@ -13,11 +12,11 @@ public class JsonTradeToTradeConverter implements Converter<JsonTrade, Trade> {
 	@Override
 	public Trade convertTo(JsonTrade jsonTrade) {
 		Trade trade = new Trade();
-		trade.setAmount(new BigDecimal(jsonTrade.getAmount()));
+		trade.setAmount(new MercadoBigDecimal(jsonTrade.getAmount()));
 		trade.setCurrency(jsonTrade.getCurrency());
 		trade.setDate(new LongToZonedDateTimeConverter().convertTo(jsonTrade.getDate()));
 		trade.setId(jsonTrade.getTid());
-		trade.setPrice(new BigDecimal(jsonTrade.getPrice()));
+		trade.setPrice(new MercadoBigDecimal(jsonTrade.getPrice()));
 		trade.setTradeType(TradeType.retrieve(jsonTrade.getType()));
 		return trade;
 	}

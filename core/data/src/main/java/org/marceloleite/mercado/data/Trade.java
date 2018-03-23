@@ -1,9 +1,9 @@
 package org.marceloleite.mercado.data;
 
-import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.commons.MercadoBigDecimal;
 import org.marceloleite.mercado.commons.TradeType;
 
 public class Trade {
@@ -12,11 +12,11 @@ public class Trade {
 
 	private Long id;
 
-	private BigDecimal amount;
+	private MercadoBigDecimal amount;
 
 	private ZonedDateTime date;
 
-	private BigDecimal price;
+	private MercadoBigDecimal price;
 
 	private TradeType tradeType;
 
@@ -36,11 +36,11 @@ public class Trade {
 		this.id = id;
 	}
 
-	public BigDecimal getAmount() {
+	public MercadoBigDecimal getAmount() {
 		return amount;
 	}
 
-	public void setAmount(BigDecimal amount) {
+	public void setAmount(MercadoBigDecimal amount) {
 		this.amount = amount;
 	}
 
@@ -52,11 +52,11 @@ public class Trade {
 		this.date = date;
 	}
 
-	public BigDecimal getPrice() {
+	public MercadoBigDecimal getPrice() {
 		return price;
 	}
 
-	public void setPrice(BigDecimal price) {
+	public void setPrice(MercadoBigDecimal price) {
 		this.price = price;
 	}
 

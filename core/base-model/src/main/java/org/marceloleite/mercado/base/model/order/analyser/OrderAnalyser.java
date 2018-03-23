@@ -1,14 +1,12 @@
 package org.marceloleite.mercado.base.model.order.analyser;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.base.model.Balance;
 import org.marceloleite.mercado.base.model.CurrencyAmount;
 import org.marceloleite.mercado.base.model.order.MinimalAmounts;
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.commons.MercadoBigDecimal;
 import org.marceloleite.mercado.commons.OrderType;
 import org.marceloleite.mercado.commons.formatter.NonDigitalCurrencyFormatter;
 
@@ -34,8 +32,8 @@ public class OrderAnalyser {
 		this.cancelled = false;
 		this.orderType = orderType;
 		this.unitPrice = unitPrice;
-		this.first = new CurrencyAmount(firstCurrency, new BigDecimal("0.0"));
-		this.second = new CurrencyAmount(secondCurrency, new BigDecimal("0.0"));
+		this.first = new CurrencyAmount(firstCurrency, new MercadoBigDecimal("0.0"));
+		this.second = new CurrencyAmount(secondCurrency, new MercadoBigDecimal("0.0"));
 	}
 
 	public CurrencyAmount getFirst() {
@@ -90,7 +88,7 @@ public class OrderAnalyser {
 	private CurrencyAmount checkMinimal(CurrencyAmount currencyAmount)
 			throws NoBalanceForMinimalValueOrderAnalyserException {
 		if (MinimalAmounts.isAmountLowerThanMinimal(currencyAmount)) {
-			BigDecimal minimalAmount = MinimalAmounts.retrieveMinimalAmountFor(currencyAmount.getCurrency());
+			MercadoBigDecimal minimalAmount = MinimalAmounts.retrieveMinimalAmountFor(currencyAmount.getCurrency());
 			CurrencyAmount minimal = new CurrencyAmount(currencyAmount.getCurrency(), minimalAmount);
 			LOGGER.debug(currencyAmount + " is lower than minimal of " + minimal + ".");
 
@@ -122,12 +120,12 @@ public class OrderAnalyser {
 	}
 
 	private CurrencyAmount calculateSecondFor(CurrencyAmount currencyAmount) {
-		BigDecimal amount = currencyAmount.getAmount().divide(unitPrice.getAmount(), 16, RoundingMode.HALF_UP);
+		MercadoBigDecimal amount = currencyAmount.getAmount().divide(unitPrice.getAmount());
 		return new CurrencyAmount(second.getCurrency(), amount);
 	}
 
 	private CurrencyAmount calculateFirstFor(CurrencyAmount currencyAmount) {
-		BigDecimal amount = currencyAmount.getAmount().multiply(unitPrice.getAmount());
+		MercadoBigDecimal amount = currencyAmount.getAmount().multiply(unitPrice.getAmount());
 		return new CurrencyAmount(first.getCurrency(), amount);
 	}
 

@@ -1,6 +1,5 @@
 package org.marceloleite.mercado.strategies.first;
 
-import java.math.BigDecimal;
 import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
@@ -17,6 +16,7 @@ import org.marceloleite.mercado.base.model.order.analyser.NoBalanceForMinimalVal
 import org.marceloleite.mercado.base.model.order.analyser.NoBalanceOrderAnalyserException;
 import org.marceloleite.mercado.base.model.order.analyser.OrderAnalyser;
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.commons.MercadoBigDecimal;
 import org.marceloleite.mercado.commons.OrderType;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.converter.ObjectToJsonConverter;
@@ -42,9 +42,9 @@ public class FirstStrategy extends AbstractStrategy {
 
 	private CurrencyAmount baseRealAmount;
 
-	private BigDecimal growthPercentageThreshold;
+	private MercadoBigDecimal growthPercentageThreshold;
 
-	private BigDecimal shrinkPercentageThreshold;
+	private MercadoBigDecimal shrinkPercentageThreshold;
 
 	public FirstStrategy(Currency currency) {
 		super(FirstStrategyParameter.class, FirstStrategyVariable.class);
@@ -67,9 +67,9 @@ public class FirstStrategy extends AbstractStrategy {
 				house.getTemporalTickers().get(currency));
 
 		if (temporalTickerVariation != null) {
-			BigDecimal lastVariation = temporalTickerVariation.getLastVariation();
-			/* TODO: Create a positive and negative infity BigDecimal. */
-			if (lastVariation != null && lastVariation.compareTo(new BigDecimal("10E20")) != 0) {
+			MercadoBigDecimal lastVariation = temporalTickerVariation.getLastVariation();
+			if (lastVariation.compareTo(MercadoBigDecimal.NOT_A_NUMBER) != 0
+					&& lastVariation.compareTo(MercadoBigDecimal.POSITIVE_INFINITY) != 0) {
 				checkGrowthPercentage(simulationTimeInterval, account, house, lastVariation);
 				checkShrinkPercentage(simulationTimeInterval, account, house, temporalTickerVariation);
 			}
@@ -78,18 +78,24 @@ public class FirstStrategy extends AbstractStrategy {
 
 	private void checkShrinkPercentage(TimeInterval simulationTimeInterval, Account account, House house,
 			TemporalTickerVariation temporalTickerVariation) {
-		BigDecimal lastVariation = temporalTickerVariation.getLastVariation();
+		MercadoBigDecimal lastVariation = temporalTickerVariation.getLastVariation();
 		if (lastVariation.compareTo(shrinkPercentageThreshold) <= 0) {
 			if (account.getBalance().hasPositiveBalance(currency)) {
-				/*LOGGER.debug(new ZonedDateTimeToStringConverter().convertTo(simulationTimeInterval.getEnd())
-						+ ": Shrink threshold reached.");*/
+				/*
+				 * LOGGER.debug(new
+				 * ZonedDateTimeToStringConverter().convertTo(simulationTimeInterval.getEnd()) +
+				 * ": Shrink threshold reached.");
+				 */
 				Order order = createSellOrder(simulationTimeInterval, account, house);
 				if (order != null) {
 					executeOrder(order, account, house);
 					updateBaseTemporalTicker(house.getTemporalTickers().get(currency));
 				}
 			} else {
-				/*LOGGER.debug("No " + currency + " balance remaining to create a sell order. Cancelling.");*/
+				/*
+				 * LOGGER.debug("No " + currency +
+				 * " balance remaining to create a sell order. Cancelling.");
+				 */
 			}
 		}
 	}
@@ -97,7 +103,7 @@ public class FirstStrategy extends AbstractStrategy {
 	private Order createSellOrder(TimeInterval simulationTimeInterval, Account account, House house) {
 		OrderAnalyser orderValuesAnalyser = new OrderAnalyser(account.getBalance(), OrderType.SELL,
 				calculateCurrencyAmountUnitPrice(house), Currency.REAL, currency);
-		
+
 		try {
 			orderValuesAnalyser.setFirst(calculareCurrencyAmountBaseValue(orderValuesAnalyser.getOrderType()));
 		} catch (NoBalanceForMinimalValueOrderAnalyserException | NoBalanceOrderAnalyserException exception) {
@@ -110,7 +116,7 @@ public class FirstStrategy extends AbstractStrategy {
 
 		try {
 			orderValuesAnalyser.setSecond(
-						calculateCurrencyAmountToSell(orderValuesAnalyser.getFirst(), orderValuesAnalyser.getUnitPrice()));
+					calculateCurrencyAmountToSell(orderValuesAnalyser.getFirst(), orderValuesAnalyser.getUnitPrice()));
 		} catch (NoBalanceForMinimalValueOrderAnalyserException | NoBalanceOrderAnalyserException exception) {
 			LOGGER.warn(exception.getMessage());
 			if (exception instanceof NoBalanceForMinimalValueOrderAnalyserException) {
@@ -118,7 +124,7 @@ public class FirstStrategy extends AbstractStrategy {
 			}
 			return null;
 		}
-		
+
 		Order order = new SellOrderBuilder().toExecuteOn(simulationTimeInterval.getStart())
 				.selling(orderValuesAnalyser.getSecond()).receivingUnitPriceOf(orderValuesAnalyser.getUnitPrice())
 				.build();
@@ -144,10 +150,13 @@ public class FirstStrategy extends AbstractStrategy {
 	}
 
 	private void checkGrowthPercentage(TimeInterval simulationTimeInterval, Account account, House house,
-			BigDecimal lastVariation) {
+			MercadoBigDecimal lastVariation) {
 		if (lastVariation.compareTo(growthPercentageThreshold) >= 0) {
-/*			LOGGER.debug(new ZonedDateTimeToStringConverter().convertTo(simulationTimeInterval.getEnd())
-					+ ": Growth threshold reached.");*/
+			/*
+			 * LOGGER.debug(new
+			 * ZonedDateTimeToStringConverter().convertTo(simulationTimeInterval.getEnd()) +
+			 * ": Growth threshold reached.");
+			 */
 			if (account.getBalance().hasPositiveBalance(Currency.REAL)) {
 				Order order = createBuyOrder(simulationTimeInterval, house, account);
 				if (order != null) {
@@ -155,7 +164,10 @@ public class FirstStrategy extends AbstractStrategy {
 					updateBaseTemporalTicker(house.getTemporalTickers().get(currency));
 				}
 			} else {
-				/*LOGGER.debug("No " + Currency.REAL + " balance remaining to create a sell order. Cancelling.");*/
+				/*
+				 * LOGGER.debug("No " + Currency.REAL +
+				 * " balance remaining to create a sell order. Cancelling.");
+				 */
 			}
 		}
 	}
@@ -193,8 +205,8 @@ public class FirstStrategy extends AbstractStrategy {
 
 	private CurrencyAmount calculareCurrencyAmountBaseValue(OrderType orderType) {
 
-		BigDecimal operationPercentage = calculateOperationPercentage(orderType);
-		BigDecimal baseValueAmount = baseRealAmount.getAmount().multiply(operationPercentage);
+		MercadoBigDecimal operationPercentage = calculateOperationPercentage(orderType);
+		MercadoBigDecimal baseValueAmount = baseRealAmount.getAmount().multiply(operationPercentage);
 
 		CurrencyAmount currencyAmountBaseValue = new CurrencyAmount(Currency.REAL, baseValueAmount);
 		LOGGER.debug("Base value is: " + currencyAmountBaseValue);
@@ -203,8 +215,8 @@ public class FirstStrategy extends AbstractStrategy {
 
 	private CurrencyAmount calculateCurrencyAmountUnitPrice(House house) {
 		TemporalTicker temporalTicker = house.getTemporalTickers().get(currency);
-		BigDecimal lastPrice = temporalTicker.getLastPrice();
-		if (lastPrice == null || lastPrice.compareTo(BigDecimal.ZERO) == 0) {
+		MercadoBigDecimal lastPrice = temporalTicker.getLastPrice();
+		if (lastPrice == null || lastPrice.compareTo(MercadoBigDecimal.ZERO) == 0) {
 			lastPrice = temporalTicker.getPreviousLastPrice();
 		}
 		CurrencyAmount currencyAmountUnitPrice = new CurrencyAmount(Currency.REAL, lastPrice);
@@ -213,7 +225,7 @@ public class FirstStrategy extends AbstractStrategy {
 
 	private CurrencyAmount calculateCurrencyAmountToBuy(CurrencyAmount currencyAmountToPay,
 			CurrencyAmount currencyAmountUnitPrice) {
-		BigDecimal quantity = currencyAmountToPay.getAmount().divide(currencyAmountUnitPrice.getAmount());
+		MercadoBigDecimal quantity = currencyAmountToPay.getAmount().divide(currencyAmountUnitPrice.getAmount());
 		CurrencyAmount currencyAmountToBuy = new CurrencyAmount(currency, quantity);
 		LOGGER.debug("Currency amount to buy is: " + currencyAmountToBuy);
 		return currencyAmountToBuy;
@@ -232,7 +244,7 @@ public class FirstStrategy extends AbstractStrategy {
 
 	private CurrencyAmount calculateCurrencyAmountToSell(CurrencyAmount currencyAmountToReceive,
 			CurrencyAmount currencyAmountUnitPrice) {
-		BigDecimal amountToSell = currencyAmountToReceive.getAmount().divide(currencyAmountUnitPrice.getAmount());
+		MercadoBigDecimal amountToSell = currencyAmountToReceive.getAmount().divide(currencyAmountUnitPrice.getAmount());
 		CurrencyAmount currencyAmountToSell = new CurrencyAmount(currency, amountToSell);
 		LOGGER.debug("Currency amount to sell is " + currencyAmountToSell + ".");
 		return currencyAmountToSell;
@@ -246,13 +258,14 @@ public class FirstStrategy extends AbstractStrategy {
 
 	}
 
-	private BigDecimal calculateOperationPercentage(OrderType orderType) {
-		BigDecimal result;
+	private MercadoBigDecimal calculateOperationPercentage(OrderType orderType) {
+		MercadoBigDecimal result;
 		long checkStep = buySellStep.calculateStep(orderType);
 		if (checkStep > 0) {
-			result = new BigDecimal((double) MathUtils.factorial(checkStep) / (double) MathUtils.factorial(buySteps));
+			result = new MercadoBigDecimal((double) MathUtils.factorial(checkStep) / (double) MathUtils.factorial(buySteps));
 		} else {
-			result = new BigDecimal((double) MathUtils.factorial(Math.abs(checkStep)) / (double) MathUtils.factorial(sellSteps));
+			result = new MercadoBigDecimal(
+					(double) MathUtils.factorial(Math.abs(checkStep)) / (double) MathUtils.factorial(sellSteps));
 		}
 		LOGGER.debug("Operation percentage is " + new PercentageFormatter().format(result) + ".");
 		return result;
@@ -301,13 +314,13 @@ public class FirstStrategy extends AbstractStrategy {
 			buySteps = Long.parseLong(parameter.getValue());
 			break;
 		case GROWTH_PERCENTAGE_THRESHOLD:
-			growthPercentageThreshold = new BigDecimal(parameter.getValue());
+			growthPercentageThreshold = new MercadoBigDecimal(parameter.getValue());
 			break;
 		case SELL_STEP_FACTORIAL_NUMBER:
 			sellSteps = Long.parseLong(parameter.getValue());
 			break;
 		case SHRINK_PERCENTAGE_THRESHOLD:
-			shrinkPercentageThreshold = new BigDecimal(parameter.getValue());
+			shrinkPercentageThreshold = new MercadoBigDecimal(parameter.getValue());
 			break;
 		}
 

@@ -1,7 +1,6 @@
 package org.marceloleite.mercado.converter.entity;
 
-import java.math.BigDecimal;
-
+import org.marceloleite.mercado.commons.MercadoBigDecimal;
 import org.marceloleite.mercado.commons.converter.Converter;
 import org.marceloleite.mercado.data.WithdrawalData;
 import org.marceloleite.mercado.databaseretriever.persistence.objects.WithdrawalIdPO;
@@ -24,7 +23,7 @@ public class WithdrawalPOToWithdrawalDataConverter implements Converter<Withdraw
 		withdrawalIdPO.setAccoOwner(withdrawalData.getAccountData().getOwner());
 		withdrawalIdPO.setCurrency(withdrawalData.getCurrency());
 		withdrawalPO.setId(withdrawalIdPO);
-		withdrawalPO.setAmount(new BigDecimal(withdrawalData.getAmount()));
+		withdrawalPO.setAmount(new MercadoBigDecimal(withdrawalData.getAmount()));
 		return withdrawalPO;
 	}
 

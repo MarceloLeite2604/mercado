@@ -1,7 +1,5 @@
 package org.marceloleite.mercado.strategies.third;
 
-import java.math.BigDecimal;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.base.model.Account;
@@ -15,6 +13,7 @@ import org.marceloleite.mercado.base.model.order.analyser.NoBalanceForMinimalVal
 import org.marceloleite.mercado.base.model.order.analyser.NoBalanceOrderAnalyserException;
 import org.marceloleite.mercado.base.model.order.analyser.OrderAnalyser;
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.commons.MercadoBigDecimal;
 import org.marceloleite.mercado.commons.OrderType;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.converter.ObjectToJsonConverter;
@@ -28,9 +27,9 @@ public class ThirdStrategy extends AbstractStrategy {
 
 	private static final Logger LOGGER = LogManager.getLogger(ThirdStrategy.class);
 
-	private BigDecimal growthPercentageThreshold;
+	private MercadoBigDecimal growthPercentageThreshold;
 
-	private BigDecimal shrinkPercentageThreshold;
+	private MercadoBigDecimal shrinkPercentageThreshold;
 
 	private Currency currency;
 
@@ -59,11 +58,11 @@ public class ThirdStrategy extends AbstractStrategy {
 		TemporalTickerVariation temporalTickerVariation = generateTemporalTickerVariation(simulationTimeInterval,
 				house);
 		if (temporalTickerVariation != null) {
-			BigDecimal lastVariation = temporalTickerVariation.getLastVariation();
+			MercadoBigDecimal lastVariation = temporalTickerVariation.getLastVariation();
 			Order order = null;
 			switch (status) {
 			case UNDEFINED:
-				if (lastVariation != null && lastVariation.compareTo(BigDecimal.ZERO) > 0) {
+				if (lastVariation.compareTo(MercadoBigDecimal.NOT_A_NUMBER) != 0  && lastVariation.compareTo(MercadoBigDecimal.ZERO) > 0) {
 					LOGGER.debug(simulationTimeInterval + ": Last variation is "
 							+ new PercentageFormatter().format(lastVariation));
 					updateBase(house);
@@ -71,17 +70,17 @@ public class ThirdStrategy extends AbstractStrategy {
 				}
 				break;
 			case SAVED:
-				if (lastVariation != null && lastVariation.compareTo(BigDecimal.ZERO) < 0) {
+				if (lastVariation.compareTo(MercadoBigDecimal.NOT_A_NUMBER) != 0 && lastVariation.compareTo(MercadoBigDecimal.ZERO) < 0) {
 					updateBase(house);
-				} else if (lastVariation != null && lastVariation.compareTo(growthPercentageThreshold) >= 0) {
+				} else if (lastVariation.compareTo(MercadoBigDecimal.NOT_A_NUMBER) != 0 && lastVariation.compareTo(growthPercentageThreshold) >= 0) {
 					updateBase(house);
 					order = createBuyOrder(simulationTimeInterval, account, house);
 				}
 				break;
 			case APPLIED:
-				if (lastVariation != null && lastVariation.compareTo(BigDecimal.ZERO) > 0) {
+				if (lastVariation.compareTo(MercadoBigDecimal.NOT_A_NUMBER) != 0 && lastVariation.compareTo(MercadoBigDecimal.ZERO) > 0) {
 					updateBase(house);
-				} else if (lastVariation != null && lastVariation.compareTo(shrinkPercentageThreshold) <= 0) {
+				} else if (lastVariation.compareTo(MercadoBigDecimal.NOT_A_NUMBER) != 0 && lastVariation.compareTo(shrinkPercentageThreshold) <= 0) {
 					updateBase(house);
 					order = createSellOrder(simulationTimeInterval, account, house);
 				}
@@ -224,16 +223,16 @@ public class ThirdStrategy extends AbstractStrategy {
 		ThirdStrategyParameter fifthStrategyParameter = ThirdStrategyParameter.findByName(parameter.getName());
 		switch (fifthStrategyParameter) {
 		case GROWTH_PERCENTAGE_THRESHOLD:
-			growthPercentageThreshold = new BigDecimal(parameter.getValue());
+			growthPercentageThreshold = new MercadoBigDecimal(parameter.getValue());
 			break;
 		case SHRINK_PERCENTAGE_THRESHOLD:
-			shrinkPercentageThreshold = new BigDecimal(parameter.getValue());
+			shrinkPercentageThreshold = new MercadoBigDecimal(parameter.getValue());
 			break;
 		}
 	}
 
 	private CurrencyAmount calculateCurrencyAmountUnitPrice(House house) {
-		BigDecimal lastPrice = house.getTemporalTickers().get(currency).getCurrentOrPreviousLastPrice();
+		MercadoBigDecimal lastPrice = house.getTemporalTickers().get(currency).getCurrentOrPreviousLastPrice();
 		return new CurrencyAmount(Currency.REAL, lastPrice);
 	}
 }

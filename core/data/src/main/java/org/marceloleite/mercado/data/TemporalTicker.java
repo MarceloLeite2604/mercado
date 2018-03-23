@@ -1,10 +1,10 @@
 package org.marceloleite.mercado.data;
 
-import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.ZonedDateTime;
 
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.commons.MercadoBigDecimal;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.formatter.DigitalCurrencyFormatter;
 
@@ -22,38 +22,39 @@ public class TemporalTicker {
 
 	private Long sellOrders;
 
-	private BigDecimal buy;
+	private MercadoBigDecimal buy;
 
-	private BigDecimal previousBuy;
+	private MercadoBigDecimal previousBuy;
 
-	private BigDecimal sell;
+	private MercadoBigDecimal sell;
 
-	private BigDecimal previousSell;
+	private MercadoBigDecimal previousSell;
 
-	private BigDecimal lastPrice;
+	private MercadoBigDecimal lastPrice;
 
-	private BigDecimal previousLastPrice;
+	private MercadoBigDecimal previousLastPrice;
 
-	private BigDecimal firstPrice;
+	private MercadoBigDecimal firstPrice;
 
-	private BigDecimal highestPrice;
+	private MercadoBigDecimal highestPrice;
 
-	private BigDecimal lowestPrice;
+	private MercadoBigDecimal lowestPrice;
 
-	private BigDecimal averagePrice;
+	private MercadoBigDecimal averagePrice;
 
 	private Duration timeDuration;
 
-	private BigDecimal volumeTrades;
+	private MercadoBigDecimal volumeTrades;
 
 	public TemporalTicker() {
 		super();
 	}
 
 	private TemporalTicker(Currency currency, ZonedDateTime start, ZonedDateTime end, Long orders, Long buyOrders,
-			Long sellOrders, BigDecimal buy, BigDecimal previousBuy, BigDecimal sell, BigDecimal previousSell,
-			BigDecimal lastPrice, BigDecimal previousLastPrice, BigDecimal firstPrice, BigDecimal highestPrice,
-			BigDecimal lowestPrice, BigDecimal averagePrice, Duration timeDuration, BigDecimal volumeTrades) {
+			Long sellOrders, MercadoBigDecimal buy, MercadoBigDecimal previousBuy, MercadoBigDecimal sell,
+			MercadoBigDecimal previousSell, MercadoBigDecimal lastPrice, MercadoBigDecimal previousLastPrice,
+			MercadoBigDecimal firstPrice, MercadoBigDecimal highestPrice, MercadoBigDecimal lowestPrice,
+			MercadoBigDecimal averagePrice, Duration timeDuration, MercadoBigDecimal volumeTrades) {
 		super();
 		this.currency = currency;
 		this.start = start;
@@ -132,91 +133,91 @@ public class TemporalTicker {
 		this.sellOrders = sellOrders;
 	}
 
-	public BigDecimal getBuy() {
+	public MercadoBigDecimal getBuy() {
 		return buy;
 	}
 
-	public void setBuy(BigDecimal buy) {
+	public void setBuy(MercadoBigDecimal buy) {
 		this.buy = buy;
 	}
 
-	public BigDecimal getPreviousBuy() {
+	public MercadoBigDecimal getPreviousBuy() {
 		return previousBuy;
 	}
 
-	public void setPreviousBuy(BigDecimal previousBuy) {
+	public void setPreviousBuy(MercadoBigDecimal previousBuy) {
 		this.previousBuy = previousBuy;
 	}
 
-	public BigDecimal getSell() {
+	public MercadoBigDecimal getSell() {
 		return sell;
 	}
 
-	public void setSell(BigDecimal sell) {
+	public void setSell(MercadoBigDecimal sell) {
 		this.sell = sell;
 	}
 
-	public BigDecimal getPreviousSell() {
+	public MercadoBigDecimal getPreviousSell() {
 		return previousSell;
 	}
 
-	public void setPreviousSell(BigDecimal previousSell) {
+	public void setPreviousSell(MercadoBigDecimal previousSell) {
 		this.previousSell = previousSell;
 	}
 
-	public BigDecimal getLastPrice() {
+	public MercadoBigDecimal getLastPrice() {
 		return lastPrice;
 	}
 
-	public BigDecimal getCurrentOrPreviousLastPrice() {
-		if (lastPrice != null && lastPrice.compareTo(BigDecimal.ZERO) != 0) {
+	public MercadoBigDecimal getCurrentOrPreviousLastPrice() {
+		if (lastPrice != null && lastPrice.compareTo(MercadoBigDecimal.ZERO) != 0) {
 			return lastPrice;
 		} else {
 			return previousLastPrice;
 		}
 	}
 
-	public void setLastPrice(BigDecimal lastPrice) {
+	public void setLastPrice(MercadoBigDecimal lastPrice) {
 		this.lastPrice = lastPrice;
 	}
 
-	public BigDecimal getPreviousLastPrice() {
+	public MercadoBigDecimal getPreviousLastPrice() {
 		return previousLastPrice;
 	}
 
-	public void setPreviousLastPrice(BigDecimal previousLastPrice) {
+	public void setPreviousLastPrice(MercadoBigDecimal previousLastPrice) {
 		this.previousLastPrice = previousLastPrice;
 	}
 
-	public BigDecimal getFirstPrice() {
+	public MercadoBigDecimal getFirstPrice() {
 		return firstPrice;
 	}
 
-	public void setFirstPrice(BigDecimal firstPrice) {
+	public void setFirstPrice(MercadoBigDecimal firstPrice) {
 		this.firstPrice = firstPrice;
 	}
 
-	public BigDecimal getHighestPrice() {
+	public MercadoBigDecimal getHighestPrice() {
 		return highestPrice;
 	}
 
-	public void setHighestPrice(BigDecimal highestPrice) {
+	public void setHighestPrice(MercadoBigDecimal highestPrice) {
 		this.highestPrice = highestPrice;
 	}
 
-	public BigDecimal getLowestPrice() {
+	public MercadoBigDecimal getLowestPrice() {
 		return lowestPrice;
 	}
 
-	public void setLowestPrice(BigDecimal lowestPrice) {
+	public void setLowestPrice(MercadoBigDecimal lowestPrice) {
 		this.lowestPrice = lowestPrice;
 	}
 
-	public BigDecimal getAveragePrice() {
+	public MercadoBigDecimal getAveragePrice() {
 		return averagePrice;
 	}
 
-	public void setAveragePrice(BigDecimal averagePrice) {
+	public void setAveragePrice(MercadoBigDecimal averagePrice) {
 		this.averagePrice = averagePrice;
 	}
 
@@ -228,11 +229,11 @@ public class TemporalTicker {
 		this.timeDuration = timeDuration;
 	}
 
-	public BigDecimal getVolumeTrades() {
+	public MercadoBigDecimal getVolumeTrades() {
 		return volumeTrades;
 	}
 
-	public void setVolumeTrades(BigDecimal volumeTrades) {
+	public void setVolumeTrades(MercadoBigDecimal volumeTrades) {
 		this.volumeTrades = volumeTrades;
 	}
 
@@ -283,13 +284,13 @@ public class TemporalTicker {
 		stringBuilder.append(", sell orders: " + sellOrders);
 		stringBuilder.append(", volume: " + volumeTrades);
 
-		BigDecimal buy = (this.buy != null ? this.buy : this.previousBuy);
+		MercadoBigDecimal buy = (this.buy != null ? this.buy : this.previousBuy);
 		stringBuilder.append(", buy: " + digitalCurrencyFormatter.format(buy));
 
-		BigDecimal sell = (this.sell != null ? this.sell : this.previousSell);
+		MercadoBigDecimal sell = (this.sell != null ? this.sell : this.previousSell);
 		stringBuilder.append(", sell: " + digitalCurrencyFormatter.format(sell));
 
-		BigDecimal lastPrice = (this.lastPrice != null ? this.lastPrice : this.previousLastPrice);
+		MercadoBigDecimal lastPrice = (this.lastPrice != null ? this.lastPrice : this.previousLastPrice);
 		stringBuilder.append(", last: " + digitalCurrencyFormatter.format(lastPrice));
 
 		stringBuilder.append(", first: " + digitalCurrencyFormatter.format(firstPrice));

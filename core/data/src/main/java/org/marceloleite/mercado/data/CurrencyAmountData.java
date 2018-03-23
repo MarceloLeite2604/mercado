@@ -1,21 +1,20 @@
 package org.marceloleite.mercado.data;
 
-import java.math.BigDecimal;
-
 import javax.xml.bind.annotation.XmlElement;
 
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.commons.MercadoBigDecimal;
 
 public class CurrencyAmountData {
 
 	private Currency currency;
 
-	private BigDecimal amount;
+	private MercadoBigDecimal amount;
 
-	public CurrencyAmountData(Currency currency, BigDecimal amount) {
+	public CurrencyAmountData(Currency currency, MercadoBigDecimal amount) {
 		super();
 		this.currency = currency;
-		this.amount = new BigDecimal(amount.toString());
+		this.amount = new MercadoBigDecimal(amount.toString());
 	}
 
 	public Currency getCurrency() {
@@ -27,12 +26,12 @@ public class CurrencyAmountData {
 		this.currency = currency;
 	}
 
-	public BigDecimal getAmount() {
+	public MercadoBigDecimal getAmount() {
 		return amount;
 	}
 
 	@XmlElement
-	public void setAmount(BigDecimal amount) {
+	public void setAmount(MercadoBigDecimal amount) {
 		this.amount = amount;
 	}
 

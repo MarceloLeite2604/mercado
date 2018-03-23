@@ -1,8 +1,8 @@
 package org.marceloleite.mercado.converter.entity;
 
-import java.math.BigDecimal;
 import java.time.Duration;
 
+import org.marceloleite.mercado.commons.MercadoBigDecimal;
 import org.marceloleite.mercado.commons.converter.Converter;
 import org.marceloleite.mercado.data.TemporalTicker;
 import org.marceloleite.mercado.databaseretriever.persistence.objects.TemporalTickerIdPO;
@@ -20,19 +20,19 @@ public class TemporalTickerPOToTemporalTickerConverter implements Converter<Temp
 		temporalTicker.setOrders(temporalTickerPO.getOrders().longValue());
 		temporalTicker.setBuyOrders(temporalTickerPO.getBuyOrders().longValue());
 		temporalTicker.setSellOrders(temporalTickerPO.getSellOrders().longValue());
-		temporalTicker.setBuy(temporalTickerPO.getBuy());
-		temporalTicker.setPreviousBuy(temporalTickerPO.getPreviousBuy());
-		temporalTicker.setSell(temporalTickerPO.getSell());
-		temporalTicker.setPreviousSell(temporalTickerPO.getPreviousSell());
-		temporalTicker.setLastPrice(temporalTickerPO.getLastPrice());
-		temporalTicker.setPreviousLastPrice(temporalTickerPO.getPreviousLastPrice());
-		temporalTicker.setFirstPrice(temporalTickerPO.getFirstPrice());
-		temporalTicker.setHighestPrice(temporalTickerPO.getHighestPrice());
-		temporalTicker.setLowestPrice(temporalTickerPO.getLowestPrice());
-		temporalTicker.setAveragePrice(temporalTickerPO.getAveragePrice());
+		temporalTicker.setBuy(new MercadoBigDecimal(temporalTickerPO.getBuy()));
+		temporalTicker.setPreviousBuy(new MercadoBigDecimal(temporalTickerPO.getPreviousBuy()));
+		temporalTicker.setSell(new MercadoBigDecimal(temporalTickerPO.getSell()));
+		temporalTicker.setPreviousSell(new MercadoBigDecimal(temporalTickerPO.getPreviousSell()));
+		temporalTicker.setLastPrice(new MercadoBigDecimal(temporalTickerPO.getLastPrice()));
+		temporalTicker.setPreviousLastPrice(new MercadoBigDecimal(temporalTickerPO.getPreviousLastPrice()));
+		temporalTicker.setFirstPrice(new MercadoBigDecimal(temporalTickerPO.getFirstPrice()));
+		temporalTicker.setHighestPrice(new MercadoBigDecimal(temporalTickerPO.getHighestPrice()));
+		temporalTicker.setLowestPrice(new MercadoBigDecimal(temporalTickerPO.getLowestPrice()));
+		temporalTicker.setAveragePrice(new MercadoBigDecimal(temporalTickerPO.getAveragePrice()));
 		Duration timeDuration = Duration.ofSeconds(temporalTickerPO.getTimeDuration().longValue());
 		temporalTicker.setTimeDuration(timeDuration);
-		temporalTicker.setVolumeTrades(temporalTickerPO.getVolumeTraded());
+		temporalTicker.setVolumeTrades(new MercadoBigDecimal(temporalTickerPO.getVolumeTraded()));
 		return temporalTicker;
 	}
 
@@ -46,9 +46,9 @@ public class TemporalTickerPOToTemporalTickerConverter implements Converter<Temp
 		temporalTickerIdPO.setEndTime(temporalTicker.getEnd());
 		temporalTickerPO.setId(temporalTickerIdPO);
 		
-		temporalTickerPO.setOrders(new BigDecimal(temporalTicker.getOrders()));
-		temporalTickerPO.setBuyOrders(new BigDecimal(temporalTicker.getBuyOrders()));
-		temporalTickerPO.setSellOrders(new BigDecimal(temporalTicker.getSellOrders()));
+		temporalTickerPO.setOrders(new MercadoBigDecimal(temporalTicker.getOrders()));
+		temporalTickerPO.setBuyOrders(new MercadoBigDecimal(temporalTicker.getBuyOrders()));
+		temporalTickerPO.setSellOrders(new MercadoBigDecimal(temporalTicker.getSellOrders()));
 		temporalTickerPO.setBuy(temporalTicker.getBuy());
 		temporalTickerPO.setPreviousBuy(temporalTicker.getPreviousBuy());
 		temporalTickerPO.setSell(temporalTicker.getSell());
@@ -61,7 +61,7 @@ public class TemporalTickerPOToTemporalTickerConverter implements Converter<Temp
 		temporalTickerPO.setAveragePrice(temporalTicker.getAveragePrice());
 		
 		long seconds = temporalTicker.getTimeDuration().getSeconds();
-		temporalTickerPO.setTimeDuration(new BigDecimal(seconds));
+		temporalTickerPO.setTimeDuration(new MercadoBigDecimal(seconds));
 		return temporalTickerPO;
 	}
 

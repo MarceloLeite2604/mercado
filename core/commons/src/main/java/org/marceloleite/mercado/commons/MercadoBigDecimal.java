@@ -8,71 +8,151 @@ public class MercadoBigDecimal extends BigDecimal {
 
 	private static final long serialVersionUID = 1L;
 
-	private static final int DEFAULT_SCALE = 16;
+	public static final int DEFAULT_SCALE = 8;
 
-	private static final short POSITIVE_INFINITY_VALUE = 1;
-	private static final short FINITE_NUMBER = 0;
-	private static final short NEGATIVE_INFINITY_VALUE = -1;
+	public static final RoundingMode DEFAULT_ROUDING_MODE = RoundingMode.HALF_UP;
+
+	private static final short POSITIVE_INFINITY_TYPE = 1;
+	private static final short FINITE_TYPE = 0;
+	private static final short NEGATIVE_INFINITY_TYPE = -1;
+	private static final short NOT_A_NUMBER_TYPE = -2;
 
 	public static final MercadoBigDecimal POSITIVE_INFINITY = new MercadoBigDecimal(BigDecimal.ZERO,
-			POSITIVE_INFINITY_VALUE);
+			POSITIVE_INFINITY_TYPE);
 	public static final MercadoBigDecimal NEGATIVE_INFINITY = new MercadoBigDecimal(BigDecimal.ZERO,
-			NEGATIVE_INFINITY_VALUE);
+			NEGATIVE_INFINITY_TYPE);
+	public static final MercadoBigDecimal NOT_A_NUMBER = new MercadoBigDecimal(BigDecimal.ZERO, NOT_A_NUMBER_TYPE);
+	
+	public static final MercadoBigDecimal ZERO = new MercadoBigDecimal(BigDecimal.ZERO);
+	
+	public static final MercadoBigDecimal ONE = new MercadoBigDecimal(BigDecimal.ONE);
 
-	public MercadoBigDecimal(BigInteger bigInteger) {
-		super(bigInteger);
-		infinity = FINITE_NUMBER;
+	public short numberType;
+
+	public MercadoBigDecimal() {
+		super("0");
+		this.numberType = FINITE_TYPE;
 	}
 
-	private MercadoBigDecimal(BigDecimal bigDecimal, short infinity) {
-		super(bigDecimal.toString());
-		this.infinity = infinity;
+	public MercadoBigDecimal(String string, short numberType) {
+		super(string);
+		this.numberType = FINITE_TYPE;
+	}
+
+	public MercadoBigDecimal(String string) {
+		this(string, FINITE_TYPE);
+	}
+
+	public MercadoBigDecimal(Double value) {
+		this(value.toString());
+
+		if (value == Double.NEGATIVE_INFINITY) {
+			numberType = NEGATIVE_INFINITY_TYPE;
+		} else if (value == Double.POSITIVE_INFINITY) {
+			numberType = POSITIVE_INFINITY_TYPE;
+		} else if (value == Double.NaN) {
+			numberType = NOT_A_NUMBER_TYPE;
+		} else {
+			numberType = FINITE_TYPE;
+		}
+	}
+
+	public MercadoBigDecimal(BigInteger bigInteger) {
+		this(bigInteger.toString());
+	}
+
+	private MercadoBigDecimal(BigDecimal bigDecimal, short numberType) {
+		this(bigDecimal.toString(), numberType);
 	}
 
 	public MercadoBigDecimal(BigDecimal bigDecimal) {
 		super(bigDecimal.toString());
-		this.infinity = FINITE_NUMBER;
 	}
 
-	public short infinity;
-
-	public MercadoBigDecimal divide(BigDecimal divisor) {
-		return this.divide(divisor).setDefaultScale();
+	public MercadoBigDecimal(Long value) {
+		super(value.toString());
 	}
 
-	public MercadoBigDecimal multiply(BigDecimal multiplicand) {
-		return new MercadoBigDecimal(this.multiply(multiplicand), this.infinity).setDefaultScale();
+	public MercadoBigDecimal divide(MercadoBigDecimal divisor) {
+		return new MercadoBigDecimal(super.divide(divisor, DEFAULT_SCALE, DEFAULT_ROUDING_MODE), this.numberType);
 	}
 
-	public MercadoBigDecimal add(BigDecimal multiplicand) {
-		return new MercadoBigDecimal(this.add(multiplicand), this.infinity).setDefaultScale();
+	public MercadoBigDecimal multiply(MercadoBigDecimal multiplicand) {
+		return new MercadoBigDecimal(super.multiply(multiplicand), this.numberType).setDefaultScale();
 	}
 
-	public MercadoBigDecimal subtract(BigDecimal multiplicand) {
-		return new MercadoBigDecimal(this.subtract(multiplicand), this.infinity).setDefaultScale();
+	public MercadoBigDecimal add(MercadoBigDecimal augend) {
+		return new MercadoBigDecimal(super.add(augend), this.numberType).setDefaultScale();
+	}
+
+	public MercadoBigDecimal subtract(MercadoBigDecimal subtrahend) {
+		return new MercadoBigDecimal(super.subtract(subtrahend), this.numberType).setDefaultScale();
 	}
 
 	private MercadoBigDecimal setDefaultScale() {
-		return new MercadoBigDecimal(this.setScale(DEFAULT_SCALE, RoundingMode.HALF_UP), this.infinity);
+		return new MercadoBigDecimal(super.setScale(DEFAULT_SCALE, RoundingMode.HALF_UP), this.numberType);
 	}
 
-	public short getInfinity() {
-		return infinity;
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + numberType;
+		return result;
 	}
 
-	public void setInfinity(short infinity) {
-		this.infinity = infinity;
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		MercadoBigDecimal other = (MercadoBigDecimal) obj;
+		if (numberType != other.numberType)
+			return false;
+		return true;
 	}
 
 	@Override
 	public String toString() {
-		switch (infinity) {
-		case POSITIVE_INFINITY_VALUE:
+		switch (numberType) {
+		case POSITIVE_INFINITY_TYPE:
 			return new Double(Double.POSITIVE_INFINITY).toString();
-		case NEGATIVE_INFINITY_VALUE:
+		case NEGATIVE_INFINITY_TYPE:
 			return new Double(Double.NEGATIVE_INFINITY).toString();
+		case NOT_A_NUMBER_TYPE:
+			return new Double(Double.NaN).toString();
 		default:
 			return super.toString();
 		}
+	}
+
+	public int compareTo(MercadoBigDecimal val) {
+		switch (numberType) {
+		case POSITIVE_INFINITY_TYPE:
+			return (val.numberType == POSITIVE_INFINITY_TYPE ? 0 : 1);
+		case NEGATIVE_INFINITY_TYPE:
+			return (val.numberType == NEGATIVE_INFINITY_TYPE ? 0 : -1);
+		case NOT_A_NUMBER_TYPE:
+			return (val.numberType == NOT_A_NUMBER_TYPE ? 0 : -1);
+		default:
+			switch (val.numberType) {
+			case POSITIVE_INFINITY_TYPE:
+				return -1;
+			case NEGATIVE_INFINITY_TYPE:
+				return 1;
+			case NOT_A_NUMBER_TYPE:
+				return 1;
+			default:
+				return super.compareTo(val);
+			}
+		}
+	}
+	
+	@Override
+	public MercadoBigDecimal setScale(int newScale) {
+		return new MercadoBigDecimal(super.setScale(newScale, MercadoBigDecimal.DEFAULT_ROUDING_MODE));
 	}
 }
