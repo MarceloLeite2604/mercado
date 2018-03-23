@@ -59,6 +59,8 @@ public class ThirdStrategy extends AbstractStrategy {
 				house);
 		if (temporalTickerVariation != null) {
 			MercadoBigDecimal lastVariation = temporalTickerVariation.getLastVariation();
+			LOGGER.debug(simulationTimeInterval + ": Last variation is "
+					+ new PercentageFormatter().format(lastVariation));
 			Order order = null;
 			switch (status) {
 			case UNDEFINED:
