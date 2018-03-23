@@ -1,15 +1,16 @@
 package org.marceloleite.mercado.strategies.second;
 
-import java.math.BigDecimal;
 import java.util.List;
+
+import org.marceloleite.mercado.commons.MercadoBigDecimal;
 
 public class PositiveNegativeCounter {
 	
-	public long countPositives(List<BigDecimal> values) {
-		return values.stream().filter(value -> value.compareTo(BigDecimal.ZERO) > 0).count();
+	public long countPositives(List<MercadoBigDecimal> values) {
+		return values.stream().filter(value -> value.compareTo(MercadoBigDecimal.ZERO) > 0).count();
 	}
 	
-	public long countNegatives(List<BigDecimal> values) {
-		return values.stream().filter(value -> value.compareTo(BigDecimal.ZERO) < 0).count();
+	public long countNegatives(List<MercadoBigDecimal> values) {
+		return values.stream().filter(value -> value.compareTo(MercadoBigDecimal.ZERO) < 0).count();
 	}
 }

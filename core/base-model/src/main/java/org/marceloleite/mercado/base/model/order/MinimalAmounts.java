@@ -1,27 +1,27 @@
 package org.marceloleite.mercado.base.model.order;
 
-import java.math.BigDecimal;
 import java.util.EnumMap;
 import java.util.Map;
 
 import org.marceloleite.mercado.base.model.CurrencyAmount;
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.commons.MercadoBigDecimal;
 
 public class MinimalAmounts {
 
-	private static final Map<Currency, BigDecimal> MINIMAL_AMOUNTS = new EnumMap<>(Currency.class);
+	private static final Map<Currency, MercadoBigDecimal> MINIMAL_AMOUNTS = new EnumMap<>(Currency.class);
 
 	static {
-		MINIMAL_AMOUNTS.put(Currency.REAL, new BigDecimal("0.01"));
-		MINIMAL_AMOUNTS.put(Currency.BITCOIN, new BigDecimal("0.001"));
-		MINIMAL_AMOUNTS.put(Currency.LITECOIN, new BigDecimal("0.009"));
+		MINIMAL_AMOUNTS.put(Currency.REAL, new MercadoBigDecimal("0.01"));
+		MINIMAL_AMOUNTS.put(Currency.BITCOIN, new MercadoBigDecimal("0.001"));
+		MINIMAL_AMOUNTS.put(Currency.LITECOIN, new MercadoBigDecimal("0.009"));
 	}
 	
-	public static BigDecimal retrieveMinimalAmountFor(Currency currency) {
-		return MINIMAL_AMOUNTS.getOrDefault(currency, new BigDecimal("0.0"));
+	public static MercadoBigDecimal retrieveMinimalAmountFor(Currency currency) {
+		return MINIMAL_AMOUNTS.getOrDefault(currency, new MercadoBigDecimal("0.0"));
 	}
 	
-	public static boolean isAmountLowerThanMinimal(Currency currency, BigDecimal amount) {
+	public static boolean isAmountLowerThanMinimal(Currency currency, MercadoBigDecimal amount) {
 		if (currency == null) {
 			throw new RuntimeException("Currency to check minimal amount cannot be null.");
 		}
@@ -29,7 +29,7 @@ public class MinimalAmounts {
 			throw new RuntimeException("Amount of " + currency + " currency to check minimal amount cannot be null.");
 		}
 
-		BigDecimal minimal = retrieveMinimalAmountFor(currency);
+		MercadoBigDecimal minimal = retrieveMinimalAmountFor(currency);
 		return (amount.compareTo(minimal) < 0);
 	}
 	

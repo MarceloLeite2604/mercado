@@ -2,19 +2,22 @@ package org.marceloleite.mercado.commons;
 
 public enum Currency {
 
-	BITCOIN("BTC", true),
-	LITECOIN("LTC", true),
-	BCASH("BCH", true),
-	BGOLD("BTG", true),
-	REAL("BRL", false);
+	BITCOIN("BTC", true, 8),
+	LITECOIN("LTC", true, 8),
+	BCASH("BCH", true, 8),
+	BGOLD("BTG", true, 8),
+	REAL("BRL", false, 5);
 
 	private String acronym;
 
 	private boolean digital;
+	
+	private int scale;
 
-	private Currency(String acronym, boolean digital) {
+	private Currency(String acronym, boolean digital, int scale) {
 		this.acronym = acronym;
 		this.digital = digital;
+		this.scale = scale;
 	}
 
 	public String getAcronym() {
@@ -23,6 +26,10 @@ public enum Currency {
 
 	public boolean isDigital() {
 		return digital;
+	}
+	
+	public int getScale() {
+		return scale;
 	}
 
 	@Override

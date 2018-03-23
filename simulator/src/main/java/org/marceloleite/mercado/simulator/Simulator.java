@@ -1,6 +1,5 @@
 package org.marceloleite.mercado.simulator;
 
-import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.Map;
@@ -17,6 +16,7 @@ import org.marceloleite.mercado.base.model.Account;
 import org.marceloleite.mercado.base.model.Balance;
 import org.marceloleite.mercado.base.model.CurrencyAmount;
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.commons.MercadoBigDecimal;
 import org.marceloleite.mercado.commons.TimeDivisionController;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.data.TemporalTicker;
@@ -132,7 +132,7 @@ public class Simulator {
 	}
 
 	private void logTotalWorth(Account account) {
-		CurrencyAmount totalRealAmount = new CurrencyAmount(Currency.REAL, new BigDecimal("0.0"));
+		CurrencyAmount totalRealAmount = new CurrencyAmount(Currency.REAL, new MercadoBigDecimal("0.0"));
 		Balance balance = account.getBalance();
 
 		for (Currency currency : Currency.values()) {
@@ -141,8 +141,8 @@ public class Simulator {
 				if (temporalTicker != null) {
 					CurrencyAmount currencyAmount = balance.get(currency);
 					if (currencyAmount != null) {
-						BigDecimal last = temporalTicker.getLastPrice();
-						if (last.compareTo(BigDecimal.ZERO) == 0) {
+						MercadoBigDecimal last = temporalTicker.getLastPrice();
+						if (last.compareTo(MercadoBigDecimal.ZERO) == 0) {
 							last = temporalTicker.getPreviousLastPrice();
 						}
 						totalRealAmount.setAmount(totalRealAmount.getAmount().add(currencyAmount.getAmount().multiply(last)));

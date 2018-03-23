@@ -1,7 +1,6 @@
 package org.marceloleite.mercado.xml;
 
 import java.io.File;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -12,6 +11,7 @@ import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.commons.MercadoBigDecimal;
 import org.marceloleite.mercado.commons.utils.ZonedDateTimeUtils;
 import org.marceloleite.mercado.xml.adapters.XmlBalancesXmlAdapter;
 import org.marceloleite.mercado.xml.structures.XmlAccount;
@@ -80,11 +80,11 @@ public class Main {
 	}
 
 	private static void createObjects() {
-		xmlCurrencyAmount = new XmlCurrencyAmount(Currency.BITCOIN, new BigDecimal("0.123"));
-		xmlDeposit = new XmlDeposit(ZonedDateTimeUtils.now(), Currency.BITCOIN, new BigDecimal("0.2236"));
+		xmlCurrencyAmount = new XmlCurrencyAmount(Currency.BITCOIN, new MercadoBigDecimal("0.123"));
+		xmlDeposit = new XmlDeposit(ZonedDateTimeUtils.now(), Currency.BITCOIN, new MercadoBigDecimal("0.2236"));
 		xmlBalances = new XmlBalances();
-		xmlBalances.put(Currency.BITCOIN, new BigDecimal("0.123"));
-		xmlOrder = new XmlOrder(Currency.REAL, Currency.BITCOIN, new BigDecimal("1.0"), new BigDecimal("20000.0"));
+		xmlBalances.put(Currency.BITCOIN, new MercadoBigDecimal("0.123"));
+		xmlOrder = new XmlOrder(Currency.REAL, Currency.BITCOIN, new MercadoBigDecimal("1.0"), new MercadoBigDecimal("20000.0"));
 		xmlAccount = new XmlAccount();
 		xmlAccount.setOwner("Marcelo");
 		xmlAccount.setXmlDeposits(Arrays.asList(xmlDeposit));

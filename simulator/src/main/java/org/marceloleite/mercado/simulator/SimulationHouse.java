@@ -1,6 +1,5 @@
 package org.marceloleite.mercado.simulator;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -20,6 +19,7 @@ import org.marceloleite.mercado.base.model.OrderExecutor;
 import org.marceloleite.mercado.base.model.Strategy;
 import org.marceloleite.mercado.base.model.TemporalTickerVariation;
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.commons.MercadoBigDecimal;
 import org.marceloleite.mercado.commons.OrderStatus;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.data.AccountData;
@@ -32,13 +32,13 @@ public class SimulationHouse implements House {
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = LogManager.getLogger(SimulationHouse.class);
 
-	private static final BigDecimal DEFAULT_COMISSION_PERCENTAGE = new BigDecimal("0.007");
+	private static final MercadoBigDecimal DEFAULT_COMISSION_PERCENTAGE = new MercadoBigDecimal("0.007");
 
 	private List<Account> accounts;
 
 	private Map<String, Balance> comissionBalance;
 
-	private BigDecimal comissionPercentage;
+	private MercadoBigDecimal comissionPercentage;
 
 	private Map<Currency, TemporalTicker> temporalTickers;
 
@@ -48,7 +48,7 @@ public class SimulationHouse implements House {
 	
 	private OrderExecutor orderExecutor;
 
-	private SimulationHouse(List<Account> accounts, Map<String, Balance> comissionBalance, BigDecimal comissionPercentage,
+	private SimulationHouse(List<Account> accounts, Map<String, Balance> comissionBalance, MercadoBigDecimal comissionPercentage,
 			Map<Currency, TemporalTicker> temporalTickers,
 			Map<Currency, TemporalTickerVariation> temporalTickerVariations,
 			TemporalTickerRetriever temporalTickerRetriever) {
@@ -102,15 +102,15 @@ public class SimulationHouse implements House {
 		return accounts;
 	}
 
-	public static BigDecimal getDefaultComissionPercentage() {
+	public static MercadoBigDecimal getDefaultComissionPercentage() {
 		return DEFAULT_COMISSION_PERCENTAGE;
 	}
 
-	public BigDecimal getComissionPercentage() {
+	public MercadoBigDecimal getComissionPercentage() {
 		return comissionPercentage;
 	}
 
-	public void setComissionPercentage(BigDecimal comissionPercentage) {
+	public void setComissionPercentage(MercadoBigDecimal comissionPercentage) {
 		this.comissionPercentage = comissionPercentage;
 	}
 

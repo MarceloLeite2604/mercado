@@ -1,10 +1,10 @@
 package org.marceloleite.mercado.retriever;
 
-import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.commons.MercadoBigDecimal;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.TradeType;
 import org.marceloleite.mercado.data.TemporalTicker;
@@ -20,17 +20,17 @@ public class TemporalTickerCreator {
 
 		TemporalTicker temporalTicker = null;
 
-		BigDecimal high = new BigDecimal("0.0");
-		BigDecimal average = new BigDecimal("0.0");
-		BigDecimal low = new BigDecimal("0.0");
-		BigDecimal vol = new BigDecimal("0.0");
-		BigDecimal first = new BigDecimal("0.0");
-		BigDecimal last = new BigDecimal("0.0");
-		BigDecimal previousLast = new BigDecimal("0.0");
-		BigDecimal buy = new BigDecimal("0.0");
-		BigDecimal previousBuy = new BigDecimal("0.0");
-		BigDecimal sell = new BigDecimal("0.0");
-		BigDecimal previousSell = new BigDecimal("0.0");
+		MercadoBigDecimal high = MercadoBigDecimal.NOT_A_NUMBER;
+		MercadoBigDecimal average = MercadoBigDecimal.NOT_A_NUMBER;
+		MercadoBigDecimal low = MercadoBigDecimal.NOT_A_NUMBER;
+		MercadoBigDecimal vol = MercadoBigDecimal.NOT_A_NUMBER;
+		MercadoBigDecimal first = MercadoBigDecimal.NOT_A_NUMBER;
+		MercadoBigDecimal last = MercadoBigDecimal.NOT_A_NUMBER;
+		MercadoBigDecimal previousLast = MercadoBigDecimal.NOT_A_NUMBER;
+		MercadoBigDecimal buy = MercadoBigDecimal.NOT_A_NUMBER;
+		MercadoBigDecimal previousBuy = MercadoBigDecimal.NOT_A_NUMBER;
+		MercadoBigDecimal sell = MercadoBigDecimal.NOT_A_NUMBER;
+		MercadoBigDecimal previousSell = MercadoBigDecimal.NOT_A_NUMBER;
 		long buyOrders = 0;
 		long sellOrders = 0;
 
@@ -41,16 +41,16 @@ public class TemporalTickerCreator {
 			Map<Long, Trade> sellingTrades = new TradeTypeFilter(TradeType.SELL).filter(trades);
 			buyOrders = sellingTrades.size();
 
-			high = new BigDecimal(trades.entrySet().stream().map(Entry<Long, Trade>::getValue)
+			high = new MercadoBigDecimal(trades.entrySet().stream().map(Entry<Long, Trade>::getValue)
 					.mapToDouble(trade -> trade.getPrice().doubleValue()).max().orElse(0.0));
 
-			average = new BigDecimal(trades.entrySet().stream().map(Entry<Long, Trade>::getValue)
+			average = new MercadoBigDecimal(trades.entrySet().stream().map(Entry<Long, Trade>::getValue)
 					.mapToDouble(trade -> trade.getPrice().doubleValue()).average().orElse(0.0));
 
-			low = new BigDecimal(trades.entrySet().stream().map(Entry<Long, Trade>::getValue)
+			low = new MercadoBigDecimal(trades.entrySet().stream().map(Entry<Long, Trade>::getValue)
 					.mapToDouble(trade -> trade.getPrice().doubleValue()).min().orElse(0.0));
 
-			vol = new BigDecimal(trades.entrySet().stream().map(Entry<Long, Trade>::getValue)
+			vol = new MercadoBigDecimal(trades.entrySet().stream().map(Entry<Long, Trade>::getValue)
 					.mapToDouble(trade -> trade.getAmount().doubleValue()).sum());
 
 			long lastTradeId = trades.entrySet().stream().map(Entry<Long, Trade>::getValue)
@@ -75,7 +75,7 @@ public class TemporalTickerCreator {
 				TradePO previousBuyingTrade = new TradeDAO().retrievePreviousTrade(currency, TradeType.SELL,
 						timeInterval.getStart());
 				if (previousBuyingTrade != null) {
-					previousBuy = previousBuyingTrade.getPrice();
+					previousBuy = new MercadoBigDecimal(previousBuyingTrade.getPrice());
 				}
 			}
 
@@ -87,7 +87,7 @@ public class TemporalTickerCreator {
 				TradePO previousSellingTrade = new TradeDAO().retrievePreviousTrade(currency, TradeType.BUY,
 						timeInterval.getStart());
 				if (previousSellingTrade != null) {
-					previousSell = previousSellingTrade.getPrice();
+					previousSell = new MercadoBigDecimal(previousSellingTrade.getPrice());
 				}
 			}
 		} else {
@@ -95,27 +95,27 @@ public class TemporalTickerCreator {
 			TradePO previousBuyingTrade = tradeDAO.retrievePreviousTrade(currency, TradeType.SELL,
 					timeInterval.getStart());
 			if (previousBuyingTrade != null) {
-				previousBuy = previousBuyingTrade.getPrice();
+				previousBuy = new MercadoBigDecimal(previousBuyingTrade.getPrice());
 			}
 			TradePO previousSellingTrade = tradeDAO.retrievePreviousTrade(currency, TradeType.BUY,
 					timeInterval.getStart());
 			if (previousSellingTrade != null) {
-				previousSell = previousSellingTrade.getPrice();
+				previousSell = new MercadoBigDecimal(previousSellingTrade.getPrice());
 			}
 
 			if (previousSellingTrade == null) {
 				if (previousBuyingTrade != null) {
-					previousLast = previousBuyingTrade.getPrice();
+					previousLast = new MercadoBigDecimal(previousBuyingTrade.getPrice());
 				}
 			} else {
 				if (previousBuyingTrade != null) {
 					if (previousBuyingTrade.getId().getTradeId() > previousSellingTrade.getId().getTradeId()) {
-						previousLast = previousBuyingTrade.getPrice();
+						previousLast = new MercadoBigDecimal(previousBuyingTrade.getPrice());
 					} else {
-						previousLast = previousSellingTrade.getPrice();
+						previousLast = new MercadoBigDecimal(previousSellingTrade.getPrice());
 					}
 				} else {
-					previousLast = previousSellingTrade.getPrice();
+					previousLast = new MercadoBigDecimal(previousSellingTrade.getPrice());
 				}
 			}
 		}

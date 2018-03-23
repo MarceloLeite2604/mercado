@@ -1,7 +1,5 @@
 package org.marceloleite.mercado.strategies.fourth;
 
-import java.math.BigDecimal;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.base.model.Account;
@@ -13,6 +11,7 @@ import org.marceloleite.mercado.base.model.order.BuyOrderBuilder;
 import org.marceloleite.mercado.base.model.order.MinimalAmounts;
 import org.marceloleite.mercado.base.model.order.SellOrderBuilder;
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.commons.MercadoBigDecimal;
 import org.marceloleite.mercado.commons.OrderType;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.converter.ObjectToJsonConverter;
@@ -35,9 +34,9 @@ public class FourthStrategy extends AbstractStrategy {
 
 	private Currency currency;
 
-	private BigDecimal growthPercentageThreshold;
+	private MercadoBigDecimal growthPercentageThreshold;
 
-	private BigDecimal shrinkPercentageThreshold;
+	private MercadoBigDecimal shrinkPercentageThreshold;
 
 	private TemporalTicker baseTemporalTicker;
 
@@ -67,10 +66,10 @@ public class FourthStrategy extends AbstractStrategy {
 				house.getTemporalTickers().get(currency));
 
 		if (temporalTickerVariation != null) {
-			BigDecimal lastVariation = temporalTickerVariation.getLastVariation();
+			MercadoBigDecimal lastVariation = temporalTickerVariation.getLastVariation();
 			switch (status) {
 			case UNDEFINED:
-				if (lastVariation != null && lastVariation.compareTo(BigDecimal.ZERO) > 0) {
+				if (lastVariation.compareTo(MercadoBigDecimal.NOT_A_NUMBER) != 0 && lastVariation.compareTo(MercadoBigDecimal.ZERO) > 0) {
 					LOGGER.debug(simulationTimeInterval + ": Last variation is "
 							+ new PercentageFormatter().format(lastVariation));
 					updateBase(house);
@@ -78,7 +77,7 @@ public class FourthStrategy extends AbstractStrategy {
 				}
 				break;
 			case SAVED:
-				if (lastVariation != null && lastVariation.compareTo(BigDecimal.ZERO) < 0) {
+				if (lastVariation.compareTo(MercadoBigDecimal.NOT_A_NUMBER) != 0 && lastVariation.compareTo(MercadoBigDecimal.ZERO) < 0) {
 					updateBase(house);
 				} else if (lastVariation != null && lastVariation.compareTo(growthPercentageThreshold) >= 0 ) {
 					updateBase(house);
@@ -86,9 +85,9 @@ public class FourthStrategy extends AbstractStrategy {
 				}
 				break;
 			case APPLIED:
-				if (lastVariation != null && lastVariation.compareTo(BigDecimal.ZERO) > 0) {
+				if (lastVariation.compareTo(MercadoBigDecimal.NOT_A_NUMBER) != 0 && lastVariation.compareTo(MercadoBigDecimal.ZERO) > 0) {
 					updateBase(house);
-				} else if (lastVariation != null && lastVariation.compareTo(shrinkPercentageThreshold) <= 0) {
+				} else if (lastVariation.compareTo(MercadoBigDecimal.NOT_A_NUMBER) != 0 && lastVariation.compareTo(shrinkPercentageThreshold) <= 0) {
 					updateBase(house);
 					createSellOrder(simulationTimeInterval, account, house);
 				}
@@ -213,17 +212,17 @@ public class FourthStrategy extends AbstractStrategy {
 			circularArray = new CircularArray<>(Integer.parseInt(parameter.getValue()));
 			break;
 		case GROWTH_PERCENTAGE_THRESHOLD:
-			growthPercentageThreshold = new BigDecimal(parameter.getValue());
+			growthPercentageThreshold = new MercadoBigDecimal(parameter.getValue());
 			break;
 		case SHRINK_PERCENTAGE_THRESHOLD:
-			shrinkPercentageThreshold = new BigDecimal(parameter.getValue());
+			shrinkPercentageThreshold = new MercadoBigDecimal(parameter.getValue());
 			break;
 
 		}
 	}
 
 	private CurrencyAmount calculateCurrencyAmountUnitPrice(House house) {
-		BigDecimal lastPrice = house.getTemporalTickers().get(currency).getLastPrice();
+		MercadoBigDecimal lastPrice = house.getTemporalTickers().get(currency).getLastPrice();
 		CurrencyAmount currencyAmountUnitPrice = new CurrencyAmount(currency, lastPrice);
 		return currencyAmountUnitPrice;
 	}

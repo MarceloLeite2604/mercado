@@ -1,5 +1,6 @@
 package org.marceloleite.mercado.converter.entity;
 
+import org.marceloleite.mercado.commons.MercadoBigDecimal;
 import org.marceloleite.mercado.commons.converter.Converter;
 import org.marceloleite.mercado.data.Trade;
 import org.marceloleite.mercado.databaseretriever.persistence.objects.TradeIdPO;
@@ -13,9 +14,9 @@ public class TradePOToTradeConverter implements Converter<TradePO, Trade>{
 		TradeIdPO tradeIdPO = tradePO.getId();
 		trade.setCurrency(tradeIdPO.getCurrency());
 		trade.setId(tradeIdPO.getTradeId());
-		trade.setAmount(tradePO.getAmount());
+		trade.setAmount(new MercadoBigDecimal(tradePO.getAmount()));
 		trade.setDate(tradePO.getTradeDate());
-		trade.setPrice(tradePO.getPrice());
+		trade.setPrice(new MercadoBigDecimal(tradePO.getPrice()));
 		trade.setTradeType(tradePO.getTradeType());
 		return trade;
 	}

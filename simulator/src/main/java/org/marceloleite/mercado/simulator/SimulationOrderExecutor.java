@@ -1,7 +1,5 @@
 package org.marceloleite.mercado.simulator;
 
-import java.math.BigDecimal;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.base.model.Account;
@@ -11,6 +9,7 @@ import org.marceloleite.mercado.base.model.House;
 import org.marceloleite.mercado.base.model.Order;
 import org.marceloleite.mercado.base.model.OrderExecutor;
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.commons.MercadoBigDecimal;
 import org.marceloleite.mercado.commons.OrderStatus;
 
 public class SimulationOrderExecutor implements OrderExecutor {
@@ -52,13 +51,13 @@ public class SimulationOrderExecutor implements OrderExecutor {
 	}
 
 	private CurrencyAmount calculateCurrencyAmountToPay(Order order) {
-		BigDecimal amountToPay = order.getLimitPrice().multiply(order.getQuantity());
+		MercadoBigDecimal amountToPay = order.getLimitPrice().multiply(order.getQuantity());
 		Currency currencyToPay = order.getFirstCurrency();
 		return new CurrencyAmount(currencyToPay, amountToPay);
 	}
 
 	private CurrencyAmount calculateCurrencyAmountToSell(Order order) {
-		BigDecimal quantity = order.getQuantity();
+		MercadoBigDecimal quantity = order.getQuantity();
 		Currency currencyToSell = order.getSecondCurrency();
 		return new CurrencyAmount(currencyToSell, quantity);
 	}
@@ -92,24 +91,24 @@ public class SimulationOrderExecutor implements OrderExecutor {
 
 	private CurrencyAmount calculateBuyOrderComission(Order order, House house) {
 		CurrencyAmount currencyAmountToBuy = elaborateCurrencyAmountToBuy(order);
-		BigDecimal comissionAmount = currencyAmountToBuy.getAmount().multiply(house.getComissionPercentage());
+		MercadoBigDecimal comissionAmount = currencyAmountToBuy.getAmount().multiply(house.getComissionPercentage());
 		return new CurrencyAmount(currencyAmountToBuy.getCurrency(), comissionAmount);
 	}
 
 	private CurrencyAmount elaborateCurrencyAmountToBuy(Order order) {
-		BigDecimal quantity = order.getQuantity();
+		MercadoBigDecimal quantity = order.getQuantity();
 		Currency currencyToBuy = order.getSecondCurrency();
 		return new CurrencyAmount(currencyToBuy, quantity);
 	}
 
 	private CurrencyAmount calculateSellOrderCommission(Order order, House house) {
 		CurrencyAmount currencyAmountToReceive = elaborateCurrencyAmountToReceive(order);
-		BigDecimal comissionAmount = currencyAmountToReceive.getAmount().multiply(house.getComissionPercentage());
+		MercadoBigDecimal comissionAmount = currencyAmountToReceive.getAmount().multiply(house.getComissionPercentage());
 		return new CurrencyAmount(currencyAmountToReceive.getCurrency(), comissionAmount);
 	}
 
 	private CurrencyAmount elaborateCurrencyAmountToReceive(Order order) {
-		BigDecimal amount = order.getQuantity().multiply(order.getLimitPrice());
+		MercadoBigDecimal amount = order.getQuantity().multiply(order.getLimitPrice());
 		Currency currency = order.getFirstCurrency();
 		return new CurrencyAmount(currency, amount);
 	}
@@ -122,13 +121,13 @@ public class SimulationOrderExecutor implements OrderExecutor {
 
 	private CurrencyAmount calculateBuyOrderDeposit(Order order, CurrencyAmount currencyAmountComission) {
 		CurrencyAmount currencyAmountToBuy = elaborateCurrencyAmountToBuy(order);
-		BigDecimal amountToDeposit = currencyAmountToBuy.getAmount().subtract(currencyAmountComission.getAmount());
+		MercadoBigDecimal amountToDeposit = currencyAmountToBuy.getAmount().subtract(currencyAmountComission.getAmount());
 		return new CurrencyAmount(currencyAmountToBuy.getCurrency(), amountToDeposit);
 	}
 
 	private CurrencyAmount calculateSellOrderDeposit(Order order, House house, CurrencyAmount currencyAmountComission) {
 		CurrencyAmount currencyAmountToReceive = elaborateCurrencyAmountToReceive(order);
-		BigDecimal amountToDeposit = currencyAmountToReceive.getAmount().subtract(currencyAmountComission.getAmount());
+		MercadoBigDecimal amountToDeposit = currencyAmountToReceive.getAmount().subtract(currencyAmountComission.getAmount());
 		return new CurrencyAmount(currencyAmountToReceive.getCurrency(), amountToDeposit);
 	}
 }

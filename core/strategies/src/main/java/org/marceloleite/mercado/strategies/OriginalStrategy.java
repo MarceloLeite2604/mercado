@@ -1,8 +1,5 @@
 package org.marceloleite.mercado.strategies;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.base.model.Account;
@@ -12,6 +9,7 @@ import org.marceloleite.mercado.base.model.House;
 import org.marceloleite.mercado.base.model.Order;
 import org.marceloleite.mercado.base.model.order.BuyOrderBuilder;
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.commons.MercadoBigDecimal;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.properties.Property;
 import org.marceloleite.mercado.data.TemporalTicker;
@@ -69,7 +67,7 @@ public class OriginalStrategy extends AbstractStrategy {
 
 	private CurrencyAmount calculateCurrencyAmountToBuy(CurrencyAmount realBalance,
 			CurrencyAmount currencyAmountUnitPrice) {
-		BigDecimal quantity = realBalance.getAmount().divide(currencyAmountUnitPrice.getAmount(), 16, RoundingMode.HALF_UP);
+		MercadoBigDecimal quantity = realBalance.getAmount().divide(currencyAmountUnitPrice.getAmount());
 		CurrencyAmount currencyAmountToBuy = new CurrencyAmount(currency, quantity);
 		return currencyAmountToBuy;
 	}
@@ -91,8 +89,8 @@ public class OriginalStrategy extends AbstractStrategy {
 
 	private CurrencyAmount calculateCurrencyAmountUnitPrice(House house) {
 		TemporalTicker temporalTicker = house.getTemporalTickers().get(currency);
-		BigDecimal lastPrice = temporalTicker.getLastPrice();
-		if (lastPrice == null || lastPrice.compareTo(BigDecimal.ZERO) == 0) {
+		MercadoBigDecimal lastPrice = temporalTicker.getLastPrice();
+		if (lastPrice.compareTo(MercadoBigDecimal.NOT_A_NUMBER) == 0 || lastPrice.compareTo(MercadoBigDecimal.ZERO) == 0) {
 			lastPrice = temporalTicker.getPreviousLastPrice();
 		}
 		CurrencyAmount currencyAmountUnitPrice = new CurrencyAmount(Currency.REAL, lastPrice);

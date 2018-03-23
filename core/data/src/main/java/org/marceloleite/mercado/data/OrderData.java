@@ -1,10 +1,10 @@
 package org.marceloleite.mercado.data;
 
-import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.List;
 
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.commons.MercadoBigDecimal;
 import org.marceloleite.mercado.commons.OrderStatus;
 import org.marceloleite.mercado.commons.OrderType;
 
@@ -24,15 +24,15 @@ public class OrderData {
 
 	private Boolean hasFills;
 
-	private BigDecimal quantity;
+	private MercadoBigDecimal quantity;
 
-	private BigDecimal limitPrice;
+	private MercadoBigDecimal limitPrice;
 
-	private BigDecimal executedQuantity;
+	private MercadoBigDecimal executedQuantity;
 
-	private BigDecimal executedPriceAverage;
+	private MercadoBigDecimal executedPriceAverage;
 
-	private BigDecimal fee;
+	private MercadoBigDecimal fee;
 
 	private ZonedDateTime created;
 
@@ -102,43 +102,43 @@ public class OrderData {
 		this.hasFills = hasFills;
 	}
 
-	public BigDecimal getQuantity() {
+	public MercadoBigDecimal getQuantity() {
 		return quantity;
 	}
 
-	public void setQuantity(BigDecimal quantity) {
+	public void setQuantity(MercadoBigDecimal quantity) {
 		this.quantity = quantity;
 	}
 
-	public BigDecimal getLimitPrice() {
+	public MercadoBigDecimal getLimitPrice() {
 		return limitPrice;
 	}
 
-	public void setLimitPrice(BigDecimal limitPrice) {
+	public void setLimitPrice(MercadoBigDecimal limitPrice) {
 		this.limitPrice = limitPrice;
 	}
 
-	public BigDecimal getExecutedQuantity() {
+	public MercadoBigDecimal getExecutedQuantity() {
 		return executedQuantity;
 	}
 
-	public void setExecutedQuantity(BigDecimal executedQuantity) {
+	public void setExecutedQuantity(MercadoBigDecimal executedQuantity) {
 		this.executedQuantity = executedQuantity;
 	}
 
-	public BigDecimal getExecutedPriceAverage() {
+	public MercadoBigDecimal getExecutedPriceAverage() {
 		return executedPriceAverage;
 	}
 
-	public void setExecutedPriceAverage(BigDecimal executedPriceAverage) {
+	public void setExecutedPriceAverage(MercadoBigDecimal executedPriceAverage) {
 		this.executedPriceAverage = executedPriceAverage;
 	}
 
-	public BigDecimal getFee() {
+	public MercadoBigDecimal getFee() {
 		return fee;
 	}
 
-	public void setFee(BigDecimal fee) {
+	public void setFee(MercadoBigDecimal fee) {
 		this.fee = fee;
 	}
 

@@ -1,16 +1,14 @@
 package org.marceloleite.mercado.base.model.util;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
+import org.marceloleite.mercado.commons.MercadoBigDecimal;
 
 public class VariationCalculator {
 
-	public BigDecimal calculate(BigDecimal  firstValue, BigDecimal  secondValue) {
-		if (secondValue.compareTo(BigDecimal.ZERO) == 0) {
-			/* TODO: Representing a positive infinity (?) */
-			return new BigDecimal("10E20") ;
+	public MercadoBigDecimal calculate(MercadoBigDecimal  firstValue, MercadoBigDecimal  secondValue) {
+		if (secondValue.compareTo(MercadoBigDecimal.ZERO) == 0) {
+			return MercadoBigDecimal.POSITIVE_INFINITY;
 		} else {
-			return (firstValue.divide(secondValue, 16, RoundingMode.HALF_UP).subtract(BigDecimal.ONE));
+			return new MercadoBigDecimal(firstValue.divide(secondValue).subtract(MercadoBigDecimal.ONE));
 		}
 	}
 }
