@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<account>
+	<owner>Fifth Strategy</owner>
+	<email/>
+	<tapiInformations>
+		<id/>
+		<secret/>
+	</tapiInformations>
+	<balances>
+		<balance>
+			<currency>BRL</currency>
+			<amount>1000</amount>
+		</balance>
+	</balances>
+	<deposits />
+	<strategies>
+		<strategy>
+			<currency>BTC</currency>
+			<classes>
+				<class>
+					<name>org.marceloleite.mercado.strategies.fifth.FifthStrategy</name>
+					<parameters>
+						<parameter>
+							<name>growthPercentageThreshold</name>
+							<value>0.04</value>
+						</parameter>
+						<parameter>
+							<name>shrinkPercentageThreshold</name>
+							<value>-0.06</value>
+						</parameter>
+						<parameter>
+							<name>workingAmountCurrency</name>
+							<value>1000.0</value>
+						</parameter>
+						<parameter>
+							<name>circularArraySize</name>
+							<value>30</value>
+						</parameter>
+					</parameters>
+				</class>
+			</classes>
+		</strategy>
+	</strategies>
+</account>

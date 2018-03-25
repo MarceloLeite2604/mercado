@@ -1,4 +1,4 @@
-package org.marceloleite.mercado.strategies.third;
+package org.marceloleite.mercado.strategies.fifth;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,10 +22,12 @@ import org.marceloleite.mercado.commons.formatter.PercentageFormatter;
 import org.marceloleite.mercado.commons.properties.Property;
 import org.marceloleite.mercado.data.TemporalTicker;
 import org.marceloleite.mercado.strategies.AbstractStrategy;
+import org.marceloleite.mercado.strategies.third.ThirdStrategyParameter;
+import org.marceloleite.mercado.strategies.third.ThirdStrategyVariable;
 
-public class ThirdStrategy extends AbstractStrategy {
+public class OldFifthStrategy extends AbstractStrategy {
 
-	private static final Logger LOGGER = LogManager.getLogger(ThirdStrategy.class);
+	private static final Logger LOGGER = LogManager.getLogger(OldFifthStrategy.class);
 
 	private MercadoBigDecimal growthPercentageThreshold;
 
@@ -35,15 +37,17 @@ public class ThirdStrategy extends AbstractStrategy {
 
 	private TemporalTicker baseTemporalTicker;
 
-	private ThirdStrategyStatus status;
+	private Double workingAmountCurrency;
 
-	public ThirdStrategy(Currency currency) {
+	private FifthStrategyStatus status;
+
+	public OldFifthStrategy(Currency currency) {
 		super(ThirdStrategyParameter.class, ThirdStrategyVariable.class);
 		this.currency = currency;
-		this.status = ThirdStrategyStatus.UNDEFINED;
+		this.status = FifthStrategyStatus.UNDEFINED;
 	}
 
-	public ThirdStrategy() {
+	public OldFifthStrategy() {
 		this(null);
 	}
 
@@ -62,7 +66,7 @@ public class ThirdStrategy extends AbstractStrategy {
 			Order order = null;
 			switch (status) {
 			case UNDEFINED:
-				if (lastVariation.compareTo(MercadoBigDecimal.NOT_A_NUMBER) != 0  && lastVariation.compareTo(MercadoBigDecimal.ZERO) > 0) {
+				if (lastVariation != null && lastVariation.compareTo(MercadoBigDecimal.ZERO) > 0) {
 					LOGGER.debug(simulationTimeInterval + ": Last variation is "
 							+ new PercentageFormatter().format(lastVariation));
 					updateBase(house);
@@ -70,17 +74,17 @@ public class ThirdStrategy extends AbstractStrategy {
 				}
 				break;
 			case SAVED:
-				if (!lastVariation.equals(MercadoBigDecimal.NOT_A_NUMBER) && lastVariation.compareTo(MercadoBigDecimal.ZERO) < 0) {
+				if (lastVariation != null && lastVariation.compareTo(MercadoBigDecimal.ZERO) < 0) {
 					updateBase(house);
-				} else if (!lastVariation.equals(MercadoBigDecimal.NOT_A_NUMBER) && lastVariation.compareTo(growthPercentageThreshold) >= 0) {
+				} else if (lastVariation != null && lastVariation.compareTo(growthPercentageThreshold) >= 0) {
 					updateBase(house);
 					order = createBuyOrder(simulationTimeInterval, account, house);
 				}
 				break;
 			case APPLIED:
-				if (!lastVariation.equals(MercadoBigDecimal.NOT_A_NUMBER) && lastVariation.compareTo(MercadoBigDecimal.ZERO) > 0) {
+				if (lastVariation != null && lastVariation.compareTo(MercadoBigDecimal.ZERO) > 0) {
 					updateBase(house);
-				} else if (!lastVariation.equals(MercadoBigDecimal.NOT_A_NUMBER) && lastVariation.compareTo(shrinkPercentageThreshold) <= 0) {
+				} else if (lastVariation != null && lastVariation.compareTo(shrinkPercentageThreshold) <= 0) {
 					updateBase(house);
 					order = createSellOrder(simulationTimeInterval, account, house);
 				}
@@ -115,7 +119,7 @@ public class ThirdStrategy extends AbstractStrategy {
 			LOGGER.warn(exception.getMessage());
 			return null;
 		}
-		
+
 		Order order = new SellOrderBuilder().toExecuteOn(simulationTimeInterval.getStart())
 				.selling(orderAnalyser.getSecond()).receivingUnitPriceOf(orderAnalyser.getUnitPrice()).build();
 		LOGGER.info(new ZonedDateTimeToStringConverter().convertTo(simulationTimeInterval.getStart()) + ": Created "
@@ -157,7 +161,7 @@ public class ThirdStrategy extends AbstractStrategy {
 
 		TemporalTickerVariation temporalTickerVariation = new TemporalTickerVariation(baseTemporalTicker,
 				currentTemporalTicker);
-		/*LOGGER.debug("Variation : " + temporalTickerVariation + ".");*/
+		LOGGER.debug("Variation : " + temporalTickerVariation + ".");
 		return temporalTickerVariation;
 	}
 
@@ -172,10 +176,10 @@ public class ThirdStrategy extends AbstractStrategy {
 		case FILLED:
 			switch (order.getType()) {
 			case BUY:
-				status = ThirdStrategyStatus.APPLIED;
+				status = FifthStrategyStatus.APPLIED;
 				break;
 			case SELL:
-				status = ThirdStrategyStatus.SAVED;
+				status = FifthStrategyStatus.SAVED;
 				break;
 			}
 			break;
@@ -187,7 +191,7 @@ public class ThirdStrategy extends AbstractStrategy {
 
 	@Override
 	protected Property retrieveVariable(String name) {
-		ThirdStrategyVariable fifthStrategyVariable = ThirdStrategyVariable.findByName(name);
+		FifthStrategyVariable fifthStrategyVariable = FifthStrategyVariable.findByName(name);
 		ObjectToJsonConverter objectToJsonConverter = new ObjectToJsonConverter();
 		String json = null;
 		switch (fifthStrategyVariable) {
@@ -196,6 +200,8 @@ public class ThirdStrategy extends AbstractStrategy {
 			break;
 		case STATUS:
 			json = objectToJsonConverter.convertTo(status);
+		case WORKING_AMOUNT_CURRENCY:
+			json = objectToJsonConverter.convertTo(workingAmountCurrency);
 			break;
 		}
 
@@ -205,7 +211,7 @@ public class ThirdStrategy extends AbstractStrategy {
 
 	@Override
 	protected void defineVariable(Property variable) {
-		ThirdStrategyVariable fifthStrategyVariable = ThirdStrategyVariable.findByName(variable.getName());
+		FifthStrategyVariable fifthStrategyVariable = FifthStrategyVariable.findByName(variable.getName());
 		ObjectToJsonConverter objectToJsonConverter = new ObjectToJsonConverter();
 		switch (fifthStrategyVariable) {
 		case BASE_TEMPORAL_TICKER:
@@ -215,12 +221,17 @@ public class ThirdStrategy extends AbstractStrategy {
 		case STATUS:
 			status = objectToJsonConverter.convertFromToObject(variable.getValue(), status);
 			break;
+		case WORKING_AMOUNT_CURRENCY:
+			workingAmountCurrency = new Double(0.0);
+			workingAmountCurrency = objectToJsonConverter.convertFromToObject(variable.getValue(),
+					workingAmountCurrency);
+			break;
 		}
 	}
 
 	@Override
 	protected void defineParameter(Property parameter) {
-		ThirdStrategyParameter fifthStrategyParameter = ThirdStrategyParameter.findByName(parameter.getName());
+		FifthStrategyParameter fifthStrategyParameter = FifthStrategyParameter.findByName(parameter.getName());
 		switch (fifthStrategyParameter) {
 		case GROWTH_PERCENTAGE_THRESHOLD:
 			growthPercentageThreshold = new MercadoBigDecimal(parameter.getValue());
@@ -228,11 +239,14 @@ public class ThirdStrategy extends AbstractStrategy {
 		case SHRINK_PERCENTAGE_THRESHOLD:
 			shrinkPercentageThreshold = new MercadoBigDecimal(parameter.getValue());
 			break;
+		case WORKING_AMOUNT_CURRENCY:
+			workingAmountCurrency = Double.parseDouble(parameter.getValue());
+			break;
 		}
 	}
 
 	private CurrencyAmount calculateCurrencyAmountUnitPrice(House house) {
 		MercadoBigDecimal lastPrice = house.getTemporalTickers().get(currency).getCurrentOrPreviousLastPrice();
-		return new CurrencyAmount(Currency.REAL, lastPrice);
+		return new CurrencyAmount(currency, lastPrice);
 	}
 }

@@ -1,4 +1,4 @@
-package org.marceloleite.mercado.strategies.second;
+package org.marceloleite.mercado.commons;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,17 +14,16 @@ public class CircularArray<T extends Object> {
 	private int firstPosition;
 
 	private Object[] buffer;
+	
+	private int size;
 
 	public CircularArray(int size) {
 		super();
 		if (size <= 0) {
 			throw new IllegalArgumentException("Invalid circular buffer size: " + size);
 		}
-		this.buffer = new Object[size];
-		this.bufferSize = size;
-		this.totalOfValues = 0;
-		this.lastPosition = -1;
-		this.firstPosition = -1;
+		this.size = size;
+		clear();
 	}
 
 	public void add(T object) {
@@ -116,5 +115,13 @@ public class CircularArray<T extends Object> {
 			list.add((T) buffer[calculatePosition(counter)]);
 		}
 		return list;
+	}
+
+	public void clear() {
+		this.buffer = new Object[size];
+		this.bufferSize = size;
+		this.totalOfValues = 0;
+		this.lastPosition = -1;
+		this.firstPosition = -1;
 	}
 }

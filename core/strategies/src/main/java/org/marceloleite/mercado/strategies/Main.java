@@ -1,6 +1,6 @@
 package org.marceloleite.mercado.strategies;
 
-import org.marceloleite.mercado.strategies.second.CircularArray;
+import org.marceloleite.mercado.commons.CircularArray;
 
 public class Main {
 	
