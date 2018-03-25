@@ -1,6 +1,7 @@
 package org.marceloleite.mercado.strategies.second;
 
 import org.apache.commons.math3.stat.descriptive.moment.Mean;
+import org.marceloleite.mercado.commons.CircularArray;
 
 public class ValueStatistics {
 

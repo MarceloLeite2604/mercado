@@ -73,6 +73,10 @@ public class MercadoBigDecimal extends BigDecimal {
 		super(value.toString());
 	}
 
+	public MercadoBigDecimal(int value) {
+		super(Integer.toString(value));
+	}
+
 	public MercadoBigDecimal divide(MercadoBigDecimal divisor) {
 		return new MercadoBigDecimal(super.divide(divisor, 2*DEFAULT_SCALE, DEFAULT_ROUNDING_MODE), this.numberType);
 	}

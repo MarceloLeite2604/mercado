@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.base.model.Account;
 import org.marceloleite.mercado.base.model.House;
 import org.marceloleite.mercado.base.model.TemporalTickerVariation;
+import org.marceloleite.mercado.commons.CircularArray;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.MercadoBigDecimal;
 import org.marceloleite.mercado.commons.TimeInterval;

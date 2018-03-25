@@ -10,6 +10,7 @@ import org.marceloleite.mercado.base.model.TemporalTickerVariation;
 import org.marceloleite.mercado.base.model.order.BuyOrderBuilder;
 import org.marceloleite.mercado.base.model.order.MinimalAmounts;
 import org.marceloleite.mercado.base.model.order.SellOrderBuilder;
+import org.marceloleite.mercado.commons.CircularArray;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.MercadoBigDecimal;
 import org.marceloleite.mercado.commons.OrderType;
@@ -20,7 +21,6 @@ import org.marceloleite.mercado.commons.formatter.PercentageFormatter;
 import org.marceloleite.mercado.commons.properties.Property;
 import org.marceloleite.mercado.data.TemporalTicker;
 import org.marceloleite.mercado.strategies.AbstractStrategy;
-import org.marceloleite.mercado.strategies.second.CircularArray;
 
 public class FourthStrategy extends AbstractStrategy {
 

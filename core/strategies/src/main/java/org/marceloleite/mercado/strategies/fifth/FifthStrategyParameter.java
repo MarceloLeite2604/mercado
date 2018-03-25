@@ -7,7 +7,8 @@ public enum FifthStrategyParameter implements Property {
 	
 	GROWTH_PERCENTAGE_THRESHOLD("growthPercentageThreshold"),
 	SHRINK_PERCENTAGE_THRESHOLD("shrinkPercentageThreshold"),
-	WORKING_AMOUNT_CURRENCY("workingAmountCurrency");
+	WORKING_AMOUNT_CURRENCY("workingAmountCurrency"),
+	CIRCULAR_ARRAY_SIZE("circularArraySize");
 
 	private String name;
 
