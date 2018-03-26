@@ -11,17 +11,23 @@
 			<currency>BTC</currency>
 			<classes>
 				<class>
-					<name>org.marceloleite.mercado.strategies.third.ThirdStrategy</name>
+					<name>org.marceloleite.mercado.strategies.sixth.SixthStrategy</name>
 					<parameters>
 						<parameter>
 							<name>growthPercentageThreshold</name>
-							<!-- <value>0.0496</value> -->
-							<value>0.02</value>
+							<value>0.10</value>
 						</parameter>
 						<parameter>
 							<name>shrinkPercentageThreshold</name>
-							<!-- <value>-0.05</value> -->
-							<value>-0.015</value>
+							<value>-0.15</value>
+						</parameter>
+						<parameter>
+							<name>workingAmountCurrency</name>
+							<value>60.0</value>
+						</parameter>
+						<parameter>
+							<name>circularArraySize</name>
+							<value>720</value>
 						</parameter>
 					</parameters>
 				</class>
