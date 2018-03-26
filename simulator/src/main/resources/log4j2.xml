@@ -43,6 +43,12 @@
 				<Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
 			</PatternLayout>
 		</File>
+		<File name="SixthStrategyLogFile" fileName="output/logs/mercado-simulator-sixth-strategy.log"
+			append="false">
+			<PatternLayout>
+				<Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
+			</PatternLayout>
+		</File>
 		<File name="HibernateLogFile" fileName="output/logs/mercado-simulator-hibernate.log">
 			<PatternLayout>
 				<Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
@@ -50,7 +56,7 @@
 		</File>
 	</Appenders>
 	<Loggers>
-		<Root level="info">
+		<Root level="debug">
 			<AppenderRef ref="LogFile" />
 		</Root>
 		<Logger name="org.hibernate" level="info" additivity="false">
@@ -86,6 +92,10 @@
 		<Logger name="org.marceloleite.mercado.strategies.fifth"
 			level="debug" additivity="false">
 			<AppenderRef ref="FifthStrategyLogFile" />
+		</Logger>
+		<Logger name="org.marceloleite.mercado.strategies.sixth"
+			level="debug" additivity="false">
+			<AppenderRef ref="SixthStrategyLogFile" />
 		</Logger>
 	</Loggers>
 </Configuration>

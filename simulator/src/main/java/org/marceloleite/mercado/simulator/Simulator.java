@@ -19,6 +19,7 @@ import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.MercadoBigDecimal;
 import org.marceloleite.mercado.commons.TimeDivisionController;
 import org.marceloleite.mercado.commons.TimeInterval;
+import org.marceloleite.mercado.commons.converter.ZonedDateTimeToStringConverter;
 import org.marceloleite.mercado.data.TemporalTicker;
 import org.marceloleite.mercado.databaseretriever.persistence.EntityManagerController;
 import org.marceloleite.mercado.simulator.property.SimulatorPropertiesRetriever;
@@ -47,9 +48,8 @@ public class Simulator {
 		this.stepDuration = simulatorPropertiesRetriever.retrieveStepDurationTime();
 		Duration retrievingDuration = simulatorPropertiesRetriever.retrieveRetrievingDurationTime();
 		timeDivisionController = new TimeDivisionController(startTime, endTime, retrievingDuration);
-		this.house = new SimulationHouse();
 	}
-	
+
 	private void configureEntityManagerController() {
 		String persistenceFileName = simulatorPropertiesRetriever.retrievePersistencePropertyFile();
 		if (persistenceFileName != null) {
@@ -71,19 +71,21 @@ public class Simulator {
 			Future<TreeMap<TimeInterval, Map<Currency, TemporalTicker>>> future;
 			Semaphore updateHouseThreadSemaphore = new Semaphore(1);
 			Semaphore runSimulationSemaphore = new Semaphore(0);
-			HouseSimulationThread houseSimulationThread = new HouseSimulationThread(house, updateHouseThreadSemaphore, runSimulationSemaphore);
+			HouseSimulationThread houseSimulationThread = new HouseSimulationThread(house, updateHouseThreadSemaphore,
+					runSimulationSemaphore);
 			executor.execute(houseSimulationThread);
 
 			TreeMap<TimeInterval, Map<Currency, TemporalTicker>> temporalTickersDataModelByTimeInterval = null;
 			for (TimeInterval stepTimeInterval : timeDivisionController.geTimeIntervals()) {
-				// logSimulationStep(stepTimeInterval);
+				logSimulationStep(stepTimeInterval);
 				TimeDivisionController timeDivisionController = new TimeDivisionController(stepTimeInterval,
 						stepDuration);
 				future = executor.submit(new TemporalTickerRetrieverCallable(timeDivisionController));
-				
+
 				temporalTickersDataModelByTimeInterval = future.get();
-				updateHouseThread(houseSimulationThread, temporalTickersDataModelByTimeInterval, updateHouseThreadSemaphore, runSimulationSemaphore);
-				
+				updateHouseThread(houseSimulationThread, temporalTickersDataModelByTimeInterval,
+						updateHouseThreadSemaphore, runSimulationSemaphore);
+
 			}
 			finishExecution(houseSimulationThread, updateHouseThreadSemaphore, runSimulationSemaphore);
 			logAccountsBalance(true);
@@ -95,25 +97,27 @@ public class Simulator {
 		}
 	}
 
-	private void finishExecution(HouseSimulationThread houseSimulationThread, Semaphore updateHouseThreadSemaphore, Semaphore runSimulationSemaphore) {
+	private void finishExecution(HouseSimulationThread houseSimulationThread, Semaphore updateHouseThreadSemaphore,
+			Semaphore runSimulationSemaphore) {
 		try {
-		updateHouseThreadSemaphore.acquire();
-		houseSimulationThread.setFinished(true);
-		runSimulationSemaphore.release();
+			updateHouseThreadSemaphore.acquire();
+			houseSimulationThread.setFinished(true);
+			runSimulationSemaphore.release();
 		} catch (InterruptedException exception) {
 			throw new RuntimeException(exception);
 		}
 	}
 
 	private void updateHouseThread(HouseSimulationThread houseSimulationThread,
-			TreeMap<TimeInterval, Map<Currency, TemporalTicker>> temporalTickersDataModelsByTimeInterval, Semaphore updateHouseThreadSemaphore, Semaphore runSimulationSemaphore) {
+			TreeMap<TimeInterval, Map<Currency, TemporalTicker>> temporalTickersDataModelsByTimeInterval,
+			Semaphore updateHouseThreadSemaphore, Semaphore runSimulationSemaphore) {
 		try {
 			updateHouseThreadSemaphore.acquire();
 			houseSimulationThread.setTemporalTickersPOByTimeInterval(temporalTickersDataModelsByTimeInterval);
 			runSimulationSemaphore.release();
 		} catch (InterruptedException exception) {
 			throw new RuntimeException(exception);
-		}		
+		}
 	}
 
 	private void logAccountsBalance(boolean printTotalWorth) {
@@ -145,7 +149,8 @@ public class Simulator {
 						if (last.compareTo(MercadoBigDecimal.ZERO) == 0) {
 							last = temporalTicker.getPreviousLastPrice();
 						}
-						totalRealAmount.setAmount(totalRealAmount.getAmount().add(currencyAmount.getAmount().multiply(last)));
+						totalRealAmount
+								.setAmount(totalRealAmount.getAmount().add(currencyAmount.getAmount().multiply(last)));
 					}
 				}
 			} else {
@@ -163,6 +168,8 @@ public class Simulator {
 	}
 
 	private void logSimulationStep(TimeInterval timeInterval) {
-		LOGGER.debug("Advancing to step time " + timeInterval + ".");
+		ZonedDateTimeToStringConverter zonedDateTimeToStringConverter = new ZonedDateTimeToStringConverter();
+		LOGGER.info("From: " + zonedDateTimeToStringConverter.convertTo(timeInterval.getStart()) + " to: "
+				+ zonedDateTimeToStringConverter.convertTo(timeInterval.getEnd()));
 	}
 }

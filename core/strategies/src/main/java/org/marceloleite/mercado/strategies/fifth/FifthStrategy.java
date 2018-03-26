@@ -48,8 +48,6 @@ public class FifthStrategy extends AbstractStrategy {
 
 	private int circularArraySize;
 
-	private CircularArray<TemporalTickerVariation> temporalTickerVariationCircularArray;
-
 	private CircularArray<TemporalTicker> temporalTickerCircularArray;
 
 	public FifthStrategy(Currency currency) {
@@ -74,7 +72,6 @@ public class FifthStrategy extends AbstractStrategy {
 		TemporalTickerVariation temporalTickerVariation = generateTemporalTickerVariation(simulationTimeInterval,
 				house);
 		if (temporalTickerVariation != null) {
-			temporalTickerVariationCircularArray.add(temporalTickerVariation);
 			temporalTickerCircularArray = addToTemporalTickerCircularArray(temporalTickerCircularArray, temporalTicker);
 			MercadoBigDecimal nextPrice = calculateNextPrice(temporalTicker);
 			MercadoBigDecimal lastVariation = new VariationCalculator().calculate(nextPrice,
@@ -125,8 +122,6 @@ public class FifthStrategy extends AbstractStrategy {
 			if (order != null) {
 				LOGGER.debug(stringBuilderDebug.toString());
 				executeOrder(order, account, house);
-				temporalTickerVariationCircularArray.clear();
-				// temporalTickerCircularArray.clear();
 			}
 		}
 	}
@@ -172,22 +167,6 @@ public class FifthStrategy extends AbstractStrategy {
 		return averageLast.add(variation);
 	}
 
-	private MercadoBigDecimal retrieveLastVariation() {
-		List<TemporalTickerVariation> temporalTickerVariations = temporalTickerVariationCircularArray.asList();
-
-		List<MercadoBigDecimal> lastVariations = temporalTickerVariations.stream()
-				.map(temporalTickerVariation -> temporalTickerVariation.getLastVariation())
-				.collect(Collectors.toList());
-		if (lastVariations.size() < circularArraySize) {
-			for (int counter = lastVariations.size(); counter < circularArraySize; counter++) {
-				lastVariations.add(new MercadoBigDecimal("0"));
-			}
-		}
-		double average = lastVariations.stream().mapToDouble(MercadoBigDecimal::doubleValue).average().orElse(0.0);
-		return new MercadoBigDecimal(average);
-
-	}
-
 	private void setBaseIfNull(TemporalTicker temporalTicker) {
 		if (baseTemporalTicker == null) {
 			LOGGER.debug("Setting base temporal ticker as: " + temporalTicker + ".");
@@ -199,8 +178,6 @@ public class FifthStrategy extends AbstractStrategy {
 		TemporalTicker temporalTicker = house.getTemporalTickers().get(currency);
 		if (temporalTicker != null) {
 			baseTemporalTicker = temporalTicker;
-			temporalTickerVariationCircularArray.clear();
-			// temporalTickerCircularArray.clear();
 		}
 	}
 
@@ -208,7 +185,7 @@ public class FifthStrategy extends AbstractStrategy {
 		OrderAnalyser orderAnalyser = new OrderAnalyser(account.getBalance(), OrderType.SELL,
 				calculateCurrencyAmountUnitPrice(house), Currency.REAL, currency);
 		try {
-			orderAnalyser.setSecond(calculateOrderAmount(OrderType.SELL, account));
+			orderAnalyser.setSecond(calculateOrderAmount(orderAnalyser, account));
 		} catch (NoBalanceForMinimalValueOrderAnalyserException | NoBalanceOrderAnalyserException exception) {
 			LOGGER.warn(exception.getMessage());
 			return null;
@@ -226,7 +203,7 @@ public class FifthStrategy extends AbstractStrategy {
 				calculateCurrencyAmountUnitPrice(house), Currency.REAL, currency);
 
 		try {
-			orderAnalyser.setFirst(calculateOrderAmount(OrderType.BUY, account));
+			orderAnalyser.setFirst(calculateOrderAmount(orderAnalyser, account));
 		} catch (NoBalanceForMinimalValueOrderAnalyserException | NoBalanceOrderAnalyserException exception) {
 			LOGGER.warn(exception.getMessage());
 			return null;
@@ -239,8 +216,8 @@ public class FifthStrategy extends AbstractStrategy {
 		return order;
 	}
 
-	private CurrencyAmount calculateOrderAmount(OrderType orderType, Account account) {
-		Currency currency = (orderType == OrderType.SELL ? this.currency : Currency.REAL);
+	private CurrencyAmount calculateOrderAmount(OrderAnalyser orderAnalyser, Account account) {
+		Currency currency = (orderAnalyser.getOrderType() == OrderType.SELL ? this.currency : Currency.REAL);
 		CurrencyAmount balance = account.getBalance().get(currency);
 		CurrencyAmount orderAmount = new CurrencyAmount(balance);
 		LOGGER.debug("Order amount is " + orderAmount + ".");
@@ -340,7 +317,6 @@ public class FifthStrategy extends AbstractStrategy {
 		case CIRCULAR_ARRAY_SIZE:
 			circularArraySize = Integer.parseInt(parameter.getValue());
 			temporalTickerCircularArray = new CircularArray<>(circularArraySize);
-			temporalTickerVariationCircularArray = new CircularArray<>(circularArraySize);
 		}
 	}
 
