@@ -1,7 +1,6 @@
 package org.marceloleite.mercado.simulator;
 
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.Semaphore;
 
@@ -36,9 +35,6 @@ public class HouseSimulationThread extends Thread {
 	public void setTemporalTickersPOByTimeInterval(
 			TreeMap<TimeInterval, Map<Currency, TemporalTicker>> temporalTickersDataModelsByTimeInterval) {
 		this.temporalTickersDataModelsByTimeInterval = temporalTickersDataModelsByTimeInterval;
-		Set<TimeInterval> keySet = temporalTickersDataModelsByTimeInterval.keySet();
-		
-		LOGGER.info("From: "+keySet.toArray()[0] + " to: " + keySet.toArray()[keySet.size()-1]);
 	}
 
 	@Override

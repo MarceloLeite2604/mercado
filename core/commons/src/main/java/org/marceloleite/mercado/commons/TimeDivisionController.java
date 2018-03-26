@@ -21,8 +21,8 @@ public class TimeDivisionController {
 
 	public TimeDivisionController(ZonedDateTime start, ZonedDateTime end, Duration divisionDuration) {
 		super();
-		if (end.isBefore(start)) {
-			throw new IllegalArgumentException("Start time cannot be after end time.");
+		if (end.isBefore(start) || end.isEqual(start)) {
+			throw new IllegalArgumentException("Start time cannot be before or equal end time.");
 		}
 		this.start = start;
 		this.end = end;
