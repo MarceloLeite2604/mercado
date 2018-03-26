@@ -37,8 +37,8 @@ public class ControllerOrderExecutor implements OrderExecutor {
 		Currency firstCurrency = order.getFirstCurrency();
 		Currency secondCurrency = order.getSecondCurrency();
 		CurrencyPair currencyPair = CurrencyPair.retrieveByPair(firstCurrency, secondCurrency);
-		Double quantity = order.getQuantity();
-		Double limitPrice = order.getLimitPrice();
+		Double quantity = order.getQuantity().doubleValue();
+		Double limitPrice = order.getLimitPrice().doubleValue();
 		
 		PlaceSellOrderMethod placeSellOrderMethod = new PlaceSellOrderMethod(account.getTapiInformation());
 		PlaceSellOrderMethodResponse placeSellOrderMethodResponse = placeSellOrderMethod.execute(currencyPair, quantity, limitPrice);
@@ -60,8 +60,8 @@ public class ControllerOrderExecutor implements OrderExecutor {
 	private Order placeBuyOrder(Order order, Account account) {
 		PlaceBuyOrderMethod placeBuyOrderMethod = new PlaceBuyOrderMethod(account.getTapiInformation());
 		CurrencyPair currencyPair = CurrencyPair.retrieveByPair(order.getFirstCurrency(), order.getSecondCurrency());
-		double quantity = order.getQuantity();
-		double limitPrice = order.getLimitPrice();
+		double quantity = order.getQuantity().doubleValue();
+		double limitPrice = order.getLimitPrice().doubleValue();
 		PlaceBuyOrderMethodResponse placeBuyOrderMethodResponse = placeBuyOrderMethod.execute(currencyPair, quantity, limitPrice);
 		if ( placeBuyOrderMethodResponse.getStatusCode() == 100 ) {
 			PlaceBuyOrderResponse placeBuyOrderResponse = placeBuyOrderMethodResponse.getResponse();

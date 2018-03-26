@@ -8,13 +8,14 @@ import org.marceloleite.mercado.base.model.Balance;
 import org.marceloleite.mercado.base.model.House;
 import org.marceloleite.mercado.base.model.OrderExecutor;
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.commons.MercadoBigDecimal;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.data.TemporalTicker;
 import org.marceloleite.mercado.retriever.TemporalTickerRetriever;
 
 public class ControllerHouse implements House {
 
-	private static final double DEFAULT_COMISSION_PERCENTAGE = 0.007;
+	private static final MercadoBigDecimal DEFAULT_COMISSION_PERCENTAGE = new MercadoBigDecimal("0.007");
 
 	private TemporalTickerRetriever temporalTickerRetriever;
 
@@ -41,7 +42,7 @@ public class ControllerHouse implements House {
 	}
 
 	@Override
-	public double getComissionPercentage() {
+	public MercadoBigDecimal getComissionPercentage() {
 		return DEFAULT_COMISSION_PERCENTAGE;
 	}
 
