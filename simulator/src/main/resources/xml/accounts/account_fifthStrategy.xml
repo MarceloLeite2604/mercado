@@ -22,11 +22,11 @@
 					<parameters>
 						<parameter>
 							<name>growthPercentageThreshold</name>
-							<value>0.04</value>
+							<value>0.10</value>
 						</parameter>
 						<parameter>
 							<name>shrinkPercentageThreshold</name>
-							<value>-0.06</value>
+							<value>-0.15</value>
 						</parameter>
 						<parameter>
 							<name>workingAmountCurrency</name>
@@ -34,7 +34,7 @@
 						</parameter>
 						<parameter>
 							<name>circularArraySize</name>
-							<value>30</value>
+							<value>720</value>
 						</parameter>
 					</parameters>
 				</class>

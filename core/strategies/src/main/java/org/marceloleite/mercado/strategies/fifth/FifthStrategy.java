@@ -75,7 +75,7 @@ public class FifthStrategy extends AbstractStrategy {
 				house);
 		if (temporalTickerVariation != null) {
 			temporalTickerVariationCircularArray.add(temporalTickerVariation);
-			temporalTickerCircularArray.add(temporalTicker);
+			temporalTickerCircularArray = addToTemporalTickerCircularArray(temporalTickerCircularArray, temporalTicker);
 			MercadoBigDecimal nextPrice = calculateNextPrice(temporalTicker);
 			MercadoBigDecimal lastVariation = new VariationCalculator().calculate(nextPrice,
 					baseTemporalTicker.getCurrentOrPreviousLastPrice());
@@ -86,7 +86,6 @@ public class FifthStrategy extends AbstractStrategy {
 			MercadoBigDecimal lastPrice = temporalTicker.getCurrentOrPreviousLastPrice();
 			stringBuilderDebug.append(", last: " + new NonDigitalCurrencyFormatter().format(lastPrice));
 			stringBuilderDebug.append(", next: " + new NonDigitalCurrencyFormatter().format(nextPrice));
-			LOGGER.debug(stringBuilderDebug.toString());
 			// MercadoBigDecimal lastVariation = retrieveLastVariation();
 			/*
 			 * LOGGER.debug( simulationTimeInterval + ": Last variation is " + new
@@ -124,6 +123,7 @@ public class FifthStrategy extends AbstractStrategy {
 				break;
 			}
 			if (order != null) {
+				LOGGER.debug(stringBuilderDebug.toString());
 				executeOrder(order, account, house);
 				temporalTickerVariationCircularArray.clear();
 				// temporalTickerCircularArray.clear();
@@ -131,39 +131,45 @@ public class FifthStrategy extends AbstractStrategy {
 		}
 	}
 
-	private MercadoBigDecimal calculateNextPrice(TemporalTicker currentTemporalTicker) {
+	private CircularArray<TemporalTicker> addToTemporalTickerCircularArray(
+			CircularArray<TemporalTicker> temporalTickerCircularArray, TemporalTicker temporalTicker) {
+		temporalTickerCircularArray.add(temporalTicker);
 		if (temporalTickerCircularArray.getSize() < circularArraySize) {
 			for (int counter = temporalTickerCircularArray.getSize(); counter < circularArraySize; counter++) {
-				temporalTickerCircularArray.add(currentTemporalTicker);
+				temporalTickerCircularArray.add(temporalTicker);
 			}
 		}
+		return temporalTickerCircularArray;
+	}
+
+	private MercadoBigDecimal calculateNextPrice(TemporalTicker currentTemporalTicker) {
 		List<TemporalTicker> temporalTickersList = temporalTickerCircularArray.asList();
-		List<Double> lasts = temporalTickersList.stream()
-				.map(temporalTicker -> temporalTicker.getCurrentOrPreviousLastPrice().doubleValue())
-				.collect(Collectors.toList());
-		List<Double> derivativeLasts = new ArrayList<>();
+		List<MercadoBigDecimal> lasts = temporalTickersList.stream()
+				.map(temporalTicker -> temporalTicker.getCurrentOrPreviousLastPrice()).collect(Collectors.toList());
+		List<MercadoBigDecimal> derivativeLasts = new ArrayList<>();
+		MercadoBigDecimal previousLast = new MercadoBigDecimal("0");
+		MercadoBigDecimal sumLast = new MercadoBigDecimal("0");
 		for (int counter = 0; counter < lasts.size(); counter++) {
-			double previousLast = 0;
 			if (counter == 0) {
-				previousLast = baseTemporalTicker.getCurrentOrPreviousLastPrice().doubleValue();
+				previousLast = baseTemporalTicker.getCurrentOrPreviousLastPrice();
 			} else {
 				previousLast = lasts.get(counter - 1);
 			}
-			double currentLast = lasts.get(counter);
+			MercadoBigDecimal currentLast = lasts.get(counter);
 
-			double derivativeLast = currentLast - previousLast;
-			derivativeLasts.add(derivativeLast);
+			derivativeLasts.add(currentLast.subtract(previousLast));
+			sumLast = sumLast.add(currentLast);
 		}
 
-		MercadoBigDecimal derivativeLastSum = new MercadoBigDecimal(
-				derivativeLasts.stream().mapToDouble(derivativeLast -> derivativeLast).sum());
-		MercadoBigDecimal variation = derivativeLastSum
-				.divide(new MercadoBigDecimal(temporalTickerCircularArray.getSize()));
-		/*
-		 * LOGGER.debug("Variation is: " + new
-		 * NonDigitalCurrencyFormatter().format(variation));
-		 */
-		return currentTemporalTicker.getCurrentOrPreviousLastPrice().add(variation);
+		double sum = derivativeLasts.parallelStream().mapToDouble(derivativeLast -> derivativeLast.doubleValue()).sum();
+		MercadoBigDecimal derivativeLastSum = new MercadoBigDecimal(sum);
+		
+		MercadoBigDecimal arraySize = new MercadoBigDecimal(temporalTickerCircularArray.getSize());
+		MercadoBigDecimal variation = derivativeLastSum.divide(arraySize);
+
+		MercadoBigDecimal averageLast = sumLast.divide(arraySize);
+		
+		return averageLast.add(variation);
 	}
 
 	private MercadoBigDecimal retrieveLastVariation() {
