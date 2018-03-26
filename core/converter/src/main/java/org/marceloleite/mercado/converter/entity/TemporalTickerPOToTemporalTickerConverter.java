@@ -59,6 +59,7 @@ public class TemporalTickerPOToTemporalTickerConverter implements Converter<Temp
 		temporalTickerPO.setHighestPrice(temporalTicker.getHighestPrice());
 		temporalTickerPO.setLowestPrice(temporalTicker.getLowestPrice());
 		temporalTickerPO.setAveragePrice(temporalTicker.getAveragePrice());
+		temporalTickerPO.setVolumeTraded(temporalTicker.getVolumeTrades());
 		
 		long seconds = temporalTicker.getTimeDuration().getSeconds();
 		temporalTickerPO.setTimeDuration(new MercadoBigDecimal(seconds));

@@ -76,7 +76,7 @@ public class Simulator {
 
 			TreeMap<TimeInterval, Map<Currency, TemporalTicker>> temporalTickersDataModelByTimeInterval = null;
 			for (TimeInterval stepTimeInterval : timeDivisionController.geTimeIntervals()) {
-				logSimulationStep(stepTimeInterval);
+				// logSimulationStep(stepTimeInterval);
 				TimeDivisionController timeDivisionController = new TimeDivisionController(stepTimeInterval,
 						stepDuration);
 				future = executor.submit(new TemporalTickerRetrieverCallable(timeDivisionController));
