@@ -21,7 +21,7 @@ public class TradesSiteRetriever extends AbstractSiteRetriever {
 
 	private static final Duration DEFAULT_DURATION_STEP = Duration.ofMinutes(30);
 	
-	private static final int THREAD_POOL_SIZE = 8;
+	private static final int THREAD_POOL_SIZE = 2;
 
 	private Duration stepDuration;
 
