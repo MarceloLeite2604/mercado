@@ -130,8 +130,6 @@ public class TemporalTickerRetriever {
 
 	private List<TemporalTicker> retrieveTemporalTickersNotFoundOnBulk(List<TemporalTicker> temporalTickers,
 			Currency currency, TimeDivisionController timeDivisionController) {
-		/*List<TemporalTickerIdPO> temporalTickerIdPOsFromBulk = temporalTickerPOs.stream().map(TemporalTickerPO::getId)
-				.collect(Collectors.toList());*/
 		TemporalTicker temporalTickerToCheck;
 		for (TimeInterval timeInterval : timeDivisionController.geTimeIntervals()) {
 			temporalTickerToCheck = new TemporalTicker();
