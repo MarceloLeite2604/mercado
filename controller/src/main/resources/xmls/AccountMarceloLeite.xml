@@ -23,7 +23,7 @@
 						</parameter>
 						<parameter>
 							<name>workingAmountCurrency</name>
-							<value>60.0</value>
+							<value>200.0</value>
 						</parameter>
 						<parameter>
 							<name>circularArraySize</name>
