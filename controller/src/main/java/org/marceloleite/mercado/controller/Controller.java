@@ -27,6 +27,7 @@ import org.marceloleite.mercado.databaseretriever.persistence.EntityManagerContr
 import org.marceloleite.mercado.databaseretriever.persistence.daos.AccountDAO;
 import org.marceloleite.mercado.databaseretriever.persistence.objects.AccountPO;
 import org.marceloleite.mercado.negotiationapi.model.getaccountinfo.AccountInfo;
+<<<<<<< HEAD
 import org.marceloleite.mercado.siteretriever.trades.TradesSiteRetriever;
 import org.marceloleite.mercado.xml.readers.AccountsXmlReader;
 
@@ -59,6 +60,25 @@ public class Controller {
 		if ( tradesSiteRetrieverThreadPoolSize != null) {
 			TradesSiteRetriever.setConfiguredThreadPoolSize(tradesSiteRetrieverThreadPoolSize);
 		}
+=======
+import org.marceloleite.mercado.xml.readers.AccountsXmlReader;
+
+public class Controller {
+
+	private static final Logger LOGGER = LogManager.getLogger(Controller.class);
+
+	private AccountDAO accountDAO;
+
+	private House house;
+
+	private ControllerPropertiesRetriever controllerPropertiesRetriever;
+
+	public Controller() {
+		this.controllerPropertiesRetriever = new ControllerPropertiesRetriever();
+		configureEntityManagerController();
+		this.accountDAO = new AccountDAO();
+		this.house = new ControllerHouse();
+>>>>>>> branch 'develop_1' of git@github.com:MarceloLeite2604/mercado.git
 	}
 
 	public void start() {

@@ -51,6 +51,7 @@
 
 	</Appenders>
 	<Loggers>
+<<<<<<< HEAD
 		<Root level="info">
 			<AppenderRef ref="LogFile" />
 		</Root>
@@ -89,5 +90,43 @@
 		</Logger>
 		<Logger name="org.marceloleite.mercado.controller.Controller"
 			level="debug" />
+=======
+		<Root level="debug">
+			<AppenderRef ref="LogFile" />
+		</Root>
+		<Logger name="org.hibernate" level="info" additivity="false">
+			<AppenderRef ref="HibernateLogFile" />
+		</Logger>
+		o<Logger name="org.hibernate" level="info" additivity="false">
+			<AppenderRef ref="HibernateLogFile" />
+		</Logger>
+		<Logger name="org.marceloleite.mercado.simulator" level="debug" />
+		<Logger name="org.marceloleite.mercado.simulator.TemporalTickerVariation"
+			level="info" />
+		<Logger name="org.marceloleite.mercado.simulator.House" level="debug" />
+		<Logger name="org.marceloleite.mercado.simulator.Simulator"
+			level="debug" />
+		<Logger
+			name="org.marceloleite.mercado.strategies.OriginalStrategy"
+			level="debug" additivity="false">
+			<AppenderRef ref="OriginalStrategyLogFile" />
+		</Logger>
+		<Logger name="org.marceloleite.mercado.strategies.first"
+			level="debug" additivity="false">
+			<AppenderRef ref="FirstStrategyLogFile" />
+		</Logger>
+		<Logger name="org.marceloleite.mercado.strategies.second"
+			level="debug" additivity="false">
+			<AppenderRef ref="SecondStrategyLogFile" />
+		</Logger>
+		<Logger name="org.marceloleite.mercado.strategies.third"
+			level="debug" additivity="false">
+			<AppenderRef ref="ThirdStrategyLogFile" />
+		</Logger>
+		<Logger name="org.marceloleite.mercado.strategies.fourth"
+			level="debug" additivity="false">
+			<AppenderRef ref="FourthStrategyLogFile" />
+		</Logger>
+>>>>>>> branch 'develop_1' of git@github.com:MarceloLeite2604/mercado.git
 	</Loggers>
 </Configuration>

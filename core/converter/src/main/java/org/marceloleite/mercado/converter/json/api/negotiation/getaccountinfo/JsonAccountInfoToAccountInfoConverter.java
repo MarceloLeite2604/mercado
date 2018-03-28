@@ -4,6 +4,7 @@ import org.marceloleite.mercado.commons.converter.Converter;
 import org.marceloleite.mercado.jsonmodel.api.negotiation.accountinfo.JsonAccountInfo;
 import org.marceloleite.mercado.negotiationapi.model.getaccountinfo.AccountInfo;
 
+<<<<<<< HEAD
 public class JsonAccountInfoToAccountInfoConverter implements Converter<JsonAccountInfo, AccountInfo> {
 
 	@Override
@@ -15,6 +16,15 @@ public class JsonAccountInfoToAccountInfoConverter implements Converter<JsonAcco
 			accountInfo.setWithdrawalLimits(new JsonWithdrawalLimitsToWithdrawalLimitsConverter()
 					.convertTo(jsonAccountInfo.getJsonWithdrawlLimits()));
 		}
+=======
+public class JsonAccountInfoToAccountInfoConverter implements Converter<JsonAccountInfo, AccountInfo>{
+
+	@Override
+	public AccountInfo convertTo(JsonAccountInfo jsonAccountInfo) {
+		AccountInfo accountInfo = new AccountInfo();
+		accountInfo.setBalanceApi(new JsonBalanceToBalanceApiConverter().convertTo(jsonAccountInfo.getJsonBalance()));
+		accountInfo.setWithdrawalLimits(new JsonWithdrawalLimitsToWithdrawalLimitsConverter().convertTo(jsonAccountInfo.getJsonWithdrawlLimits()));
+>>>>>>> branch 'develop_1' of git@github.com:MarceloLeite2604/mercado.git
 		return accountInfo;
 	}
 
