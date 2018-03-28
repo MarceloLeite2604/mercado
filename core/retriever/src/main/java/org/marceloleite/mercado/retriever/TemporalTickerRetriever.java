@@ -36,18 +36,17 @@ public class TemporalTickerRetriever {
 		super();
 		this.temporalTickerDAO = new TemporalTickerDAO();
 	}
-	
+
 	public TemporalTicker retrieve(Currency currency, TimeInterval timeInterval) {
 		return retrieve(currency, timeInterval, false);
 	}
 
-	public TemporalTicker retrieve(Currency currency, TimeInterval timeInterval,
-			boolean ignoreValueOnDatabsase) {
+	public TemporalTicker retrieve(Currency currency, TimeInterval timeInterval, boolean ignoreValueOnDatabsase) {
 		return retrieve(currency, timeInterval, ignoreValueOnDatabsase, FIRST_CALL);
 	}
 
-	private TemporalTicker retrieve(Currency currency, TimeInterval timeInterval,
-			boolean ignoreValueOnDatabsase, int calls) {
+	private TemporalTicker retrieve(Currency currency, TimeInterval timeInterval, boolean ignoreValueOnDatabsase,
+			int calls) {
 
 		TemporalTickerPO temporalTickerPO = null;
 		if (!ignoreValueOnDatabsase) {
@@ -65,14 +64,12 @@ public class TemporalTickerRetriever {
 		if (temporalTickerPO == null) {
 			TradesRetriever tradesRetriever = new TradesRetriever();
 
-			List<Trade> trades = tradesRetriever.retrieve(currency, timeInterval.getStart(),
-					timeInterval.getEnd(), IGNORE_DATABASE_VALUES);
+			List<Trade> trades = tradesRetriever.retrieve(currency, timeInterval.getStart(), timeInterval.getEnd(),
+					IGNORE_DATABASE_VALUES);
 			Map<Long, Trade> tradesMap = new ListToMapTradeConverter().convertTo(trades);
-			TemporalTicker temporalTicker = new TemporalTickerCreator().create(currency, timeInterval,
-					tradesMap);
+			TemporalTicker temporalTicker = new TemporalTickerCreator().create(currency, timeInterval, tradesMap);
 			if (temporalTicker != null) {
-				temporalTickerPO = new TemporalTickerPOToTemporalTickerConverter()
-						.convertFrom(temporalTicker);
+				temporalTickerPO = new TemporalTickerPOToTemporalTickerConverter().convertFrom(temporalTicker);
 				temporalTickerDAO.merge(temporalTickerPO);
 			}
 		}
@@ -80,13 +77,13 @@ public class TemporalTickerRetriever {
 		return new TemporalTickerPOToTemporalTickerConverter().convertTo(temporalTickerPO);
 	}
 
-	public List<TemporalTicker> bulkRetrieve(Currency currency,
-			TimeDivisionController timeDivisionController) {
+	public List<TemporalTicker> bulkRetrieve(Currency currency, TimeDivisionController timeDivisionController) {
 		List<TemporalTickerPO> temporalTickerPOs = temporalTickerDAO.bulkRetrieve(currency, timeDivisionController);
 		ListTemporalTickerPOToListTemporalTickerConverter listTemporalTickerPOToListTemporalTickerConverter = new ListTemporalTickerPOToListTemporalTickerConverter();
-		List<TemporalTicker> temporalTickers = listTemporalTickerPOToListTemporalTickerConverter.convertTo(temporalTickerPOs);
+		List<TemporalTicker> temporalTickers = listTemporalTickerPOToListTemporalTickerConverter
+				.convertTo(temporalTickerPOs);
 		temporalTickers = retrieveTemporalTickersNotFoundOnBulk(temporalTickers, currency, timeDivisionController);
-		
+
 		return sortTemporalTickers(temporalTickers);
 	}
 
@@ -117,10 +114,9 @@ public class TemporalTickerRetriever {
 		for (Currency currency : temporalTickerPOsByCurrency.keySet()) {
 			List<TemporalTicker> temporalTickers = temporalTickerPOsByCurrency.get(currency);
 			for (TemporalTicker temporalTicker : temporalTickers) {
-				TimeInterval timeInterval = new TimeInterval(temporalTicker.getStart(),
-						temporalTicker.getEnd());
-				Map<Currency, TemporalTicker> temporalTickersByCurrency = result
-						.getOrDefault(timeInterval, new EnumMap<>(Currency.class));
+				TimeInterval timeInterval = new TimeInterval(temporalTicker.getStart(), temporalTicker.getEnd());
+				Map<Currency, TemporalTicker> temporalTickersByCurrency = result.getOrDefault(timeInterval,
+						new EnumMap<>(Currency.class));
 				temporalTickersByCurrency.put(temporalTicker.getCurrency(), temporalTicker);
 				result.put(timeInterval, temporalTickersByCurrency);
 			}

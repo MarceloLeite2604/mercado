@@ -20,34 +20,38 @@ import org.marceloleite.mercado.siteretriever.AbstractSiteRetriever;
 public class TradesSiteRetriever extends AbstractSiteRetriever {
 
 	private static final Duration DEFAULT_DURATION_STEP = Duration.ofMinutes(30);
-	
-	private static final int THREAD_POOL_SIZE = 2;
+
+	private static final int DEFAULT_THREAD_POOL_SIZE = 2;
+
+	private static Duration configuredStepDuration = DEFAULT_DURATION_STEP;
+
+	private static int configuredThreadPoolSize = DEFAULT_THREAD_POOL_SIZE;
 
 	private Duration stepDuration;
+
+	private int threadPoolSize;
 
 	public TradesSiteRetriever(Currency currency, Duration stepDuration) {
 		super(currency);
 		this.stepDuration = stepDuration;
+		this.threadPoolSize = configuredThreadPoolSize;
 	}
-
+	
 	public TradesSiteRetriever(Currency currency) {
-		this(currency, DEFAULT_DURATION_STEP);
-	}
-
-	public void setStepDuration(Duration stepDuration) {
-		this.stepDuration = stepDuration;
+		this(currency, configuredStepDuration);
 	}
 
 	public Map<Long, Trade> retrieve(TimeInterval timeInterval) {
 		Set<Future<Map<Long, Trade>>> futureSet = new HashSet<>();
-		
+
 		checkArguments(timeInterval);
-		
-		ExecutorService executorService = Executors.newFixedThreadPool(THREAD_POOL_SIZE);
+
+		ExecutorService executorService = Executors.newFixedThreadPool(threadPoolSize);
 
 		TimeDivisionController timeDivisionController = new TimeDivisionController(timeInterval, stepDuration);
 		for (TimeInterval timeIntervalDivision : timeDivisionController.geTimeIntervals()) {
-			Callable<Map<Long, Trade>> partialTradesSiteRetrieverCallable = new PartialTradesSiteRetrieverCallable(currency, timeIntervalDivision);
+			Callable<Map<Long, Trade>> partialTradesSiteRetrieverCallable = new PartialTradesSiteRetrieverCallable(
+					currency, timeIntervalDivision);
 			futureSet.add(executorService.submit(partialTradesSiteRetrieverCallable));
 		}
 
@@ -67,7 +71,7 @@ public class TradesSiteRetriever extends AbstractSiteRetriever {
 	}
 
 	private void checkArguments(TimeInterval timeInterval) {
-		if ( timeInterval == null ) {
+		if (timeInterval == null) {
 			throw new IllegalArgumentException("Time interval cannot be null.");
 		}
 	}
@@ -75,5 +79,13 @@ public class TradesSiteRetriever extends AbstractSiteRetriever {
 	@Override
 	protected String getMethod() {
 		throw new UnsupportedOperationException();
+	}
+
+	public static void setConfiguredStepDuration(Duration configuredStepDuration) {
+		TradesSiteRetriever.configuredStepDuration = configuredStepDuration;
+	}
+
+	public static void setConfiguredThreadPoolSize(int configuredThreadPoolSize) {
+		TradesSiteRetriever.configuredThreadPoolSize = configuredThreadPoolSize;
 	}
 }

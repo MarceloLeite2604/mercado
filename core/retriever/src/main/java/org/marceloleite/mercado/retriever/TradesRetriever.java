@@ -1,6 +1,5 @@
 package org.marceloleite.mercado.retriever;
 
-import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
@@ -26,15 +25,8 @@ public class TradesRetriever {
 
 	private TradeDAO tradeDAO;
 
-	private Duration tradesSiteRetrieverStepDuration;
-
 	public TradesRetriever() {
-		this.tradeDAO = new TradeDAO();
-		this.tradesSiteRetrieverStepDuration = null;
-	}
-
-	public void setTradesSiteRetrieverStepDuration(Duration tradesSiteRetrieverStepDuration) {
-		this.tradesSiteRetrieverStepDuration = tradesSiteRetrieverStepDuration;
+		this.tradeDAO = new TradeDAO(); 
 	}
 
 	public List<Trade> retrieve(Currency currency, TimeInterval timeInterval, boolean ignoreValuesFromDatabase) {
@@ -93,10 +85,8 @@ public class TradesRetriever {
 
 	private List<Trade> retrieveTradesFromSite(Currency currency, ZonedDateTime start, ZonedDateTime end) {
 		TimeInterval timeInterval = new TimeInterval(start, end);
+		
 		TradesSiteRetriever tradesSiteRetriever = new TradesSiteRetriever(currency);
-		if (tradesSiteRetrieverStepDuration != null) {
-			tradesSiteRetriever.setStepDuration(tradesSiteRetrieverStepDuration);
-		}
 		Map<Long, Trade> jsonTrades = tradesSiteRetriever.retrieve(timeInterval);
 		return new ListToMapTradeConverter().convertFrom(jsonTrades);
 	}

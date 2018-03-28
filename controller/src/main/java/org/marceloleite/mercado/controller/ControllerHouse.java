@@ -1,5 +1,6 @@
 package org.marceloleite.mercado.controller;
 
+import java.time.Duration;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,11 +25,15 @@ public class ControllerHouse implements House {
 	private Map<String, Balance> comissionBalance;
 
 	private OrderExecutor orderExecutor;
-
+	
 	public ControllerHouse() {
 		super();
 		this.orderExecutor = new MailOrderExecutor();
 		this.temporalTickerRetriever = new TemporalTickerRetriever();
+	}
+	
+	public void setTemporalTickerRetriever(TemporalTickerRetriever temporalTickerRetriever) {
+		this.temporalTickerRetriever = temporalTickerRetriever;
 	}
 
 	@Override

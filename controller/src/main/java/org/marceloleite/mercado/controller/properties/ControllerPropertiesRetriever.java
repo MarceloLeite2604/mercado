@@ -1,5 +1,7 @@
 package org.marceloleite.mercado.controller.properties;
 
+import java.time.Duration;
+
 import org.marceloleite.mercado.commons.properties.AbstractEnumPropertiesReader;
 
 public class ControllerPropertiesRetriever extends AbstractEnumPropertiesReader<ControllerProperty> {
@@ -17,6 +19,17 @@ public class ControllerPropertiesRetriever extends AbstractEnumPropertiesReader<
 
 	public String retrieveXmlDirectoryPath() {
 		return getProperty(ControllerProperty.XML_DIRECTORY_PATH).getValue();
+	}
+	
+	public Integer retrieveTradesSiteRetrieverThreadPoolSize() {
+		ControllerProperty property = getProperty(ControllerProperty.TRADES_SITE_RETRIEVER_THREAD_POOL_SIZE);
+		return Integer.parseInt(property.getValue());
+	}
+	
+	public Duration retrieveTradesSiteRetrieverDurationStep() {
+		ControllerProperty property = getProperty(ControllerProperty.TRADES_SITE_RETRIEVER_DURATION_STEP);
+		int durationStep = Integer.parseInt(property.getValue());
+		return Duration.ofMinutes(durationStep);
 	}
 
 }
