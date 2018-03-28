@@ -51,13 +51,13 @@
 
 	</Appenders>
 	<Loggers>
-		<Root level="debug">
+		<Root level="info">
 			<AppenderRef ref="LogFile" />
 		</Root>
 		<Logger name="org.hibernate" level="info" additivity="false">
 			<AppenderRef ref="HibernateLogFile" />
 		</Logger>
-		o<Logger name="org.hibernate" level="info" additivity="false">
+		<Logger name="org.hibernate" level="info" additivity="false">
 			<AppenderRef ref="HibernateLogFile" />
 		</Logger>
 		<Logger name="org.marceloleite.mercado.simulator" level="debug" />
@@ -87,5 +87,7 @@
 			level="debug" additivity="false">
 			<AppenderRef ref="FourthStrategyLogFile" />
 		</Logger>
+		<Logger name="org.marceloleite.mercado.controller.Controller"
+			level="debug" />
 	</Loggers>
 </Configuration>

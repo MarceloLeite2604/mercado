@@ -7,6 +7,7 @@ import java.io.OutputStreamWriter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.net.UnknownHostException;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -31,15 +32,18 @@ public abstract class AbstractTapiMethod<T extends AbstractTapiResponse<?, ?>> {
 
 	private static final String PARAMETER_TAPI_NONCE = "tapi_nonce";
 
+	private static final int MAXIMUM_RETRIES = 5;
+
 	private TapiMethod tapiMethod;
 
 	private Class<?> responseClass;
 
 	private String[] parameterNames;
-	
+
 	private TapiInformation tapiInformation;
-	
-	public AbstractTapiMethod(TapiInformation tapiInformation, TapiMethod tapiMethod, Class<?> responseClass, String[] parameterNames) {
+
+	public AbstractTapiMethod(TapiInformation tapiInformation, TapiMethod tapiMethod, Class<?> responseClass,
+			String[] parameterNames) {
 		this.tapiInformation = tapiInformation;
 		this.tapiMethod = tapiMethod;
 		this.responseClass = responseClass;
@@ -96,16 +100,31 @@ public abstract class AbstractTapiMethod<T extends AbstractTapiResponse<?, ?>> {
 		URL url = new UrlGenerator().generate(generateAddress(), tapiMethodParameters);
 		LOGGER.debug("Url generated is: " + url);
 		HttpsURLConnection httpsUrlConnection = new HttpConnection(tapiInformation).createHttpsUrlConnection(url);
-		try {
-			httpsUrlConnection.connect();
-			sendHttpUrlConnectionProperties(httpsUrlConnection, tapiMethodParameters);
-			String response = readHttpUrlConnectionResponse(httpsUrlConnection);
-			LOGGER.debug("Response received: " + response);
-			JsonTapiResponse jsonTapiResponse = generateJsonTapiResponse(response);
-			return generateMethodResponse(jsonTapiResponse);
-		} catch (IOException exception) {
-			throw new RuntimeException("Error while connecting to URL \"" + url + "\".", exception);
+		String response = null;
+		JsonTapiResponse jsonTapiResponse = null;
+		int retries = 0;
+		boolean methodExecuted = false;
+		while (!methodExecuted && retries < MAXIMUM_RETRIES) {
+			try {
+				httpsUrlConnection.connect();
+				sendHttpUrlConnectionProperties(httpsUrlConnection, tapiMethodParameters);
+				response = readHttpUrlConnectionResponse(httpsUrlConnection);
+				LOGGER.debug("Response received: " + response);
+				methodExecuted = true;
+			} catch (UnknownHostException exception) {
+				LOGGER.debug("Unknown host exception: " + exception.getMessage());
+				retries++;
+			} catch (IOException exception) {
+				throw new RuntimeException("Error while connecting to URL \"" + url + "\".", exception);
+			}
 		}
+		
+		if ( retries >= MAXIMUM_RETRIES) {
+			throw new RuntimeException("Could not connect to host \"" + url.getHost() + "\".");
+		}
+		
+		jsonTapiResponse = generateJsonTapiResponse(response);
+		return generateMethodResponse(jsonTapiResponse);
 	}
 
 	@SuppressWarnings("unchecked")
