@@ -169,11 +169,7 @@ public class TemporalTicker {
 		return lastPrice;
 	}
 
-<<<<<<< HEAD
 	public MercadoBigDecimal retrieveCurrentOrPreviousLastPrice() {
-=======
-	public MercadoBigDecimal getCurrentOrPreviousLastPrice() {
->>>>>>> branch 'develop_1' of git@github.com:MarceloLeite2604/mercado.git
 		if (lastPrice != null && lastPrice.compareTo(MercadoBigDecimal.ZERO) != 0) {
 			return lastPrice;
 		} else {

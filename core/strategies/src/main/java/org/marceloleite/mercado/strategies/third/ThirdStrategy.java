@@ -62,7 +62,8 @@ public class ThirdStrategy extends AbstractStrategy {
 			Order order = null;
 			switch (status) {
 			case UNDEFINED:
-				if (lastVariation.compareTo(MercadoBigDecimal.NOT_A_NUMBER) != 0  && lastVariation.compareTo(MercadoBigDecimal.ZERO) > 0) {
+				if (lastVariation.compareTo(MercadoBigDecimal.NOT_A_NUMBER) != 0
+						&& lastVariation.compareTo(MercadoBigDecimal.ZERO) > 0) {
 					LOGGER.debug(simulationTimeInterval + ": Last variation is "
 							+ new PercentageFormatter().format(lastVariation));
 					updateBase(house);
@@ -70,17 +71,21 @@ public class ThirdStrategy extends AbstractStrategy {
 				}
 				break;
 			case SAVED:
-				if (!lastVariation.equals(MercadoBigDecimal.NOT_A_NUMBER) && lastVariation.compareTo(MercadoBigDecimal.ZERO) < 0) {
+				if (!lastVariation.equals(MercadoBigDecimal.NOT_A_NUMBER)
+						&& lastVariation.compareTo(MercadoBigDecimal.ZERO) < 0) {
 					updateBase(house);
-				} else if (!lastVariation.equals(MercadoBigDecimal.NOT_A_NUMBER) && lastVariation.compareTo(growthPercentageThreshold) >= 0) {
+				} else if (!lastVariation.equals(MercadoBigDecimal.NOT_A_NUMBER)
+						&& lastVariation.compareTo(growthPercentageThreshold) >= 0) {
 					updateBase(house);
 					order = createBuyOrder(simulationTimeInterval, account, house);
 				}
 				break;
 			case APPLIED:
-				if (!lastVariation.equals(MercadoBigDecimal.NOT_A_NUMBER) && lastVariation.compareTo(MercadoBigDecimal.ZERO) > 0) {
+				if (!lastVariation.equals(MercadoBigDecimal.NOT_A_NUMBER)
+						&& lastVariation.compareTo(MercadoBigDecimal.ZERO) > 0) {
 					updateBase(house);
-				} else if (!lastVariation.equals(MercadoBigDecimal.NOT_A_NUMBER) && lastVariation.compareTo(shrinkPercentageThreshold) <= 0) {
+				} else if (!lastVariation.equals(MercadoBigDecimal.NOT_A_NUMBER)
+						&& lastVariation.compareTo(shrinkPercentageThreshold) <= 0) {
 					updateBase(house);
 					order = createSellOrder(simulationTimeInterval, account, house);
 				}
@@ -115,7 +120,7 @@ public class ThirdStrategy extends AbstractStrategy {
 			LOGGER.warn(exception.getMessage());
 			return null;
 		}
-		
+
 		Order order = new SellOrderBuilder().toExecuteOn(simulationTimeInterval.getStart())
 				.selling(orderAnalyser.getSecond()).receivingUnitPriceOf(orderAnalyser.getUnitPrice()).build();
 		LOGGER.info(new ZonedDateTimeToStringConverter().convertTo(simulationTimeInterval.getStart()) + ": Created "
@@ -157,7 +162,7 @@ public class ThirdStrategy extends AbstractStrategy {
 
 		TemporalTickerVariation temporalTickerVariation = new TemporalTickerVariation(baseTemporalTicker,
 				currentTemporalTicker);
-		/*LOGGER.debug("Variation : " + temporalTickerVariation + ".");*/
+		/* LOGGER.debug("Variation : " + temporalTickerVariation + "."); */
 		return temporalTickerVariation;
 	}
 
@@ -232,11 +237,7 @@ public class ThirdStrategy extends AbstractStrategy {
 	}
 
 	private CurrencyAmount calculateCurrencyAmountUnitPrice(House house) {
-<<<<<<< HEAD
 		MercadoBigDecimal lastPrice = house.getTemporalTickers().get(currency).retrieveCurrentOrPreviousLastPrice();
-=======
-		MercadoBigDecimal lastPrice = house.getTemporalTickers().get(currency).getCurrentOrPreviousLastPrice();
->>>>>>> branch 'develop_1' of git@github.com:MarceloLeite2604/mercado.git
 		return new CurrencyAmount(Currency.REAL, lastPrice);
 	}
 }
