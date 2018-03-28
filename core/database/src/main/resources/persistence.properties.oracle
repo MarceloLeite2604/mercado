@@ -3,9 +3,5 @@ javax.persistence.jdbc.url=jdbc:oracle:thin:@oraclelinux:1521:orcl
 javax.persistence.jdbc.user=69/UF5LQ7rY=
 javax.persistence.jdbc.password=HQbtfCrbBsz1YcnbP/8dkUXogkD+qRqj
 hibernate.hbm2ddl.auto=update
-<<<<<<< HEAD
 hibernate.show_sql=false
-=======
-hibernate.show_sql=true
->>>>>>> branch 'develop_1' of git@github.com:MarceloLeite2604/mercado.git
 hibernate.dialect=org.hibernate.dialect.OracleDialect
