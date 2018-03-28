@@ -4,13 +4,17 @@ import org.marceloleite.mercado.commons.converter.Converter;
 import org.marceloleite.mercado.jsonmodel.api.negotiation.accountinfo.JsonAccountInfo;
 import org.marceloleite.mercado.negotiationapi.model.getaccountinfo.AccountInfo;
 
-public class JsonAccountInfoToAccountInfoConverter implements Converter<JsonAccountInfo, AccountInfo>{
+public class JsonAccountInfoToAccountInfoConverter implements Converter<JsonAccountInfo, AccountInfo> {
 
 	@Override
 	public AccountInfo convertTo(JsonAccountInfo jsonAccountInfo) {
 		AccountInfo accountInfo = new AccountInfo();
-		accountInfo.setBalanceApi(new JsonBalanceToBalanceApiConverter().convertTo(jsonAccountInfo.getJsonBalance()));
-		accountInfo.setWithdrawalLimits(new JsonWithdrawalLimitsToWithdrawalLimitsConverter().convertTo(jsonAccountInfo.getJsonWithdrawlLimits()));
+		if (jsonAccountInfo != null) {
+			accountInfo
+					.setBalanceApi(new JsonBalanceToBalanceApiConverter().convertTo(jsonAccountInfo.getJsonBalance()));
+			accountInfo.setWithdrawalLimits(new JsonWithdrawalLimitsToWithdrawalLimitsConverter()
+					.convertTo(jsonAccountInfo.getJsonWithdrawlLimits()));
+		}
 		return accountInfo;
 	}
 

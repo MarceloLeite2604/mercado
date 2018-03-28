@@ -16,20 +16,25 @@ public abstract class AbstractTapiResponse<T, T2> {
 	private ZonedDateTime timestamp;
 
 	private String responseData;
-	
+
 	private Class<?> jsonResponseDataClass;
-	
+
 	private T2 response;
 
-	public AbstractTapiResponse(JsonTapiResponse jsonTapiResponse, Class<?> jsonResponseDataClass, Converter<T, T2> jsonTapiResponseConverter) {
+	public AbstractTapiResponse(JsonTapiResponse jsonTapiResponse, Class<?> jsonResponseDataClass,
+			Converter<T, T2> jsonTapiResponseConverter) {
 		super();
 		this.statusCode = jsonTapiResponse.getStatusCode();
 		this.errorMessage = jsonTapiResponse.getErrorMessage();
+		if (errorMessage != null) {
+			throw new RuntimeException("Error while retrieving TAPI response: " + statusCode + " - " + errorMessage);
+		}
 		long longTimestamp = Long.parseLong(jsonTapiResponse.getServerUnixTimestamp());
 		this.timestamp = new LongToZonedDateTimeConverter().convertTo(longTimestamp);
 		this.responseData = jsonTapiResponse.getResponseData();
 		this.jsonResponseDataClass = jsonResponseDataClass;
-		this.response = jsonTapiResponseConverter.convertTo(getJsonResponseData());
+		T jsonResponseData = getJsonResponseData();
+		this.response = jsonTapiResponseConverter.convertTo(jsonResponseData);
 	}
 
 	public long getStatusCode() {
@@ -43,11 +48,11 @@ public abstract class AbstractTapiResponse<T, T2> {
 	public ZonedDateTime getTimestamp() {
 		return timestamp;
 	}
-	
+
 	protected String getResponseData() {
 		return responseData;
 	}
-	
+
 	public T2 getResponse() {
 		return response;
 	}
