@@ -24,11 +24,15 @@ public class ControllerHouse implements House {
 	private Map<String, Balance> comissionBalance;
 
 	private OrderExecutor orderExecutor;
-
+	
 	public ControllerHouse() {
 		super();
 		this.orderExecutor = new MailOrderExecutor();
 		this.temporalTickerRetriever = new TemporalTickerRetriever();
+	}
+	
+	public void setTemporalTickerRetriever(TemporalTickerRetriever temporalTickerRetriever) {
+		this.temporalTickerRetriever = temporalTickerRetriever;
 	}
 
 	@Override

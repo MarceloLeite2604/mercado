@@ -232,7 +232,11 @@ public class ThirdStrategy extends AbstractStrategy {
 	}
 
 	private CurrencyAmount calculateCurrencyAmountUnitPrice(House house) {
+<<<<<<< HEAD
+		MercadoBigDecimal lastPrice = house.getTemporalTickers().get(currency).retrieveCurrentOrPreviousLastPrice();
+=======
 		MercadoBigDecimal lastPrice = house.getTemporalTickers().get(currency).getCurrentOrPreviousLastPrice();
+>>>>>>> branch 'develop_1' of git@github.com:MarceloLeite2604/mercado.git
 		return new CurrencyAmount(Currency.REAL, lastPrice);
 	}
 }

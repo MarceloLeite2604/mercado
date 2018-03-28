@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="info">
 	<Appenders>
-		<File name="LogFile" fileName="output/logs/mercado-controller.log"
-			append="false">
+		<File name="LogFile"
+			fileName="output/logs/mercado-controller.log" append="false">
 			<PatternLayout>
 				<Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
 			</PatternLayout>
@@ -51,19 +51,21 @@
 
 	</Appenders>
 	<Loggers>
-		<Root level="debug">
+		<Root level="info">
 			<AppenderRef ref="LogFile" />
 		</Root>
 		<Logger name="org.hibernate" level="info" additivity="false">
 			<AppenderRef ref="HibernateLogFile" />
 		</Logger>
-		o<Logger name="org.hibernate" level="info" additivity="false">
+		<Logger name="org.hibernate" level="info" additivity="false">
 			<AppenderRef ref="HibernateLogFile" />
 		</Logger>
 		<Logger name="org.marceloleite.mercado.simulator" level="debug" />
-		<Logger name="org.marceloleite.mercado.simulator.TemporalTickerVariation"
+		<Logger
+			name="org.marceloleite.mercado.simulator.TemporalTickerVariation"
 			level="info" />
-		<Logger name="org.marceloleite.mercado.simulator.House" level="debug" />
+		<Logger name="org.marceloleite.mercado.simulator.House"
+			level="debug" />
 		<Logger name="org.marceloleite.mercado.simulator.Simulator"
 			level="debug" />
 		<Logger
@@ -87,5 +89,7 @@
 			level="debug" additivity="false">
 			<AppenderRef ref="FourthStrategyLogFile" />
 		</Logger>
+		<Logger name="org.marceloleite.mercado.controller.Controller"
+			level="debug" />
 	</Loggers>
 </Configuration>

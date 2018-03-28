@@ -16,6 +16,45 @@ public abstract class AbstractTapiResponse<T, T2> {
 	private ZonedDateTime timestamp;
 
 	private String responseData;
+<<<<<<< HEAD
+
+	private Class<?> jsonResponseDataClass;
+
+	private T2 response;
+
+	public AbstractTapiResponse(JsonTapiResponse jsonTapiResponse, Class<?> jsonResponseDataClass,
+			Converter<T, T2> jsonTapiResponseConverter) {
+		super();
+		this.statusCode = jsonTapiResponse.getStatusCode();
+		this.errorMessage = jsonTapiResponse.getErrorMessage();
+		if (errorMessage != null) {
+			throw new RuntimeException("Error while retrieving TAPI response: " + statusCode + " - " + errorMessage);
+		}
+		long longTimestamp = Long.parseLong(jsonTapiResponse.getServerUnixTimestamp());
+		this.timestamp = new LongToZonedDateTimeConverter().convertTo(longTimestamp);
+		this.responseData = jsonTapiResponse.getResponseData();
+		this.jsonResponseDataClass = jsonResponseDataClass;
+		T jsonResponseData = getJsonResponseData();
+		this.response = jsonTapiResponseConverter.convertTo(jsonResponseData);
+	}
+
+	public long getStatusCode() {
+		return statusCode;
+	}
+
+	public String getErrorMessage() {
+		return errorMessage;
+	}
+
+	public ZonedDateTime getTimestamp() {
+		return timestamp;
+	}
+
+	protected String getResponseData() {
+		return responseData;
+	}
+
+=======
 	
 	private Class<?> jsonResponseDataClass;
 	
@@ -48,6 +87,7 @@ public abstract class AbstractTapiResponse<T, T2> {
 		return responseData;
 	}
 	
+>>>>>>> branch 'develop_1' of git@github.com:MarceloLeite2604/mercado.git
 	public T2 getResponse() {
 		return response;
 	}

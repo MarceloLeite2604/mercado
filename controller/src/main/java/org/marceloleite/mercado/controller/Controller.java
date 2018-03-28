@@ -27,6 +27,7 @@ import org.marceloleite.mercado.databaseretriever.persistence.EntityManagerContr
 import org.marceloleite.mercado.databaseretriever.persistence.daos.AccountDAO;
 import org.marceloleite.mercado.databaseretriever.persistence.objects.AccountPO;
 import org.marceloleite.mercado.negotiationapi.model.getaccountinfo.AccountInfo;
+import org.marceloleite.mercado.siteretriever.trades.TradesSiteRetriever;
 import org.marceloleite.mercado.xml.readers.AccountsXmlReader;
 
 public class Controller {
@@ -42,8 +43,24 @@ public class Controller {
 	public Controller() {
 		this.controllerPropertiesRetriever = new ControllerPropertiesRetriever();
 		configureEntityManagerController();
+		configureTradesSiteRetriever();
 		this.accountDAO = new AccountDAO();
 		this.house = new ControllerHouse();
+
+	}
+
+	private void configureTradesSiteRetriever() {
+		Duration tradesSiteRetrieverDurationStep = controllerPropertiesRetriever
+				.retrieveTradesSiteRetrieverDurationStep();
+		if (tradesSiteRetrieverDurationStep != null) {
+			TradesSiteRetriever.setConfiguredStepDuration(tradesSiteRetrieverDurationStep);
+		}
+
+		Integer tradesSiteRetrieverThreadPoolSize = controllerPropertiesRetriever
+				.retrieveTradesSiteRetrieverThreadPoolSize();
+		if (tradesSiteRetrieverThreadPoolSize != null) {
+			TradesSiteRetriever.setConfiguredThreadPoolSize(tradesSiteRetrieverThreadPoolSize);
+		}
 	}
 
 	public void start() {

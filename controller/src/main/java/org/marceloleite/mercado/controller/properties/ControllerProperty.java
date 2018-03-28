@@ -5,7 +5,9 @@ import org.marceloleite.mercado.commons.properties.Property;
 public enum ControllerProperty implements Property {
 
 	PERSISTENCE_FILE("controller.persistenceFile", "persistence.properties"),
-	XML_DIRECTORY_PATH("controller.xmlDirectoryPath", null);
+	XML_DIRECTORY_PATH("controller.xmlDirectoryPath", null),
+	TRADES_SITE_RETRIEVER_THREAD_POOL_SIZE("controller.tradesSiteRetriever.threadPoolSize", "8"),
+	TRADES_SITE_RETRIEVER_DURATION_STEP("controller.tradesSiteRetriever.durationStep", "30");
 	
 	private ControllerProperty(String name, String defaultValue) {
 		this.name = name;
