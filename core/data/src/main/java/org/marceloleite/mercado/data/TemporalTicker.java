@@ -169,7 +169,7 @@ public class TemporalTicker {
 		return lastPrice;
 	}
 
-	public MercadoBigDecimal getCurrentOrPreviousLastPrice() {
+	public MercadoBigDecimal retrieveCurrentOrPreviousLastPrice() {
 		if (lastPrice != null && lastPrice.compareTo(MercadoBigDecimal.ZERO) != 0) {
 			return lastPrice;
 		} else {

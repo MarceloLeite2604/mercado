@@ -75,12 +75,12 @@ public class SixthStrategy extends AbstractStrategy {
 			temporalTickerCircularArray = addToTemporalTickerCircularArray(temporalTickerCircularArray, temporalTicker);
 			MercadoBigDecimal nextPrice = calculateNextPrice(temporalTicker);
 			MercadoBigDecimal lastVariation = new VariationCalculator().calculate(nextPrice,
-					baseTemporalTicker.getCurrentOrPreviousLastPrice());
+					baseTemporalTicker.retrieveCurrentOrPreviousLastPrice());
 			StringBuilder stringBuilderDebug = new StringBuilder();
 			stringBuilderDebug.append("Variation: " + new PercentageFormatter().format(lastVariation));
-			MercadoBigDecimal baseLastPrice = baseTemporalTicker.getCurrentOrPreviousLastPrice();
+			MercadoBigDecimal baseLastPrice = baseTemporalTicker.retrieveCurrentOrPreviousLastPrice();
 			stringBuilderDebug.append(", base: " + new NonDigitalCurrencyFormatter().format(baseLastPrice));
-			MercadoBigDecimal lastPrice = temporalTicker.getCurrentOrPreviousLastPrice();
+			MercadoBigDecimal lastPrice = temporalTicker.retrieveCurrentOrPreviousLastPrice();
 			stringBuilderDebug.append(", last: " + new NonDigitalCurrencyFormatter().format(lastPrice));
 			stringBuilderDebug.append(", next: " + new NonDigitalCurrencyFormatter().format(nextPrice));
 			// MercadoBigDecimal lastVariation = retrieveLastVariation();
@@ -140,13 +140,13 @@ public class SixthStrategy extends AbstractStrategy {
 	private MercadoBigDecimal calculateNextPrice(TemporalTicker currentTemporalTicker) {
 		List<TemporalTicker> temporalTickersList = temporalTickerCircularArray.asList();
 		List<MercadoBigDecimal> lasts = temporalTickersList.stream()
-				.map(temporalTicker -> temporalTicker.getCurrentOrPreviousLastPrice()).collect(Collectors.toList());
+				.map(temporalTicker -> temporalTicker.retrieveCurrentOrPreviousLastPrice()).collect(Collectors.toList());
 		List<MercadoBigDecimal> derivativeLasts = new ArrayList<>();
 		MercadoBigDecimal previousLast = new MercadoBigDecimal("0");
 		MercadoBigDecimal sumLast = new MercadoBigDecimal("0");
 		for (int counter = 0; counter < lasts.size(); counter++) {
 			if (counter == 0) {
-				previousLast = baseTemporalTicker.getCurrentOrPreviousLastPrice();
+				previousLast = baseTemporalTicker.retrieveCurrentOrPreviousLastPrice();
 			} else {
 				previousLast = lasts.get(counter - 1);
 			}
@@ -335,7 +335,7 @@ public class SixthStrategy extends AbstractStrategy {
 	}
 
 	private CurrencyAmount calculateCurrencyAmountUnitPrice(House house) {
-		MercadoBigDecimal lastPrice = house.getTemporalTickers().get(currency).getCurrentOrPreviousLastPrice();
+		MercadoBigDecimal lastPrice = house.getTemporalTickers().get(currency).retrieveCurrentOrPreviousLastPrice();
 		return new CurrencyAmount(Currency.REAL, lastPrice);
 	}
 }
