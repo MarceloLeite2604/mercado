@@ -4,7 +4,7 @@
 
 	<groupId>org.marceloleite.mercado</groupId>
 	<artifactId>simulator</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0</version>
 	<packaging>jar</packaging>
 
 	<name>simulator</name>
@@ -20,17 +20,17 @@
 		<dependency>
 			<groupId>org.marceloleite.mercado</groupId>
 			<artifactId>retriever</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.marceloleite.mercado</groupId>
 			<artifactId>xml-reader</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.marceloleite.mercado</groupId>
 			<artifactId>strategies</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.javassist</groupId>
@@ -55,6 +55,8 @@
 					<descriptorRefs>
 						<descriptorRef>jar-with-dependencies</descriptorRef>
 					</descriptorRefs>
+					<finalName>mercado-${project.artifactId}-${project.version}</finalName>
+					<appendAssemblyId>false</appendAssemblyId>
 					<archive>
 						<manifest>
 							<mainClass>org.marceloleite.mercado.simulator.Main</mainClass>

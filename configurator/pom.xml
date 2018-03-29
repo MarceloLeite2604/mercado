@@ -4,7 +4,7 @@
 
 	<groupId>org.marceloleite.mercado</groupId>
 	<artifactId>configurator</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0</version>
 	<packaging>jar</packaging>
 
 	<name>configurator</name>
@@ -20,7 +20,7 @@
 		<dependency>
 			<groupId>org.marceloleite.mercado</groupId>
 			<artifactId>retriever</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>

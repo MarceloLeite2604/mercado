@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.marceloleite.mercado</groupId>
 		<artifactId>core</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>1.0</version>
 	</parent>
 
 	<artifactId>database</artifactId>
@@ -38,12 +38,12 @@
 		<dependency>
 			<groupId>org.marceloleite.mercado</groupId>
 			<artifactId>commons</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.marceloleite.mercado</groupId>
 			<artifactId>extra-libs</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>1.0</version>
 			<type>pom</type>
 		</dependency>
 		<dependency>

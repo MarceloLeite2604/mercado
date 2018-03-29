@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.marceloleite.mercado</groupId>
 		<artifactId>core</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>1.0</version>
 	</parent>
 
 	<artifactId>retriever</artifactId>
@@ -21,12 +21,12 @@
 		<dependency>
 			<groupId>org.marceloleite.mercado</groupId>
 			<artifactId>site-retriever</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.marceloleite.mercado</groupId>
 			<artifactId>converter</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
