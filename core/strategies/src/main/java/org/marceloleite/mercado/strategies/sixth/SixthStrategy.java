@@ -84,10 +84,8 @@ public class SixthStrategy extends AbstractStrategy {
 			stringBuilderDebug.append(", last: " + new NonDigitalCurrencyFormatter().format(lastPrice));
 			stringBuilderDebug.append(", next: " + new NonDigitalCurrencyFormatter().format(nextPrice));
 			// MercadoBigDecimal lastVariation = retrieveLastVariation();
-			/*
-			 * LOGGER.debug( simulationTimeInterval + ": Last variation is " + new
-			 * PercentageFormatter().format(lastVariation));
-			 */
+			LOGGER.debug(
+					simulationTimeInterval + ": Last variation is " + new PercentageFormatter().format(lastVariation));
 			Order order = null;
 			switch (status) {
 			case UNDEFINED:
