@@ -60,6 +60,8 @@
 					<descriptorRefs>
 						<descriptorRef>jar-with-dependencies</descriptorRef>
 					</descriptorRefs>
+					<finalName>mercado-${pom.artifactId}-${pom.version}</finalName>
+					<appendAssemblyId>false</appendAssemblyId>
 					<archive>
 						<manifest>
 							<mainClass>org.marceloleite.mercado.controller.Main</mainClass>
