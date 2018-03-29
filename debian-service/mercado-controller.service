@@ -1,0 +1,15 @@
+[Unit]
+Description=Mercado Controller
+After=networking.service
+Requires=networking.service
+
+[Service]
+Type=forking
+#Environment="MERCADO_ENCRYPT_KEY="
+WorkingDirectory=/opt/marcelo/git/mercado/controller/
+ExecStart=/opt/marcelo/git/mercado/debian-service/start.sh
+ExecStop=/opt/marcelo/git/mercado/debian-service/stop.sh
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
