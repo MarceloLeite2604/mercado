@@ -167,24 +167,27 @@ public class SixthStrategy extends AbstractStrategy {
 		MercadoBigDecimal sumLast = new MercadoBigDecimal("0");
 		for (int counter = 0; counter < lasts.size(); counter++) {
 			if (counter == 0) {
-				previousLast = baseTemporalTicker.retrieveCurrentOrPreviousLastPrice();
+				previousLast = lasts.get(counter);
 			} else {
 				previousLast = lasts.get(counter - 1);
 			}
 			MercadoBigDecimal currentLast = lasts.get(counter);
 
-			derivativeLasts.add(currentLast.subtract(previousLast));
+			MercadoBigDecimal subtract = currentLast.subtract(previousLast);
+			// LOGGER.debug("Subtract: " + new DigitalCurrencyFormatter().format(subtract));
+			derivativeLasts.add(subtract);
 			sumLast = sumLast.add(currentLast);
 		}
-		LOGGER.debug("Sumlast: " + new DigitalCurrencyFormatter().format(sumLast));
+		// LOGGER.debug("Sumlast: " + new DigitalCurrencyFormatter().format(sumLast));
 
 		double sum = derivativeLasts.parallelStream().mapToDouble(derivativeLast -> derivativeLast.doubleValue()).sum();
 		MercadoBigDecimal derivativeLastSum = new MercadoBigDecimal(sum);
-		LOGGER.debug("Derivative last sum: " + new DigitalCurrencyFormatter().format(derivativeLastSum));
+		// LOGGER.debug("Derivative last sum: " + new DigitalCurrencyFormatter().format(derivativeLastSum));
 
 		MercadoBigDecimal arraySize = new MercadoBigDecimal(temporalTickerCircularArray.getSize());
+		// LOGGER.debug("Array size: " + new DigitalCurrencyFormatter().format(arraySize));
 		MercadoBigDecimal variation = derivativeLastSum.divide(arraySize);
-		LOGGER.debug("Variation: " + new DigitalCurrencyFormatter().format(variation));
+		// LOGGER.debug("Variation: " + new DigitalCurrencyFormatter().format(variation));
 
 		MercadoBigDecimal averageLast = sumLast.divide(arraySize);
 

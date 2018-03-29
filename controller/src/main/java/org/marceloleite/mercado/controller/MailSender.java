@@ -79,7 +79,8 @@ public class MailSender {
 
 	private String retrieveUsername() {
 		PropertyPO propertyPO = retrieveProperty(SystemProperty.EMAIL_USERNAME.getName());
-		return propertyPO.getValue();
+		String encryptedUsername = propertyPO.getValue();
+		return new Encrypt().decrypt(encryptedUsername);
 	}
 
 	private String retrievePassword() {

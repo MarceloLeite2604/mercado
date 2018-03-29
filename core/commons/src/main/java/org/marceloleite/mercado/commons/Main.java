@@ -6,16 +6,15 @@ import java.time.ZonedDateTime;
 
 import org.marceloleite.mercado.commons.converter.DurationToStringConverter;
 import org.marceloleite.mercado.commons.encryption.Encrypt;
-import org.marceloleite.mercado.commons.properties.SystemProperty;
 
 public class Main {
 
 	public static void main(String[] args) {
 		// daylightSavingTime();
 		// durationToStringConverter();
-		// encrypt();
+		encrypt();
 		// createEncryptKey();
-		mercadoBigDecimal();
+		// mercadoBigDecimal();
 	}
 
 	@SuppressWarnings("unused")
@@ -44,7 +43,7 @@ public class Main {
 		Encrypt encrypt = new Encrypt();
 		String encryptedString = encrypt.encrypt(string);
 		System.out.println(encryptedString);
-		string = encrypt.decrypt(encryptedString);
+		string = encrypt.decrypt("HQbtfCrbBsz1YcnbP/8dkUXogkD+qRqj");
 		System.out.println(string);
 	}
 	
