@@ -29,6 +29,10 @@
 							<name>circularArraySize</name>
 							<value>720</value>
 						</parameter>
+						<parameter>
+							<name>initialStatus</name>
+							<value>saved</value>
+						</parameter>
 					</parameters>
 				</class>
 			</classes>

@@ -321,9 +321,11 @@ public class SixthStrategy extends AbstractStrategy {
 		case CIRCULAR_ARRAY_SIZE:
 			circularArraySize = Integer.parseInt(parameter.getValue());
 			temporalTickerCircularArray = new CircularArray<>(circularArraySize);
+			break;
 		case INITIAL_STATUS:
 			status = SixthStrategyStatus
 					.findByName(Optional.ofNullable(parameter.getValue()).orElse(parameter.getDefaultValue()));
+			break;
 		}
 	}
 
