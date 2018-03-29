@@ -8,14 +8,22 @@ public enum SixthStrategyParameter implements Property {
 	GROWTH_PERCENTAGE_THRESHOLD("growthPercentageThreshold"),
 	SHRINK_PERCENTAGE_THRESHOLD("shrinkPercentageThreshold"),
 	WORKING_AMOUNT_CURRENCY("workingAmountCurrency"),
-	CIRCULAR_ARRAY_SIZE("circularArraySize");
+	CIRCULAR_ARRAY_SIZE("circularArraySize"),
+	INITIAL_STATUS("initialStatus", "saved");
 
 	private String name;
 
 	private String value;
+	
+	private String defaultValue;
 
-	private SixthStrategyParameter(String name) {
+	private SixthStrategyParameter(String name, String defaultValue) {
 		this.name = name;
+		this.defaultValue = defaultValue;
+	}
+	
+	private SixthStrategyParameter(String name) {
+		this(name, null);
 	}
 
 	public String getName() {
@@ -44,7 +52,7 @@ public enum SixthStrategyParameter implements Property {
 
 	@Override
 	public String getDefaultValue() {
-		return null;
+		return defaultValue;
 	}
 
 	@Override

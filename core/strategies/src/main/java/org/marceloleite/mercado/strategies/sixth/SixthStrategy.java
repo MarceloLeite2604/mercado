@@ -2,6 +2,7 @@ package org.marceloleite.mercado.strategies.sixth;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
@@ -53,7 +54,7 @@ public class SixthStrategy extends AbstractStrategy {
 	public SixthStrategy(Currency currency) {
 		super(SixthStrategyParameter.class, SixthStrategyVariable.class);
 		this.currency = currency;
-		this.status = SixthStrategyStatus.UNDEFINED;
+		this.status = null;
 	}
 
 	public SixthStrategy() {
@@ -76,50 +77,40 @@ public class SixthStrategy extends AbstractStrategy {
 			MercadoBigDecimal nextPrice = calculateNextPrice(temporalTicker);
 			MercadoBigDecimal lastVariation = new VariationCalculator().calculate(nextPrice,
 					baseTemporalTicker.retrieveCurrentOrPreviousLastPrice());
+			MercadoBigDecimal baseLastPrice = baseTemporalTicker.retrieveCurrentOrPreviousLastPrice();
+			MercadoBigDecimal lastPrice = temporalTicker.retrieveCurrentOrPreviousLastPrice();
+			
 			StringBuilder stringBuilderDebug = new StringBuilder();
 			stringBuilderDebug.append("Variation: " + new PercentageFormatter().format(lastVariation));
-			MercadoBigDecimal baseLastPrice = baseTemporalTicker.retrieveCurrentOrPreviousLastPrice();
 			stringBuilderDebug.append(", base: " + new NonDigitalCurrencyFormatter().format(baseLastPrice));
-			MercadoBigDecimal lastPrice = temporalTicker.retrieveCurrentOrPreviousLastPrice();
 			stringBuilderDebug.append(", last: " + new NonDigitalCurrencyFormatter().format(lastPrice));
 			stringBuilderDebug.append(", next: " + new NonDigitalCurrencyFormatter().format(nextPrice));
-			// MercadoBigDecimal lastVariation = retrieveLastVariation();
-			LOGGER.debug(
-					simulationTimeInterval + ": Last variation is " + new PercentageFormatter().format(lastVariation));
-			Order order = null;
-			switch (status) {
-			case UNDEFINED:
-				if (lastVariation.compareTo(MercadoBigDecimal.NOT_A_NUMBER) != 0
-						&& lastVariation.compareTo(MercadoBigDecimal.ZERO) > 0) {
-
-					updateBase(house);
-					order = createBuyOrder(simulationTimeInterval, account, house);
+			LOGGER.debug(stringBuilderDebug.toString());
+			
+			if (lastVariation.compareTo(MercadoBigDecimal.NOT_A_NUMBER) != 0) {
+				Order order = null;
+				switch (status) {
+				case SAVED:
+					if (lastVariation.compareTo(MercadoBigDecimal.ZERO) < 0) {
+						updateBase(house);
+					} else if (lastVariation.compareTo(growthPercentageThreshold) >= 0) {
+						updateBase(house);
+						order = createBuyOrder(simulationTimeInterval, account, house);
+					}
+					break;
+				case APPLIED:
+					if (lastVariation.compareTo(MercadoBigDecimal.ZERO) > 0) {
+						updateBase(house);
+					} else if (lastVariation.compareTo(shrinkPercentageThreshold) <= 0) {
+						updateBase(house);
+						order = createSellOrder(simulationTimeInterval, account, house);
+					}
+					break;
 				}
-				break;
-			case SAVED:
-				if (!lastVariation.equals(MercadoBigDecimal.NOT_A_NUMBER)
-						&& lastVariation.compareTo(MercadoBigDecimal.ZERO) < 0) {
-					updateBase(house);
-				} else if (!lastVariation.equals(MercadoBigDecimal.NOT_A_NUMBER)
-						&& lastVariation.compareTo(growthPercentageThreshold) >= 0) {
-					updateBase(house);
-					order = createBuyOrder(simulationTimeInterval, account, house);
+				if (order != null) {
+					LOGGER.debug(stringBuilderDebug.toString());
+					executeOrder(order, account, house);
 				}
-				break;
-			case APPLIED:
-				if (!lastVariation.equals(MercadoBigDecimal.NOT_A_NUMBER)
-						&& lastVariation.compareTo(MercadoBigDecimal.ZERO) > 0) {
-					updateBase(house);
-				} else if (!lastVariation.equals(MercadoBigDecimal.NOT_A_NUMBER)
-						&& lastVariation.compareTo(shrinkPercentageThreshold) <= 0) {
-					updateBase(house);
-					order = createSellOrder(simulationTimeInterval, account, house);
-				}
-				break;
-			}
-			if (order != null) {
-				LOGGER.debug(stringBuilderDebug.toString());
-				executeOrder(order, account, house);
 			}
 		}
 	}
@@ -330,6 +321,9 @@ public class SixthStrategy extends AbstractStrategy {
 		case CIRCULAR_ARRAY_SIZE:
 			circularArraySize = Integer.parseInt(parameter.getValue());
 			temporalTickerCircularArray = new CircularArray<>(circularArraySize);
+		case INITIAL_STATUS:
+			status = SixthStrategyStatus
+					.findByName(Optional.ofNullable(parameter.getValue()).orElse(parameter.getDefaultValue()));
 		}
 	}
 
