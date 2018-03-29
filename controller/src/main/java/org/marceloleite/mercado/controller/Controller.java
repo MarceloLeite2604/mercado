@@ -3,6 +3,7 @@ package org.marceloleite.mercado.controller;
 import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -65,10 +66,21 @@ public class Controller {
 
 	public void start() {
 		List<Account> accounts = retrieveAccounts();
+		sendStartEmails(accounts);
 		while (!finished()) {
 			waitNextMinute();
 			LOGGER.debug("Checking.");
 			check(accounts);
+		}
+	}
+
+	private void sendStartEmails(List<Account> accounts) {
+		MailSender mailSender = new MailSender();
+		for (Account account : accounts) {
+			String email = account.getEmail();
+			if (email != null) {
+				mailSender.sendEmail(Arrays.asList(email), "Started", "mercado-controller has started.");
+			}
 		}
 	}
 

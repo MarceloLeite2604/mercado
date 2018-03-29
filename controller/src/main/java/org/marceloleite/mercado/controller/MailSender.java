@@ -59,6 +59,10 @@ public class MailSender {
 			exception.printStackTrace();
 		}
 	}
+	
+	public void sendEmail(List<String> toAddressesList, String subject, String content) {
+		sendEmail(toAddressesList, null, null, subject, content);
+	}
 
 	private Address[] createAddresses(List<String> addressesList) {
 		try {
