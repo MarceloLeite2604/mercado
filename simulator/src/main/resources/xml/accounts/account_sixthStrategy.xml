@@ -9,7 +9,7 @@
 	<balances>
 		<balance>
 			<currency>BRL</currency>
-			<amount>60.0</amount>
+			<amount>1000.0</amount>
 		</balance>
 	</balances>
 	<deposits />
@@ -30,11 +30,15 @@
 						</parameter>
 						<parameter>
 							<name>workingAmountCurrency</name>
-							<value>60.0</value>
+							<value>0</value>
 						</parameter>
 						<parameter>
 							<name>circularArraySize</name>
 							<value>720</value>
+						</parameter>
+						<parameter>
+							<name>initialStatus</name>
+							<value>undefined</value>
 						</parameter>
 					</parameters>
 				</class>

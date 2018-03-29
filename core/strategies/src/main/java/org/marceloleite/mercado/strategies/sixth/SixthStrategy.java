@@ -28,7 +28,6 @@ import org.marceloleite.mercado.commons.TimeDivisionController;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.converter.ObjectToJsonConverter;
 import org.marceloleite.mercado.commons.converter.ZonedDateTimeToStringConverter;
-import org.marceloleite.mercado.commons.formatter.DigitalCurrencyFormatter;
 import org.marceloleite.mercado.commons.formatter.NonDigitalCurrencyFormatter;
 import org.marceloleite.mercado.commons.formatter.PercentageFormatter;
 import org.marceloleite.mercado.commons.properties.Property;
@@ -90,15 +89,24 @@ public class SixthStrategy extends AbstractStrategy {
 			MercadoBigDecimal lastPrice = temporalTicker.retrieveCurrentOrPreviousLastPrice();
 
 			StringBuilder stringBuilderDebug = new StringBuilder();
+			stringBuilderDebug
+					.append(new ZonedDateTimeToStringConverter().convertTo(simulationTimeInterval.getStart()) + " ");
 			stringBuilderDebug.append("Variation: " + new PercentageFormatter().format(lastVariation));
-			stringBuilderDebug.append(", base: " + new NonDigitalCurrencyFormatter().format(baseLastPrice));
-			stringBuilderDebug.append(", last: " + new NonDigitalCurrencyFormatter().format(lastPrice));
-			stringBuilderDebug.append(", next: " + new NonDigitalCurrencyFormatter().format(nextPrice));
+			NonDigitalCurrencyFormatter nonDigitalCurrencyFormatter = new NonDigitalCurrencyFormatter();
+			stringBuilderDebug.append(", base: " + nonDigitalCurrencyFormatter.format(baseLastPrice));
+			stringBuilderDebug.append(", last: " + nonDigitalCurrencyFormatter.format(lastPrice));
+			stringBuilderDebug.append(", next: " + nonDigitalCurrencyFormatter.format(nextPrice));
 			LOGGER.debug(stringBuilderDebug.toString());
 
 			if (lastVariation.compareTo(MercadoBigDecimal.NOT_A_NUMBER) != 0) {
 				Order order = null;
 				switch (status) {
+				case UNDEFINED:
+					if (lastVariation.compareTo(MercadoBigDecimal.ZERO) > 0) {
+						updateBase(house);
+						order = createBuyOrder(simulationTimeInterval, account, house);
+					}
+					break;
 				case SAVED:
 					if (lastVariation.compareTo(MercadoBigDecimal.ZERO) < 0) {
 						updateBase(house);
@@ -119,8 +127,8 @@ public class SixthStrategy extends AbstractStrategy {
 					break;
 				}
 				if (order != null) {
-					LOGGER.debug(stringBuilderDebug.toString());
 					executeOrder(order, account, house);
+//					temporalTickerCircularArray.clear();
 				}
 			}
 		}
@@ -136,8 +144,7 @@ public class SixthStrategy extends AbstractStrategy {
 			TimeInterval timeIntervalToRetrieve = new TimeInterval(duration, endTime);
 			TradesRetriever tradesRetriever = new TradesRetriever();
 
-			/* TODO: Ignore values from database? */
-			List<Trade> trades = tradesRetriever.retrieve(currency, timeIntervalToRetrieve, true);
+			List<Trade> trades = tradesRetriever.retrieve(currency, timeIntervalToRetrieve, false);
 			TimeDivisionController timeDivisionController = new TimeDivisionController(timeIntervalToRetrieve,
 					stepTime);
 			TemporalTickerCreator temporalTickerCreator = new TemporalTickerCreator();
@@ -151,6 +158,10 @@ public class SixthStrategy extends AbstractStrategy {
 						retrievedTimeInterval, tradesOnTimeInterval);
 				temporalTickerCircularArray.add(temporalTickerForTimeInterval);
 			}
+
+			/*for (int counter = temporalTickerCircularArray.getSize(); counter < circularArraySize; counter++) {
+				temporalTickerCircularArray.add(temporalTicker);
+			}*/
 		}
 
 		temporalTickerCircularArray.add(temporalTicker);
@@ -182,15 +193,19 @@ public class SixthStrategy extends AbstractStrategy {
 
 		double sum = derivativeLasts.parallelStream().mapToDouble(derivativeLast -> derivativeLast.doubleValue()).sum();
 		MercadoBigDecimal derivativeLastSum = new MercadoBigDecimal(sum);
-		// LOGGER.debug("Derivative last sum: " + new DigitalCurrencyFormatter().format(derivativeLastSum));
+		// LOGGER.debug("Derivative last sum: " + new
+		// DigitalCurrencyFormatter().format(derivativeLastSum));
 
 		MercadoBigDecimal arraySize = new MercadoBigDecimal(temporalTickerCircularArray.getSize());
-		// LOGGER.debug("Array size: " + new DigitalCurrencyFormatter().format(arraySize));
+		// LOGGER.debug("Array size: " + new
+		// DigitalCurrencyFormatter().format(arraySize));
 		MercadoBigDecimal variation = derivativeLastSum.divide(arraySize);
-		// LOGGER.debug("Variation: " + new DigitalCurrencyFormatter().format(variation));
+		// LOGGER.debug("Variation: " + new
+		// DigitalCurrencyFormatter().format(variation));
 
 		MercadoBigDecimal averageLast = sumLast.divide(arraySize);
 
+		// return averageLast.add(variation.multiply(new MercadoBigDecimal("72")));
 		return averageLast.add(variation);
 	}
 
@@ -249,8 +264,12 @@ public class SixthStrategy extends AbstractStrategy {
 		switch (orderAnalyser.getOrderType()) {
 		case BUY:
 			currency = Currency.REAL;
-			if (account.getBalance().get(currency).getAmount().compareTo(workingAmountCurrency) > 0) {
-				amount = new MercadoBigDecimal(workingAmountCurrency);
+			if (workingAmountCurrency.compareTo(MercadoBigDecimal.ZERO) > 0) {
+				if (account.getBalance().get(currency).getAmount().compareTo(workingAmountCurrency) > 0) {
+					amount = new MercadoBigDecimal(workingAmountCurrency);
+				} else {
+					amount = new MercadoBigDecimal(account.getBalance().get(currency).getAmount());
+				}
 			} else {
 				amount = new MercadoBigDecimal(account.getBalance().get(currency).getAmount());
 			}

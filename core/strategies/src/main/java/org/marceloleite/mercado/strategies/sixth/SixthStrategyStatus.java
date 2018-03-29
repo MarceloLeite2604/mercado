@@ -1,6 +1,7 @@
 package org.marceloleite.mercado.strategies.sixth;
 
 enum SixthStrategyStatus {
+	UNDEFINED("undefined"),
 	APPLIED("applied"),
 	SAVED("saved");
 
