@@ -3,8 +3,10 @@
 java=$(which java)
 cat=$(which cat)
 
+project_name=mercado-controller
+version=1.0
 working_directory=/opt/marcelo/git/mercado/controller/
-jar_name=controller-0.0.1-SNAPSHOT-jar-with-dependencies.jar
+jar_name=${project_name}-${version}.jar
 target_directory=${working_directory}target/
 output_directory=${working_directory}output/
 logs_directory=${output_directory}logs/
