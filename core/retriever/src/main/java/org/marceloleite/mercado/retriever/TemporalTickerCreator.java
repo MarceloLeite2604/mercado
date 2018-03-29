@@ -1,5 +1,6 @@
 package org.marceloleite.mercado.retriever;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -12,11 +13,11 @@ import org.marceloleite.mercado.data.Trade;
 import org.marceloleite.mercado.databaseretriever.persistence.daos.TradeDAO;
 import org.marceloleite.mercado.databaseretriever.persistence.objects.TradePO;
 import org.marceloleite.mercado.retriever.filter.TradeTypeFilter;
+import org.marceloleite.mercado.siteretriever.converters.ListToMapTradeConverter;
 
 public class TemporalTickerCreator {
-	
-	public TemporalTicker create(Currency currency, TimeInterval timeInterval,
-			Map<Long, Trade> trades) {
+
+	public TemporalTicker create(Currency currency, TimeInterval timeInterval, Map<Long, Trade> trades) {
 
 		TemporalTicker temporalTicker = null;
 
@@ -141,5 +142,9 @@ public class TemporalTickerCreator {
 		temporalTicker.setTimeDuration(timeInterval.getDuration());
 
 		return temporalTicker;
+	}
+
+	public TemporalTicker create(Currency currency, TimeInterval timeInterval, List<Trade> trades) {
+		return create(currency, timeInterval, new ListToMapTradeConverter().convertTo(trades));
 	}
 }

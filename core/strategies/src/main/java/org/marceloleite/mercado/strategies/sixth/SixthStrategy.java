@@ -1,5 +1,7 @@
 package org.marceloleite.mercado.strategies.sixth;
 
+import java.time.Duration;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -22,13 +24,19 @@ import org.marceloleite.mercado.commons.CircularArray;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.MercadoBigDecimal;
 import org.marceloleite.mercado.commons.OrderType;
+import org.marceloleite.mercado.commons.TimeDivisionController;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.converter.ObjectToJsonConverter;
 import org.marceloleite.mercado.commons.converter.ZonedDateTimeToStringConverter;
+import org.marceloleite.mercado.commons.formatter.DigitalCurrencyFormatter;
 import org.marceloleite.mercado.commons.formatter.NonDigitalCurrencyFormatter;
 import org.marceloleite.mercado.commons.formatter.PercentageFormatter;
 import org.marceloleite.mercado.commons.properties.Property;
+import org.marceloleite.mercado.commons.utils.ZonedDateTimeUtils;
 import org.marceloleite.mercado.data.TemporalTicker;
+import org.marceloleite.mercado.data.Trade;
+import org.marceloleite.mercado.retriever.TemporalTickerCreator;
+import org.marceloleite.mercado.retriever.TradesRetriever;
 import org.marceloleite.mercado.strategies.AbstractStrategy;
 
 public class SixthStrategy extends AbstractStrategy {
@@ -73,27 +81,29 @@ public class SixthStrategy extends AbstractStrategy {
 		TemporalTickerVariation temporalTickerVariation = generateTemporalTickerVariation(simulationTimeInterval,
 				house);
 		if (temporalTickerVariation != null) {
-			temporalTickerCircularArray = addToTemporalTickerCircularArray(temporalTickerCircularArray, temporalTicker);
+			temporalTickerCircularArray = addToTemporalTickerCircularArray(temporalTickerCircularArray, temporalTicker,
+					simulationTimeInterval);
 			MercadoBigDecimal nextPrice = calculateNextPrice(temporalTicker);
 			MercadoBigDecimal lastVariation = new VariationCalculator().calculate(nextPrice,
 					baseTemporalTicker.retrieveCurrentOrPreviousLastPrice());
 			MercadoBigDecimal baseLastPrice = baseTemporalTicker.retrieveCurrentOrPreviousLastPrice();
 			MercadoBigDecimal lastPrice = temporalTicker.retrieveCurrentOrPreviousLastPrice();
-			
+
 			StringBuilder stringBuilderDebug = new StringBuilder();
 			stringBuilderDebug.append("Variation: " + new PercentageFormatter().format(lastVariation));
 			stringBuilderDebug.append(", base: " + new NonDigitalCurrencyFormatter().format(baseLastPrice));
 			stringBuilderDebug.append(", last: " + new NonDigitalCurrencyFormatter().format(lastPrice));
 			stringBuilderDebug.append(", next: " + new NonDigitalCurrencyFormatter().format(nextPrice));
 			LOGGER.debug(stringBuilderDebug.toString());
-			
+
 			if (lastVariation.compareTo(MercadoBigDecimal.NOT_A_NUMBER) != 0) {
 				Order order = null;
 				switch (status) {
 				case SAVED:
 					if (lastVariation.compareTo(MercadoBigDecimal.ZERO) < 0) {
 						updateBase(house);
-					} else if (lastVariation.compareTo(growthPercentageThreshold) >= 0) {
+					} else if (temporalTickerCircularArray.isFilled()
+							&& lastVariation.compareTo(growthPercentageThreshold) >= 0) {
 						updateBase(house);
 						order = createBuyOrder(simulationTimeInterval, account, house);
 					}
@@ -101,7 +111,8 @@ public class SixthStrategy extends AbstractStrategy {
 				case APPLIED:
 					if (lastVariation.compareTo(MercadoBigDecimal.ZERO) > 0) {
 						updateBase(house);
-					} else if (lastVariation.compareTo(shrinkPercentageThreshold) <= 0) {
+					} else if (temporalTickerCircularArray.isFilled()
+							&& lastVariation.compareTo(shrinkPercentageThreshold) <= 0) {
 						updateBase(house);
 						order = createSellOrder(simulationTimeInterval, account, house);
 					}
@@ -116,13 +127,33 @@ public class SixthStrategy extends AbstractStrategy {
 	}
 
 	private CircularArray<TemporalTicker> addToTemporalTickerCircularArray(
-			CircularArray<TemporalTicker> temporalTickerCircularArray, TemporalTicker temporalTicker) {
-		temporalTickerCircularArray.add(temporalTicker);
+			CircularArray<TemporalTicker> temporalTickerCircularArray, TemporalTicker temporalTicker,
+			TimeInterval timeInterval) {
 		if (temporalTickerCircularArray.getSize() < circularArraySize) {
-			for (int counter = temporalTickerCircularArray.getSize(); counter < circularArraySize; counter++) {
-				temporalTickerCircularArray.add(temporalTicker);
+			Duration stepTime = timeInterval.getDuration();
+			ZonedDateTime endTime = timeInterval.getStart().minus(stepTime);
+			Duration duration = stepTime.multipliedBy(circularArraySize - temporalTickerCircularArray.getSize());
+			TimeInterval timeIntervalToRetrieve = new TimeInterval(duration, endTime);
+			TradesRetriever tradesRetriever = new TradesRetriever();
+
+			/* TODO: Ignore values from database? */
+			List<Trade> trades = tradesRetriever.retrieve(currency, timeIntervalToRetrieve, true);
+			TimeDivisionController timeDivisionController = new TimeDivisionController(timeIntervalToRetrieve,
+					stepTime);
+			TemporalTickerCreator temporalTickerCreator = new TemporalTickerCreator();
+			List<TimeInterval> retrievedTimeIntervals = timeDivisionController.geTimeIntervals();
+			for (TimeInterval retrievedTimeInterval : retrievedTimeIntervals) {
+				List<Trade> tradesOnTimeInterval = trades.stream()
+						.filter(trade -> ZonedDateTimeUtils.isBetween(trade.getDate(), retrievedTimeInterval))
+						.collect(Collectors.toList());
+
+				TemporalTicker temporalTickerForTimeInterval = temporalTickerCreator.create(currency,
+						retrievedTimeInterval, tradesOnTimeInterval);
+				temporalTickerCircularArray.add(temporalTickerForTimeInterval);
 			}
 		}
+
+		temporalTickerCircularArray.add(temporalTicker);
 		return temporalTickerCircularArray;
 	}
 
@@ -131,8 +162,8 @@ public class SixthStrategy extends AbstractStrategy {
 		List<MercadoBigDecimal> lasts = temporalTickersList.stream()
 				.map(temporalTicker -> temporalTicker.retrieveCurrentOrPreviousLastPrice())
 				.collect(Collectors.toList());
-		List<MercadoBigDecimal> derivativeLasts = new ArrayList<>();
-		MercadoBigDecimal previousLast = new MercadoBigDecimal("0");
+		List<MercadoBigDecimal> derivativeLasts = new ArrayList<>(lasts.size());
+		MercadoBigDecimal previousLast = null;
 		MercadoBigDecimal sumLast = new MercadoBigDecimal("0");
 		for (int counter = 0; counter < lasts.size(); counter++) {
 			if (counter == 0) {
@@ -145,12 +176,15 @@ public class SixthStrategy extends AbstractStrategy {
 			derivativeLasts.add(currentLast.subtract(previousLast));
 			sumLast = sumLast.add(currentLast);
 		}
+		LOGGER.debug("Sumlast: " + new DigitalCurrencyFormatter().format(sumLast));
 
 		double sum = derivativeLasts.parallelStream().mapToDouble(derivativeLast -> derivativeLast.doubleValue()).sum();
 		MercadoBigDecimal derivativeLastSum = new MercadoBigDecimal(sum);
+		LOGGER.debug("Derivative last sum: " + new DigitalCurrencyFormatter().format(derivativeLastSum));
 
 		MercadoBigDecimal arraySize = new MercadoBigDecimal(temporalTickerCircularArray.getSize());
 		MercadoBigDecimal variation = derivativeLastSum.divide(arraySize);
+		LOGGER.debug("Variation: " + new DigitalCurrencyFormatter().format(variation));
 
 		MercadoBigDecimal averageLast = sumLast.divide(arraySize);
 

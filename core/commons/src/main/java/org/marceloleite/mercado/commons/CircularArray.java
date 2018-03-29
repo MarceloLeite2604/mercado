@@ -124,4 +124,8 @@ public class CircularArray<T extends Object> {
 		this.lastPosition = -1;
 		this.firstPosition = -1;
 	}
+
+	public boolean isFilled() {
+		return (getSize() == size);
+	}
 }
