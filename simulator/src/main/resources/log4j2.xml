@@ -94,7 +94,7 @@
 			<AppenderRef ref="FifthStrategyLogFile" />
 		</Logger>
 		<Logger name="org.marceloleite.mercado.strategies.sixth"
-			level="info" additivity="false">
+			level="debug" additivity="false">
 			<AppenderRef ref="SixthStrategyLogFile" />
 		</Logger>
 	</Loggers>

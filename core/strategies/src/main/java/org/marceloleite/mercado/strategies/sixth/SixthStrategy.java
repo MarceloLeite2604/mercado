@@ -96,7 +96,7 @@ public class SixthStrategy extends AbstractStrategy {
 			stringBuilderDebug.append(", base: " + nonDigitalCurrencyFormatter.format(baseLastPrice));
 			stringBuilderDebug.append(", last: " + nonDigitalCurrencyFormatter.format(lastPrice));
 			stringBuilderDebug.append(", next: " + nonDigitalCurrencyFormatter.format(nextPrice));
-			LOGGER.debug(stringBuilderDebug.toString());
+			// LOGGER.debug(stringBuilderDebug.toString());
 
 			if (lastVariation.compareTo(MercadoBigDecimal.NOT_A_NUMBER) != 0) {
 				Order order = null;
@@ -110,8 +110,7 @@ public class SixthStrategy extends AbstractStrategy {
 				case SAVED:
 					if (lastVariation.compareTo(MercadoBigDecimal.ZERO) < 0) {
 						updateBase(house);
-					} else if (temporalTickerCircularArray.isFilled()
-							&& lastVariation.compareTo(growthPercentageThreshold) >= 0) {
+					} else if (lastVariation.compareTo(growthPercentageThreshold) >= 0) {
 						updateBase(house);
 						order = createBuyOrder(simulationTimeInterval, account, house);
 					}
@@ -119,8 +118,7 @@ public class SixthStrategy extends AbstractStrategy {
 				case APPLIED:
 					if (lastVariation.compareTo(MercadoBigDecimal.ZERO) > 0) {
 						updateBase(house);
-					} else if (temporalTickerCircularArray.isFilled()
-							&& lastVariation.compareTo(shrinkPercentageThreshold) <= 0) {
+					} else if (lastVariation.compareTo(shrinkPercentageThreshold) <= 0) {
 						updateBase(house);
 						order = createSellOrder(simulationTimeInterval, account, house);
 					}

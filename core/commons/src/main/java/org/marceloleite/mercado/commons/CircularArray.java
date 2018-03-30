@@ -110,7 +110,7 @@ public class CircularArray<T extends Object> {
 
 	@SuppressWarnings("unchecked")
 	public List<T> asList() {
-		List<T> list = new ArrayList<>();
+		List<T> list = new ArrayList<>(totalOfValues);
 		for (int counter = 0; counter < totalOfValues; counter++) {
 			list.add((T) buffer[calculatePosition(counter)]);
 		}
