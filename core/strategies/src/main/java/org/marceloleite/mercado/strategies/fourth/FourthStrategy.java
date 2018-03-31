@@ -102,7 +102,7 @@ public class FourthStrategy extends AbstractStrategy {
 			throw new RuntimeException("No temporal ticker for time interval " + simulationTimeInterval);
 		}
 		circularArray.add(temporalTicker);
-		if (circularArray.getSize() == CIRCULAR_ARRAY_SIZE) {
+		if (circularArray.getOccupiedPositions() == CIRCULAR_ARRAY_SIZE) {
 			return new TemporalTickerVariation(circularArray.first(), circularArray.last());
 		} else {
 			return null;

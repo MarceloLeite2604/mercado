@@ -67,7 +67,6 @@ public class Simulator {
 
 		ExecutorService executor = Executors.newFixedThreadPool(2);
 		try {
-
 			Future<TreeMap<TimeInterval, Map<Currency, TemporalTicker>>> future;
 			Semaphore updateHouseThreadSemaphore = new Semaphore(1);
 			Semaphore runSimulationSemaphore = new Semaphore(0);

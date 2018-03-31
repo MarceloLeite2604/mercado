@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 
@@ -45,11 +46,11 @@ public class SimulationHouse implements House {
 	private Map<Currency, TemporalTickerVariation> temporalTickerVariations;
 
 	private TemporalTickerRetriever temporalTickerRetriever;
-	
+
 	private OrderExecutor orderExecutor;
 
-	private SimulationHouse(List<Account> accounts, Map<String, Balance> comissionBalance, MercadoBigDecimal comissionPercentage,
-			Map<Currency, TemporalTicker> temporalTickers,
+	private SimulationHouse(List<Account> accounts, Map<String, Balance> comissionBalance,
+			MercadoBigDecimal comissionPercentage, Map<Currency, TemporalTicker> temporalTickers,
 			Map<Currency, TemporalTickerVariation> temporalTickerVariations,
 			TemporalTickerRetriever temporalTickerRetriever) {
 		this.accounts = accounts;
@@ -154,22 +155,27 @@ public class SimulationHouse implements House {
 		for (Account account : accounts) {
 			account.checkTimedEvents(currentTimeInterval);
 			checkStrategies(currentTimeInterval, account);
-			/*checkBuyOrders(currentTimeInterval, account);
-			checkSellOrders(currentTimeInterval, account);*/
+			/*
+			 * checkBuyOrders(currentTimeInterval, account);
+			 * checkSellOrders(currentTimeInterval, account);
+			 */
 		}
 	}
 
 	public void executeTemporalEvents(
 			TreeMap<TimeInterval, Map<Currency, TemporalTicker>> temporalTickersDataModelsByTimeInterval) {
-		for (Entry<TimeInterval, Map<Currency, TemporalTicker>> entry : temporalTickersDataModelsByTimeInterval.entrySet()) {
+		for (Entry<TimeInterval, Map<Currency, TemporalTicker>> entry : temporalTickersDataModelsByTimeInterval
+				.entrySet()) {
 			TimeInterval timeInterval = entry.getKey();
 			Map<Currency, TemporalTicker> temporalTickerPOsByCurrency = entry.getValue();
 			updateTemporalTickers(temporalTickerPOsByCurrency);
 			for (Account account : accounts) {
 				account.checkTimedEvents(timeInterval);
 				checkStrategies(timeInterval, account);
-				/*checkBuyOrders(timeInterval, account);
-				checkSellOrders(timeInterval, account);*/
+				/*
+				 * checkBuyOrders(timeInterval, account); checkSellOrders(timeInterval,
+				 * account);
+				 */
 			}
 		}
 	}
@@ -183,8 +189,8 @@ public class SimulationHouse implements House {
 
 	private void checkBuyOrders(TimeInterval currentTimeInterval, Account account) {
 		List<Order> orders = account.getBuyOrdersTemporalController().retrieve(currentTimeInterval);
-		List<Order> buyOrdersCreated = orders.stream()
-				.filter(buyOrder -> buyOrder.getStatus() == OrderStatus.OPEN).collect(Collectors.toList());
+		List<Order> buyOrdersCreated = orders.stream().filter(buyOrder -> buyOrder.getStatus() == OrderStatus.OPEN)
+				.collect(Collectors.toList());
 		if (buyOrdersCreated != null && buyOrdersCreated.size() > 0) {
 			SimulationOrderExecutor orderExecutor = new SimulationOrderExecutor();
 			buyOrdersCreated.forEach(buyOrder -> orderExecutor.executeBuyOrder(buyOrder, this, account));
@@ -193,8 +199,8 @@ public class SimulationHouse implements House {
 
 	private void checkSellOrders(TimeInterval currentTimeInterval, Account account) {
 		List<Order> orders = account.getSellOrdersTemporalController().retrieve(currentTimeInterval);
-		List<Order> sellOrdersCreated = orders.stream()
-				.filter(sellOrder -> sellOrder.getStatus() == OrderStatus.OPEN).collect(Collectors.toList());
+		List<Order> sellOrdersCreated = orders.stream().filter(sellOrder -> sellOrder.getStatus() == OrderStatus.OPEN)
+				.collect(Collectors.toList());
 		if (sellOrdersCreated != null && sellOrdersCreated.size() > 0) {
 			SimulationOrderExecutor orderExecutor = new SimulationOrderExecutor();
 			sellOrdersCreated.forEach(sellOrder -> orderExecutor.executeSellOrder(sellOrder, this, account));
@@ -204,5 +210,18 @@ public class SimulationHouse implements House {
 	@Override
 	public OrderExecutor getOrderExecutor() {
 		return orderExecutor;
+	}
+
+	public void finishTemporalEvents() {
+		for (Account account : accounts) {
+			Map<Currency, List<Strategy>> currenciesStrategiesMap = account.getCurrenciesStrategies();
+			Set<Currency> currenciesStrategies = currenciesStrategiesMap.keySet();
+			for (Currency currency : currenciesStrategies) {
+				List<Strategy> strategies = currenciesStrategiesMap.get(currency);
+				for (Strategy strategy : strategies) {
+					strategy.afterFinish();
+				}
+			}
+		}
 	}
 }

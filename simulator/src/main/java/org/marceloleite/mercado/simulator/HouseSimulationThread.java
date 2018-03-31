@@ -48,6 +48,7 @@ public class HouseSimulationThread extends Thread {
 			}
 			updateSemaphore.release();
 		}
+		house.finishTemporalEvents();
 	}
 
 	private void aquireSemaphore() {

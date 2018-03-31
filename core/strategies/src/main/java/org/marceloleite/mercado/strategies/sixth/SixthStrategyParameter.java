@@ -9,7 +9,8 @@ public enum SixthStrategyParameter implements Property {
 	SHRINK_PERCENTAGE_THRESHOLD("shrinkPercentageThreshold"),
 	WORKING_AMOUNT_CURRENCY("workingAmountCurrency"),
 	CIRCULAR_ARRAY_SIZE("circularArraySize"),
-	INITIAL_STATUS("initialStatus", "saved");
+	INITIAL_STATUS("initialStatus", "saved"),
+	NEXT_VALUE_STEPS("nextValueSteps", "1");
 
 	private String name;
 

@@ -22,7 +22,7 @@
 					<parameters>
 						<parameter>
 							<name>growthPercentageThreshold</name>
-							<value>0.10</value>
+							<value>0.09</value>
 						</parameter>
 						<parameter>
 							<name>shrinkPercentageThreshold</name>
@@ -34,6 +34,10 @@
 						</parameter>
 						<parameter>
 							<name>circularArraySize</name>
+							<value>720</value>
+						</parameter>
+						<parameter>
+							<name>nextValueSteps</name>
 							<value>720</value>
 						</parameter>
 						<parameter>

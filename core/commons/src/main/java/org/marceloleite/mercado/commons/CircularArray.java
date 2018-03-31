@@ -5,24 +5,24 @@ import java.util.List;
 
 public class CircularArray<T extends Object> {
 
-	private int bufferSize;
+	private int arraySize;
 
-	private int totalOfValues;
-
+	private int occupiedPositions;
+	
 	private int lastPosition;
 
 	private int firstPosition;
 
 	private Object[] buffer;
 	
-	private int size;
+	// private int size;
 
-	public CircularArray(int size) {
+	public CircularArray(int arraySize) {
 		super();
-		if (size <= 0) {
-			throw new IllegalArgumentException("Invalid circular buffer size: " + size);
+		if (arraySize <= 0) {
+			throw new IllegalArgumentException("Invalid circular array size: " + arraySize);
 		}
-		this.size = size;
+		this.arraySize = arraySize;
 		clear();
 	}
 
@@ -33,8 +33,8 @@ public class CircularArray<T extends Object> {
 	}
 
 	private void updateSize() {
-		if (totalOfValues < bufferSize) {
-			totalOfValues++;
+		if (occupiedPositions < arraySize) {
+			occupiedPositions++;
 		}
 	}
 
@@ -45,9 +45,9 @@ public class CircularArray<T extends Object> {
 	}
 
 	private void checkIndex(int index) {
-		if (index >= totalOfValues) {
-			throw new IllegalArgumentException("The array contains " + totalOfValues
-					+ " element(s). It cannot get the element at position " + index + ".");
+		if (index >= occupiedPositions) {
+			throw new IllegalArgumentException("The array has " + occupiedPositions
+					+ " position(s) occupied. It cannot get the element at position " + index + ".");
 		}
 	}
 
@@ -67,8 +67,8 @@ public class CircularArray<T extends Object> {
 		}
 	}
 
-	public int getSize() {
-		return totalOfValues;
+	public int getOccupiedPositions() {
+		return occupiedPositions;
 	}
 
 	private void updatePositions() {
@@ -88,7 +88,7 @@ public class CircularArray<T extends Object> {
 		if (firstPosition == -1) {
 			firstPosition = 0;
 		} else {
-			if (totalOfValues == bufferSize) {
+			if (occupiedPositions == arraySize) {
 				firstPosition = addPosition(firstPosition, 1);
 			}
 		}
@@ -97,35 +97,38 @@ public class CircularArray<T extends Object> {
 	private int addPosition(int position, int valueToAdd) {
 		int realPosition = position;
 		realPosition += valueToAdd;
-		realPosition %= bufferSize;
+		realPosition %= arraySize;
 		return realPosition;
 	}
 
 	private int calculatePosition(int position) {
 		int realPosition = firstPosition;
 		realPosition += position;
-		realPosition %= bufferSize;
+		realPosition %= arraySize;
 		return realPosition;
 	}
 
 	@SuppressWarnings("unchecked")
 	public List<T> asList() {
-		List<T> list = new ArrayList<>(totalOfValues);
-		for (int counter = 0; counter < totalOfValues; counter++) {
+		List<T> list = new ArrayList<>(occupiedPositions);
+		for (int counter = 0; counter < occupiedPositions; counter++) {
 			list.add((T) buffer[calculatePosition(counter)]);
 		}
 		return list;
 	}
 
 	public void clear() {
-		this.buffer = new Object[size];
-		this.bufferSize = size;
-		this.totalOfValues = 0;
+		this.buffer = new Object[arraySize];
+		this.occupiedPositions = 0;
 		this.lastPosition = -1;
 		this.firstPosition = -1;
 	}
 
 	public boolean isFilled() {
-		return (getSize() == size);
+		return (occupiedPositions == arraySize);
+	}
+	
+	public int getVacantPositions() {
+		return (arraySize - occupiedPositions);
 	}
 }

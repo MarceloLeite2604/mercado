@@ -22,4 +22,8 @@ public interface Strategy {
 	void setVariables(List<Property> variables);
 	
 	ClassData retrieveData();
+	
+	void beforeStart();
+	
+	void afterFinish();
 }

@@ -164,6 +164,12 @@ public abstract class AbstractStrategy implements Strategy {
 		
 		return classData;
 	}
+	
+	@Override
+	public void beforeStart() {}
+	
+	@Override
+	public void afterFinish() {}
 
 	protected abstract Property retrieveVariable(String name);
 

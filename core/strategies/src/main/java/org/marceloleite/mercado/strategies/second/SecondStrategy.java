@@ -93,7 +93,7 @@ public class SecondStrategy extends AbstractStrategy {
 		ZonedDateTimeToStringConverter zonedDateTimeToStringConverter = new ZonedDateTimeToStringConverter();
 		System.out.println("Current status: ");
 		System.out.println("               Time    Order variation     Buy/sell ratio     Last/first ratio\n");
-		for (int counter = 0; counter < temporalTickerCircularArray.getSize(); counter++) {
+		for (int counter = 0; counter < temporalTickerCircularArray.getOccupiedPositions(); counter++) {
 			MercadoBigDecimal orderVariation = new MercadoBigDecimal("0.0");
 			if ( counter > 0 ) {
 				orderVariation = temporalTickerVariationCircularArray.get(counter-1).getOrderVariation();

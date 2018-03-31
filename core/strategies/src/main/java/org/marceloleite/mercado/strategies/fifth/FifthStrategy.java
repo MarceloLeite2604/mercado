@@ -129,8 +129,8 @@ public class FifthStrategy extends AbstractStrategy {
 	private CircularArray<TemporalTicker> addToTemporalTickerCircularArray(
 			CircularArray<TemporalTicker> temporalTickerCircularArray, TemporalTicker temporalTicker) {
 		temporalTickerCircularArray.add(temporalTicker);
-		if (temporalTickerCircularArray.getSize() < circularArraySize) {
-			for (int counter = temporalTickerCircularArray.getSize(); counter < circularArraySize; counter++) {
+		if (temporalTickerCircularArray.getOccupiedPositions() < circularArraySize) {
+			for (int counter = temporalTickerCircularArray.getOccupiedPositions(); counter < circularArraySize; counter++) {
 				temporalTickerCircularArray.add(temporalTicker);
 			}
 		}
@@ -159,7 +159,7 @@ public class FifthStrategy extends AbstractStrategy {
 		double sum = derivativeLasts.parallelStream().mapToDouble(derivativeLast -> derivativeLast.doubleValue()).sum();
 		MercadoBigDecimal derivativeLastSum = new MercadoBigDecimal(sum);
 		
-		MercadoBigDecimal arraySize = new MercadoBigDecimal(temporalTickerCircularArray.getSize());
+		MercadoBigDecimal arraySize = new MercadoBigDecimal(temporalTickerCircularArray.getOccupiedPositions());
 		MercadoBigDecimal variation = derivativeLastSum.divide(arraySize);
 
 		MercadoBigDecimal averageLast = sumLast.divide(arraySize);
