@@ -5,4 +5,4 @@
 **/.classpath
 **/persistence.properties*
 *.log
-*.png
+**.png
