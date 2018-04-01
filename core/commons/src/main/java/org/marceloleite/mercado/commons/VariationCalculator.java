@@ -1,6 +1,4 @@
-package org.marceloleite.mercado.base.model.util;
-
-import org.marceloleite.mercado.commons.MercadoBigDecimal;
+package org.marceloleite.mercado.commons;
 
 public class VariationCalculator {
 

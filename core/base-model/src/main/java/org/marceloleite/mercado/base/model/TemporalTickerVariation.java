@@ -2,9 +2,9 @@ package org.marceloleite.mercado.base.model;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.marceloleite.mercado.base.model.util.VariationCalculator;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.MercadoBigDecimal;
+import org.marceloleite.mercado.commons.VariationCalculator;
 import org.marceloleite.mercado.commons.formatter.PercentageFormatter;
 import org.marceloleite.mercado.data.TemporalTicker;
 

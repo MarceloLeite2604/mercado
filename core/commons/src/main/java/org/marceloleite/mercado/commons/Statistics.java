@@ -1,10 +1,7 @@
-package org.marceloleite.mercado.strategies.sixth;
+package org.marceloleite.mercado.commons;
 
 import java.util.List;
 
-import org.marceloleite.mercado.base.model.util.VariationCalculator;
-import org.marceloleite.mercado.commons.CircularArray;
-import org.marceloleite.mercado.commons.MercadoBigDecimal;
 import org.marceloleite.mercado.commons.formatter.NonDigitalCurrencyFormatter;
 import org.marceloleite.mercado.commons.formatter.PercentageFormatter;
 

@@ -3,5 +3,6 @@
 **/output/
 **/.project
 **/.classpath
-**/persistence.properties
+**/persistence.properties*
 *.log
+*.png

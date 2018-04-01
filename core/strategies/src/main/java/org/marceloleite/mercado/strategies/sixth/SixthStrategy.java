@@ -1,5 +1,6 @@
 package org.marceloleite.mercado.strategies.sixth;
 
+import java.awt.Dimension;
 import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
 import org.marceloleite.mercado.base.model.Account;
 import org.marceloleite.mercado.base.model.CurrencyAmount;
 import org.marceloleite.mercado.base.model.House;
@@ -22,11 +24,15 @@ import org.marceloleite.mercado.commons.CircularArray;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.MercadoBigDecimal;
 import org.marceloleite.mercado.commons.OrderType;
+import org.marceloleite.mercado.commons.Statistics;
 import org.marceloleite.mercado.commons.TimeDivisionController;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.converter.ObjectToJsonConverter;
 import org.marceloleite.mercado.commons.converter.ZonedDateTimeToStringConverter;
 import org.marceloleite.mercado.commons.formatter.NonDigitalCurrencyFormatter;
+import org.marceloleite.mercado.commons.graphic.Graphic;
+import org.marceloleite.mercado.commons.graphic.GraphicData;
+import org.marceloleite.mercado.commons.graphic.MercadoRangeAxis;
 import org.marceloleite.mercado.commons.properties.Property;
 import org.marceloleite.mercado.commons.utils.ZonedDateTimeUtils;
 import org.marceloleite.mercado.data.TemporalTicker;
@@ -34,7 +40,6 @@ import org.marceloleite.mercado.data.Trade;
 import org.marceloleite.mercado.retriever.TemporalTickerCreator;
 import org.marceloleite.mercado.retriever.TradesRetriever;
 import org.marceloleite.mercado.strategies.AbstractStrategy;
-import org.marceloleite.mercado.strategies.sixth.graphic.Graphic;
 
 public class SixthStrategy extends AbstractStrategy {
 
@@ -63,6 +68,10 @@ public class SixthStrategy extends AbstractStrategy {
 
 	private Graphic graphic;
 
+	private GraphicData lastPriceGraphicData;
+	
+	private GraphicData averageLastPriceGraphicData;
+
 	public SixthStrategy(Currency currency) {
 		super(SixthStrategyParameter.class, SixthStrategyVariable.class);
 		this.currency = currency;
@@ -70,6 +79,11 @@ public class SixthStrategy extends AbstractStrategy {
 		this.circularArraySize = null;
 		this.nextValueSteps = null;
 		this.graphic = new Graphic();
+		this.graphic.setDimension(new Dimension(8192, 768));
+		this.lastPriceGraphicData = new GraphicData("Last price", StandardXYItemRenderer.LINES,
+				MercadoRangeAxis.CURRENCY_REAL);
+		this.averageLastPriceGraphicData = new GraphicData("Average last price", StandardXYItemRenderer.LINES,
+				MercadoRangeAxis.CURRENCY_REAL);
 	}
 
 	public SixthStrategy() {
@@ -136,14 +150,14 @@ public class SixthStrategy extends AbstractStrategy {
 
 	private void addToGraphic(TemporalTicker temporalTicker) {
 		Double lastPrice = temporalTicker.retrieveCurrentOrPreviousLastPrice().doubleValue();
-		Double buyOrders = buyOrdersStatistics.getAverage().doubleValue();
-		Double sellOrders = sellOrdersStatistics.getAverage().doubleValue();
-		MercadoBigDecimal average = lastPriceStatistics.getAverage();
-		Double averageLastPrice = average.doubleValue();
-		MercadoBigDecimal variation = lastPriceStatistics.getVariation();
-		Double nextLastPrice = average.add(variation.multiply(new MercadoBigDecimal(nextValueSteps))).doubleValue();
-		graphic.add(lastPrice, averageLastPrice, nextLastPrice, buyOrders, sellOrders);
-
+//		Double buyOrders = buyOrdersStatistics.getAverage().doubleValue();
+//		Double sellOrders = sellOrdersStatistics.getAverage().doubleValue();
+		MercadoBigDecimal averageLastPrice = lastPriceStatistics.getAverage();
+//		Double averageLastPrice = average.doubleValue();
+//		MercadoBigDecimal variation = lastPriceStatistics.getVariation();
+//		Double nextLastPrice = average.add(variation.multiply(new MercadoBigDecimal(nextValueSteps))).doubleValue();
+		lastPriceGraphicData.addValue(temporalTicker.getStart(), lastPrice.doubleValue());
+		averageLastPriceGraphicData.addValue(temporalTicker.getStart(), averageLastPrice.doubleValue());
 	}
 
 	private void addToStatistics(TemporalTicker temporalTicker, TimeInterval timeInterval) {
@@ -374,6 +388,8 @@ public class SixthStrategy extends AbstractStrategy {
 
 	@Override
 	public void afterFinish() {
-		graphic.plotGraphic();
+		graphic.put(lastPriceGraphicData);
+		graphic.put(averageLastPriceGraphicData);
+		graphic.writeGraphicToFile("graphic.png");
 	}
 }
