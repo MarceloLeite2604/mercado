@@ -7,6 +7,7 @@ import org.marceloleite.mercado.base.model.Account;
 import org.marceloleite.mercado.base.model.House;
 import org.marceloleite.mercado.base.model.Order;
 import org.marceloleite.mercado.base.model.OrderExecutor;
+import org.marceloleite.mercado.commons.MailSender;
 import org.marceloleite.mercado.commons.OrderStatus;
 import org.marceloleite.mercado.commons.OrderType;
 

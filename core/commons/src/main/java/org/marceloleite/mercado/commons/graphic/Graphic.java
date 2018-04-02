@@ -1,6 +1,8 @@
 package org.marceloleite.mercado.commons.graphic;
 
+import java.awt.BasicStroke;
 import java.awt.Dimension;
+import java.awt.Stroke;
 import java.awt.image.BufferedImage;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -47,7 +49,7 @@ public class Graphic {
 	public Map<String, GraphicData> getGraphicDatas() {
 		return graphicDatas;
 	}
-	
+
 	public void put(GraphicData graphicData) {
 		graphicDatas.put(graphicData.getTitle(), graphicData);
 	}
@@ -82,7 +84,17 @@ public class Graphic {
 		for (String graphicTitle : graphicDatas.keySet()) {
 			GraphicData graphicData = graphicDatas.get(graphicTitle);
 			TimeSeries timeSeries = createTimeSeries(graphicData);
-			xyPlot.setRenderer(counter, new StandardXYItemRenderer(graphicData.getGraphicType()));
+
+			StandardXYItemRenderer standardXYItemRenderer = new StandardXYItemRenderer(graphicData.getGraphicType());
+			if (GraphicStrokeType.DASHED.equals(graphicData.getGraphicStrokeType())) {
+				Stroke dashedStroke = new BasicStroke(
+				        1.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND,
+				        1.0f, new float[] {10.0f, 10.0f}, 0.0f
+				    );
+				standardXYItemRenderer.setSeriesStroke(0, dashedStroke);
+			}
+
+			xyPlot.setRenderer(counter, standardXYItemRenderer);
 			xyPlot.setDataset(counter, new TimeSeriesCollection(timeSeries));
 			if (graphicData.getMercadoRangeAxis() == MercadoRangeAxis.ORDERS) {
 				xyPlot.mapDatasetToRangeAxis(counter, 1);
@@ -108,7 +120,7 @@ public class Graphic {
 			ZonedDateTime zonedDateTime = valuePair.getKey();
 			Date date = Date.from(zonedDateTime.toInstant());
 			Minute minute = new Minute(date);
-			timeSeries.add(minute, valuePair.getValue());
+			timeSeries.addOrUpdate(minute, valuePair.getValue());
 		}
 		return timeSeries;
 	}
@@ -116,7 +128,9 @@ public class Graphic {
 	private XYPlot createRangeAxes(XYPlot xyPlot) {
 		int counter = 0;
 		for (MercadoRangeAxis mercadoRangeAxis : MercadoRangeAxis.values()) {
-			xyPlot.setRangeAxis(counter++, new NumberAxis(mercadoRangeAxis.getTitle()));
+			NumberAxis numberAxis = new NumberAxis(mercadoRangeAxis.getTitle());
+			numberAxis.setAutoRangeIncludesZero(false);
+			xyPlot.setRangeAxis(counter++, numberAxis);
 		}
 		return xyPlot;
 	}

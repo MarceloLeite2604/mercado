@@ -17,6 +17,7 @@ import org.marceloleite.mercado.base.model.House;
 import org.marceloleite.mercado.base.model.Strategy;
 import org.marceloleite.mercado.base.model.TapiInformation;
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.commons.MailSender;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.utils.ZonedDateTimeUtils;
 import org.marceloleite.mercado.controller.properties.ControllerPropertiesRetriever;

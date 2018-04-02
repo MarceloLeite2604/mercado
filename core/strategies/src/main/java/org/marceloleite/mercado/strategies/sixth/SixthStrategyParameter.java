@@ -10,7 +10,8 @@ public enum SixthStrategyParameter implements Property {
 	WORKING_AMOUNT_CURRENCY("workingAmountCurrency"),
 	CIRCULAR_ARRAY_SIZE("circularArraySize"),
 	INITIAL_STATUS("initialStatus", "saved"),
-	NEXT_VALUE_STEPS("nextValueSteps", "1");
+	NEXT_VALUE_STEPS("nextValueSteps", "1"),
+	GENERATE_DAILY_GRAPHIC("generateDailyGraphic", "false");
 
 	private String name;
 
@@ -44,7 +45,7 @@ public enum SixthStrategyParameter implements Property {
 	}
 
 	public boolean isRequired() {
-		return true;
+		return (defaultValue == null);
 	}
 
 	public static SixthStrategyParameter findByName(String name) {

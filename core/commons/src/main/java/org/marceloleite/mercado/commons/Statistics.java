@@ -161,7 +161,7 @@ public class Statistics {
 			} else {
 				first = average;
 			}
-			return new VariationCalculator().calculate(next, first);
+			return new VariationCalculator().calculate(average, first);
 		}
 	}
 	

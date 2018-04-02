@@ -1,7 +1,7 @@
 package org.marceloleite.mercado.strategies.sixth;
 
-import java.awt.Dimension;
 import java.time.Duration;
+import java.time.LocalTime;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -9,12 +9,10 @@ import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
 import org.marceloleite.mercado.base.model.Account;
 import org.marceloleite.mercado.base.model.CurrencyAmount;
 import org.marceloleite.mercado.base.model.House;
 import org.marceloleite.mercado.base.model.Order;
-import org.marceloleite.mercado.base.model.TemporalTickerVariation;
 import org.marceloleite.mercado.base.model.order.BuyOrderBuilder;
 import org.marceloleite.mercado.base.model.order.SellOrderBuilder;
 import org.marceloleite.mercado.base.model.order.analyser.NoBalanceForMinimalValueOrderAnalyserException;
@@ -29,10 +27,6 @@ import org.marceloleite.mercado.commons.TimeDivisionController;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.converter.ObjectToJsonConverter;
 import org.marceloleite.mercado.commons.converter.ZonedDateTimeToStringConverter;
-import org.marceloleite.mercado.commons.formatter.NonDigitalCurrencyFormatter;
-import org.marceloleite.mercado.commons.graphic.Graphic;
-import org.marceloleite.mercado.commons.graphic.GraphicData;
-import org.marceloleite.mercado.commons.graphic.MercadoRangeAxis;
 import org.marceloleite.mercado.commons.properties.Property;
 import org.marceloleite.mercado.commons.utils.ZonedDateTimeUtils;
 import org.marceloleite.mercado.data.TemporalTicker;
@@ -40,12 +34,18 @@ import org.marceloleite.mercado.data.Trade;
 import org.marceloleite.mercado.retriever.TemporalTickerCreator;
 import org.marceloleite.mercado.retriever.TradesRetriever;
 import org.marceloleite.mercado.strategies.AbstractStrategy;
+import org.marceloleite.mercado.strategies.sixth.graphic.SixStrategyGraphic;
+import org.marceloleite.mercado.strategies.sixth.graphic.SixthStrategyGraphicData;
 
 public class SixthStrategy extends AbstractStrategy {
 
 	private static final Logger LOGGER = LogManager.getLogger(SixthStrategy.class);
 
+	private static final LocalTime DAILY_GRAPHIC_TIME = LocalTime.of(8, 0, 0);
+
 	private TemporalTicker baseTemporalTicker;
+
+	private TemporalTicker lastTemporalTicker;
 
 	private MercadoBigDecimal growthPercentageThreshold;
 
@@ -58,19 +58,16 @@ public class SixthStrategy extends AbstractStrategy {
 	private MercadoBigDecimal workingAmountCurrency;
 
 	private Statistics lastPriceStatistics;
-	private Statistics buyOrdersStatistics;
-	private Statistics sellOrdersStatistics;
-	private Statistics orderStatistics;
+
+	private Statistics averagePriceStatistics;
 
 	private Integer circularArraySize;
 
 	private Integer nextValueSteps;
 
-	private Graphic graphic;
+	private SixStrategyGraphic sixStrategyGraphic;
 
-	private GraphicData lastPriceGraphicData;
-	
-	private GraphicData averageLastPriceGraphicData;
+	private boolean generateDailyGraphic;
 
 	public SixthStrategy(Currency currency) {
 		super(SixthStrategyParameter.class, SixthStrategyVariable.class);
@@ -78,12 +75,7 @@ public class SixthStrategy extends AbstractStrategy {
 		this.status = null;
 		this.circularArraySize = null;
 		this.nextValueSteps = null;
-		this.graphic = new Graphic();
-		this.graphic.setDimension(new Dimension(8192, 768));
-		this.lastPriceGraphicData = new GraphicData("Last price", StandardXYItemRenderer.LINES,
-				MercadoRangeAxis.CURRENCY_REAL);
-		this.averageLastPriceGraphicData = new GraphicData("Average last price", StandardXYItemRenderer.LINES,
-				MercadoRangeAxis.CURRENCY_REAL);
+		this.sixStrategyGraphic = new SixStrategyGraphic();
 	}
 
 	public SixthStrategy() {
@@ -99,74 +91,73 @@ public class SixthStrategy extends AbstractStrategy {
 	public void check(TimeInterval simulationTimeInterval, Account account, House house) {
 		TemporalTicker temporalTicker = house.getTemporalTickers().get(currency);
 		setBaseIfNull(temporalTicker);
-		TemporalTickerVariation temporalTickerVariation = generateTemporalTickerVariation(simulationTimeInterval,
-				house);
-		if (temporalTickerVariation != null) {
-			addToStatistics(temporalTicker, simulationTimeInterval);
-			addToGraphic(temporalTicker);
+		lastTemporalTicker = temporalTicker;
+		addToStatistics(temporalTicker, simulationTimeInterval);
+		addToGraphicData(temporalTicker);
 
-			MercadoBigDecimal baseLastPrice = lastPriceStatistics.getBase();
-			MercadoBigDecimal lastPrice = temporalTicker.retrieveCurrentOrPreviousLastPrice();
-
-			StringBuilder stringBuilderDebug = new StringBuilder();
-			stringBuilderDebug
-					.append(new ZonedDateTimeToStringConverter().convertTo(simulationTimeInterval.getStart()) + " ");
-			stringBuilderDebug.append(new NonDigitalCurrencyFormatter().format(lastPrice) + " ");
-			stringBuilderDebug.append(lastPriceStatistics);
-			// LOGGER.debug(stringBuilderDebug.toString());
-
-			if (lastPriceStatistics.getNext().compareTo(MercadoBigDecimal.NOT_A_NUMBER) != 0) {
-				Order order = null;
-				switch (status) {
-				case UNDEFINED:
-					if (lastPriceStatistics.getNext().compareTo(MercadoBigDecimal.ZERO) > 0) {
-						updateBase(temporalTicker);
-						order = createBuyOrder(simulationTimeInterval, account, house);
-					}
-					break;
-				case SAVED:
-					if (lastPriceStatistics.getRatio().compareTo(baseLastPrice) < 0) {
-						updateBase(temporalTicker);
-					} else if (lastPriceStatistics.getRatio().compareTo(growthPercentageThreshold) >= 0) {
-						updateBase(temporalTicker);
-						order = createBuyOrder(simulationTimeInterval, account, house);
-					}
-					break;
-				case APPLIED:
-					if (lastPriceStatistics.getRatio().compareTo(baseLastPrice) > 0) {
-						updateBase(temporalTicker);
-					} else if (lastPriceStatistics.getRatio().compareTo(shrinkPercentageThreshold) <= 0) {
-						updateBase(temporalTicker);
-						order = createSellOrder(simulationTimeInterval, account, house);
-					}
-					break;
+		if (lastPriceStatistics.getNext().compareTo(MercadoBigDecimal.NOT_A_NUMBER) != 0) {
+			Order order = null;
+			switch (status) {
+			case UNDEFINED:
+				if (lastPriceStatistics.getRatio().compareTo(MercadoBigDecimal.ZERO) > 0) {
+					updateBase(temporalTicker);
+					order = createBuyOrder(simulationTimeInterval, account, house);
 				}
-				if (order != null) {
-					executeOrder(order, account, house);
+				break;
+			case SAVED:
+				if (lastPriceStatistics.getRatio().compareTo(MercadoBigDecimal.ZERO) < 0) {
+					if (temporalTicker.retrieveCurrentOrPreviousLastPrice()
+							.compareTo(lastPriceStatistics.getBase()) < 0) {
+						updateBase(temporalTicker);
+					}
+				} else if (lastPriceStatistics.getRatio().compareTo(growthPercentageThreshold) >= 0
+						&& averagePriceStatistics.getVariation().compareTo(MercadoBigDecimal.ZERO) > 0) {
+					updateBase(temporalTicker);
+					order = createBuyOrder(simulationTimeInterval, account, house);
 				}
+				break;
+			case APPLIED:
+				if (lastPriceStatistics.getRatio().compareTo(MercadoBigDecimal.ZERO) > 0) {
+					if (temporalTicker.retrieveCurrentOrPreviousLastPrice()
+							.compareTo(lastPriceStatistics.getBase()) > 0) {
+						updateBase(temporalTicker);
+					}
+				} else if (lastPriceStatistics.getRatio().compareTo(shrinkPercentageThreshold) <= 0
+						&& averagePriceStatistics.getVariation().compareTo(MercadoBigDecimal.ZERO) < 0) {
+					updateBase(temporalTicker);
+					order = createSellOrder(simulationTimeInterval, account, house);
+				}
+				break;
 			}
+			if (order != null) {
+				executeOrder(order, account, house);
+			}
+		}
+		checkSendDailyGraphic(temporalTicker, account);
+	}
+
+	private void checkSendDailyGraphic(TemporalTicker temporalTicker, Account account) {
+		if (generateDailyGraphic && temporalTicker.getEnd().toLocalTime().equals(DAILY_GRAPHIC_TIME)) {
+			addLimitsToGraphicDatas(temporalTicker.getEnd());
+			sixStrategyGraphic.createGraphicFile();
+			sixStrategyGraphic.sendGraphic(account.getEmail());
 		}
 	}
 
-	private void addToGraphic(TemporalTicker temporalTicker) {
+	private void addToGraphicData(TemporalTicker temporalTicker) {
 		Double lastPrice = temporalTicker.retrieveCurrentOrPreviousLastPrice().doubleValue();
-//		Double buyOrders = buyOrdersStatistics.getAverage().doubleValue();
-//		Double sellOrders = sellOrdersStatistics.getAverage().doubleValue();
 		MercadoBigDecimal averageLastPrice = lastPriceStatistics.getAverage();
-//		Double averageLastPrice = average.doubleValue();
-//		MercadoBigDecimal variation = lastPriceStatistics.getVariation();
-//		Double nextLastPrice = average.add(variation.multiply(new MercadoBigDecimal(nextValueSteps))).doubleValue();
-		lastPriceGraphicData.addValue(temporalTicker.getStart(), lastPrice.doubleValue());
-		averageLastPriceGraphicData.addValue(temporalTicker.getStart(), averageLastPrice.doubleValue());
+		sixStrategyGraphic.getGraphicDatas().get(SixthStrategyGraphicData.LAST_PRICE.getTitle())
+				.addValue(temporalTicker.getStart(), lastPrice.doubleValue());
+		sixStrategyGraphic.getGraphicDatas().get(SixthStrategyGraphicData.AVERAGE_LAST_PRICE.getTitle())
+				.addValue(temporalTicker.getStart(), averageLastPrice.doubleValue());
+		sixStrategyGraphic.getGraphicDatas().get(SixthStrategyGraphicData.BASE_PRICE.getTitle())
+				.addValue(temporalTicker.getStart(), lastPriceStatistics.getBase().doubleValue());
 	}
 
 	private void addToStatistics(TemporalTicker temporalTicker, TimeInterval timeInterval) {
 		lastPriceStatistics.add(temporalTicker.retrieveCurrentOrPreviousLastPrice());
-		MercadoBigDecimal buy = new MercadoBigDecimal(temporalTicker.getBuyOrders());
-		buyOrdersStatistics.add(buy);
-		MercadoBigDecimal sell = new MercadoBigDecimal(temporalTicker.getSellOrders());
-		sellOrdersStatistics.add(sell);
-		orderStatistics.add(buy.add(sell));
+		averagePriceStatistics.add(lastPriceStatistics.getAverage());
 		CircularArray<MercadoBigDecimal> circularArray = lastPriceStatistics.getCircularArray();
 		if (!circularArray.isFilled()) {
 			Duration stepTime = timeInterval.getDuration();
@@ -188,11 +179,6 @@ public class SixthStrategy extends AbstractStrategy {
 				TemporalTicker temporalTickerForTimeInterval = temporalTickerCreator.create(currency,
 						retrievedTimeInterval, tradesOnTimeInterval);
 				lastPriceStatistics.add(temporalTickerForTimeInterval.retrieveCurrentOrPreviousLastPrice());
-				MercadoBigDecimal temporaryBuy = new MercadoBigDecimal(temporalTickerForTimeInterval.getBuyOrders());
-				buyOrdersStatistics.add(temporaryBuy);
-				MercadoBigDecimal temporarySell = new MercadoBigDecimal(temporalTickerForTimeInterval.getSellOrders());
-				sellOrdersStatistics.add(temporarySell);
-				orderStatistics.add(temporaryBuy.add(temporarySell));
 			}
 		}
 	}
@@ -202,12 +188,24 @@ public class SixthStrategy extends AbstractStrategy {
 			LOGGER.debug("Setting base temporal ticker as: " + temporalTicker + ".");
 			baseTemporalTicker = temporalTicker;
 			lastPriceStatistics.setBase(baseTemporalTicker.retrieveCurrentOrPreviousLastPrice());
+			addLimitsToGraphicDatas(temporalTicker.getStart());
 		}
 	}
 
 	private void updateBase(TemporalTicker temporalTicker) {
-		baseTemporalTicker = temporalTicker;
-		lastPriceStatistics.setBase(baseTemporalTicker.retrieveCurrentOrPreviousLastPrice());
+		addLimitsToGraphicDatas(temporalTicker.getStart());
+		lastPriceStatistics.setBase(temporalTicker.retrieveCurrentOrPreviousLastPrice());
+		addLimitsToGraphicDatas(temporalTicker.getEnd());
+	}
+
+	private void addLimitsToGraphicDatas(ZonedDateTime zonedDateTime) {
+		double baseLastPrice = lastPriceStatistics.getBase().doubleValue();
+		Double upperLimit = baseLastPrice * (1.0 + growthPercentageThreshold.doubleValue());
+		Double lowerLimit = baseLastPrice * (1.0 + shrinkPercentageThreshold.doubleValue());
+		sixStrategyGraphic.getGraphicDatas().get(SixthStrategyGraphicData.UPPER_LIMIT.getTitle())
+				.addValue(zonedDateTime, upperLimit);
+		sixStrategyGraphic.getGraphicDatas().get(SixthStrategyGraphicData.LOWER_LIMIT.getTitle())
+				.addValue(zonedDateTime, lowerLimit);
 	}
 
 	private Order createSellOrder(TimeInterval simulationTimeInterval, Account account, House house) {
@@ -269,18 +267,6 @@ public class SixthStrategy extends AbstractStrategy {
 		CurrencyAmount orderAmount = new CurrencyAmount(currency, amount);
 		LOGGER.debug("Order amount is " + orderAmount + ".");
 		return orderAmount;
-	}
-
-	private TemporalTickerVariation generateTemporalTickerVariation(TimeInterval simulationTimeInterval, House house) {
-		TemporalTicker currentTemporalTicker = house.getTemporalTickers().get(currency);
-		if (currentTemporalTicker == null) {
-			throw new RuntimeException("No temporal ticker for time interval " + simulationTimeInterval);
-		}
-
-		TemporalTickerVariation temporalTickerVariation = new TemporalTickerVariation(baseTemporalTicker,
-				currentTemporalTicker);
-		/* LOGGER.debug("Variation : " + temporalTickerVariation + "."); */
-		return temporalTickerVariation;
 	}
 
 	private void executeOrder(Order order, Account account, House house) {
@@ -369,15 +355,17 @@ public class SixthStrategy extends AbstractStrategy {
 			status = SixthStrategyStatus
 					.findByName(Optional.ofNullable(parameter.getValue()).orElse(parameter.getDefaultValue()));
 			break;
+		case GENERATE_DAILY_GRAPHIC:
+			generateDailyGraphic = Boolean
+					.parseBoolean(Optional.ofNullable(parameter.getValue()).orElse(parameter.getDefaultValue()));
+			break;
 		case NEXT_VALUE_STEPS:
 			nextValueSteps = Integer.parseInt(parameter.getValue());
 		}
 
 		if (circularArraySize != null && nextValueSteps != null) {
 			lastPriceStatistics = new Statistics(circularArraySize, nextValueSteps);
-			buyOrdersStatistics = new Statistics(circularArraySize, nextValueSteps);
-			sellOrdersStatistics = new Statistics(circularArraySize, nextValueSteps);
-			orderStatistics = new Statistics(circularArraySize, nextValueSteps);
+			averagePriceStatistics = new Statistics(circularArraySize, nextValueSteps);
 		}
 	}
 
@@ -388,8 +376,9 @@ public class SixthStrategy extends AbstractStrategy {
 
 	@Override
 	public void afterFinish() {
-		graphic.put(lastPriceGraphicData);
-		graphic.put(averageLastPriceGraphicData);
-		graphic.writeGraphicToFile("graphic.png");
+		if (lastTemporalTicker != null) {
+			addLimitsToGraphicDatas(lastTemporalTicker.getStart());
+		}
+		sixStrategyGraphic.createGraphicFile();
 	}
 }

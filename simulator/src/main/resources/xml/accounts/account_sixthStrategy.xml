@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <account>
 	<owner>Sixth Strategy</owner>
-	<email/>
+	<email>marceloleite2604@gmail.com</email>
 	<tapiInformations>
 		<id/>
 		<secret/>
@@ -38,11 +38,15 @@
 						</parameter>
 						<parameter>
 							<name>nextValueSteps</name>
-							<value>720</value>
+							<value>360</value>
 						</parameter>
 						<parameter>
 							<name>initialStatus</name>
 							<value>undefined</value>
+						</parameter>
+						<parameter>
+							<name>generateDailyGraphic</name>
+							<value>true</value>
 						</parameter>
 					</parameters>
 				</class>
