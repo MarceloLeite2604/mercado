@@ -3,7 +3,6 @@ package org.marceloleite.mercado.controller;
 import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -17,7 +16,6 @@ import org.marceloleite.mercado.base.model.House;
 import org.marceloleite.mercado.base.model.Strategy;
 import org.marceloleite.mercado.base.model.TapiInformation;
 import org.marceloleite.mercado.commons.Currency;
-import org.marceloleite.mercado.commons.MailSender;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.utils.ZonedDateTimeUtils;
 import org.marceloleite.mercado.controller.properties.ControllerPropertiesRetriever;
@@ -29,6 +27,7 @@ import org.marceloleite.mercado.databaseretriever.persistence.EntityManagerContr
 import org.marceloleite.mercado.databaseretriever.persistence.daos.AccountDAO;
 import org.marceloleite.mercado.databaseretriever.persistence.objects.AccountPO;
 import org.marceloleite.mercado.negotiationapi.model.getaccountinfo.AccountInfo;
+import org.marceloleite.mercado.retriever.email.EmailMessage;
 import org.marceloleite.mercado.siteretriever.trades.TradesSiteRetriever;
 import org.marceloleite.mercado.xml.readers.AccountsXmlReader;
 
@@ -76,11 +75,14 @@ public class Controller {
 	}
 
 	private void sendStartEmails(List<Account> accounts) {
-		MailSender mailSender = new MailSender();
+		EmailMessage emailMessage = new EmailMessage();
 		for (Account account : accounts) {
 			String email = account.getEmail();
 			if (email != null) {
-				mailSender.sendEmail(Arrays.asList(email), "Started", "mercado-controller has started.");
+				emailMessage.getToAddresses().add(email);
+				emailMessage.setSubject("Started");
+				emailMessage.setContent("Mercado Controller has started.");
+				emailMessage.send();
 			}
 		}
 	}
