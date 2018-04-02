@@ -4,7 +4,7 @@ java=$(which java)
 cat=$(which cat)
 
 project_name=mercado-controller
-version=1.0
+version=1.1.0-SNAPSHOT
 working_directory=/opt/marcelo/git/mercado/controller/
 jar_name=${project_name}-${version}.jar
 target_directory=${working_directory}target/
