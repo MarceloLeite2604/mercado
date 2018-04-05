@@ -7,7 +7,8 @@ public enum SixthStrategyVariable implements Property {
 	
 	WORKING_AMOUNT_CURRENCY("workingAmountCurrency"),
 	BASE_TEMPORAL_TICKER("baseTemporalTicker"),
-	STATUS("status");
+	STATUS("status"),
+	GENERATE_DAILY_GRAPHIC("generateDailyGraphic");
 
 	private String name;
 

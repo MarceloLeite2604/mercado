@@ -1,7 +1,6 @@
 package org.marceloleite.mercado.strategies.sixth;
 
 import java.time.Duration;
-import java.time.LocalTime;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -41,8 +40,6 @@ public class SixthStrategy extends AbstractStrategy {
 
 	private static final Logger LOGGER = LogManager.getLogger(SixthStrategy.class);
 
-	private static final LocalTime DAILY_GRAPHIC_TIME = LocalTime.of(8, 0, 0);
-
 	private TemporalTicker baseTemporalTicker;
 
 	private TemporalTicker lastTemporalTicker;
@@ -67,15 +64,12 @@ public class SixthStrategy extends AbstractStrategy {
 
 	private SixStrategyGraphic sixStrategyGraphic;
 
-	private boolean generateDailyGraphic;
-
 	public SixthStrategy(Currency currency) {
 		super(SixthStrategyParameter.class, SixthStrategyVariable.class);
 		this.currency = currency;
 		this.status = null;
 		this.circularArraySize = null;
 		this.nextValueSteps = null;
-		this.sixStrategyGraphic = new SixStrategyGraphic();
 	}
 
 	public SixthStrategy() {
@@ -137,10 +131,13 @@ public class SixthStrategy extends AbstractStrategy {
 	}
 
 	private void checkSendDailyGraphic(TemporalTicker temporalTicker, Account account) {
-		if (generateDailyGraphic && temporalTicker.getEnd().toLocalTime().equals(DAILY_GRAPHIC_TIME)) {
-			addLimitsToGraphicDatas(temporalTicker.getEnd());
-			sixStrategyGraphic.createGraphicFile();
-			sixStrategyGraphic.sendGraphic(account.getEmail());
+
+		if (sixStrategyGraphic != null) {
+			ZonedDateTime time = temporalTicker.getEnd();
+			if (sixStrategyGraphic.isTimeToSendGraphic(time)) {
+				addLimitsToGraphicDatas(time);
+				sixStrategyGraphic.sendDailyGraphic(time, account.getEmail());
+				}
 		}
 	}
 
@@ -308,6 +305,9 @@ public class SixthStrategy extends AbstractStrategy {
 		case WORKING_AMOUNT_CURRENCY:
 			json = objectToJsonConverter.convertTo(workingAmountCurrency);
 			break;
+		case GENERATE_DAILY_GRAPHIC:
+			json = Boolean.toString((sixStrategyGraphic != null));
+			break;
 		}
 
 		fifthStrategyVariable.setValue(json);
@@ -331,6 +331,11 @@ public class SixthStrategy extends AbstractStrategy {
 			workingAmountCurrency = new MercadoBigDecimal();
 			workingAmountCurrency = objectToJsonConverter.convertFromToObject(variable.getValue(),
 					workingAmountCurrency);
+			break;
+		case GENERATE_DAILY_GRAPHIC:
+			boolean generateDailyGraphic = Boolean
+					.parseBoolean(Optional.of(variable.getValue()).orElse(variable.getDefaultValue()));
+			this.sixStrategyGraphic = createSixStrategyGraphic(generateDailyGraphic);
 			break;
 		}
 	}
@@ -356,8 +361,10 @@ public class SixthStrategy extends AbstractStrategy {
 					.findByName(Optional.ofNullable(parameter.getValue()).orElse(parameter.getDefaultValue()));
 			break;
 		case GENERATE_DAILY_GRAPHIC:
-			generateDailyGraphic = Boolean
+			boolean generateDailyGraphic = Boolean
 					.parseBoolean(Optional.ofNullable(parameter.getValue()).orElse(parameter.getDefaultValue()));
+
+			this.sixStrategyGraphic = createSixStrategyGraphic(generateDailyGraphic);
 			break;
 		case NEXT_VALUE_STEPS:
 			nextValueSteps = Integer.parseInt(parameter.getValue());
@@ -367,6 +374,15 @@ public class SixthStrategy extends AbstractStrategy {
 			lastPriceStatistics = new Statistics(circularArraySize, nextValueSteps);
 			averagePriceStatistics = new Statistics(circularArraySize, nextValueSteps);
 		}
+	}
+
+	private SixStrategyGraphic createSixStrategyGraphic(boolean generate) {
+
+		SixStrategyGraphic sixStrategyGraphic = null;
+		if (generate) {
+			sixStrategyGraphic = new SixStrategyGraphic();
+		}
+		return sixStrategyGraphic;
 	}
 
 	private CurrencyAmount calculateCurrencyAmountUnitPrice(House house) {

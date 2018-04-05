@@ -1,6 +1,9 @@
 package org.marceloleite.mercado.strategies.sixth.graphic;
 
 import java.awt.Dimension;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,19 +16,27 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMultipart;
 
 import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
+import org.marceloleite.mercado.commons.Alarm;
 import org.marceloleite.mercado.commons.graphic.Graphic;
 import org.marceloleite.mercado.commons.graphic.GraphicData;
 import org.marceloleite.mercado.commons.graphic.GraphicStrokeType;
 import org.marceloleite.mercado.commons.graphic.MercadoRangeAxis;
+import org.marceloleite.mercado.commons.utils.ZonedDateTimeUtils;
 import org.marceloleite.mercado.retriever.email.EmailMessage;
 
 public class SixStrategyGraphic {
 
 	private Graphic graphic;
 
-	private static final String GRAPHIC_LOCATION = "graphic.png";
+	private static final String GRAPHIC_LOCATION = "output/graphic.png";
 
 	private Map<String, GraphicData> graphicDatas;
+
+	private static final LocalTime DAILY_GRAPHIC_TIME = LocalTime.of(8, 0, 0);
+
+	private static final int DAILY_GRAPHIC_TIME_INTERVAL_MINUTES = 30;
+
+	private Alarm dailyGraphicAlarm;
 
 	public SixStrategyGraphic() {
 		this.graphic = new Graphic();
@@ -80,12 +91,20 @@ public class SixStrategyGraphic {
 		graphic.writeGraphicToFile(GRAPHIC_LOCATION);
 	}
 
-	public void sendGraphic(String email) {
+	private Alarm createDailyGraphicAlarm(ZonedDateTime time) {
+		ZonedDateTime alarmTime = ZonedDateTime.of(time.toLocalDate(), DAILY_GRAPHIC_TIME, ZonedDateTimeUtils.DEFAULT_ZONE_ID);
+		if ( time.isAfter(alarmTime)) {
+			alarmTime = alarmTime.plusDays(1);
+		}
+		return new Alarm(alarmTime, DAILY_GRAPHIC_TIME_INTERVAL_MINUTES);
+	}
+
+	private void sendGraphic(String emailAddressToSend) {
 		EmailMessage emailMessage = new EmailMessage();
-		emailMessage.getToAddresses().add(email);
+		/*emailMessage.getToAddresses().add(emailAddressToSend);
 		emailMessage.setSubject("Daily Graphic");
 		emailMessage.setMimeMultipart(createGraphicMimeMultipart(GRAPHIC_LOCATION));
-		emailMessage.send();
+		emailMessage.send();*/
 	}
 
 	private MimeMultipart createGraphicMimeMultipart(String graphicLocation) {
@@ -98,9 +117,9 @@ public class SixStrategyGraphic {
 			messageBodyPart.setContent(htmlText, "text/html");
 			multipart.addBodyPart(messageBodyPart);
 			messageBodyPart = new MimeBodyPart();
-			DataSource fds = new FileDataSource(graphicLocation);
+			DataSource dataSource = new FileDataSource(graphicLocation);
 
-			messageBodyPart.setDataHandler(new DataHandler(fds));
+			messageBodyPart.setDataHandler(new DataHandler(dataSource));
 			messageBodyPart.setHeader("Content-ID", "<image>");
 
 			multipart.addBodyPart(messageBodyPart);
@@ -110,8 +129,29 @@ public class SixStrategyGraphic {
 
 		return multipart;
 	}
-	
+
 	public void clearData() {
-		this.graphicDatas = createGraphicDatas();	
+		this.graphicDatas = createGraphicDatas();
+	}
+
+	public void sendDailyGraphic(ZonedDateTime time, String emailAddress) {
+		if (dailyGraphicAlarm.isRinging(time)) {
+			dailyGraphicAlarm.disarm();
+			setAlarmForNextDay(time);
+		}
+		sendGraphic(emailAddress);
+	}
+
+	private void setAlarmForNextDay(ZonedDateTime time) {
+		LocalDate nextDay = time.toLocalDate().plusDays(1);
+		ZonedDateTime nextAlarmTime = ZonedDateTime.of(nextDay, DAILY_GRAPHIC_TIME, ZonedDateTimeUtils.DEFAULT_ZONE_ID);
+		dailyGraphicAlarm.setStartTime(nextAlarmTime);
+	}
+
+	public boolean isTimeToSendGraphic(ZonedDateTime time) {
+		if (dailyGraphicAlarm == null ) {
+			dailyGraphicAlarm = createDailyGraphicAlarm(time);
+		}
+		return dailyGraphicAlarm.isRinging(time);
 	}
 }

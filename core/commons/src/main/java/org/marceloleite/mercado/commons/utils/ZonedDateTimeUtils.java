@@ -20,7 +20,7 @@ public class ZonedDateTimeUtils {
 	}
 
 	public static boolean isBetween(ZonedDateTime date, ZonedDateTime startInclusive, ZonedDateTime endExclusive) {
-		return ((date.isAfter(startInclusive) || date.equals(startInclusive)) && date.equals(endExclusive));
+		return ((date.isAfter(startInclusive) || date.equals(startInclusive)) && date.isBefore(endExclusive));
 	}
 	
 	public static boolean isBetween(ZonedDateTime date, TimeInterval timeInterval) {

@@ -102,12 +102,6 @@ public class Graphic {
 			counter++;
 		}
 
-		// xyPlot = addLastPriceToXyPlot(xyPlot);
-		// xyPlot = addBuyOrdersToXyPlot(xyPlot);
-		// xyPlot = addSellOrdersToXyPlot(xyPlot);
-		// xyPlot = addAverageLastPriceToXyPlot(xyPlot);
-		// xyPlot = addNextLastPriceToXyPlot(xyPlot);
-
 		xyPlot.setDatasetRenderingOrder(DatasetRenderingOrder.FORWARD);
 		return new JFreeChart(title, JFreeChart.DEFAULT_TITLE_FONT, xyPlot, true);
 
@@ -132,6 +126,9 @@ public class Graphic {
 			numberAxis.setAutoRangeIncludesZero(false);
 			xyPlot.setRangeAxis(counter++, numberAxis);
 		}
+		NumberAxis numberAxis = new NumberAxis(MercadoRangeAxis.CURRENCY_REAL.getTitle());
+		numberAxis.setAutoRangeIncludesZero(false);
+		xyPlot.setRangeAxis(counter++, numberAxis);
 		return xyPlot;
 	}
 
