@@ -101,10 +101,10 @@ public class SixStrategyGraphic {
 
 	private void sendGraphic(String emailAddressToSend) {
 		EmailMessage emailMessage = new EmailMessage();
-		/*emailMessage.getToAddresses().add(emailAddressToSend);
+		emailMessage.getToAddresses().add(emailAddressToSend);
 		emailMessage.setSubject("Daily Graphic");
 		emailMessage.setMimeMultipart(createGraphicMimeMultipart(GRAPHIC_LOCATION));
-		emailMessage.send();*/
+		emailMessage.send();
 	}
 
 	private MimeMultipart createGraphicMimeMultipart(String graphicLocation) {
