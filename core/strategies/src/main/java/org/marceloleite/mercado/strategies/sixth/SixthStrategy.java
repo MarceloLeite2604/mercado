@@ -157,6 +157,7 @@ public class SixthStrategy extends AbstractStrategy {
 		averagePriceStatistics.add(lastPriceStatistics.getAverage());
 		CircularArray<MercadoBigDecimal> circularArray = lastPriceStatistics.getCircularArray();
 		if (!circularArray.isFilled()) {
+			LOGGER.debug("Filling last price statistics circular array.");
 			Duration stepTime = timeInterval.getDuration();
 			ZonedDateTime endTime = timeInterval.getStart();
 			Duration duration = stepTime.multipliedBy(circularArray.getVacantPositions());
@@ -177,6 +178,7 @@ public class SixthStrategy extends AbstractStrategy {
 						retrievedTimeInterval, tradesOnTimeInterval);
 				lastPriceStatistics.add(temporalTickerForTimeInterval.retrieveCurrentOrPreviousLastPrice());
 			}
+			LOGGER.debug("Filling concluded.");
 		}
 	}
 
