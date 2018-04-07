@@ -21,7 +21,7 @@ public class TradesRetriever {
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = LogManager.getLogger(TradesRetriever.class);
 
-	private static final boolean RETRIEVE_CACHED_TIME_INTERVAL_AVAILABLE = true;
+	private static final boolean RETRIEVE_CACHED_TIME_INTERVAL_AVAILABLE = false;
 
 	private TradeDAO tradeDAO;
 
