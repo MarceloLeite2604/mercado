@@ -67,7 +67,7 @@ public class TradesSiteRetriever extends AbstractSiteRetriever {
 			}
 		}
 
-		executorService.shutdownNow();
+		// executorService.shutdownNow();
 
 		return trades;
 	}
