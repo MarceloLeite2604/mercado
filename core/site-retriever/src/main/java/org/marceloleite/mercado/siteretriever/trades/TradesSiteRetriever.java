@@ -21,20 +21,22 @@ public class TradesSiteRetriever extends AbstractSiteRetriever {
 
 	private static final Duration DEFAULT_DURATION_STEP = Duration.ofMinutes(30);
 
-	private static final int DEFAULT_THREAD_POOL_SIZE = 2;
+	private static final int DEFAULT_THREAD_POOL_SIZE = 4;
 
 	private static Duration configuredStepDuration = DEFAULT_DURATION_STEP;
 
-	private static int configuredThreadPoolSize = DEFAULT_THREAD_POOL_SIZE;
+	// private static int configuredThreadPoolSize = DEFAULT_THREAD_POOL_SIZE;
+	
+	private static ExecutorService executorService = Executors.newFixedThreadPool(DEFAULT_THREAD_POOL_SIZE);
 
 	private Duration stepDuration;
 
-	private int threadPoolSize;
+	// private int threadPoolSize;
 
 	public TradesSiteRetriever(Currency currency, Duration stepDuration) {
 		super(currency);
 		this.stepDuration = stepDuration;
-		this.threadPoolSize = configuredThreadPoolSize;
+		// this.threadPoolSize = configuredThreadPoolSize;
 	}
 
 	public TradesSiteRetriever(Currency currency) {
@@ -46,7 +48,7 @@ public class TradesSiteRetriever extends AbstractSiteRetriever {
 
 		checkArguments(timeInterval);
 
-		ExecutorService executorService = Executors.newFixedThreadPool(threadPoolSize);
+		
 
 		TimeDivisionController timeDivisionController = new TimeDivisionController(timeInterval, stepDuration);
 		for (TimeInterval timeIntervalDivision : timeDivisionController.geTimeIntervals()) {
@@ -86,6 +88,6 @@ public class TradesSiteRetriever extends AbstractSiteRetriever {
 	}
 
 	public static void setConfiguredThreadPoolSize(int configuredThreadPoolSize) {
-		TradesSiteRetriever.configuredThreadPoolSize = configuredThreadPoolSize;
+		executorService = Executors.newFixedThreadPool(configuredThreadPoolSize);
 	}
 }
