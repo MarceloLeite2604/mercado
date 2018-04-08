@@ -70,8 +70,7 @@ public class TradesRetriever {
 				tradeDAO.merge(tradePOs);
 			}
 			if (end.isAfter(retrieveTimeIntervalAvailable.getEnd())) {
-				ZonedDateTime startRetrieveTime = ZonedDateTime.from(retrieveTimeIntervalAvailable.getEnd())
-						.plusSeconds(1);
+				ZonedDateTime startRetrieveTime = ZonedDateTime.from(retrieveTimeIntervalAvailable.getEnd());
 				List<Trade> trades = retrieveTradesFromSite(currency, startRetrieveTime, end);
 				List<TradePO> tradePOs = listTradePOToListTradeConverter.convertFrom(trades);
 				tradeDAO.merge(tradePOs);
