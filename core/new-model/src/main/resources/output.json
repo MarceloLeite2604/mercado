@@ -1,0 +1,21 @@
+{
+  "owner" : "Marcelo Leite",
+  "email" : "marceloleite2604@gmail.com",
+  "tapiInformation" : null,
+  "balances" : [ {
+    "currency" : "REAL",
+    "amount" : 1000
+  } ],
+  "withdrawals" : [ {
+    "currency" : "REAL",
+    "amount" : 1000
+  } ],
+  "strategies" : [ {
+    "className" : "org.marceloleite.mercado.test.Main",
+    "parameters" : [ {
+      "name" : "destroyAll",
+      "value" : "true"
+    } ],
+    "variables" : [ ]
+  } ]
+}

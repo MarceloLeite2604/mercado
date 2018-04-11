@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<account>
+    <owner>Marcelo Leite</owner>
+    <email>marceloleite2604@gmail.com</email>
+    <balances>
+        <balance>
+            <currency>BRL</currency>
+            <amount>1000</amount>
+        </balance>
+    </balances>
+    <withdrawals>
+        <withdrawal>
+            <currency>BRL</currency>
+            <amount>1000</amount>
+        </withdrawal>
+    </withdrawals>
+    <strategies>
+        <strategy>
+            <className>org.marceloleite.mercado.test.Main</className>
+            <parameters>
+                <parameter>
+                    <name>destroyAll</name>
+                    <value>true</value>
+                </parameter>
+            </parameters>
+            <variables/>
+        </strategy>
+    </strategies>
+</account>
