@@ -4,30 +4,30 @@ import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinColumns;
 import javax.persistence.ManyToOne;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.XmlTransient;
+
+import org.marceloleite.mercado.attributeconverter.ZonedDateTimeAttributeConverter;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @Entity
-@Table(name = "ORDERS")
+@Table(name = "OPERATIONS")
 @JsonIgnoreProperties({ "id", "order" })
 @JsonPropertyOrder({ "quantity", "price", "feeRate", "executed" })
 @XmlRootElement(name = "order")
-@XmlType(propOrder = { "firstCurrency", "secondCurrency", "type", "status", "hasFills", "quantity", "limitPrice",
-		"executedQuantity", "executedPriceAverage", "fee", "created", "updated", "intended" })
+// @XmlType(propOrder = { "quantity", "price", "feeRate", "executed" })
 public class Operation {
 
 	@Id
@@ -36,7 +36,7 @@ public class Operation {
 	private Long id;
 
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "ACCO_ID", nullable = false, foreignKey = @ForeignKey(name = "OPER_ORDE_FK"))
+	@JoinColumn(name = "ORDE_ID", nullable = false, foreignKey = @ForeignKey(name = "OPER_ORDE_FK"))
 	private Order order;
 
 	@Column(name = "QUANTITY")
@@ -51,22 +51,25 @@ public class Operation {
 	@Column(name = "EXECUTED")
 	private ZonedDateTime executed;
 
-	public OperationIdPO getId() {
+	@XmlTransient
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(OperationIdPO id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public OrderPO getOrder() {
+	@XmlTransient
+	public Order getOrder() {
 		return order;
 	}
 
-	public void setOrder(OrderPO order) {
+	public void setOrder(Order order) {
 		this.order = order;
 	}
 
+	@XmlElement(name = "quantity")
 	public BigDecimal getQuantity() {
 		return quantity;
 	}
@@ -75,6 +78,7 @@ public class Operation {
 		this.quantity = quantity;
 	}
 
+	@XmlElement(name = "price")
 	public BigDecimal getPrice() {
 		return price;
 	}
@@ -83,6 +87,7 @@ public class Operation {
 		this.price = price;
 	}
 
+	@XmlElement(name = "feeRate")
 	public BigDecimal getFeeRate() {
 		return feeRate;
 	}
@@ -91,6 +96,8 @@ public class Operation {
 		this.feeRate = feeRate;
 	}
 
+	@XmlElement(name = "executed")
+	@Convert(converter = ZonedDateTimeAttributeConverter.class)
 	public ZonedDateTime getExecuted() {
 		return executed;
 	}

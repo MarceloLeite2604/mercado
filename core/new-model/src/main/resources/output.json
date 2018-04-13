@@ -3,11 +3,11 @@
   "email" : "marceloleite2604@gmail.com",
   "tapiInformation" : null,
   "balances" : [ {
-    "currency" : "REAL",
+    "currency" : "BRL",
     "amount" : 1000
   } ],
   "withdrawals" : [ {
-    "currency" : "REAL",
+    "currency" : "BRL",
     "amount" : 1000
   } ],
   "strategies" : [ {
@@ -17,5 +17,21 @@
       "value" : "true"
     } ],
     "variables" : [ ]
+  } ],
+  "orders" : [ {
+    "firstCurrency" : "BRL",
+    "secondCurrency" : "LTC",
+    "type" : "2",
+    "status" : "4",
+    "hasFills" : true,
+    "quantity" : 0.23,
+    "limitPrice" : 32200,
+    "executedQuantity" : 0.04,
+    "executedPriceAverage" : 32000,
+    "fee" : 14,
+    "created" : "12/04/2018 13:43:32",
+    "updated" : "12/04/2018 13:38:32",
+    "intended" : "12/04/2018 13:33:32",
+    "operations" : [ ]
   } ]
 }

@@ -1,7 +1,9 @@
 package org.marceloleite.mercado;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,8 +14,13 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.commons.OrderStatus;
+import org.marceloleite.mercado.commons.OrderType;
+import org.marceloleite.mercado.commons.converter.ObjectToJsonConverter;
+import org.marceloleite.mercado.commons.utils.ZonedDateTimeUtils;
 import org.marceloleite.mercado.model.Account;
 import org.marceloleite.mercado.model.Balance;
+import org.marceloleite.mercado.model.Order;
 import org.marceloleite.mercado.model.Parameter;
 import org.marceloleite.mercado.model.Strategy;
 import org.marceloleite.mercado.model.Variable;
@@ -26,10 +33,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-
-import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 
 @SpringBootApplication
 public class Main {
@@ -86,6 +89,21 @@ public class Main {
 			withdrawal.setCurrency(Currency.REAL);
 			withdrawal.setAmount(new BigDecimal("1000"));
 
+			Order order = new Order();
+			order.setCreated(ZonedDateTimeUtils.now());
+			order.setQuantity(new BigDecimal("0.23"));
+			order.setExecutedPriceAverage(new BigDecimal("32000"));
+			order.setExecutedQuantity(new BigDecimal("0.035734"));
+			order.setFee(new BigDecimal("14"));
+			order.setFirstCurrency(Currency.REAL);
+			order.setSecondCurrency(Currency.LITECOIN);
+			order.setHasFills(true);
+			order.setIntended(ZonedDateTimeUtils.now().minusMinutes(10));
+			order.setLimitPrice(new BigDecimal("32200"));
+			order.setStatus(OrderStatus.FILLED);
+			order.setType(OrderType.SELL);
+			order.setUpdated(ZonedDateTimeUtils.now().minusMinutes(5));
+
 			account = new Account();
 			account.setOwner(ACCOUNT_OWNER);
 			account.setEmail("marceloleite2604@gmail.com");
@@ -97,6 +115,9 @@ public class Main {
 
 			account.setWithdrawals(new ArrayList<>());
 			account.addWithdrawal(withdrawal);
+
+			account.setOrders(new ArrayList<>());
+			account.addOrder(order);
 		}
 
 		return account;
@@ -104,11 +125,9 @@ public class Main {
 
 	private void writeJson(Object object) {
 		log.info("Persisting Json.");
-		File outputFile = new File("src/main/resources/output.json");
-		ObjectMapper objectMapper = new ObjectMapper();
-		ObjectWriter objectWriter = objectMapper.writer(new DefaultPrettyPrinter());
-		try {
-			objectWriter.writeValue(outputFile, object);
+		ObjectToJsonConverter objectToJsonConverter = new ObjectToJsonConverter();
+		try (OutputStream outputStream = new FileOutputStream("src/main/resources/output.json")) {
+			outputStream.write(objectToJsonConverter.convertTo(object).getBytes());
 		} catch (IOException exception) {
 			throw new RuntimeException("Error while writing Json file.", exception);
 		}

@@ -5,9 +5,17 @@ import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.time.ZonedDateTime;
 
+import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.commons.OrderStatus;
+import org.marceloleite.mercado.commons.OrderType;
+import org.marceloleite.mercado.commons.deserializer.CurrencyDeserializer;
 import org.marceloleite.mercado.commons.deserializer.DurationDeserializer;
+import org.marceloleite.mercado.commons.deserializer.OrderTypeDeserializer;
 import org.marceloleite.mercado.commons.deserializer.ZonedDateTimeDeserializer;
+import org.marceloleite.mercado.commons.serializer.CurrencySerializer;
 import org.marceloleite.mercado.commons.serializer.DurationSerializer;
+import org.marceloleite.mercado.commons.serializer.OrderStatusSerializer;
+import org.marceloleite.mercado.commons.serializer.OrderTypeSerializer;
 import org.marceloleite.mercado.commons.serializer.ZonedDateTimeSerializer;
 import org.marceloleite.mercado.commons.utils.ZonedDateTimeUtils;
 
@@ -48,11 +56,16 @@ public class ObjectToJsonConverter implements Converter<Object, String> {
 	private void addDefaultSerializers() {
 		simpleModule.addSerializer(ZonedDateTime.class, new ZonedDateTimeSerializer());
 		simpleModule.addSerializer(Duration.class, new DurationSerializer());
+		simpleModule.addSerializer(OrderType.class, new OrderTypeSerializer());
+		simpleModule.addSerializer(OrderStatus.class, new OrderStatusSerializer());
+		simpleModule.addSerializer(Currency.class, new CurrencySerializer());
 	}
 
 	private void addDefaultDeserializers() {
 		simpleModule.addDeserializer(ZonedDateTime.class, new ZonedDateTimeDeserializer());
 		simpleModule.addDeserializer(Duration.class, new DurationDeserializer());
+		simpleModule.addDeserializer(OrderType.class, new OrderTypeDeserializer());
+		simpleModule.addDeserializer(Currency.class, new CurrencyDeserializer());
 	}
 
 	public ObjectToJsonConverter(Class<?> clazz) {
@@ -107,11 +120,10 @@ public class ObjectToJsonConverter implements Converter<Object, String> {
 		this.clazz = clazz;
 		return (T) convertFrom(json);
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public <T> T convertFromToObject(String json, T object) {
-		return (T)convertFromToObject(json, object.getClass());
+		return (T) convertFromToObject(json, object.getClass());
 	}
 
-	
 }

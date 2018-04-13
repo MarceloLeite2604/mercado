@@ -28,9 +28,9 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Table(name = "ACCOUNTS")
 @JsonIgnoreProperties({ "id" })
-@JsonPropertyOrder({ "owner", "email", "tapiInformation", "balances", "withdrawals", "strategies" })
+@JsonPropertyOrder({ "owner", "email", "tapiInformation", "balances", "withdrawals", "strategies", "orders" })
 @XmlRootElement(name = "account")
-@XmlType(propOrder = { "owner", "email", "tapiInformation", "balances", "withdrawals", "strategies" })
+@XmlType(propOrder = { "owner", "email", "tapiInformation", "balances", "withdrawals", "strategies", "orders" })
 public class Account {
 
 	@Id
@@ -131,6 +131,8 @@ public class Account {
 		this.strategies = strategies;
 	}
 
+	@XmlElementWrapper(name = "orders")
+	@XmlElement(name = "order")
 	public List<Order> getOrders() {
 		return orders;
 	}

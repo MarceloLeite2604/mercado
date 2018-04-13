@@ -2,18 +2,18 @@ package org.marceloleite.mercado.commons;
 
 public enum OrderStatus {
 
-	UNDEFINED(1),
-	OPEN(2),
-	CANCELLED(3),
-	FILLED(4);
+	UNDEFINED(1L),
+	OPEN(2L),
+	CANCELLED(3L),
+	FILLED(4L);
 	
-	private int value;
+	private Long value;
 
-	private OrderStatus(int value) {
+	private OrderStatus(Long value) {
 		this.value = value;
 	}
 	
-	public int getValue() {
+	public Long getValue() {
 		return value;
 	}
 
