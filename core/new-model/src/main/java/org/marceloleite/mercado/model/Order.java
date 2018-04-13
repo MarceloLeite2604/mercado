@@ -70,8 +70,8 @@ public class Order {
 	private OrderType type;
 
 	@Column(name = "STATUS", nullable = false, length = 16)
-	@JsonSerialize(using=OrderStatusSerializer.class)
-	@JsonDeserialize(using=OrderStatusDeserializer.class)
+	@JsonSerialize(using = OrderStatusSerializer.class)
+	@JsonDeserialize(using = OrderStatusDeserializer.class)
 	private OrderStatus status;
 
 	@Column(name = "HAS_FILLS", nullable = false, length = 8)
@@ -126,7 +126,7 @@ public class Order {
 		this.account = account;
 	}
 
-	@XmlElement(name = "firstCurrency")
+	@XmlElement
 	@XmlJavaTypeAdapter(CurrencyXmlAdapter.class)
 	public Currency getFirstCurrency() {
 		return firstCurrency;
@@ -136,7 +136,7 @@ public class Order {
 		this.firstCurrency = firstCurrency;
 	}
 
-	@XmlElement(name = "secondCurrency")
+	@XmlElement
 	@XmlJavaTypeAdapter(CurrencyXmlAdapter.class)
 	public Currency getSecondCurrency() {
 		return secondCurrency;
@@ -146,7 +146,7 @@ public class Order {
 		this.secondCurrency = secondCurrency;
 	}
 
-	@XmlElement(name = "type")
+	@XmlElement
 	@XmlJavaTypeAdapter(OrderTypeXmlAdapter.class)
 	public OrderType getType() {
 		return type;
@@ -156,7 +156,7 @@ public class Order {
 		this.type = type;
 	}
 
-	@XmlElement(name = "status")
+	@XmlElement
 	@XmlJavaTypeAdapter(OrderStatusXmlAdapter.class)
 	public OrderStatus getStatus() {
 		return status;
@@ -166,7 +166,7 @@ public class Order {
 		this.status = status;
 	}
 
-	@XmlElement(name = "hasFills")
+	@XmlElement
 	public Boolean getHasFills() {
 		return hasFills;
 	}
@@ -175,7 +175,7 @@ public class Order {
 		this.hasFills = hasFills;
 	}
 
-	@XmlElement(name = "quantity")
+	@XmlElement
 	public BigDecimal getQuantity() {
 		return quantity;
 	}
@@ -184,7 +184,7 @@ public class Order {
 		this.quantity = quantity;
 	}
 
-	@XmlElement(name = "limitPrice")
+	@XmlElement
 	public BigDecimal getLimitPrice() {
 		return limitPrice;
 	}
@@ -193,7 +193,7 @@ public class Order {
 		this.limitPrice = limitPrice;
 	}
 
-	@XmlElement(name = "executedQuantity")
+	@XmlElement
 	public BigDecimal getExecutedQuantity() {
 		return executedQuantity;
 	}
@@ -202,7 +202,7 @@ public class Order {
 		this.executedQuantity = executedQuantity;
 	}
 
-	@XmlElement(name = "executedPriceAverage")
+	@XmlElement
 	public BigDecimal getExecutedPriceAverage() {
 		return executedPriceAverage;
 	}
@@ -211,7 +211,7 @@ public class Order {
 		this.executedPriceAverage = executedPriceAverage;
 	}
 
-	@XmlElement(name = "fee")
+	@XmlElement
 	public BigDecimal getFee() {
 		return fee;
 	}
@@ -220,7 +220,7 @@ public class Order {
 		this.fee = fee;
 	}
 
-	@XmlElement(name = "created")
+	@XmlElement
 	@XmlJavaTypeAdapter(ZonedDateTimeXmlAdapter.class)
 	public ZonedDateTime getCreated() {
 		return created;
@@ -230,7 +230,7 @@ public class Order {
 		this.created = created;
 	}
 
-	@XmlElement(name = "updated")
+	@XmlElement
 	@XmlJavaTypeAdapter(ZonedDateTimeXmlAdapter.class)
 	public ZonedDateTime getUpdated() {
 		return updated;
@@ -240,7 +240,7 @@ public class Order {
 		this.updated = updated;
 	}
 
-	@XmlElement(name = "intended")
+	@XmlElement
 	@XmlJavaTypeAdapter(ZonedDateTimeXmlAdapter.class)
 	public ZonedDateTime getIntended() {
 		return intended;
@@ -251,7 +251,7 @@ public class Order {
 	}
 
 	@XmlElementWrapper(name = "operations")
-	@XmlElement(name = "operation")
+	@XmlElement
 	public List<Operation> getOperations() {
 		return operations;
 	}

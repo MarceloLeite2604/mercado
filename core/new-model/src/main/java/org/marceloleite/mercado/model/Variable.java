@@ -58,7 +58,7 @@ public class Variable {
 		this.strategy = strategy;
 	}
 
-	@XmlElement(name = "name")
+	@XmlElement
 	public String getName() {
 		return name;
 	}
@@ -67,7 +67,7 @@ public class Variable {
 		this.name = name;
 	}
 
-	@XmlElement(name = "value")
+	@XmlElement
 	public String getValue() {
 		return value;
 	}

@@ -74,7 +74,7 @@ public class Account {
 		this.id = id;
 	}
 
-	@XmlElement(name = "owner")
+	@XmlElement
 	public String getOwner() {
 		return owner;
 	}
@@ -83,7 +83,7 @@ public class Account {
 		this.owner = owner;
 	}
 
-	@XmlElement(name = "email")
+	@XmlElement
 	public String getEmail() {
 		return email;
 	}
@@ -92,7 +92,7 @@ public class Account {
 		this.email = email;
 	}
 
-	@XmlElement(name = "tapiInformation")
+	@XmlElement
 	public TapiInformation getTapiInformation() {
 		return tapiInformation;
 	}
@@ -102,7 +102,7 @@ public class Account {
 	}
 
 	@XmlElementWrapper(name = "balances")
-	@XmlElement(name = "balance")
+	@XmlElement
 	public List<Balance> getBalances() {
 		return balances;
 	}
@@ -112,7 +112,7 @@ public class Account {
 	}
 
 	@XmlElementWrapper(name = "withdrawals")
-	@XmlElement(name = "withdrawal", required = false)
+	@XmlElement(required = false)
 	public List<Withdrawal> getWithdrawals() {
 		return withdrawals;
 	}
@@ -122,7 +122,7 @@ public class Account {
 	}
 
 	@XmlElementWrapper(name = "strategies")
-	@XmlElement(name = "strategy")
+	@XmlElement
 	public List<Strategy> getStrategies() {
 		return strategies;
 	}
@@ -132,7 +132,7 @@ public class Account {
 	}
 
 	@XmlElementWrapper(name = "orders")
-	@XmlElement(name = "order")
+	@XmlElement
 	public List<Order> getOrders() {
 		return orders;
 	}

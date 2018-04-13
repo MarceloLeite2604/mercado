@@ -64,7 +64,7 @@ public class Withdrawal {
 		this.account = account;
 	}
 
-	@XmlElement(name = "currency")
+	@XmlElement
 	@XmlJavaTypeAdapter(CurrencyXmlAdapter.class)
 	public Currency getCurrency() {
 		return currency;
@@ -74,7 +74,7 @@ public class Withdrawal {
 		this.currency = currency;
 	}
 
-	@XmlElement(name = "amount")
+	@XmlElement
 	public BigDecimal getAmount() {
 		return amount;
 	}

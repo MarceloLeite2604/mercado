@@ -58,7 +58,7 @@ public class Parameter {
 		this.strategy = strategy;
 	}
 
-	@XmlElement(name = "name")
+	@XmlElement
 	public String getName() {
 		return name;
 	}
@@ -67,7 +67,7 @@ public class Parameter {
 		this.name = name;
 	}
 
-	@XmlElement(name = "value")
+	@XmlElement
 	public String getValue() {
 		return value;
 	}
@@ -75,5 +75,4 @@ public class Parameter {
 	public void setValue(String value) {
 		this.value = value;
 	}
-
 }

@@ -26,10 +26,10 @@ public class Property implements org.marceloleite.mercado.commons.properties.Pro
 	@Column(name = "ID")
 	private Long id;
 	
-	@Column(name="NAME", length=64)
+	@Column(name="NAME", nullable = false, length=64)
 	private String name;
 
-	@Column(name="VALUE", length=128)
+	@Column(name="VALUE", nullable = false, length=128)
 	private String value;
 
 	@XmlTransient
@@ -41,7 +41,7 @@ public class Property implements org.marceloleite.mercado.commons.properties.Pro
 		this.id = id;
 	}
 
-	@XmlElement(name = "name")
+	@XmlElement
 	public String getName() {
 		return name;
 	}
@@ -50,7 +50,7 @@ public class Property implements org.marceloleite.mercado.commons.properties.Pro
 		this.name = name;
 	}
 
-	@XmlElement(name = "value")
+	@XmlElement
 	public String getValue() {
 		return value;
 	}

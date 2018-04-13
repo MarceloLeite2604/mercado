@@ -2,7 +2,6 @@ package org.marceloleite.mercado.commons.deserializer;
 
 import java.io.IOException;
 import java.time.Duration;
-import java.time.ZonedDateTime;
 
 import org.marceloleite.mercado.commons.converter.DurationToStringFormatConverter;
 
@@ -17,11 +16,7 @@ public class DurationDeserializer extends StdDeserializer<Duration> {
 	private static final long serialVersionUID = 1L;
 
 	public DurationDeserializer() {
-		this(null);
-	}
-
-	public DurationDeserializer(Class<ZonedDateTime> clazz) {
-		super(clazz);
+		super(Duration.class);
 	}
 
 	@Override

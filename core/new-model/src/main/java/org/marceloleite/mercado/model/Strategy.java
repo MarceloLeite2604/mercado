@@ -75,7 +75,7 @@ public class Strategy {
 		this.account = account;
 	}
 
-	@XmlElement(name = "className")
+	@XmlElement
 	public String getClassName() {
 		return className;
 	}
@@ -85,7 +85,7 @@ public class Strategy {
 	}
 
 	@XmlElementWrapper(name = "parameters")
-	@XmlElement(name = "parameter", required = false)
+	@XmlElement(required = false)
 	public List<Parameter> getParameters() {
 		return parameters;
 	}
@@ -98,7 +98,7 @@ public class Strategy {
 	}
 
 	@XmlElementWrapper(name = "variables")
-	@XmlElement(name = "variables", required = false)
+	@XmlElement(required = false)
 	public List<Variable> getVariables() {
 		return variables;
 	}

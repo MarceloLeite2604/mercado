@@ -23,16 +23,16 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @XmlRootElement(name = "tapiInformation")
 @XmlType(propOrder = { "identification", "secret" })
 public class TapiInformation {
-	
+
 	@Id
 	@GeneratedValue
-	@Column(name="ID")
+	@Column(name = "ID")
 	private Long id;
-	
-	@Column(name="IDENTIFICATION", length=128)
+
+	@Column(name = "IDENTIFICATION", length = 128)
 	private String identification;
 
-	@Column(name="SECRET", length=128)
+	@Column(name = "SECRET", length = 128)
 	private String secret;
 
 	@OneToOne
@@ -48,7 +48,7 @@ public class TapiInformation {
 		this.id = id;
 	}
 
-	@XmlElement(name="identification")
+	@XmlElement
 	public String getIdentification() {
 		return identification;
 	}
@@ -57,7 +57,7 @@ public class TapiInformation {
 		this.identification = identification;
 	}
 
-	@XmlElement(name="secret")
+	@XmlElement
 	public String getSecret() {
 		return secret;
 	}
@@ -74,5 +74,5 @@ public class TapiInformation {
 	public void setAccount(Account account) {
 		this.account = account;
 	}
-	
+
 }

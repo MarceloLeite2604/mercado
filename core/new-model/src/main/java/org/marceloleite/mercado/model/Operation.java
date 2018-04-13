@@ -69,7 +69,7 @@ public class Operation {
 		this.order = order;
 	}
 
-	@XmlElement(name = "quantity")
+	@XmlElement
 	public BigDecimal getQuantity() {
 		return quantity;
 	}
@@ -78,7 +78,7 @@ public class Operation {
 		this.quantity = quantity;
 	}
 
-	@XmlElement(name = "price")
+	@XmlElement
 	public BigDecimal getPrice() {
 		return price;
 	}
@@ -87,7 +87,7 @@ public class Operation {
 		this.price = price;
 	}
 
-	@XmlElement(name = "feeRate")
+	@XmlElement
 	public BigDecimal getFeeRate() {
 		return feeRate;
 	}
@@ -96,7 +96,7 @@ public class Operation {
 		this.feeRate = feeRate;
 	}
 
-	@XmlElement(name = "executed")
+	@XmlElement
 	@Convert(converter = ZonedDateTimeAttributeConverter.class)
 	public ZonedDateTime getExecuted() {
 		return executed;
