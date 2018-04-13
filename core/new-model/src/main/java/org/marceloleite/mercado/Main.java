@@ -22,10 +22,12 @@ import org.marceloleite.mercado.model.Account;
 import org.marceloleite.mercado.model.Balance;
 import org.marceloleite.mercado.model.Order;
 import org.marceloleite.mercado.model.Parameter;
+import org.marceloleite.mercado.model.Property;
 import org.marceloleite.mercado.model.Strategy;
 import org.marceloleite.mercado.model.Variable;
 import org.marceloleite.mercado.model.Withdrawal;
 import org.marceloleite.mercado.repository.AccountRepository;
+import org.marceloleite.mercado.repository.PropertyRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +44,12 @@ public class Main {
 	@Autowired
 	private AccountRepository accountRepository;
 
+	@Autowired
+	private PropertyRepository propertyRepository;
+
 	private static final String ACCOUNT_OWNER = "Marcelo Leite";
+	
+	private static final String PROPERTY_NAME = "org.marceloleite.property"; 
 
 	public static void main(String[] args) {
 		SpringApplication.run(Main.class);
@@ -52,17 +59,24 @@ public class Main {
 	@Transactional
 	public CommandLineRunner commandLineRunner() {
 		return (args) -> {
-			Account account = createStructure();
+			Account account = createAccount();
+			Property property = createProperty();
 
-			persist(account);
+			persistAccount(account);
 
-			writeXML(account);
+			persistProperty(property);
 
-			writeJson(account);
+			writeXML(account, "account");
+			
+			writeXML(property, "property");
+
+			writeJson(account, "account");
+			
+			writeJson(property, "property");
 		};
 	}
 
-	private Account createStructure() {
+	private Account createAccount() {
 
 		Account account = null;
 
@@ -123,10 +137,23 @@ public class Main {
 		return account;
 	}
 
-	private void writeJson(Object object) {
+	private Property createProperty() {
+		Property property = null;
+				
+		property = propertyRepository.findByName(PROPERTY_NAME);
+
+		if (property == null) {
+			property = new Property();
+			property.setName(PROPERTY_NAME);
+			property.setValue("propertyValue");
+		}
+		return property;
+	}
+
+	private void writeJson(Object object, String fileName) {
 		log.info("Persisting Json.");
 		ObjectToJsonConverter objectToJsonConverter = new ObjectToJsonConverter();
-		try (OutputStream outputStream = new FileOutputStream("src/main/resources/output.json")) {
+		try (OutputStream outputStream = new FileOutputStream("src/main/resources/" + fileName + ".json")) {
 			outputStream.write(objectToJsonConverter.convertTo(object).getBytes());
 		} catch (IOException exception) {
 			throw new RuntimeException("Error while writing Json file.", exception);
@@ -134,12 +161,12 @@ public class Main {
 
 	}
 
-	private void writeXML(Object object) {
+	private void writeXML(Object object, String fileName) {
 		log.info("Writing XML.");
-		File outputFile = new File("src/main/resources/output.xml");
+		File outputFile = new File("src/main/resources/" + fileName + ".xml");
 		JAXBContext jaxbContext;
 		try {
-			jaxbContext = JAXBContext.newInstance(Account.class);
+			jaxbContext = JAXBContext.newInstance(Account.class, Property.class);
 			Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 			jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 			jaxbMarshaller.marshal(object, outputFile);
@@ -149,10 +176,16 @@ public class Main {
 
 	}
 
-	private void persist(Account account) {
-		log.info("Persisting object.");
+	private void persistAccount(Account account) {
+		log.info("Persisting account.");
 
 		accountRepository.save(account);
-		// parameterRepository.saveAll(strategy.getParameters());
 	}
+
+	private void persistProperty(Property property) {
+		log.info("Persisting property.");
+
+		propertyRepository.save(property);
+	}
+
 }
