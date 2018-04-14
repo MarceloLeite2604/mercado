@@ -19,6 +19,7 @@ import javax.xml.bind.Marshaller;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.OrderStatus;
 import org.marceloleite.mercado.commons.OrderType;
+import org.marceloleite.mercado.commons.TradeType;
 import org.marceloleite.mercado.commons.converter.ObjectToJsonConverter;
 import org.marceloleite.mercado.commons.utils.ZonedDateTimeUtils;
 import org.marceloleite.mercado.model.Account;
@@ -29,12 +30,14 @@ import org.marceloleite.mercado.model.Property;
 import org.marceloleite.mercado.model.Strategy;
 import org.marceloleite.mercado.model.TemporalTicker;
 import org.marceloleite.mercado.model.Ticker;
+import org.marceloleite.mercado.model.Trade;
 import org.marceloleite.mercado.model.Variable;
 import org.marceloleite.mercado.model.Withdrawal;
 import org.marceloleite.mercado.repository.AccountRepository;
 import org.marceloleite.mercado.repository.PropertyRepository;
 import org.marceloleite.mercado.repository.TemporalTickerRepository;
 import org.marceloleite.mercado.repository.TickerRepository;
+import org.marceloleite.mercado.repository.TradeRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +63,15 @@ public class Main {
 	@Autowired
 	private TickerRepository tickerRepository;
 
+	@Autowired
+	private TradeRepository tradeRepository;
+
+	private static final String OUTPUT_FOLDER = "output/";
+
+	private static final String XML_FILE_PATH_TEMPLATE = OUTPUT_FOLDER + "%s.xml";
+
+	private static final String JSON_FILE_PATH_TEMPLATE = OUTPUT_FOLDER + "%s.json";
+
 	private static final String ACCOUNT_OWNER = "Marcelo Leite";
 
 	private static final String PROPERTY_NAME = "org.marceloleite.property";
@@ -73,6 +85,11 @@ public class Main {
 			ZonedDateTimeUtils.DEFAULT_ZONE_ID);
 
 	private static final ZonedDateTime TICKER_TIME = ZonedDateTime.of(LocalDateTime.of(2018, 04, 13, 18, 9, 0),
+			ZonedDateTimeUtils.DEFAULT_ZONE_ID);
+
+	private static final Long TRADE_ID = 1L;
+
+	private static final ZonedDateTime TRADE_TIME = ZonedDateTime.of(LocalDateTime.of(2018, 04, 14, 20, 19),
 			ZonedDateTimeUtils.DEFAULT_ZONE_ID);
 
 	public static void main(String[] args) {
@@ -103,14 +120,17 @@ public class Main {
 			persistTicker(ticker);
 			writeXML(ticker, "ticker");
 			writeJson(ticker, "ticker");
+
+			Trade trade = createTrade();
+			persistTrade(trade);
+			writeXML(trade, "trade");
+			writeJson(trade, "trade");
 		};
 	}
 
 	private Account createAccount() {
 
-		Account account = null;
-
-		account = accountRepository.findByOwner(ACCOUNT_OWNER);
+		Account account = accountRepository.findByOwner(ACCOUNT_OWNER);
 
 		if (account == null) {
 			Parameter parameter = new Parameter();
@@ -168,9 +188,7 @@ public class Main {
 	}
 
 	private Property createProperty() {
-		Property property = null;
-
-		property = propertyRepository.findByName(PROPERTY_NAME);
+		Property property = propertyRepository.findByName(PROPERTY_NAME);
 
 		if (property == null) {
 			property = new Property();
@@ -208,9 +226,7 @@ public class Main {
 	}
 
 	private Ticker createTicker() {
-		Ticker ticker = null;
-
-		ticker = tickerRepository.findByCurrencyAndTickerTime(CURRENCY, TICKER_TIME);
+		Ticker ticker = tickerRepository.findByCurrencyAndTickerTime(CURRENCY, TICKER_TIME);
 		if (ticker == null) {
 			ticker = new Ticker();
 			ticker.setCurrency(CURRENCY);
@@ -225,10 +241,24 @@ public class Main {
 		return ticker;
 	}
 
+	private Trade createTrade() {
+		Trade trade = tradeRepository.findById(TRADE_ID).orElse(null);
+		if (trade == null) {
+			trade = new Trade();
+			trade.setId(TRADE_ID);
+			trade.setAmount(new BigDecimal("1.496"));
+			trade.setCurrency(CURRENCY);
+			trade.setPrice(new BigDecimal("503.76"));
+			trade.setTime(TRADE_TIME);
+			trade.setType(TradeType.BUY);
+		}
+		return trade;
+	}
+
 	private void writeJson(Object object, String fileName) {
 		log.info("Persisting Json.");
 		ObjectToJsonConverter objectToJsonConverter = new ObjectToJsonConverter();
-		try (OutputStream outputStream = new FileOutputStream("src/main/resources/" + fileName + ".json")) {
+		try (OutputStream outputStream = new FileOutputStream(createJsonFileOutput(fileName))) {
 			outputStream.write(objectToJsonConverter.convertTo(object).getBytes());
 		} catch (IOException exception) {
 			throw new RuntimeException("Error while writing Json file.", exception);
@@ -238,10 +268,11 @@ public class Main {
 
 	private void writeXML(Object object, String fileName) {
 		log.info("Writing XML.");
-		File outputFile = new File("src/main/resources/" + fileName + ".xml");
+		File outputFile = createXmlFileOutput(fileName);
 		JAXBContext jaxbContext;
 		try {
-			jaxbContext = JAXBContext.newInstance(Account.class, Property.class, TemporalTicker.class, Ticker.class);
+			jaxbContext = JAXBContext.newInstance(Account.class, Property.class, TemporalTicker.class, Ticker.class,
+					Trade.class);
 			Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 			jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 			jaxbMarshaller.marshal(object, outputFile);
@@ -249,6 +280,14 @@ public class Main {
 			throw new RuntimeException("Error while writing XML file.", exception);
 		}
 
+	}
+
+	private File createXmlFileOutput(String fileName) {
+		return new File(String.format(XML_FILE_PATH_TEMPLATE, fileName));
+	}
+
+	private File createJsonFileOutput(String fileName) {
+		return new File(String.format(JSON_FILE_PATH_TEMPLATE, fileName));
 	}
 
 	private void persistAccount(Account account) {
@@ -269,6 +308,11 @@ public class Main {
 	private void persistTicker(Ticker ticker) {
 		log.info("Persisting ticker.");
 		tickerRepository.save(ticker);
+	}
+
+	private void persistTrade(Trade trade) {
+		log.info("Persisting trade.");
+		tradeRepository.save(trade);
 	}
 
 }
