@@ -14,8 +14,8 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TradeType;
-import org.marceloleite.mercado.xmladapter.CurrencyXmlAdapter;
-import org.marceloleite.mercado.xmladapter.TradeTypeXmlAdapter;
+import org.marceloleite.mercado.xml.xmladapter.CurrencyXmlAdapter;
+import org.marceloleite.mercado.xml.xmladapter.TradeTypeXmlAdapter;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 

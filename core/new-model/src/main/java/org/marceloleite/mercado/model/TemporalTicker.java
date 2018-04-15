@@ -16,10 +16,10 @@ import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
-import org.marceloleite.mercado.attributeconverter.ZonedDateTimeAttributeConverter;
 import org.marceloleite.mercado.commons.Currency;
-import org.marceloleite.mercado.xmladapter.CurrencyXmlAdapter;
-import org.marceloleite.mercado.xmladapter.DurationXmlAdapter;
+import org.marceloleite.mercado.database.attributeconverter.ZonedDateTimeAttributeConverter;
+import org.marceloleite.mercado.xml.xmladapter.CurrencyXmlAdapter;
+import org.marceloleite.mercado.xml.xmladapter.DurationXmlAdapter;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;

@@ -25,16 +25,16 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-import org.marceloleite.mercado.attributeconverter.ZonedDateTimeAttributeConverter;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.OrderStatus;
 import org.marceloleite.mercado.commons.OrderType;
-import org.marceloleite.mercado.commons.deserializer.OrderStatusDeserializer;
-import org.marceloleite.mercado.commons.serializer.OrderStatusSerializer;
-import org.marceloleite.mercado.xmladapter.CurrencyXmlAdapter;
-import org.marceloleite.mercado.xmladapter.OrderStatusXmlAdapter;
-import org.marceloleite.mercado.xmladapter.OrderTypeXmlAdapter;
-import org.marceloleite.mercado.xmladapter.ZonedDateTimeXmlAdapter;
+import org.marceloleite.mercado.commons.json.deserializer.OrderStatusDeserializer;
+import org.marceloleite.mercado.commons.json.serializer.OrderStatusSerializer;
+import org.marceloleite.mercado.database.attributeconverter.ZonedDateTimeAttributeConverter;
+import org.marceloleite.mercado.xml.xmladapter.CurrencyXmlAdapter;
+import org.marceloleite.mercado.xml.xmladapter.OrderStatusXmlAdapter;
+import org.marceloleite.mercado.xml.xmladapter.OrderTypeXmlAdapter;
+import org.marceloleite.mercado.xml.xmladapter.ZonedDateTimeXmlAdapter;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;

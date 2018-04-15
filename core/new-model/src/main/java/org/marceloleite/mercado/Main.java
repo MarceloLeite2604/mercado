@@ -22,6 +22,10 @@ import org.marceloleite.mercado.commons.OrderType;
 import org.marceloleite.mercado.commons.TradeType;
 import org.marceloleite.mercado.commons.converter.ObjectToJsonConverter;
 import org.marceloleite.mercado.commons.utils.ZonedDateTimeUtils;
+import org.marceloleite.mercado.database.repository.PropertyRepository;
+import org.marceloleite.mercado.database.repository.TemporalTickerRepository;
+import org.marceloleite.mercado.database.repository.TickerRepository;
+import org.marceloleite.mercado.database.repository.TradeRepository;
 import org.marceloleite.mercado.model.Account;
 import org.marceloleite.mercado.model.Balance;
 import org.marceloleite.mercado.model.Order;
@@ -33,11 +37,6 @@ import org.marceloleite.mercado.model.Ticker;
 import org.marceloleite.mercado.model.Trade;
 import org.marceloleite.mercado.model.Variable;
 import org.marceloleite.mercado.model.Withdrawal;
-import org.marceloleite.mercado.repository.AccountRepository;
-import org.marceloleite.mercado.repository.PropertyRepository;
-import org.marceloleite.mercado.repository.TemporalTickerRepository;
-import org.marceloleite.mercado.repository.TickerRepository;
-import org.marceloleite.mercado.repository.TradeRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,8 +51,8 @@ public class Main {
 	private static final Logger log = LoggerFactory.getLogger(Main.class);
 
 	@Autowired
-	private AccountRepository accountRepository;
-
+	private AccountDAO accountDAO;
+	
 	@Autowired
 	private PropertyRepository propertyRepository;
 
@@ -130,7 +129,7 @@ public class Main {
 
 	private Account createAccount() {
 
-		Account account = accountRepository.findByOwner(ACCOUNT_OWNER);
+		Account account = accountDAO.findByOwner(ACCOUNT_OWNER);
 
 		if (account == null) {
 			Parameter parameter = new Parameter();
@@ -292,7 +291,7 @@ public class Main {
 
 	private void persistAccount(Account account) {
 		log.info("Persisting account.");
-		accountRepository.save(account);
+		accountDAO.save(account);
 	}
 
 	private void persistProperty(Property property) {
@@ -314,5 +313,4 @@ public class Main {
 		log.info("Persisting trade.");
 		tradeRepository.save(trade);
 	}
-
 }
