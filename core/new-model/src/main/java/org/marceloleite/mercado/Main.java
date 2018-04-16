@@ -22,10 +22,12 @@ import org.marceloleite.mercado.commons.OrderType;
 import org.marceloleite.mercado.commons.TradeType;
 import org.marceloleite.mercado.commons.converter.ObjectToJsonConverter;
 import org.marceloleite.mercado.commons.utils.ZonedDateTimeUtils;
-import org.marceloleite.mercado.database.repository.PropertyRepository;
-import org.marceloleite.mercado.database.repository.TemporalTickerRepository;
-import org.marceloleite.mercado.database.repository.TickerRepository;
-import org.marceloleite.mercado.database.repository.TradeRepository;
+import org.marceloleite.mercado.dao.database.repository.TemporalTickerRepository;
+import org.marceloleite.mercado.dao.database.repository.TickerRepository;
+import org.marceloleite.mercado.dao.database.repository.TradeRepository;
+import org.marceloleite.mercado.dao.interfaces.AccountDAO;
+import org.marceloleite.mercado.dao.interfaces.PropertyDAO;
+import org.marceloleite.mercado.dao.xml.AccountXMLDAO;
 import org.marceloleite.mercado.model.Account;
 import org.marceloleite.mercado.model.Balance;
 import org.marceloleite.mercado.model.Order;
@@ -40,6 +42,7 @@ import org.marceloleite.mercado.model.Withdrawal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -51,10 +54,12 @@ public class Main {
 	private static final Logger log = LoggerFactory.getLogger(Main.class);
 
 	@Autowired
+	@Qualifier("AccountXMLDAO")
 	private AccountDAO accountDAO;
 	
 	@Autowired
-	private PropertyRepository propertyRepository;
+	@Qualifier("PropertyXMLDAO")
+	private PropertyDAO propertyDAO;
 
 	@Autowired
 	private TemporalTickerRepository temporalTickerRepository;
@@ -99,10 +104,11 @@ public class Main {
 	@Transactional
 	public CommandLineRunner commandLineRunner() {
 		return (args) -> {
-
+			
+			AccountXMLDAO.setXMLDirectory("output/");
+			
 			Account account = createAccount();
 			persistAccount(account);
-			writeXML(account, "account");
 			writeJson(account, "account");
 
 			Property property = createProperty();
@@ -187,7 +193,7 @@ public class Main {
 	}
 
 	private Property createProperty() {
-		Property property = propertyRepository.findByName(PROPERTY_NAME);
+		Property property = propertyDAO.findByName(PROPERTY_NAME);
 
 		if (property == null) {
 			property = new Property();
@@ -296,7 +302,7 @@ public class Main {
 
 	private void persistProperty(Property property) {
 		log.info("Persisting property.");
-		propertyRepository.save(property);
+		propertyDAO.save(property);
 	}
 
 	private void persistTemporalTicker(TemporalTicker temporalTicker) {

@@ -30,7 +30,7 @@ public class XmlReader {
 	private static final String DEFAULT_ACCOUNTS_XML_DIRECTORY_PATH = "src/main/resources/xml/accounts/";
 
 	private static final String XML_FILE_EXTENSION = "XML";
-	
+
 	private String accountsXmlDirectoryLocation;
 
 	public XmlReader(String accountsXmlDirectoryLocation) {
@@ -40,12 +40,12 @@ public class XmlReader {
 		} catch (JAXBException exception) {
 			throw new RuntimeException(exception);
 		}
-		if ( accountsXmlDirectoryLocation == null || accountsXmlDirectoryLocation.isEmpty()) {
+		if (accountsXmlDirectoryLocation == null || accountsXmlDirectoryLocation.isEmpty()) {
 			throw new IllegalArgumentException("Accounts XML Directory location can not be null.");
 		}
 		this.accountsXmlDirectoryLocation = accountsXmlDirectoryLocation;
 	}
-	
+
 	public XmlReader() {
 		this(DEFAULT_ACCOUNTS_XML_DIRECTORY_PATH);
 	}
@@ -93,6 +93,6 @@ public class XmlReader {
 			throw new RuntimeException(
 					"The file \"" + xmlAccountFile.getAbsolutePath() + "\" does not contain an Account XML.");
 		}
-		return (XmlAccount)unmarshalledObject;
+		return (XmlAccount) unmarshalledObject;
 	}
 }

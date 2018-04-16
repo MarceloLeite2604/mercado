@@ -30,11 +30,11 @@ import org.marceloleite.mercado.commons.OrderStatus;
 import org.marceloleite.mercado.commons.OrderType;
 import org.marceloleite.mercado.commons.json.deserializer.OrderStatusDeserializer;
 import org.marceloleite.mercado.commons.json.serializer.OrderStatusSerializer;
-import org.marceloleite.mercado.database.attributeconverter.ZonedDateTimeAttributeConverter;
-import org.marceloleite.mercado.xml.xmladapter.CurrencyXmlAdapter;
-import org.marceloleite.mercado.xml.xmladapter.OrderStatusXmlAdapter;
-import org.marceloleite.mercado.xml.xmladapter.OrderTypeXmlAdapter;
-import org.marceloleite.mercado.xml.xmladapter.ZonedDateTimeXmlAdapter;
+import org.marceloleite.mercado.model.attributeconverter.ZonedDateTimeAttributeConverter;
+import org.marceloleite.mercado.model.xmladapter.CurrencyXmlAdapter;
+import org.marceloleite.mercado.model.xmladapter.OrderStatusXmlAdapter;
+import org.marceloleite.mercado.model.xmladapter.OrderTypeXmlAdapter;
+import org.marceloleite.mercado.model.xmladapter.ZonedDateTimeXmlAdapter;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;

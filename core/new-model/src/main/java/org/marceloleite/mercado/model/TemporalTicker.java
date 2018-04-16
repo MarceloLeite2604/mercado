@@ -17,9 +17,9 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.marceloleite.mercado.commons.Currency;
-import org.marceloleite.mercado.database.attributeconverter.ZonedDateTimeAttributeConverter;
-import org.marceloleite.mercado.xml.xmladapter.CurrencyXmlAdapter;
-import org.marceloleite.mercado.xml.xmladapter.DurationXmlAdapter;
+import org.marceloleite.mercado.model.attributeconverter.ZonedDateTimeAttributeConverter;
+import org.marceloleite.mercado.model.xmladapter.CurrencyXmlAdapter;
+import org.marceloleite.mercado.model.xmladapter.DurationXmlAdapter;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;

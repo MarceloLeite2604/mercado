@@ -17,7 +17,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-import org.marceloleite.mercado.database.attributeconverter.ZonedDateTimeAttributeConverter;
+import org.marceloleite.mercado.model.attributeconverter.ZonedDateTimeAttributeConverter;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
