@@ -8,6 +8,18 @@ public class DurationToStringFormatConverter implements Converter<Duration, Stri
 	private static final String NUMBER_FORMAT = "#########.#########";
 
 	private static final long NANOS_IN_A_SECOND = 1000000000l;
+	
+	private static DurationToStringFormatConverter instance;
+	
+	private DurationToStringFormatConverter() {
+	}
+
+	public static DurationToStringFormatConverter getInstance() {
+		if (instance == null) {
+			instance = new DurationToStringFormatConverter();
+		}
+		return instance;
+	}
 
 	@Override
 	public String convertTo(Duration duration) {

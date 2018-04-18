@@ -10,8 +10,6 @@ import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
 public class ZonedDateTimeDeserializer extends StdDeserializer<ZonedDateTime> {
-	
-	private static final ZonedDateTimeToStringConverter CONVERTER = new ZonedDateTimeToStringConverter();
 
 	public ZonedDateTimeDeserializer() {
 		super(ZonedDateTime.class);
@@ -20,9 +18,8 @@ public class ZonedDateTimeDeserializer extends StdDeserializer<ZonedDateTime> {
 	private static final long serialVersionUID = 1L;
 
 	@Override
-	public ZonedDateTime deserialize(JsonParser parser, DeserializationContext context)
-			throws IOException {
-		return CONVERTER.convertFrom(parser.readValueAs(String.class));
+	public ZonedDateTime deserialize(JsonParser parser, DeserializationContext context) throws IOException {
+		return ZonedDateTimeToStringConverter.getInstance().convertFrom(parser.readValueAs(String.class));
 	}
 
 }

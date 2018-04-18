@@ -60,8 +60,8 @@ public class TimeInterval implements Comparable<TimeInterval> {
 
 	@Override
 	public String toString() {
-		ZonedDateTimeToStringConverter zonedDateTimeToStringConverter = new ZonedDateTimeToStringConverter();
-		return zonedDateTimeToStringConverter.convertTo(start) + " to " + zonedDateTimeToStringConverter.convertTo(end);
+		return ZonedDateTimeToStringConverter.getInstance().convertTo(start) + " to "
+				+ ZonedDateTimeToStringConverter.getInstance().convertTo(end);
 	}
 
 	@Override
@@ -97,7 +97,7 @@ public class TimeInterval implements Comparable<TimeInterval> {
 
 	@Override
 	public int compareTo(TimeInterval other) {
-		if ( start.isBefore(other.getStart())) {
+		if (start.isBefore(other.getStart())) {
 			return -1;
 		} else if (start.isAfter(other.getStart())) {
 			return 1;

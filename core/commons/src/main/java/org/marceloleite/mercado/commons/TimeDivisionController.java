@@ -117,8 +117,7 @@ public class TimeDivisionController {
 
 	@Override
 	public String toString() {
-		DurationToStringConverter durationToStringConverter = new DurationToStringConverter();
 		TimeInterval timeInterval = new TimeInterval(start, end);
-		return timeInterval + " with steps of " + durationToStringConverter.convertTo(divisionDuration);
+		return timeInterval + " with steps of " + DurationToStringConverter.getInstance().convertTo(divisionDuration);
 	}
 }

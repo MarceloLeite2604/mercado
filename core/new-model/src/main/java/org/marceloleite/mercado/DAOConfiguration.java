@@ -1,28 +1,29 @@
 package org.marceloleite.mercado;
 
+import javax.inject.Inject;
+
 import org.marceloleite.mercado.dao.database.AccountDatabaseDAO;
 import org.marceloleite.mercado.dao.database.PropertyDatabaseDAO;
 import org.marceloleite.mercado.dao.interfaces.AccountDAO;
 import org.marceloleite.mercado.dao.interfaces.PropertyDAO;
 import org.marceloleite.mercado.dao.xml.AccountXMLDAO;
 import org.marceloleite.mercado.dao.xml.PropertyXMLDAO;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class DAOConfiguration {
 
-	@Autowired
+	@Inject
 	private AccountXMLDAO accountXMLDAO;
 
-	@Autowired
+	@Inject
 	private AccountDatabaseDAO accountDatabaseDAO;
 
-	@Autowired
+	@Inject
 	private PropertyDatabaseDAO propertyDatabaseDAO;
 
-	@Autowired
+	@Inject
 	private PropertyXMLDAO propertyXMLDAO;
 
 	@Bean("AccountXMLDAO")

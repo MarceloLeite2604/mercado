@@ -27,7 +27,7 @@ public class ZonedDateTimeSerializer extends StdSerializer<ZonedDateTime> {
 	@Override
 	public void serialize(ZonedDateTime localDateTime, JsonGenerator jsonGenerator, SerializerProvider serializer)
 			throws IOException {
-		jsonGenerator.writeString(new ZonedDateTimeToStringConverter().convertTo(localDateTime));
+		jsonGenerator.writeString(ZonedDateTimeToStringConverter.getInstance().convertTo(localDateTime));
 	}
 
 }

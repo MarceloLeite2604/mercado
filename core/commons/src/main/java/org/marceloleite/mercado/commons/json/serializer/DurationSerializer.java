@@ -20,7 +20,7 @@ public class DurationSerializer extends StdSerializer<Duration> {
 	@Override
 	public void serialize(Duration duration, JsonGenerator jsonGenerator, SerializerProvider serializer)
 			throws IOException {
-		jsonGenerator.writeNumber(Long.parseLong(new DurationToStringFormatConverter().convertTo(duration)));
+		jsonGenerator.writeNumber(Long.parseLong(DurationToStringFormatConverter.getInstance().convertTo(duration)));
 	}
 
 }

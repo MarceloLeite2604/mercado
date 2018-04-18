@@ -11,6 +11,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import javax.inject.Inject;
 import javax.transaction.Transactional;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -41,11 +42,13 @@ import org.marceloleite.mercado.model.Variable;
 import org.marceloleite.mercado.model.Withdrawal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
@@ -53,21 +56,21 @@ public class Main {
 
 	private static final Logger log = LoggerFactory.getLogger(Main.class);
 
-	@Autowired
+	@Inject
 	@Qualifier("AccountXMLDAO")
 	private AccountDAO accountDAO;
 	
-	@Autowired
+	@Inject
 	@Qualifier("PropertyXMLDAO")
 	private PropertyDAO propertyDAO;
 
-	@Autowired
+	@Inject
 	private TemporalTickerRepository temporalTickerRepository;
 
-	@Autowired
+	@Inject
 	private TickerRepository tickerRepository;
 
-	@Autowired
+	@Inject
 	private TradeRepository tradeRepository;
 
 	private static final String OUTPUT_FOLDER = "output/";

@@ -7,23 +7,24 @@ import java.util.Properties;
 import org.marceloleite.mercado.commons.converter.ZonedDateTimeToStringConverter;
 import org.marceloleite.mercado.commons.encryption.Encrypt;
 
-public abstract class AbstractEnumPropertiesReader<E extends Enum<? extends Property>> implements EnumPropertiesReader<E> {
+public abstract class AbstractEnumPropertiesReader<E extends Enum<? extends Property>>
+		implements EnumPropertiesReader<E> {
 
 	protected static final String DEFAULT_PROPERTIES_FILE_NAME = "application.properties";
 
 	private Properties properties;
 
 	private PropertiesFileReader propertiesFileReader;
-	
+
 	private String defaultPropertiesFileName;
-	
+
 	private Class<E> propertyEnumClass;
-	
+
 	public AbstractEnumPropertiesReader(Class<E> propertyEnumClass, String defaultPropertiesFileName) {
 		this.propertyEnumClass = propertyEnumClass;
 		this.defaultPropertiesFileName = defaultPropertiesFileName;
 	}
-	
+
 	public AbstractEnumPropertiesReader(Class<E> propertyEnumClass) {
 		this(propertyEnumClass, DEFAULT_PROPERTIES_FILE_NAME);
 	}
@@ -31,11 +32,11 @@ public abstract class AbstractEnumPropertiesReader<E extends Enum<? extends Prop
 	@Override
 	public E getProperty(E property) {
 		String value = null;
-		Property propertyObject = (Property)property;
+		Property propertyObject = (Property) property;
 		try {
 			value = (String) properties.get(propertyObject.getName());
-			
-			if ( propertyObject.isEncrypted()) {
+
+			if (propertyObject.isEncrypted()) {
 				String decryptedValue = new Encrypt().decrypt(value);
 				propertyObject.setValue(decryptedValue);
 			} else {
@@ -43,13 +44,14 @@ public abstract class AbstractEnumPropertiesReader<E extends Enum<? extends Prop
 			}
 		} catch (NullPointerException nullPointerException) {
 			if (propertyObject.isRequired()) {
-				throw new RuntimeException("Property \"" + propertyObject.getName() + "\" not found on configuration file \""
-						+ propertiesFileReader.getPropertiesFilePath() + "\".");
+				throw new RuntimeException(
+						"Property \"" + propertyObject.getName() + "\" not found on configuration file \""
+								+ propertiesFileReader.getPropertiesFilePath() + "\".");
 			}
 		}
 		return property;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public Properties getProperties() {
 		Properties properties = new Properties();
@@ -58,7 +60,7 @@ public abstract class AbstractEnumPropertiesReader<E extends Enum<? extends Prop
 			E propertyToRetrieve = (E) enumConstant;
 			E property = getProperty(propertyToRetrieve);
 			Property propertyObject = (Property) property;
-			if (propertyObject != null ) {
+			if (propertyObject != null) {
 				if (propertyObject.getValue() == null) {
 					if (propertyObject.isRequired()) {
 						throw new RuntimeException("Property \"" + propertyObject.getName() + "\" is not defined.");
@@ -80,15 +82,15 @@ public abstract class AbstractEnumPropertiesReader<E extends Enum<? extends Prop
 	public void readConfiguration() {
 		readConfiguration(defaultPropertiesFileName);
 	}
-	
+
 	protected Duration getDurationProperty(E property) {
-		Property retrievedProperty = (Property)getProperty(property);
+		Property retrievedProperty = (Property) getProperty(property);
 		return Duration.ofSeconds(Long.parseLong(retrievedProperty.getValue()));
 	}
 
 	protected ZonedDateTime getZonedDateTimeProperty(E property) {
 		Property retrievedProperty = (Property)getProperty(property);
-		ZonedDateTimeToStringConverter zonedDateTimeToStringConverter = new ZonedDateTimeToStringConverter(); 
+		ZonedDateTimeToStringConverter zonedDateTimeToStringConverter = ZonedDateTimeToStringConverter.getInstance(); 
 		return zonedDateTimeToStringConverter.convertFrom(retrievedProperty.getValue());
 	}
 

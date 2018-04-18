@@ -23,7 +23,7 @@ public class DurationDeserializer extends StdDeserializer<Duration> {
 	public Duration deserialize(JsonParser jsonParser, DeserializationContext context)
 			throws IOException, JsonProcessingException {
 		JsonNode jsonNode = jsonParser.getCodec().readTree(jsonParser);
-		return new DurationToStringFormatConverter().convertFrom(jsonNode.textValue());
+		return DurationToStringFormatConverter.getInstance().convertFrom(jsonNode.textValue());
 	}
 
 }

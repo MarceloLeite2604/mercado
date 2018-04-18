@@ -6,6 +6,18 @@ import java.time.ZonedDateTime;
 
 public class LongToZonedDateTimeConverter implements Converter<Long, ZonedDateTime> {
 
+	private static LongToZonedDateTimeConverter instance;
+
+	private LongToZonedDateTimeConverter() {
+	}
+
+	public static LongToZonedDateTimeConverter getInstance() {
+		if (instance == null) {
+			instance = new LongToZonedDateTimeConverter();
+		}
+		return instance;
+	}
+
 	@Override
 	public ZonedDateTime convertTo(Long value) {
 		Instant instant = Instant.ofEpochSecond(value);

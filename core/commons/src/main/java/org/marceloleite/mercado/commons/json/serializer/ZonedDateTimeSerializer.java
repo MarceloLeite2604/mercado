@@ -10,8 +10,6 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 
 public class ZonedDateTimeSerializer extends StdSerializer<ZonedDateTime> {
-	
-	private static final ZonedDateTimeToStringConverter CONVERTER = new ZonedDateTimeToStringConverter();
 
 	public ZonedDateTimeSerializer() {
 		super(ZonedDateTime.class);
@@ -22,7 +20,7 @@ public class ZonedDateTimeSerializer extends StdSerializer<ZonedDateTime> {
 	@Override
 	public void serialize(ZonedDateTime zonedDateTime, JsonGenerator generator, SerializerProvider provider)
 			throws IOException {
-		generator.writeString(CONVERTER.convertTo(zonedDateTime));
+		generator.writeString(ZonedDateTimeToStringConverter.getInstance().convertTo(zonedDateTime));
 	}
 
 }

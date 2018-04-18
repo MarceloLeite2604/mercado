@@ -8,7 +8,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.inject.Inject;
+
 import org.springframework.stereotype.Component;
 
 @Component
@@ -20,7 +21,7 @@ public abstract class BaseXMLDAO<T> {
 
 	private static String XMLDirectory = DEFAULT_XML_DIRECTORY;
 
-	@Autowired
+	@Inject
 	private XMLReaderWriter XML_READER_WRITER;
 
 	protected File findXMLFileByName(String fileName) {

@@ -11,7 +11,7 @@ public class DurationToStringConverter implements Converter<Duration, String> {
 	private static final String SECOND_UNIT = "second";
 
 	private static final String MINUTE_UNIT = "minute";
-	
+
 	private static final String DAY_UNIT = "day";
 
 	private static final String HOUR_UNIT = "hour";
@@ -24,7 +24,19 @@ public class DurationToStringConverter implements Converter<Duration, String> {
 
 	private static final long HOUR_IN_A_DAY = 24l;
 
+	private static DurationToStringConverter instance;
+
 	private List<String> strings;
+
+	private DurationToStringConverter() {
+	}
+
+	public static DurationToStringConverter getInstance() {
+		if (instance == null) {
+			instance = new DurationToStringConverter();
+		}
+		return instance;
+	}
 
 	@Override
 	public String convertTo(Duration duration) {
@@ -43,7 +55,7 @@ public class DurationToStringConverter implements Converter<Duration, String> {
 		total = calculateValue(total, MINUTES_IN_AN_HOUR, MINUTE_UNIT);
 		total = calculateValue(total, HOUR_IN_A_DAY, HOUR_UNIT);
 		elaborateUnitText(total, DAY_UNIT);
-		
+
 		return elaborateText();
 
 	}
@@ -52,7 +64,7 @@ public class DurationToStringConverter implements Converter<Duration, String> {
 		long remainder = total % (division);
 
 		elaborateUnitText(remainder, unit);
-		
+
 		return (total - remainder) / division;
 	}
 

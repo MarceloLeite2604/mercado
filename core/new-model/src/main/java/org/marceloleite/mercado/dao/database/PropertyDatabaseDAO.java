@@ -1,13 +1,14 @@
 package org.marceloleite.mercado.dao.database;
 
+import javax.inject.Inject;
+
 import org.marceloleite.mercado.dao.database.repository.PropertyRepository;
 import org.marceloleite.mercado.dao.interfaces.PropertyDAO;
 import org.marceloleite.mercado.model.Property;
-import org.springframework.beans.factory.annotation.Autowired;
 
 public class PropertyDatabaseDAO implements PropertyDAO {
 
-	@Autowired
+	@Inject
 	private PropertyRepository propertyRepository;
 
 	@Override
