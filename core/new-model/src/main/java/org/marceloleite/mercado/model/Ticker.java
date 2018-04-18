@@ -15,11 +15,16 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.commons.json.deserializer.ZonedDateTimeFromEpochDeserializer;
+import org.marceloleite.mercado.commons.json.serializer.ZonedDateTimeFromEpochSerializer;
 import org.marceloleite.mercado.model.xmladapter.CurrencyXmlAdapter;
 import org.marceloleite.mercado.model.xmladapter.ZonedDateTimeXmlAdapter;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @Entity
 @Table(name = "TICKERS")
@@ -38,6 +43,9 @@ public class Ticker {
 	private Currency currency;
 
 	@Column(name = "TICKER_TIME", nullable = false)
+	@JsonProperty("date")
+	@JsonSerialize(using = ZonedDateTimeFromEpochSerializer.class)
+	@JsonDeserialize(using = ZonedDateTimeFromEpochDeserializer.class)
 	private ZonedDateTime tickerTime;
 
 	@Column(name = "BUY", nullable = false, precision = 20, scale = 8)
@@ -56,6 +64,7 @@ public class Ticker {
 	private BigDecimal sell;
 
 	@Column(name = "VOLUME", nullable = false, precision = 20, scale = 8)
+	@JsonProperty("vol")
 	private BigDecimal volume;
 
 	@XmlTransient

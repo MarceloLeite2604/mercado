@@ -5,7 +5,6 @@ import java.net.URISyntaxException;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.inject.Inject;
 import javax.ws.rs.NotFoundException;
 
 import org.marceloleite.mercado.commons.Currency;
@@ -13,10 +12,8 @@ import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.converter.EpochSecondsToZonedDateTimeConveter;
 import org.marceloleite.mercado.model.Trade;
 import org.marceloleite.mercado.siteretriever.AbstractSiteRetriever;
-import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-@Component
 class PartialTradesSiteRetriever extends AbstractSiteRetriever {
 
 	private static final String METHOD = "trades";
@@ -25,9 +22,6 @@ class PartialTradesSiteRetriever extends AbstractSiteRetriever {
 
 	private static final long WAIT_TIME = 500l;
 	
-	@Inject
-	private EpochSecondsToZonedDateTimeConveter epochSecondsToZonedDateTimeConveter;
-
 	public PartialTradesSiteRetriever() {
 		super();
 	}	
@@ -77,10 +71,11 @@ class PartialTradesSiteRetriever extends AbstractSiteRetriever {
 	
 	protected URI elaborateURL(Currency currency, TimeInterval timeInterval) {
 		StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder.append(TARGET_URL);
 		stringBuilder.append(String.format(BASE_PATH_TEMPLATE, currency, getMethod()));
 		stringBuilder.append(String.format("%d/%d/",
-				epochSecondsToZonedDateTimeConveter.convertTo(timeInterval.getStart()),
-				epochSecondsToZonedDateTimeConveter.convertTo(timeInterval.getEnd())));
+				EpochSecondsToZonedDateTimeConveter.getInstance().convertTo(timeInterval.getStart()),
+				EpochSecondsToZonedDateTimeConveter.getInstance().convertTo(timeInterval.getEnd())));
 		try {
 			return new URI(stringBuilder.toString());
 		} catch (URISyntaxException exception) {

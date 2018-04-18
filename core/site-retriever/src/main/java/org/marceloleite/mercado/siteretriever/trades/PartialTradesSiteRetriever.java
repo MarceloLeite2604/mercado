@@ -66,7 +66,7 @@ class PartialTradesSiteRetriever extends AbstractSiteRetriever {
 	}
 
 	private String getPathWithParameters(TimeInterval timeInterval) {
-		EpochSecondsToZonedDateTimeConveter epochSecondsToZonedDateTimeConveter = new EpochSecondsToZonedDateTimeConveter();
+		EpochSecondsToZonedDateTimeConveter epochSecondsToZonedDateTimeConveter = EpochSecondsToZonedDateTimeConveter.getInstance();
 		return String.format(getPath() + "%d/%d/",
 				epochSecondsToZonedDateTimeConveter.convertTo(timeInterval.getStart()),
 				epochSecondsToZonedDateTimeConveter.convertTo(timeInterval.getEnd()));

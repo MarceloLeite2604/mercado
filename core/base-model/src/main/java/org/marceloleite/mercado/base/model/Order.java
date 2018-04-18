@@ -225,7 +225,7 @@ public class Order extends AbstractTimedObject {
 		stringBuffer.append(currencyAmountToBuy + " ");
 		stringBuffer.append("paying a unit price of ");
 		stringBuffer.append(currencyAmountToPay + " ");
-		stringBuffer.append("at " + new ZonedDateTimeToStringConverter().convertTo(intended));
+		stringBuffer.append("at " + ZonedDateTimeToStringConverter.getInstance().convertTo(intended));
 		
 		return stringBuffer.toString();
 	}
@@ -239,7 +239,7 @@ public class Order extends AbstractTimedObject {
 		stringBuffer.append(currencyAmountToSell + " ");
 		stringBuffer.append("receiving a unit price of ");
 		stringBuffer.append(currencyAmountToReceive + " ");
-		stringBuffer.append("at " + new ZonedDateTimeToStringConverter().convertTo(intended));
+		stringBuffer.append("at " + ZonedDateTimeToStringConverter.getInstance().convertTo(intended));
 		
 		return stringBuffer.toString();
 	}

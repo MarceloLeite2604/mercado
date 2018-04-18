@@ -29,7 +29,7 @@ public class Main {
 			ZonedDateTime zdt2 = zonedDateTimeToStringConverter.convertFrom("01/01/2017 00:00:00");
 			
 			System.out.println(zdt1.equals(zdt2));*/
-			ZonedDateTimeToStringConverter zonedDateTimeToStringConverter = new ZonedDateTimeToStringConverter();
+			ZonedDateTimeToStringConverter zonedDateTimeToStringConverter = ZonedDateTimeToStringConverter.getInstance();
 			ZonedDateTime start = zonedDateTimeToStringConverter.convertFrom("01/01/2017 00:00:00");
 			ZonedDateTime end = zonedDateTimeToStringConverter.convertFrom("02/01/2017 00:00:00");
 			Duration duration = Duration.ofSeconds(60);

@@ -30,11 +30,10 @@ public class JsonOrderToOrderDataConverter implements Converter<JsonOrder, Order
 		order.setExecutedQuantity(new MercadoBigDecimal(jsonOrder.getExecutedQuantity()));
 		order.setExecutedPriceAverage(new MercadoBigDecimal(jsonOrder.getExecutedPriceAvg()));
 		order.setFee(new MercadoBigDecimal(jsonOrder.getFee()));
-		LongToZonedDateTimeConverter longToZonedDateTimeConverter = new LongToZonedDateTimeConverter();
 		long longCreatedTimestamp = Long.parseLong(jsonOrder.getCreatedTimestamp());
-		order.setCreated(longToZonedDateTimeConverter.convertTo(longCreatedTimestamp));
+		order.setCreated(LongToZonedDateTimeConverter.getInstance().convertTo(longCreatedTimestamp));
 		long longUpdatedTimestamp = Long.parseLong(jsonOrder.getUpdatedTimestamp());
-		order.setUpdated(longToZonedDateTimeConverter.convertTo(longUpdatedTimestamp));
+		order.setUpdated(LongToZonedDateTimeConverter.getInstance().convertTo(longUpdatedTimestamp));
 
 		List<JsonOperation> jsonOperations = jsonOrder.getOperations();
 		List<OperationData> operationDatas = new ListJsonOperationToListOperationDataConverter()

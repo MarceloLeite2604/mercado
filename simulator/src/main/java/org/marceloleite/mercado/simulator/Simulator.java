@@ -167,8 +167,7 @@ public class Simulator {
 	}
 
 	private void logSimulationStep(TimeInterval timeInterval) {
-		ZonedDateTimeToStringConverter zonedDateTimeToStringConverter = new ZonedDateTimeToStringConverter();
-		LOGGER.info("From: " + zonedDateTimeToStringConverter.convertTo(timeInterval.getStart()) + " to: "
-				+ zonedDateTimeToStringConverter.convertTo(timeInterval.getEnd()));
+		LOGGER.info("From: " + ZonedDateTimeToStringConverter.getInstance().convertTo(timeInterval.getStart()) + " to: "
+				+ ZonedDateTimeToStringConverter.getInstance().convertTo(timeInterval.getEnd()));
 	}
 }

@@ -28,7 +28,7 @@ import org.springframework.context.annotation.Bean;
 @EnableAutoConfiguration(exclude={DataSourceAutoConfiguration.class,HibernateJpaAutoConfiguration.class})
 public class Main {
 	
-	private static final Logger LOG = LoggerFactory.getLogger(Main.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
 	
 	@Inject
 	private TradesSiteRetriever tradesSiteRetriever;
@@ -41,7 +41,9 @@ public class Main {
 	@Transactional
 	public CommandLineRunner commandLineRunner() {
 		return (args) -> {
-			testTradesSiteRetriever();
+			tickerSiteRetriever();
+			// orderbookSiteRetriever();
+			// testTradesSiteRetriever();
 		};
 	}
 

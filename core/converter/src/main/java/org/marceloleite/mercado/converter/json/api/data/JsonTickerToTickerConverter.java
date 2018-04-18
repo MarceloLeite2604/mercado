@@ -15,7 +15,7 @@ public class JsonTickerToTickerConverter implements Converter<JsonTicker, Ticker
 		
 		Ticker ticker = new Ticker();
 		ticker.setCurrency(jsonTicker.getCurrency());
-		ticker.setTime(new LongToZonedDateTimeConverter().convertTo(jsonTickerValues.getDate()));
+		ticker.setTime(LongToZonedDateTimeConverter.getInstance().convertTo(jsonTickerValues.getDate()));
 		ticker.setHigh(jsonTickerValues.getHigh());
 		ticker.setLow(jsonTickerValues.getLow());
 		ticker.setVolume(jsonTickerValues.getVol());

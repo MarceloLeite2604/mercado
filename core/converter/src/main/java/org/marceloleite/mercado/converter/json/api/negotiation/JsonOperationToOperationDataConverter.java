@@ -15,7 +15,7 @@ public class JsonOperationToOperationDataConverter implements Converter<JsonOper
 		operationData.setPrice(Double.parseDouble(jsonOperation.getPrice()));
 		operationData.setFeeRate(Double.parseDouble(jsonOperation.getFeeRate()));
 		long longExecutedTimestamp = Long.parseLong(jsonOperation.getExecutedTimestamp());
-		operationData.setExecuted(new LongToZonedDateTimeConverter().convertTo(longExecutedTimestamp));
+		operationData.setExecuted(LongToZonedDateTimeConverter.getInstance().convertTo(longExecutedTimestamp));
 		return operationData;
 	}
 

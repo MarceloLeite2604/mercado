@@ -14,8 +14,7 @@ public class JsonWithdrawalToWithdrawalConverter implements Converter<JsonWithdr
 		Withdrawal withdrawal = new Withdrawal();
 		withdrawal.setAccount(jsonWithdrawal.getAccount());
 		withdrawal.setAddress(jsonWithdrawal.getAddress());
-		LongToZonedDateTimeConverter longToZonedDateTimeConverter = new LongToZonedDateTimeConverter();
-		withdrawal.setCreated(longToZonedDateTimeConverter.convertTo(jsonWithdrawal.getCreated_timestamp()));
+		withdrawal.setCreated(LongToZonedDateTimeConverter.getInstance().convertTo(jsonWithdrawal.getCreated_timestamp()));
 		withdrawal.setCurrency(Currency.getByAcronym(jsonWithdrawal.getCoin()));
 		withdrawal.setDescription(jsonWithdrawal.getDescription());
 		withdrawal.setFee(jsonWithdrawal.getFee());
@@ -23,7 +22,7 @@ public class JsonWithdrawalToWithdrawalConverter implements Converter<JsonWithdr
 		withdrawal.setNetQuantity(jsonWithdrawal.getNet_quantity());
 		withdrawal.setQuantity(jsonWithdrawal.getQuantity());
 		withdrawal.setStatus(WithdrawalStatus.getByValue(jsonWithdrawal.getStatus()));
-		withdrawal.setUpdated(longToZonedDateTimeConverter.convertTo(jsonWithdrawal.getUpdated_timestamp()));
+		withdrawal.setUpdated(LongToZonedDateTimeConverter.getInstance().convertTo(jsonWithdrawal.getUpdated_timestamp()));
 		return withdrawal;
 	}
 

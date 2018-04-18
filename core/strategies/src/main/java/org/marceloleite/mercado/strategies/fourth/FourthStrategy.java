@@ -128,7 +128,7 @@ public class FourthStrategy extends AbstractStrategy {
 			CurrencyAmount currencyAmountUnitPrice = calculateCurrencyAmountUnitPrice(house);
 			Order sellOrder = new SellOrderBuilder().toExecuteOn(simulationTimeInterval.getStart())
 					.selling(currencyAmountToSell).receivingUnitPriceOf(currencyAmountUnitPrice).build();
-			LOGGER.info(new ZonedDateTimeToStringConverter().convertTo(simulationTimeInterval.getStart()) + ": Created "
+			LOGGER.info(ZonedDateTimeToStringConverter.getInstance().convertTo(simulationTimeInterval.getStart()) + ": Created "
 					+ sellOrder + ".");
 			executeOrder(sellOrder, account, house);
 		}
@@ -141,7 +141,7 @@ public class FourthStrategy extends AbstractStrategy {
 			CurrencyAmount currencyAmountUnitPrice = calculateCurrencyAmountUnitPrice(house);
 			Order buyOrder = new BuyOrderBuilder().toExecuteOn(simulationTimeInterval.getStart())
 					.buying(currencyAmountToBuy).payingUnitPriceOf(currencyAmountUnitPrice).build();
-			LOGGER.info(new ZonedDateTimeToStringConverter().convertTo(simulationTimeInterval.getStart()) + ": Created "
+			LOGGER.info(ZonedDateTimeToStringConverter.getInstance().convertTo(simulationTimeInterval.getStart()) + ": Created "
 					+ buyOrder + ".");
 			executeOrder(buyOrder, account, house);
 		}

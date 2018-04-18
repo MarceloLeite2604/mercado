@@ -48,7 +48,7 @@ public class Main {
 			System.out.println("Status code: " + listSystemMessagesMethodResponse.getStatusCode());
 			System.out.println("Error message: " + listSystemMessagesMethodResponse.getErrorMessage());
 			System.out.println("Timestamp: "
-					+ new ZonedDateTimeToStringConverter().convertTo(listSystemMessagesMethodResponse.getTimestamp()));
+					+ ZonedDateTimeToStringConverter.getInstance().convertTo(listSystemMessagesMethodResponse.getTimestamp()));
 			List<SystemMessage> systemMessages = listSystemMessagesMethodResponse.getResponse();
 			System.out.println("Total messages: " + systemMessages.size());
 			if (!systemMessages.isEmpty()) {

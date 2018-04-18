@@ -30,7 +30,7 @@ public abstract class AbstractTapiResponse<T, T2> {
 			throw new RuntimeException("Error while retrieving TAPI response: " + statusCode + " - " + errorMessage);
 		}
 		long longTimestamp = Long.parseLong(jsonTapiResponse.getServerUnixTimestamp());
-		this.timestamp = new LongToZonedDateTimeConverter().convertTo(longTimestamp);
+		this.timestamp = LongToZonedDateTimeConverter.getInstance().convertTo(longTimestamp);
 		this.responseData = jsonTapiResponse.getResponseData();
 		this.jsonResponseDataClass = jsonResponseDataClass;
 		T jsonResponseData = getJsonResponseData();

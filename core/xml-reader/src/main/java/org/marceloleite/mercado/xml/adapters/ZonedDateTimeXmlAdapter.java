@@ -10,12 +10,12 @@ public class ZonedDateTimeXmlAdapter extends XmlAdapter<String, ZonedDateTime> {
 
 	@Override
 	public ZonedDateTime unmarshal(String string) throws Exception {
-		return new ZonedDateTimeToStringConverter().convertFrom(string);
+		return ZonedDateTimeToStringConverter.getInstance().convertFrom(string);
 	}
 
 	@Override
 	public String marshal(ZonedDateTime zonedDateTime) throws Exception {
-		return new ZonedDateTimeToStringConverter().convertTo(zonedDateTime);
+		return ZonedDateTimeToStringConverter.getInstance().convertTo(zonedDateTime);
 	}
 
 }

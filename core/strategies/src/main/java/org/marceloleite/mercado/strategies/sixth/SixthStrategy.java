@@ -219,7 +219,7 @@ public class SixthStrategy extends AbstractStrategy {
 
 		Order order = new SellOrderBuilder().toExecuteOn(simulationTimeInterval.getStart())
 				.selling(orderAnalyser.getSecond()).receivingUnitPriceOf(orderAnalyser.getUnitPrice()).build();
-		LOGGER.info(new ZonedDateTimeToStringConverter().convertTo(simulationTimeInterval.getStart()) + ": Created "
+		LOGGER.info(ZonedDateTimeToStringConverter.getInstance().convertTo(simulationTimeInterval.getStart()) + ": Created "
 				+ order + ".");
 		return order;
 	}
@@ -237,7 +237,7 @@ public class SixthStrategy extends AbstractStrategy {
 
 		Order order = new BuyOrderBuilder().toExecuteOn(simulationTimeInterval.getStart())
 				.buying(orderAnalyser.getSecond()).payingUnitPriceOf(orderAnalyser.getUnitPrice()).build();
-		LOGGER.info(new ZonedDateTimeToStringConverter().convertTo(simulationTimeInterval.getStart()) + ": Created "
+		LOGGER.info(ZonedDateTimeToStringConverter.getInstance().convertTo(simulationTimeInterval.getStart()) + ": Created "
 				+ order + ".");
 		return order;
 	}

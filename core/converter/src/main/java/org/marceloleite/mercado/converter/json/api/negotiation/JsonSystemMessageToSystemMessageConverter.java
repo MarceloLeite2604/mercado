@@ -11,9 +11,8 @@ public class JsonSystemMessageToSystemMessageConverter implements Converter<Json
 	@Override
 	public SystemMessage convertTo(JsonSystemMessage jsonSystemMessage) {
 		SystemMessage systemMessage = new SystemMessage();
-		LongToZonedDateTimeConverter longToZonedDateTimeConverter = new LongToZonedDateTimeConverter();
 		long longMsgDate = Long.parseLong(jsonSystemMessage.getMsgContent());
-		systemMessage.setTime(longToZonedDateTimeConverter.convertTo(longMsgDate));
+		systemMessage.setTime(LongToZonedDateTimeConverter.getInstance().convertTo(longMsgDate));
 		systemMessage.setSystemMessageLevel(SystemMessageLevel.getByName(jsonSystemMessage.getLevel()));
 		systemMessage.setMessageContent(jsonSystemMessage.getMsgContent());
 		return systemMessage;

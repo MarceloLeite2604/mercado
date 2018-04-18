@@ -1,10 +1,10 @@
 package org.marceloleite.mercado.commons.converter;
 
+import java.time.Instant;
 import java.time.ZonedDateTime;
 
-import org.springframework.stereotype.Component;
+import org.marceloleite.mercado.commons.utils.ZonedDateTimeUtils;
 
-@Component
 public class EpochSecondsToZonedDateTimeConveter implements Converter<ZonedDateTime, Long> {
 
 	private static EpochSecondsToZonedDateTimeConveter instance;
@@ -26,6 +26,6 @@ public class EpochSecondsToZonedDateTimeConveter implements Converter<ZonedDateT
 
 	@Override
 	public ZonedDateTime convertFrom(Long epochTime) {
-		throw new UnsupportedOperationException();
+		return ZonedDateTime.ofInstant(Instant.ofEpochSecond(epochTime), ZonedDateTimeUtils.DEFAULT_ZONE_ID);
 	}
 }

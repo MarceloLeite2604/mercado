@@ -3,15 +3,15 @@ package org.marceloleite.mercado.commons.json.serializer;
 import java.io.IOException;
 import java.time.ZonedDateTime;
 
-import org.marceloleite.mercado.commons.converter.EpochSecondsToZonedDateTimeConveter;
+import org.marceloleite.mercado.commons.converter.ZonedDateTimeToStringConverter;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 
-public class ZonedDateTimeSerializer extends StdSerializer<ZonedDateTime> {
+public class ZonedDateTimeFromEpochSerializer extends StdSerializer<ZonedDateTime> {
 
-	public ZonedDateTimeSerializer() {
+	public ZonedDateTimeFromEpochSerializer() {
 		super(ZonedDateTime.class);
 	}
 
@@ -20,7 +20,7 @@ public class ZonedDateTimeSerializer extends StdSerializer<ZonedDateTime> {
 	@Override
 	public void serialize(ZonedDateTime zonedDateTime, JsonGenerator generator, SerializerProvider provider)
 			throws IOException {
-		generator.writeNumber(EpochSecondsToZonedDateTimeConveter.getInstance().convertTo(zonedDateTime));
+		generator.writeString(ZonedDateTimeToStringConverter.getInstance().convertTo(zonedDateTime));
 	}
 
 }

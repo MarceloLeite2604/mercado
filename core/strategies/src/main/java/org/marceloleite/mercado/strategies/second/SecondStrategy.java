@@ -90,7 +90,6 @@ public class SecondStrategy extends AbstractStrategy {
 	PercentageFormatter percentageFormatter = new PercentageFormatter();
 
 	private void analyze() {
-		ZonedDateTimeToStringConverter zonedDateTimeToStringConverter = new ZonedDateTimeToStringConverter();
 		System.out.println("Current status: ");
 		System.out.println("               Time    Order variation     Buy/sell ratio     Last/first ratio\n");
 		for (int counter = 0; counter < temporalTickerCircularArray.getOccupiedPositions(); counter++) {
@@ -101,7 +100,7 @@ public class SecondStrategy extends AbstractStrategy {
 			MercadoBigDecimal buySellRatio = bosoCircularArray.get(counter);
 			MercadoBigDecimal lastFirstRatio = lastFirstRatioCircularArray.get(counter);
 			StringBuffer stringBuffer = new StringBuffer();
-			stringBuffer.append(zonedDateTimeToStringConverter
+			stringBuffer.append(ZonedDateTimeToStringConverter.getInstance()
 					.convertTo(temporalTickerCircularArray.get(counter).getStart()) + "  | ");
 			stringBuffer.append(String.format("%15s", percentageFormatter.format(orderVariation)) + "  | ");
 			stringBuffer.append(String.format("%15s", digitalCurrencyFormatter.format(buySellRatio.subtract(MercadoBigDecimal.ONE))) + "  | ");

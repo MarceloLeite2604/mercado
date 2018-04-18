@@ -14,10 +14,17 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TradeType;
+import org.marceloleite.mercado.commons.json.deserializer.TradeTypeDeserializer;
+import org.marceloleite.mercado.commons.json.deserializer.ZonedDateTimeFromEpochDeserializer;
+import org.marceloleite.mercado.commons.json.serializer.TradeTypeSerializer;
+import org.marceloleite.mercado.commons.json.serializer.ZonedDateTimeFromEpochSerializer;
 import org.marceloleite.mercado.model.xmladapter.CurrencyXmlAdapter;
 import org.marceloleite.mercado.model.xmladapter.TradeTypeXmlAdapter;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 @Entity
 @Table(name = "TRADES")
@@ -28,6 +35,7 @@ public class Trade {
 
 	@Id
 	@Column(name = "ID")
+	@JsonProperty("tid")
 	private Long id;
 
 	@Column(name = "CURRENCY", nullable = false, length = 4)
@@ -40,9 +48,14 @@ public class Trade {
 	private BigDecimal price;
 
 	@Column(name = "TIME", nullable = false)
+	@JsonProperty("date")
+	@JsonSerialize(using = ZonedDateTimeFromEpochSerializer.class)
+	@JsonDeserialize(using = ZonedDateTimeFromEpochDeserializer.class)
 	private ZonedDateTime time;
 
 	@Column(name = "TYPE", nullable = false, length = 8)
+	@JsonSerialize(using = TradeTypeSerializer.class)
+	@JsonDeserialize(using = TradeTypeDeserializer.class)
 	private TradeType type;
 
 	@XmlElement
