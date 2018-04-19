@@ -8,5 +8,9 @@ import org.marceloleite.mercado.model.Trade;
 
 public interface TradeDAO extends BaseDAO<Trade> {
 	
-	List<Trade> findByCurrencyAndTimeBetween(Currency currency, ZonedDateTime start, ZonedDateTime end);
+	public List<Trade> findByCurrencyAndTimeBetween(Currency currency, ZonedDateTime start, ZonedDateTime end);
+	
+	public Trade findTopByOrderByTimeAsc();
+	
+	public Trade findTopByOrderByTimeDesc();
 }

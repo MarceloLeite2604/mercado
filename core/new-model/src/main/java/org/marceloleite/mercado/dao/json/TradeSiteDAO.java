@@ -24,8 +24,23 @@ public class TradeSiteDAO implements TradeDAO {
 	}
 
 	@Override
+	public <S extends Trade> Iterable<S> saveAll(Iterable<S> entities) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
 	public List<Trade> findByCurrencyAndTimeBetween(Currency currency, ZonedDateTime start, ZonedDateTime end) {
 		return tradeSiteRetriever.retrieve(currency, new TimeInterval(start, end));
+	}
+
+	@Override
+	public Trade findTopByOrderByTimeAsc() {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public Trade findTopByOrderByTimeDesc() {
+		throw new UnsupportedOperationException();
 	}
 
 }

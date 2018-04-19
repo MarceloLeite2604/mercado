@@ -2,7 +2,7 @@ package org.marceloleite.mercado.dao.interfaces;
 
 import org.marceloleite.mercado.model.Account;
 
-public interface AccountDAO {
+public interface AccountDAO extends BaseDAO<Account> {
 
 	public Account findByOwner(String owner);
 

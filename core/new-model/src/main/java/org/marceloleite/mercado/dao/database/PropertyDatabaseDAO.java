@@ -22,4 +22,9 @@ public class PropertyDatabaseDAO implements PropertyDAO {
 	public <S extends Property> S save(S entity) {
 		return propertyRepository.save(entity);
 	}
+
+	@Override
+	public <S extends Property> Iterable<S> saveAll(Iterable<S> entities) {
+		return propertyRepository.saveAll(entities);
+	}
 }

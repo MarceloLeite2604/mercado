@@ -22,4 +22,9 @@ public class AccountDatabaseDAO implements AccountDAO {
 	public <S extends Account> S save(S account) {
 		return accountRepository.save(account);
 	}
+
+	@Override
+	public <S extends Account> Iterable<S> saveAll(Iterable<S> accounts) {
+		return accountRepository.saveAll(accounts);
+	}
 }

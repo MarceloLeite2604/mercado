@@ -24,6 +24,14 @@ public class PropertyXMLDAO extends BaseXMLDAO<Property> implements PropertyDAO 
 	public <S extends Property> S save(S property) {
 		return writeXMLFile(property);
 	}
+	
+	@Override
+	public <S extends Property> Iterable<S> saveAll(Iterable<S> properties) {
+		for (S property : properties) {
+			save(property);
+		}
+		return properties;
+	}
 
 	@Override
 	public Property findByName(String name) {
@@ -49,5 +57,4 @@ public class PropertyXMLDAO extends BaseXMLDAO<Property> implements PropertyDAO 
 	protected String createFileName(Property property) {
 		return String.format(FILE_NAME_TEMPLATE, property.getName());
 	}
-
 }

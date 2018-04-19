@@ -57,28 +57,7 @@ import org.springframework.context.annotation.Bean;
 @SpringBootApplication
 public class Main {
 
-	private static final Logger LOG = LoggerFactory.getLogger(Main.class);
-
-	@Inject
-	@Qualifier("AccountDatabaseDAO")
-	private AccountDAO accountDAO;
-	
-	@Inject
-	@Qualifier("PropertyDatabaseDAO")
-	private PropertyDAO propertyDAO;
-	
-	@Inject
-	@Qualifier("TradeDatabaseDAO")
-	private TradeDAO tradeDAO;
-
-	@Inject
-	private TemporalTickerRepository temporalTickerRepository;
-
-	@Inject
-	private TickerRepository tickerRepository;
-
-	/*@Inject
-	private TradeSiteRetriever tradesSiteRetriever;*/
+	private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
 
 	private static final String OUTPUT_FOLDER = "output/";
 
@@ -105,9 +84,34 @@ public class Main {
 
 	private static final ZonedDateTime TRADE_TIME = ZonedDateTime.of(LocalDateTime.of(2018, 04, 14, 20, 19),
 			ZonedDateTimeUtils.DEFAULT_ZONE_ID);
-	
+
+	private static final ZonedDateTime TRADE_FIND_START_TIME = ZonedDateTime.of(LocalDateTime.of(2018, 04, 14, 20, 19),
+			ZonedDateTimeUtils.DEFAULT_ZONE_ID);
+
 	private static final ZonedDateTime TRADE_FIND_END_TIME = ZonedDateTime.of(LocalDateTime.of(2018, 04, 15, 20, 19),
 			ZonedDateTimeUtils.DEFAULT_ZONE_ID);
+
+	@Inject
+	@Qualifier("AccountDatabaseDAO")
+	private AccountDAO accountDAO;
+
+	@Inject
+	@Qualifier("PropertyDatabaseDAO")
+	private PropertyDAO propertyDAO;
+
+	@Inject
+	@Qualifier("TradeDatabaseSiteDAO")
+	private TradeDAO tradeDAO;
+
+	@Inject
+	private TemporalTickerRepository temporalTickerRepository;
+
+	@Inject
+	private TickerRepository tickerRepository;
+
+	/*
+	 * @Inject private TradeSiteRetriever tradesSiteRetriever;
+	 */
 
 	public static void main(String[] args) {
 		SpringApplication.run(Main.class);
@@ -117,9 +121,9 @@ public class Main {
 	@Transactional
 	public CommandLineRunner commandLineRunner() {
 		return (args) -> {
-			
+
 			AccountXMLDAO.setXMLDirectory("output/");
-			
+
 			Account account = createAccount();
 			persistAccount(account);
 			writeJson(account, "account");
@@ -139,10 +143,13 @@ public class Main {
 			writeXML(ticker, "ticker");
 			writeJson(ticker, "ticker");
 
-			Trade trade = createTrade();
-			persistTrade(trade);
-			writeXML(trade, "trade");
-			writeJson(trade, "trade");
+			/*
+			 * Trade trade = createTrade(); persistTrade(trade); writeXML(trade, "trade");
+			 * writeJson(trade, "trade");
+			 */
+			List<Trade> trades = tradeDAO.findByCurrencyAndTimeBetween(CURRENCY, TRADE_FIND_START_TIME,
+					TRADE_FIND_END_TIME);
+			LOGGER.info("Total trades found: " + trades.size());
 		};
 	}
 
@@ -262,11 +269,11 @@ public class Main {
 	private Trade createTrade() {
 		Trade trade = null;
 		List<Trade> trades = tradeDAO.findByCurrencyAndTimeBetween(CURRENCY, TRADE_TIME, TRADE_FIND_END_TIME);
-		if ( trades != null && !trades.isEmpty() ) {
-			LOG.info("Total trades retrieved: {}", trades.size());
-			trade = trades.get(0);	
+		if (trades != null && !trades.isEmpty()) {
+			LOGGER.info("Total trades retrieved: {}", trades.size());
+			trade = trades.get(0);
 		}
-		 
+
 		if (trade == null) {
 			trade = new Trade();
 			trade.setId(TRADE_ID);
@@ -280,7 +287,7 @@ public class Main {
 	}
 
 	private void writeJson(Object object, String fileName) {
-		LOG.info("Persisting Json.");
+		LOGGER.info("Persisting Json.");
 		ObjectToJsonConverter objectToJsonConverter = new ObjectToJsonConverter();
 		try (OutputStream outputStream = new FileOutputStream(createJsonFileOutput(fileName))) {
 			outputStream.write(objectToJsonConverter.convertTo(object).getBytes());
@@ -291,7 +298,7 @@ public class Main {
 	}
 
 	private void writeXML(Object object, String fileName) {
-		LOG.info("Writing XML.");
+		LOGGER.info("Writing XML.");
 		File outputFile = createXmlFileOutput(fileName);
 		JAXBContext jaxbContext;
 		try {
@@ -315,34 +322,34 @@ public class Main {
 	}
 
 	private void persistAccount(Account account) {
-		LOG.info("Persisting account.");
+		LOGGER.info("Persisting account.");
 		accountDAO.save(account);
 	}
 
 	private void persistProperty(Property property) {
-		LOG.info("Persisting property.");
+		LOGGER.info("Persisting property.");
 		propertyDAO.save(property);
 	}
 
 	private void persistTemporalTicker(TemporalTicker temporalTicker) {
-		LOG.info("Persisting temporal ticker.");
+		LOGGER.info("Persisting temporal ticker.");
 		temporalTickerRepository.save(temporalTicker);
 	}
 
 	private void persistTicker(Ticker ticker) {
-		LOG.info("Persisting ticker.");
+		LOGGER.info("Persisting ticker.");
 		tickerRepository.save(ticker);
 	}
 
 	private void persistTrade(Trade trade) {
-		LOG.info("Persisting trade.");
+		LOGGER.info("Persisting trade.");
 		try {
-		tradeDAO.save(trade);
+			tradeDAO.save(trade);
 		} catch (UnsupportedOperationException exception) {
-			LOG.warn("\"save\" method is unsupported by this DAO.");
+			LOGGER.warn("\"save\" method is unsupported by this DAO.");
 		}
 	}
-	
+
 	@SuppressWarnings("unused")
 	private static void orderbookSiteRetriever() {
 		Orderbook orderbook = new OrderbookSiteRetriever().retrieve(Currency.BITCOIN);

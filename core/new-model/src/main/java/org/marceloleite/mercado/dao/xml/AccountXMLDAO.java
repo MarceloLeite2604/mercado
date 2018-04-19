@@ -41,6 +41,14 @@ public class AccountXMLDAO extends BaseXMLDAO<Account> implements AccountDAO {
 	}
 
 	@Override
+	public <S extends Account> Iterable<S> saveAll(Iterable<S> accounts) {
+		for (S property : accounts) {
+			save(property);
+		}
+		return accounts;
+	}
+
+	@Override
 	protected String createFileName(Account account) {
 		return String.format(FILE_NAME_TEMPLATE, account.getOwner());
 	}
