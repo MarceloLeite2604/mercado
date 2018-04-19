@@ -22,12 +22,14 @@ import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.OrderStatus;
 import org.marceloleite.mercado.commons.OrderType;
 import org.marceloleite.mercado.commons.TimeInterval;
+import org.marceloleite.mercado.commons.TradeType;
 import org.marceloleite.mercado.commons.converter.ObjectToJsonConverter;
 import org.marceloleite.mercado.commons.utils.ZonedDateTimeUtils;
 import org.marceloleite.mercado.dao.database.repository.TemporalTickerRepository;
 import org.marceloleite.mercado.dao.database.repository.TickerRepository;
 import org.marceloleite.mercado.dao.interfaces.AccountDAO;
 import org.marceloleite.mercado.dao.interfaces.PropertyDAO;
+import org.marceloleite.mercado.dao.interfaces.TradeDAO;
 import org.marceloleite.mercado.dao.json.siteretriever.OrderbookSiteRetriever;
 import org.marceloleite.mercado.dao.json.siteretriever.TickerSiteRetriever;
 import org.marceloleite.mercado.dao.json.siteretriever.trade.TradeSiteRetriever;
@@ -55,7 +57,7 @@ import org.springframework.context.annotation.Bean;
 @SpringBootApplication
 public class Main {
 
-	private static final Logger log = LoggerFactory.getLogger(Main.class);
+	private static final Logger LOG = LoggerFactory.getLogger(Main.class);
 
 	@Inject
 	@Qualifier("AccountDatabaseDAO")
@@ -64,6 +66,10 @@ public class Main {
 	@Inject
 	@Qualifier("PropertyDatabaseDAO")
 	private PropertyDAO propertyDAO;
+	
+	@Inject
+	@Qualifier("TradeDatabaseDAO")
+	private TradeDAO tradeDAO;
 
 	@Inject
 	private TemporalTickerRepository temporalTickerRepository;
@@ -71,9 +77,6 @@ public class Main {
 	@Inject
 	private TickerRepository tickerRepository;
 
-	/*@Inject
-	private TradeDAO tradeDAO;*/
-	
 	/*@Inject
 	private TradeSiteRetriever tradesSiteRetriever;*/
 
@@ -136,10 +139,10 @@ public class Main {
 			writeXML(ticker, "ticker");
 			writeJson(ticker, "ticker");
 
-			/*Trade trade = createTrade();
+			Trade trade = createTrade();
 			persistTrade(trade);
 			writeXML(trade, "trade");
-			writeJson(trade, "trade");*/
+			writeJson(trade, "trade");
 		};
 	}
 
@@ -256,10 +259,11 @@ public class Main {
 		return ticker;
 	}
 
-	/*private Trade createTrade() {
+	private Trade createTrade() {
 		Trade trade = null;
 		List<Trade> trades = tradeDAO.findByCurrencyAndTimeBetween(CURRENCY, TRADE_TIME, TRADE_FIND_END_TIME);
 		if ( trades != null && !trades.isEmpty() ) {
+			LOG.info("Total trades retrieved: {}", trades.size());
 			trade = trades.get(0);	
 		}
 		 
@@ -273,10 +277,10 @@ public class Main {
 			trade.setType(TradeType.BUY);
 		}
 		return trade;
-	}*/
+	}
 
 	private void writeJson(Object object, String fileName) {
-		log.info("Persisting Json.");
+		LOG.info("Persisting Json.");
 		ObjectToJsonConverter objectToJsonConverter = new ObjectToJsonConverter();
 		try (OutputStream outputStream = new FileOutputStream(createJsonFileOutput(fileName))) {
 			outputStream.write(objectToJsonConverter.convertTo(object).getBytes());
@@ -287,7 +291,7 @@ public class Main {
 	}
 
 	private void writeXML(Object object, String fileName) {
-		log.info("Writing XML.");
+		LOG.info("Writing XML.");
 		File outputFile = createXmlFileOutput(fileName);
 		JAXBContext jaxbContext;
 		try {
@@ -311,29 +315,33 @@ public class Main {
 	}
 
 	private void persistAccount(Account account) {
-		log.info("Persisting account.");
+		LOG.info("Persisting account.");
 		accountDAO.save(account);
 	}
 
 	private void persistProperty(Property property) {
-		log.info("Persisting property.");
+		LOG.info("Persisting property.");
 		propertyDAO.save(property);
 	}
 
 	private void persistTemporalTicker(TemporalTicker temporalTicker) {
-		log.info("Persisting temporal ticker.");
+		LOG.info("Persisting temporal ticker.");
 		temporalTickerRepository.save(temporalTicker);
 	}
 
 	private void persistTicker(Ticker ticker) {
-		log.info("Persisting ticker.");
+		LOG.info("Persisting ticker.");
 		tickerRepository.save(ticker);
 	}
 
-	/*private void persistTrade(Trade trade) {
-		log.info("Persisting trade.");
+	private void persistTrade(Trade trade) {
+		LOG.info("Persisting trade.");
+		try {
 		tradeDAO.save(trade);
-	}*/
+		} catch (UnsupportedOperationException exception) {
+			LOG.warn("\"save\" method is unsupported by this DAO.");
+		}
+	}
 	
 	@SuppressWarnings("unused")
 	private static void orderbookSiteRetriever() {
