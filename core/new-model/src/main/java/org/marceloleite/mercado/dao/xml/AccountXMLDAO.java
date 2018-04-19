@@ -3,10 +3,13 @@ package org.marceloleite.mercado.dao.xml;
 import java.io.File;
 import java.util.List;
 
+import javax.inject.Named;
+
 import org.marceloleite.mercado.dao.interfaces.AccountDAO;
 import org.marceloleite.mercado.model.Account;
 import org.springframework.util.StringUtils;
 
+@Named("AccountXMLDAO")
 public class AccountXMLDAO extends BaseXMLDAO<Account> implements AccountDAO {
 
 	private static final String ENTITY_DIRECTORY = "accounts";

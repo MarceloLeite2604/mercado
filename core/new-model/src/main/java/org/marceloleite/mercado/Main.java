@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -20,18 +21,21 @@ import javax.xml.bind.Marshaller;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.OrderStatus;
 import org.marceloleite.mercado.commons.OrderType;
-import org.marceloleite.mercado.commons.TradeType;
+import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.converter.ObjectToJsonConverter;
 import org.marceloleite.mercado.commons.utils.ZonedDateTimeUtils;
 import org.marceloleite.mercado.dao.database.repository.TemporalTickerRepository;
 import org.marceloleite.mercado.dao.database.repository.TickerRepository;
-import org.marceloleite.mercado.dao.database.repository.TradeRepository;
 import org.marceloleite.mercado.dao.interfaces.AccountDAO;
 import org.marceloleite.mercado.dao.interfaces.PropertyDAO;
+import org.marceloleite.mercado.dao.json.siteretriever.OrderbookSiteRetriever;
+import org.marceloleite.mercado.dao.json.siteretriever.TickerSiteRetriever;
+import org.marceloleite.mercado.dao.json.siteretriever.trade.TradeSiteRetriever;
 import org.marceloleite.mercado.dao.xml.AccountXMLDAO;
 import org.marceloleite.mercado.model.Account;
 import org.marceloleite.mercado.model.Balance;
 import org.marceloleite.mercado.model.Order;
+import org.marceloleite.mercado.model.Orderbook;
 import org.marceloleite.mercado.model.Parameter;
 import org.marceloleite.mercado.model.Property;
 import org.marceloleite.mercado.model.Strategy;
@@ -45,10 +49,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
-import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
@@ -57,11 +58,11 @@ public class Main {
 	private static final Logger log = LoggerFactory.getLogger(Main.class);
 
 	@Inject
-	@Qualifier("AccountXMLDAO")
+	@Qualifier("AccountDatabaseDAO")
 	private AccountDAO accountDAO;
 	
 	@Inject
-	@Qualifier("PropertyXMLDAO")
+	@Qualifier("PropertyDatabaseDAO")
 	private PropertyDAO propertyDAO;
 
 	@Inject
@@ -70,8 +71,11 @@ public class Main {
 	@Inject
 	private TickerRepository tickerRepository;
 
-	@Inject
-	private TradeRepository tradeRepository;
+	/*@Inject
+	private TradeDAO tradeDAO;*/
+	
+	/*@Inject
+	private TradeSiteRetriever tradesSiteRetriever;*/
 
 	private static final String OUTPUT_FOLDER = "output/";
 
@@ -97,6 +101,9 @@ public class Main {
 	private static final Long TRADE_ID = 1L;
 
 	private static final ZonedDateTime TRADE_TIME = ZonedDateTime.of(LocalDateTime.of(2018, 04, 14, 20, 19),
+			ZonedDateTimeUtils.DEFAULT_ZONE_ID);
+	
+	private static final ZonedDateTime TRADE_FIND_END_TIME = ZonedDateTime.of(LocalDateTime.of(2018, 04, 15, 20, 19),
 			ZonedDateTimeUtils.DEFAULT_ZONE_ID);
 
 	public static void main(String[] args) {
@@ -129,10 +136,10 @@ public class Main {
 			writeXML(ticker, "ticker");
 			writeJson(ticker, "ticker");
 
-			Trade trade = createTrade();
+			/*Trade trade = createTrade();
 			persistTrade(trade);
 			writeXML(trade, "trade");
-			writeJson(trade, "trade");
+			writeJson(trade, "trade");*/
 		};
 	}
 
@@ -249,8 +256,13 @@ public class Main {
 		return ticker;
 	}
 
-	private Trade createTrade() {
-		Trade trade = tradeRepository.findById(TRADE_ID).orElse(null);
+	/*private Trade createTrade() {
+		Trade trade = null;
+		List<Trade> trades = tradeDAO.findByCurrencyAndTimeBetween(CURRENCY, TRADE_TIME, TRADE_FIND_END_TIME);
+		if ( trades != null && !trades.isEmpty() ) {
+			trade = trades.get(0);	
+		}
+		 
 		if (trade == null) {
 			trade = new Trade();
 			trade.setId(TRADE_ID);
@@ -261,7 +273,7 @@ public class Main {
 			trade.setType(TradeType.BUY);
 		}
 		return trade;
-	}
+	}*/
 
 	private void writeJson(Object object, String fileName) {
 		log.info("Persisting Json.");
@@ -318,8 +330,33 @@ public class Main {
 		tickerRepository.save(ticker);
 	}
 
-	private void persistTrade(Trade trade) {
+	/*private void persistTrade(Trade trade) {
 		log.info("Persisting trade.");
-		tradeRepository.save(trade);
+		tradeDAO.save(trade);
+	}*/
+	
+	@SuppressWarnings("unused")
+	private static void orderbookSiteRetriever() {
+		Orderbook orderbook = new OrderbookSiteRetriever().retrieve(Currency.BITCOIN);
+		ObjectToJsonConverter objectToJsonConverter = new ObjectToJsonConverter();
+		System.out.println(objectToJsonConverter.convertTo(orderbook));
+	}
+
+	@SuppressWarnings("unused")
+	private static void tickerSiteRetriever() {
+		Ticker ticker = new TickerSiteRetriever().retrieve(Currency.BITCOIN);
+		ObjectToJsonConverter objectToJsonConverter = new ObjectToJsonConverter();
+		System.out.println(objectToJsonConverter.convertTo(ticker));
+	}
+
+	@SuppressWarnings("unused")
+	public void testTradesSiteRetriever() {
+		ZonedDateTime to = ZonedDateTimeUtils.now();
+		ZonedDateTime from = ZonedDateTime.from(to).minusDays(2);
+		TimeInterval timeInterval = new TimeInterval(from, to);
+		List<Trade> trades = new TradeSiteRetriever().retrieve(Currency.BITCOIN, timeInterval);
+		ObjectToJsonConverter objectToJsonConverter = new ObjectToJsonConverter();
+		System.out.println(trades.size());
+		// System.out.println(objectToJsonConverter.convertTo(trades));
 	}
 }

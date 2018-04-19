@@ -1,11 +1,13 @@
 package org.marceloleite.mercado.dao.database;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.marceloleite.mercado.dao.database.repository.PropertyRepository;
 import org.marceloleite.mercado.dao.interfaces.PropertyDAO;
 import org.marceloleite.mercado.model.Property;
 
+@Named("PropertyDatabaseDAO")
 public class PropertyDatabaseDAO implements PropertyDAO {
 
 	@Inject

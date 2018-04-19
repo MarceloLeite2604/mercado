@@ -3,10 +3,13 @@ package org.marceloleite.mercado.dao.xml;
 import java.io.File;
 import java.util.List;
 
+import javax.inject.Named;
+
 import org.marceloleite.mercado.dao.interfaces.PropertyDAO;
 import org.marceloleite.mercado.model.Property;
 import org.springframework.util.StringUtils;
 
+@Named("PropertyXMLDAO")
 public class PropertyXMLDAO extends BaseXMLDAO<Property> implements PropertyDAO {
 
 	private static final String ENTITY_DIRECTORY = "properties";

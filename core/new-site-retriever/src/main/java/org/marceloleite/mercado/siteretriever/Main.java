@@ -61,6 +61,7 @@ public class Main {
 		System.out.println(objectToJsonConverter.convertTo(ticker));
 	}
 
+	@SuppressWarnings("unused")
 	public void testTradesSiteRetriever() {
 		ZonedDateTime to = ZonedDateTimeUtils.now();
 		ZonedDateTime from = ZonedDateTime.from(to).minusDays(2);
