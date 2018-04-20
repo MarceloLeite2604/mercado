@@ -87,6 +87,6 @@ public class TradesRetriever {
 
 		TradesSiteRetriever tradesSiteRetriever = new TradesSiteRetriever(currency);
 		Map<Long, Trade> jsonTrades = tradesSiteRetriever.retrieve(timeInterval);
-		return new ListToMapTradeConverter().convertFrom(jsonTrades);
+		return ListToMapTradeConverter.getInstance().convertFrom(jsonTrades);
 	}
 }

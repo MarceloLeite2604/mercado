@@ -7,7 +7,9 @@ import org.marceloleite.mercado.dao.database.repository.PropertyRepository;
 import org.marceloleite.mercado.dao.interfaces.PropertyDAO;
 import org.marceloleite.mercado.model.Account;
 import org.marceloleite.mercado.model.Property;
+import org.springframework.stereotype.Repository;
 
+@Repository
 @Named("PropertyDatabaseDAO")
 public class PropertyDatabaseDAO implements PropertyDAO {
 

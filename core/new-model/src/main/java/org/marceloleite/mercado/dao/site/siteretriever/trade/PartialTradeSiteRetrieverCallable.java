@@ -1,11 +1,11 @@
-package org.marceloleite.mercado.dao.json.siteretriever.trade;
+package org.marceloleite.mercado.dao.site.siteretriever.trade;
 
 import java.util.List;
 import java.util.concurrent.Callable;
 
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
-import org.marceloleite.mercado.dao.json.siteretriever.trade.checker.MaxTradesReachedChecker;
+import org.marceloleite.mercado.dao.site.siteretriever.trade.checker.MaxTradesReachedChecker;
 import org.marceloleite.mercado.model.Trade;
 
 class PartialTradeSiteRetrieverCallable implements Callable<List<Trade>> {

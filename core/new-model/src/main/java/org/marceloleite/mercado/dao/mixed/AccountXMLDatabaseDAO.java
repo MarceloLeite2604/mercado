@@ -11,7 +11,9 @@ import org.marceloleite.mercado.dao.database.AccountDatabaseDAO;
 import org.marceloleite.mercado.dao.interfaces.AccountDAO;
 import org.marceloleite.mercado.dao.xml.AccountXMLDAO;
 import org.marceloleite.mercado.model.Account;
+import org.springframework.stereotype.Repository;
 
+@Repository
 @Named("AccountXMLDatabaseDAO")
 public class AccountXMLDatabaseDAO implements AccountDAO {
 	

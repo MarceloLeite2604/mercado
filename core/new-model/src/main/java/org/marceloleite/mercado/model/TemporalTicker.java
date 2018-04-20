@@ -27,13 +27,13 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Table(name = "TEMPORAL_TICKERS")
 @JsonIgnoreProperties({ "id" })
-@JsonPropertyOrder({ "currency", "startTime", "endTime", "averagePrice", "buy", "buyOrders", "firstPrice",
-		"highestPrice", "lastPrice", "lowestPrice", "orders", "previousBuy", "previousLastPrice", "previousSell",
-		"sell", "sellOrders", "timeDuration", "volumeTraded" })
+@JsonPropertyOrder({ "currency", "start", "end", "duration", "first", "last", "previousLast", "highest", "lowest",
+		"average", "lastBuy", "previousLastBuy", "lastSell", "previousLastSell", "orders",
+		"buyOrders", "sellOrders", "volumeTraded" })
 @XmlRootElement(name = "temporalTicker")
-@XmlType(propOrder = { "currency", "startTime", "endTime", "averagePrice", "buy", "buyOrders", "firstPrice",
-		"highestPrice", "lastPrice", "lowestPrice", "orders", "previousBuy", "previousLastPrice", "previousSell",
-		"sell", "sellOrders", "timeDuration", "volumeTraded" })
+@XmlType(propOrder = { "currency", "start", "end", "duration", "first", "last", "previousLast", "highest", "lowest",
+		"average", "lastBuy", "previousLastBuy", "lastSell", "previousLastSell", "orders",
+		"buyOrders", "sellOrders", "volumeTraded" })
 public class TemporalTicker {
 
 	@Id
@@ -44,56 +44,82 @@ public class TemporalTicker {
 	@Column(name = "CURRENCY", nullable = false, length = 4)
 	private Currency currency;
 
-	@Column(name = "START_TIME", nullable = false)
-	private ZonedDateTime startTime;
+	@Column(name = "START", nullable = false)
+	private ZonedDateTime start;
 
-	@Column(name = "END_TIME", nullable = false)
-	private ZonedDateTime endTime;
+	@Column(name = "END", nullable = false)
+	private ZonedDateTime end;
 
-	@Column(name = "AVERAGE_PRICE", nullable = false, precision = 20, scale = 8)
-	private BigDecimal averagePrice;
+	@Column(name = "DURATION", nullable = false)
+	private Duration duration;
+
+	@Column(name = "FIRST", nullable = false, precision = 20, scale = 8)
+	private BigDecimal first;
+
+	@Column(name = "LAST", nullable = false, precision = 20, scale = 8)
+	private BigDecimal last;
+
+	@Column(name = "PREVIOUS_LAST", nullable = false, precision = 20, scale = 8)
+	private BigDecimal previousLast;
+
+	@Column(name = "HIGHEST", nullable = false, precision = 20, scale = 8)
+	private BigDecimal highest;
+
+	@Column(name = "LOWEST", nullable = false, precision = 20, scale = 8)
+	private BigDecimal lowest;
+
+	@Column(name = "AVERAGE", nullable = false, precision = 20, scale = 8)
+	private BigDecimal average;
 
 	@Column(name = "BUY", nullable = false, precision = 20, scale = 8)
 	private BigDecimal buy;
 
-	@Column(name = "BUY_ORDERS", nullable = false)
-	private Long buyOrders;
-
-	@Column(name = "FIRST_PRICE", nullable = false, precision = 20, scale = 8)
-	private BigDecimal firstPrice;
-
-	@Column(name = "HIGHEST_PRICE", nullable = false, precision = 20, scale = 8)
-	private BigDecimal highestPrice;
-
-	@Column(name = "LAST_PRICE", nullable = false, precision = 20, scale = 8)
-	private BigDecimal lastPrice;
-
-	@Column(name = "LOWEST_PRICE", nullable = false, precision = 20, scale = 8)
-	private BigDecimal lowestPrice;
-
-	@Column(name = "ORDERS", nullable = false)
-	private Long orders;
-
 	@Column(name = "PREVIOUS_BUY", nullable = false, precision = 20, scale = 8)
 	private BigDecimal previousBuy;
-
-	@Column(name = "PREVIOUS_LAST_PRICE", nullable = false, precision = 20, scale = 8)
-	private BigDecimal previousLastPrice;
-
-	@Column(name = "PREVIOUS_SELL", nullable = false, precision = 20, scale = 8)
-	private BigDecimal previousSell;
 
 	@Column(name = "SELL", nullable = false, precision = 20, scale = 8)
 	private BigDecimal sell;
 
+	@Column(name = "PREVIOUS_SELL", nullable = false, precision = 20, scale = 8)
+	private BigDecimal previousSell;
+
+	@Column(name = "ORDERS", nullable = false)
+	private Long orders;
+
+	@Column(name = "BUY_ORDERS", nullable = false)
+	private Long buyOrders;
+
 	@Column(name = "SELL_ORDERS", nullable = false)
 	private Long sellOrders;
 
-	@Column(name = "TIME_DURATION", nullable = false)
-	private Duration timeDuration;
-
 	@Column(name = "VOLUME_TRADED", nullable = false, precision = 20, scale = 8)
 	private BigDecimal volumeTraded;
+
+	public TemporalTicker() {
+		super();
+	}
+	
+	private TemporalTicker(Builder builder) {
+		super();
+		this.currency = builder.currency;
+		this.start = builder.start;
+		this.end = builder.end;
+		this.duration = builder.duration;
+		this.first = builder.first;
+		this.last = builder.last;
+		this.previousLast = builder.previousLast;
+		this.highest = builder.highest;
+		this.lowest = builder.lowest;
+		this.average = builder.average;
+		this.buy = builder.buy;
+		this.previousBuy = builder.previousBuy;
+		this.sell = builder.sell;
+		this.previousSell = builder.previousSell;
+		this.orders = builder.orders;
+		this.buyOrders = builder.buyOrders;
+		this.sellOrders = builder.sellOrders;
+		this.volumeTraded = builder.volumeTraded;
+	}
 
 	@XmlTransient
 	public Long getId() {
@@ -116,31 +142,86 @@ public class TemporalTicker {
 
 	@XmlElement
 	@Convert(converter = ZonedDateTimeAttributeConverter.class)
-	public ZonedDateTime getStartTime() {
-		return startTime;
+	public ZonedDateTime getStart() {
+		return start;
 	}
 
-	public void setStartTime(ZonedDateTime startTime) {
-		this.startTime = startTime;
+	public void setStart(ZonedDateTime start) {
+		this.start = start;
 	}
 
 	@XmlElement
 	@Convert(converter = ZonedDateTimeAttributeConverter.class)
-	public ZonedDateTime getEndTime() {
-		return endTime;
+	public ZonedDateTime getEnd() {
+		return end;
 	}
 
-	public void setEndTime(ZonedDateTime endTime) {
-		this.endTime = endTime;
+	public void setEnd(ZonedDateTime end) {
+		this.end = end;
 	}
 
 	@XmlElement
-	public BigDecimal getAveragePrice() {
-		return averagePrice;
+	@XmlJavaTypeAdapter(DurationXmlAdapter.class)
+	public Duration getDuration() {
+		return duration;
 	}
 
-	public void setAveragePrice(BigDecimal averagePrice) {
-		this.averagePrice = averagePrice;
+	public void setDuration(Duration duration) {
+		this.duration = duration;
+	}
+
+	@XmlElement
+	public BigDecimal getFirst() {
+		return first;
+	}
+
+	public void setFirst(BigDecimal first) {
+		this.first = first;
+	}
+
+	@XmlElement
+	public BigDecimal getLast() {
+		return last;
+	}
+
+	public void setLast(BigDecimal last) {
+		this.last = last;
+	}
+
+	@XmlElement
+	public BigDecimal getPreviousLast() {
+		return previousLast;
+	}
+
+	public void setPreviousLast(BigDecimal previousLast) {
+		this.previousLast = previousLast;
+	}
+
+	@XmlElement
+	public BigDecimal getHighest() {
+		return highest;
+	}
+
+	public void setHighest(BigDecimal highest) {
+		this.highest = highest;
+	}
+
+	@XmlElement
+	public BigDecimal getLowest() {
+		return lowest;
+	}
+
+	public void setLowest(BigDecimal lowest) {
+		this.lowest = lowest;
+	}
+
+	@XmlElement
+	public BigDecimal getAverage() {
+		return average;
+	}
+
+	public void setAverage(BigDecimal average) {
+		this.average = average;
 	}
 
 	@XmlElement
@@ -153,84 +234,12 @@ public class TemporalTicker {
 	}
 
 	@XmlElement
-	public Long getBuyOrders() {
-		return buyOrders;
-	}
-
-	public void setBuyOrders(Long buyOrders) {
-		this.buyOrders = buyOrders;
-	}
-
-	@XmlElement
-	public BigDecimal getFirstPrice() {
-		return firstPrice;
-	}
-
-	public void setFirstPrice(BigDecimal firstPrice) {
-		this.firstPrice = firstPrice;
-	}
-
-	@XmlElement
-	public BigDecimal getHighestPrice() {
-		return highestPrice;
-	}
-
-	public void setHighestPrice(BigDecimal highestPrice) {
-		this.highestPrice = highestPrice;
-	}
-
-	@XmlElement
-	public BigDecimal getLastPrice() {
-		return lastPrice;
-	}
-
-	public void setLastPrice(BigDecimal lastPrice) {
-		this.lastPrice = lastPrice;
-	}
-
-	@XmlElement
-	public BigDecimal getLowestPrice() {
-		return lowestPrice;
-	}
-
-	public void setLowestPrice(BigDecimal lowestPrice) {
-		this.lowestPrice = lowestPrice;
-	}
-
-	@XmlElement
-	public Long getOrders() {
-		return orders;
-	}
-
-	public void setOrders(Long orders) {
-		this.orders = orders;
-	}
-
-	@XmlElement
 	public BigDecimal getPreviousBuy() {
 		return previousBuy;
 	}
 
 	public void setPreviousBuy(BigDecimal previousBuy) {
 		this.previousBuy = previousBuy;
-	}
-
-	@XmlElement
-	public BigDecimal getPreviousLastPrice() {
-		return previousLastPrice;
-	}
-
-	public void setPreviousLastPrice(BigDecimal previousLastPrice) {
-		this.previousLastPrice = previousLastPrice;
-	}
-
-	@XmlElement
-	public BigDecimal getPreviousSell() {
-		return previousSell;
-	}
-
-	public void setPreviousSell(BigDecimal previousSell) {
-		this.previousSell = previousSell;
 	}
 
 	@XmlElement
@@ -243,6 +252,33 @@ public class TemporalTicker {
 	}
 
 	@XmlElement
+	public BigDecimal getPreviousSell() {
+		return previousSell;
+	}
+
+	public void setPreviousSell(BigDecimal previousSell) {
+		this.previousSell = previousSell;
+	}
+
+	@XmlElement
+	public Long getOrders() {
+		return orders;
+	}
+
+	public void setOrders(Long orders) {
+		this.orders = orders;
+	}
+
+	@XmlElement
+	public Long getBuyOrders() {
+		return buyOrders;
+	}
+
+	public void setBuyOrders(Long buyOrders) {
+		this.buyOrders = buyOrders;
+	}
+
+	@XmlElement
 	public Long getSellOrders() {
 		return sellOrders;
 	}
@@ -252,21 +288,134 @@ public class TemporalTicker {
 	}
 
 	@XmlElement
-	@XmlJavaTypeAdapter(DurationXmlAdapter.class)
-	public Duration getTimeDuration() {
-		return timeDuration;
-	}
-
-	public void setTimeDuration(Duration timeDuration) {
-		this.timeDuration = timeDuration;
-	}
-
-	@XmlElement
 	public BigDecimal getVolumeTraded() {
 		return volumeTraded;
 	}
 
 	public void setVolumeTraded(BigDecimal volumeTraded) {
 		this.volumeTraded = volumeTraded;
+	}
+
+	public static Builder builder() {
+		return new Builder();
+	}
+
+	public static class Builder {
+
+		private Currency currency;
+		private ZonedDateTime start;
+		private ZonedDateTime end;
+		private Duration duration;
+		private BigDecimal first;
+		private BigDecimal last;
+		private BigDecimal previousLast;
+		private BigDecimal highest;
+		private BigDecimal lowest;
+		private BigDecimal average;
+		private BigDecimal buy;
+		private BigDecimal previousBuy;
+		private BigDecimal sell;
+		private BigDecimal previousSell;
+		private Long orders;
+		private Long buyOrders;
+		private Long sellOrders;
+		private BigDecimal volumeTraded;
+
+		private Builder() {
+		}
+		
+		public Builder currency(Currency currency) {
+			this.currency = currency;
+			return this;
+		}
+		
+		public Builder start(ZonedDateTime start) {
+			this.start = start;
+			return this;
+		}
+		
+		public Builder end(ZonedDateTime end) {
+			this.end = end;
+			return this;
+		}
+		
+		public Builder duration(Duration duration) {
+			this.duration = duration;
+			return this;
+		}
+		
+		public Builder first(BigDecimal first) {
+			this.first = first;
+			return this;
+		}
+		
+		public Builder last(BigDecimal last) {
+			this.last = last;
+			return this;
+		}
+		
+		public Builder previousLast(BigDecimal previousLast) {
+			this.previousLast = previousLast;
+			return this;
+		}
+		
+		public Builder highest(BigDecimal highest) {
+			this.highest = highest;
+			return this;
+		}
+		
+		public Builder lowest(BigDecimal lowest) {
+			this.lowest = lowest;
+			return this;
+		}
+		
+		public Builder average(BigDecimal average) {
+			this.average = average;
+			return this;
+		}
+		
+		public Builder buy(BigDecimal buy) {
+			this.buy = buy;
+			return this;
+		}
+		
+		public Builder previousBuy(BigDecimal previousBuy) {
+			this.previousBuy = previousBuy;
+			return this;
+		}
+		
+		public Builder sell(BigDecimal sell) {
+			this.sell = sell;
+			return this;
+		}
+		
+		public Builder previousSell(BigDecimal previousSell) {
+			this.previousSell = previousSell;
+			return this;
+		}
+		
+		public Builder orders(Long orders) {
+			this.orders = orders;
+			return this;
+		}
+		
+		public Builder buyOrders(Long buyOrders) {
+			this.buyOrders = buyOrders;
+			return this;
+		}
+		
+		public Builder sellOrders(Long sellOrders) {
+			this.sellOrders = sellOrders;
+			return this;
+		}
+		
+		public Builder volumeTraded(BigDecimal volumeTraded) {
+			this.volumeTraded = volumeTraded;
+			return this;
+		}
+		
+		public TemporalTicker build() {
+			return new TemporalTicker(this);
+		}
 	}
 }

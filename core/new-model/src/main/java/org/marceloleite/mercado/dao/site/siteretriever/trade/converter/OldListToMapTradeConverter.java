@@ -1,4 +1,4 @@
-package org.marceloleite.mercado.dao.json.siteretriever.trade.converter;
+package org.marceloleite.mercado.dao.site.siteretriever.trade.converter;
 
 import java.util.List;
 import java.util.Map;

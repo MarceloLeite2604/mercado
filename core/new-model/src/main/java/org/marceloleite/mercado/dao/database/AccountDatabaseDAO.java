@@ -6,7 +6,9 @@ import javax.inject.Named;
 import org.marceloleite.mercado.dao.database.repository.AccountRepository;
 import org.marceloleite.mercado.dao.interfaces.AccountDAO;
 import org.marceloleite.mercado.model.Account;
+import org.springframework.stereotype.Repository;
 
+@Repository
 @Named("AccountDatabaseDAO")
 public class AccountDatabaseDAO implements AccountDAO {
 

@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.transaction.Transactional;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -30,9 +31,9 @@ import org.marceloleite.mercado.dao.database.repository.TickerRepository;
 import org.marceloleite.mercado.dao.interfaces.AccountDAO;
 import org.marceloleite.mercado.dao.interfaces.PropertyDAO;
 import org.marceloleite.mercado.dao.interfaces.TradeDAO;
-import org.marceloleite.mercado.dao.json.siteretriever.OrderbookSiteRetriever;
-import org.marceloleite.mercado.dao.json.siteretriever.TickerSiteRetriever;
-import org.marceloleite.mercado.dao.json.siteretriever.trade.TradeSiteRetriever;
+import org.marceloleite.mercado.dao.site.siteretriever.OrderbookSiteRetriever;
+import org.marceloleite.mercado.dao.site.siteretriever.TickerSiteRetriever;
+import org.marceloleite.mercado.dao.site.siteretriever.trade.TradeSiteRetriever;
 import org.marceloleite.mercado.dao.xml.AccountXMLDAO;
 import org.marceloleite.mercado.model.Account;
 import org.marceloleite.mercado.model.Balance;
@@ -48,7 +49,6 @@ import org.marceloleite.mercado.model.Variable;
 import org.marceloleite.mercado.model.Withdrawal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -92,15 +92,15 @@ public class Main {
 			ZonedDateTimeUtils.DEFAULT_ZONE_ID);
 
 	@Inject
-	@Qualifier("AccountXMLDatabaseDAO")
+	@Named("AccountXMLDatabaseDAO")
 	private AccountDAO accountDAO;
 
 	@Inject
-	@Qualifier("PropertyDatabaseDAO")
+	@Named("PropertyDatabaseDAO")
 	private PropertyDAO propertyDAO;
 
 	@Inject
-	@Qualifier("TradeDatabaseSiteDAO")
+	@Named("TradeDatabaseSiteDAO")
 	private TradeDAO tradeDAO;
 
 	@Inject
@@ -182,11 +182,13 @@ public class Main {
 			order.setFirstCurrency(Currency.REAL);
 			order.setSecondCurrency(Currency.LITECOIN);
 			order.setHasFills(true);
-			order.setIntended(ZonedDateTimeUtils.now().minusMinutes(10));
+			order.setIntended(ZonedDateTimeUtils.now()
+					.minusMinutes(10));
 			order.setLimitPrice(new BigDecimal("32200"));
 			order.setStatus(OrderStatus.FILLED);
 			order.setType(OrderType.SELL);
-			order.setUpdated(ZonedDateTimeUtils.now().minusMinutes(5));
+			order.setUpdated(ZonedDateTimeUtils.now()
+					.minusMinutes(5));
 
 			account = new Account();
 			account.setOwner(ACCOUNT_OWNER);
@@ -222,25 +224,25 @@ public class Main {
 		TemporalTicker temporalTicker = null;
 		temporalTicker = temporalTickerRepository.findByCurrencyAndStartTimeAndEndTime(CURRENCY, START_TIME, END_TIME);
 		if (temporalTicker == null) {
-			temporalTicker = new TemporalTicker();
-			temporalTicker.setCurrency(CURRENCY);
-			temporalTicker.setStartTime(START_TIME);
-			temporalTicker.setEndTime(END_TIME);
-			temporalTicker.setAveragePrice(new BigDecimal("10"));
-			temporalTicker.setBuy(new BigDecimal("2.34"));
-			temporalTicker.setBuyOrders(8L);
-			temporalTicker.setFirstPrice(new BigDecimal("12"));
-			temporalTicker.setHighestPrice(new BigDecimal("23"));
-			temporalTicker.setLastPrice(new BigDecimal("67"));
-			temporalTicker.setLowestPrice(new BigDecimal("62"));
-			temporalTicker.setOrders(20L);
-			temporalTicker.setPreviousBuy(new BigDecimal("2325"));
-			temporalTicker.setPreviousLastPrice(new BigDecimal("125"));
-			temporalTicker.setPreviousSell(new BigDecimal("57"));
-			temporalTicker.setSell(new BigDecimal("36"));
-			temporalTicker.setSellOrders(2L);
-			temporalTicker.setTimeDuration(Duration.ofSeconds(60));
-			temporalTicker.setVolumeTraded(new BigDecimal("204"));
+			TemporalTicker.builder()
+					.currency(CURRENCY)
+					.start(START_TIME)
+					.end(END_TIME)
+					.duration(Duration.ofSeconds(60))
+					.first(new BigDecimal("12"))
+					.last(new BigDecimal("67"))
+					.previousLast(new BigDecimal("125"))
+					.highest(new BigDecimal("23"))
+					.lowest(new BigDecimal("62"))
+					.average(new BigDecimal("10"))
+					.buy(new BigDecimal("2.34"))
+					.previousBuy(new BigDecimal("2325"))
+					.sell(new BigDecimal("36"))
+					.previousSell(new BigDecimal("57"))
+					.orders(20L)
+					.buyOrders(8L)
+					.sellOrders(2L)
+					.volumeTraded(new BigDecimal("204"));
 		}
 		return temporalTicker;
 	}
@@ -285,7 +287,8 @@ public class Main {
 		LOGGER.info("Persisting Json.");
 		ObjectToJsonConverter objectToJsonConverter = new ObjectToJsonConverter();
 		try (OutputStream outputStream = new FileOutputStream(createJsonFileOutput(fileName))) {
-			outputStream.write(objectToJsonConverter.convertTo(object).getBytes());
+			outputStream.write(objectToJsonConverter.convertTo(object)
+					.getBytes());
 		} catch (IOException exception) {
 			throw new RuntimeException("Error while writing Json file.", exception);
 		}
@@ -362,7 +365,8 @@ public class Main {
 	@SuppressWarnings("unused")
 	public void testTradesSiteRetriever() {
 		ZonedDateTime to = ZonedDateTimeUtils.now();
-		ZonedDateTime from = ZonedDateTime.from(to).minusDays(2);
+		ZonedDateTime from = ZonedDateTime.from(to)
+				.minusDays(2);
 		TimeInterval timeInterval = new TimeInterval(from, to);
 		List<Trade> trades = new TradeSiteRetriever().retrieve(Currency.BITCOIN, timeInterval);
 		ObjectToJsonConverter objectToJsonConverter = new ObjectToJsonConverter();

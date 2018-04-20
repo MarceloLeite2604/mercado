@@ -1,4 +1,4 @@
-package org.marceloleite.mercado.dao.json.siteretriever.trade;
+package org.marceloleite.mercado.dao.site.siteretriever.trade;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -10,7 +10,7 @@ import javax.ws.rs.NotFoundException;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.converter.EpochSecondsToZonedDateTimeConveter;
-import org.marceloleite.mercado.dao.json.siteretriever.AbstractSiteRetriever;
+import org.marceloleite.mercado.dao.site.siteretriever.AbstractSiteRetriever;
 import org.marceloleite.mercado.model.Trade;
 import org.springframework.web.client.RestTemplate;
 

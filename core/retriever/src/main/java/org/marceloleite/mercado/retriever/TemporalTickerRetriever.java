@@ -66,8 +66,8 @@ public class TemporalTickerRetriever {
 
 			List<Trade> trades = tradesRetriever.retrieve(currency, timeInterval.getStart(), timeInterval.getEnd(),
 					IGNORE_DATABASE_VALUES);
-			Map<Long, Trade> tradesMap = new ListToMapTradeConverter().convertTo(trades);
-			TemporalTicker temporalTicker = new TemporalTickerCreator().create(currency, timeInterval, tradesMap);
+			Map<Long, Trade> tradesMap = ListToMapTradeConverter.getInstance().convertTo(trades);
+			TemporalTicker temporalTicker = TemporalTickerCreator.getInstance().create(currency, timeInterval, tradesMap);
 			if (temporalTicker != null) {
 				temporalTickerPO = new TemporalTickerPOToTemporalTickerConverter().convertFrom(temporalTicker);
 				temporalTickerDAO.merge(temporalTickerPO);

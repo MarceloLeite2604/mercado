@@ -6,14 +6,17 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.marceloleite.mercado.TemporalTickerCreator;
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.dao.database.repository.TemporalTickerRepository;
 import org.marceloleite.mercado.dao.interfaces.TemporalTickerDAO;
 import org.marceloleite.mercado.dao.interfaces.TradeDAO;
 import org.marceloleite.mercado.model.TemporalTicker;
 import org.marceloleite.mercado.model.Trade;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Repository;
 
+@Repository
 @Named("TemporalTickerDatabaseDAO")
 public class TemporalTickerDatabaseDAO implements TemporalTickerDAO {
 	
@@ -21,8 +24,11 @@ public class TemporalTickerDatabaseDAO implements TemporalTickerDAO {
 	private TemporalTickerRepository temporalTickerRepository;
 	
 	@Inject
-	@Qualifier("TradesDatabaseSiteDAO")
+	@Named("TradesDatabaseSiteDAO")
 	private TradeDAO tradesDAO;
+	
+	@Inject
+	private TemporalTickerCreator temporalTickerCreator;
 
 	@Override
 	public <S extends TemporalTicker> S save(S entity) {
@@ -49,10 +55,9 @@ public class TemporalTickerDatabaseDAO implements TemporalTickerDAO {
 		return temporalTicker;
 	}
 
-	private TemporalTicker createTemporalTicker(Currency currency, ZonedDateTime startTime, ZonedDateTime endTime) {
-		List<Trade> trades = tradesDAO.findByCurrencyAndTimeBetween(currency, startTime, endTime);
-		TemporalTickerCre
-		return null;
+	private TemporalTicker createTemporalTicker(Currency currency, ZonedDateTime start, ZonedDateTime end) {
+		List<Trade> trades = tradesDAO.findByCurrencyAndTimeBetween(currency, start, end);
+		return temporalTickerCreator.create(currency, new TimeInterval(start, end), trades);
 	}
 
 }

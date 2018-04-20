@@ -8,11 +8,14 @@ import javax.inject.Named;
 
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
+import org.marceloleite.mercado.commons.TradeType;
 import org.marceloleite.mercado.dao.database.TradeDatabaseDAO;
 import org.marceloleite.mercado.dao.interfaces.TradeDAO;
-import org.marceloleite.mercado.dao.json.TradeSiteDAO;
+import org.marceloleite.mercado.dao.site.TradeSiteDAO;
 import org.marceloleite.mercado.model.Trade;
+import org.springframework.stereotype.Repository;
 
+@Repository
 @Named("TradeDatabaseSiteDAO")
 public class TradeDatabaseSiteDAO implements TradeDAO {
 
@@ -41,7 +44,7 @@ public class TradeDatabaseSiteDAO implements TradeDAO {
 		List<Trade> trades = null;
 		if (!ignoreValuesOnDatabase) {
 			trades = retrieveTradesUpdatingDatabase(currency, start, end);
-		} else { 
+		} else {
 			trades = retrieveTradesFromDatabase(currency, start, end);
 		}
 		return trades;
@@ -61,7 +64,8 @@ public class TradeDatabaseSiteDAO implements TradeDAO {
 		TimeInterval timeIntervalAvailable = tradeDatabaseDAO.retrieveTimeIntervalAvailable();
 		if (timeIntervalAvailable != null) {
 			if (start.isBefore(timeIntervalAvailable.getStart())) {
-				ZonedDateTime endRetrieveTime = ZonedDateTime.from(timeIntervalAvailable.getStart()).minusSeconds(1);
+				ZonedDateTime endRetrieveTime = ZonedDateTime.from(timeIntervalAvailable.getStart())
+						.minusSeconds(1);
 				retrieveFromSiteAndSaveOnDatabase(currency, start, endRetrieveTime);
 			}
 			if (end.isAfter(timeIntervalAvailable.getEnd())) {
@@ -87,6 +91,16 @@ public class TradeDatabaseSiteDAO implements TradeDAO {
 	@Override
 	public Trade findTopByOrderByTimeDesc() {
 		return tradeDatabaseDAO.findTopByOrderByTimeDesc();
+	}
+
+	@Override
+	public Trade findFirstTradeOfCurrencyAndTypeAndOlderThan(Currency currency, TradeType type,
+			ZonedDateTime time) {
+		Trade previousTrade = tradeDatabaseDAO.findFirstTradeOfCurrencyAndTypeAndOlderThan(currency, type, time);
+		if (previousTrade == null) {
+			previousTrade = tradeSiteDAO.findFirstTradeOfCurrencyAndTypeAndOlderThan(currency, type, time);
+		}
+		return previousTrade;
 	}
 
 	@Override

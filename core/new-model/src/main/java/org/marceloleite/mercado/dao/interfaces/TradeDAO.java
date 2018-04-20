@@ -4,6 +4,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.commons.TradeType;
 import org.marceloleite.mercado.model.Trade;
 
 public interface TradeDAO extends BaseDAO<Trade> {
@@ -14,5 +15,5 @@ public interface TradeDAO extends BaseDAO<Trade> {
 	
 	public Trade findTopByOrderByTimeDesc();
 	
-	public Trade findPreviousTradeOfSameType(Trade trade);
+	public Trade findFirstTradeOfCurrencyAndTypeAndOlderThan(Currency currency, TradeType type, ZonedDateTime time);
 }

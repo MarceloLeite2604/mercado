@@ -1,4 +1,4 @@
-package org.marceloleite.mercado.dao.json.siteretriever;
+package org.marceloleite.mercado.dao.site.siteretriever;
 
 public abstract class AbstractSiteRetriever {
 

@@ -1,4 +1,4 @@
-package org.marceloleite.mercado.dao.json;
+package org.marceloleite.mercado.dao.site;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -8,16 +8,19 @@ import javax.inject.Named;
 
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
+import org.marceloleite.mercado.commons.TradeType;
 import org.marceloleite.mercado.comparator.TradeComparatorByIdDesc;
 import org.marceloleite.mercado.dao.interfaces.TradeDAO;
-import org.marceloleite.mercado.dao.json.siteretriever.trade.TradeSiteRetriever;
+import org.marceloleite.mercado.dao.site.siteretriever.trade.TradeSiteRetriever;
 import org.marceloleite.mercado.model.Trade;
+import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 
+@Repository
 @Named("TradeSiteDAO")
 public class TradeSiteDAO implements TradeDAO {
-	
-	private static final int FIND_PREVIOUS_TRADE_LIMIT_MINUTES = 60*24*7;
+
+	private static final int FIND_PREVIOUS_TRADE_LIMIT_MINUTES = 60 * 24 * 7;
 
 	@Inject
 	private TradeSiteRetriever tradeSiteRetriever;
@@ -38,27 +41,28 @@ public class TradeSiteDAO implements TradeDAO {
 	}
 
 	@Override
-	public Trade findPreviousTradeOfSameType(Trade trade) {
+	public Trade findFirstTradeOfCurrencyAndTypeAndOlderThan(Currency currency, TradeType type,
+			ZonedDateTime time) {
 		Trade previousTrade = null;
 		int minutesToSubtract = 1;
-		ZonedDateTime end = ZonedDateTime.from(trade.getTime());
+		ZonedDateTime end = ZonedDateTime.from(time);
 		while (previousTrade == null && minutesToSubtract < FIND_PREVIOUS_TRADE_LIMIT_MINUTES) {
 			minutesToSubtract *= 2;
 			ZonedDateTime start = end.minusMinutes(minutesToSubtract);
-			List<Trade> trades = findByCurrencyAndTimeBetween(trade.getCurrency(), start, end);
+			List<Trade> trades = findByCurrencyAndTimeBetween(currency, start, end);
 			if (!CollectionUtils.isEmpty(trades)) {
-				previousTrade = findPreviousTradeOnList(trades, trade);
+				previousTrade = findPreviousTradeOnList(trades, type);
 			}
 			end = start;
 		}
-		return trade;
+		return previousTrade;
 	}
 
-	private Trade findPreviousTradeOnList(List<Trade> trades, Trade trade) {
+	private Trade findPreviousTradeOnList(List<Trade> trades, TradeType type) {
 		Trade previousTrade;
 		previousTrade = trades.stream()
 				.filter(tradeToInspect -> tradeToInspect.getType()
-						.equals(trade.getType()))
+						.equals(type))
 				.sorted(TradeComparatorByIdDesc.getInstance())
 				.findFirst()
 				.orElse(null);

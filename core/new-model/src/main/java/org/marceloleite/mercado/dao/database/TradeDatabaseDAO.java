@@ -8,14 +8,16 @@ import javax.inject.Named;
 
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
+import org.marceloleite.mercado.commons.TradeType;
 import org.marceloleite.mercado.dao.database.repository.TradeRepository;
 import org.marceloleite.mercado.dao.interfaces.TradeDAO;
-import org.marceloleite.mercado.model.Account;
 import org.marceloleite.mercado.model.Trade;
+import org.springframework.stereotype.Repository;
 
+@Repository
 @Named("TradeDatabaseDAO")
 public class TradeDatabaseDAO implements TradeDAO {
-	
+
 	private static TimeInterval cachedTimeIntervalAvailable;
 
 	@Inject
@@ -35,12 +37,12 @@ public class TradeDatabaseDAO implements TradeDAO {
 	public List<Trade> findByCurrencyAndTimeBetween(Currency currency, ZonedDateTime start, ZonedDateTime end) {
 		return tradeRepository.findByCurrencyAndTimeBetween(currency, start, end);
 	}
-	
+
 	@Override
 	public Iterable<Trade> findAll() {
 		return tradeRepository.findAll();
 	}
-	
+
 	public TimeInterval retrieveTimeIntervalAvailable(boolean retrieveFromCache) {
 		if (retrieveFromCache) {
 			if (cachedTimeIntervalAvailable == null) {
@@ -51,11 +53,11 @@ public class TradeDatabaseDAO implements TradeDAO {
 			return retrieveTimeIntervalAvailableFromDatabase();
 		}
 	}
-	
+
 	public TimeInterval retrieveTimeIntervalAvailable() {
 		return retrieveTimeIntervalAvailable(true);
 	}
-	
+
 	private TimeInterval retrieveTimeIntervalAvailableFromDatabase() {
 		Trade oldestTrade = findTopByOrderByTimeAsc();
 		Trade newestTrade = findTopByOrderByTimeDesc();
@@ -76,5 +78,12 @@ public class TradeDatabaseDAO implements TradeDAO {
 	@Override
 	public Trade findTopByOrderByTimeDesc() {
 		return tradeRepository.findTopByOrderByTimeDesc();
+	}
+
+	@Override
+	public Trade findFirstTradeOfCurrencyAndTypeAndOlderThan(Currency currency, TradeType type,
+			ZonedDateTime time) {
+		return tradeRepository.findFirstTradeOfCurrencyAndTypeAndOlderThan(currency, type, time);
+
 	}
 }

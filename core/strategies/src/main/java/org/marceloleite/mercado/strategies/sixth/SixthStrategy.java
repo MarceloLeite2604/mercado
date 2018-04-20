@@ -167,14 +167,13 @@ public class SixthStrategy extends AbstractStrategy {
 			List<Trade> trades = tradesRetriever.retrieve(currency, timeIntervalToRetrieve, false);
 			TimeDivisionController timeDivisionController = new TimeDivisionController(timeIntervalToRetrieve,
 					stepTime);
-			TemporalTickerCreator temporalTickerCreator = new TemporalTickerCreator();
 			List<TimeInterval> retrievedTimeIntervals = timeDivisionController.geTimeIntervals();
 			for (TimeInterval retrievedTimeInterval : retrievedTimeIntervals) {
 				List<Trade> tradesOnTimeInterval = trades.stream()
 						.filter(trade -> ZonedDateTimeUtils.isBetween(trade.getDate(), retrievedTimeInterval))
 						.collect(Collectors.toList());
 
-				TemporalTicker temporalTickerForTimeInterval = temporalTickerCreator.create(currency,
+				TemporalTicker temporalTickerForTimeInterval = TemporalTickerCreator.getInstance().create(currency,
 						retrievedTimeInterval, tradesOnTimeInterval);
 				lastPriceStatistics.add(temporalTickerForTimeInterval.retrieveCurrentOrPreviousLastPrice());
 			}

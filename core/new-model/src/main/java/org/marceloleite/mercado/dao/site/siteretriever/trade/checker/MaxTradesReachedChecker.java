@@ -1,4 +1,4 @@
-package org.marceloleite.mercado.dao.json.siteretriever.trade.checker;
+package org.marceloleite.mercado.dao.site.siteretriever.trade.checker;
 
 import java.util.List;
 

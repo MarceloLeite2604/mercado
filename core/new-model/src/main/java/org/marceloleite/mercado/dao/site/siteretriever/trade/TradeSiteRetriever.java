@@ -1,4 +1,4 @@
-package org.marceloleite.mercado.dao.json.siteretriever.trade;
+package org.marceloleite.mercado.dao.site.siteretriever.trade;
 
 import java.time.Duration;
 import java.util.HashSet;
@@ -17,7 +17,7 @@ import javax.ws.rs.Produces;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeDivisionController;
 import org.marceloleite.mercado.commons.TimeInterval;
-import org.marceloleite.mercado.dao.json.siteretriever.AbstractSiteRetriever;
+import org.marceloleite.mercado.dao.site.siteretriever.AbstractSiteRetriever;
 import org.marceloleite.mercado.model.Trade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

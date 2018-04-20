@@ -31,7 +31,7 @@ class PartialTradesSiteRetrieverCallable implements Callable<Map<Long, Trade>> {
 			System.err.println("Warning: Maximum trades exceeded from " + timeInterval + ". Splitting execution.");
 			result = splitExecution();
 		} else {
-			result = new ListToMapTradeConverter().convertTo(trades);
+			result = ListToMapTradeConverter.getInstance().convertTo(trades);
 		}
 		return result;
 	}

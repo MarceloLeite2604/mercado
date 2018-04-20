@@ -150,7 +150,7 @@ public class TemporalTickerCreator {
 	}
 
 	public TemporalTicker create(Currency currency, TimeInterval timeInterval, List<Trade> trades) {
-		return create(currency, timeInterval, new ListToMapTradeConverter().convertTo(trades));
+		return create(currency, timeInterval, ListToMapTradeConverter.getInstance().convertTo(trades));
 	}
 	
 	public static TemporalTickerCreator getInstance() {
