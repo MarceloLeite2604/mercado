@@ -92,7 +92,7 @@ public class Main {
 			ZonedDateTimeUtils.DEFAULT_ZONE_ID);
 
 	@Inject
-	@Qualifier("AccountDatabaseDAO")
+	@Qualifier("AccountXMLDatabaseDAO")
 	private AccountDAO accountDAO;
 
 	@Inject
@@ -108,10 +108,6 @@ public class Main {
 
 	@Inject
 	private TickerRepository tickerRepository;
-
-	/*
-	 * @Inject private TradeSiteRetriever tradesSiteRetriever;
-	 */
 
 	public static void main(String[] args) {
 		SpringApplication.run(Main.class);
@@ -156,7 +152,6 @@ public class Main {
 	private Account createAccount() {
 
 		Account account = accountDAO.findByOwner(ACCOUNT_OWNER);
-
 		if (account == null) {
 			Parameter parameter = new Parameter();
 			parameter.setName("destroyAll");

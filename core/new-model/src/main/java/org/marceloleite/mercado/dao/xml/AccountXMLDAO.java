@@ -1,6 +1,7 @@
 package org.marceloleite.mercado.dao.xml;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Named;
@@ -25,14 +26,26 @@ public class AccountXMLDAO extends BaseXMLDAO<Account> implements AccountDAO {
 		if (StringUtils.isEmpty(owner)) {
 			throw new RuntimeException("Account owner cannot be null or empty.");
 		}
+		Account account = null;
 		List<File> XMLFiles = findXMLFileByRegex(FILE_NAME_REGEX);
 		for (File XMLFile : XMLFiles) {
-			Account account = readXMLFile(XMLFile);
-			if (owner.equals(account.getOwner())) {
-				return account;
+			Account accountToCheck = readXMLFile(XMLFile);
+			if (owner.equals(accountToCheck.getOwner())) {
+				accountToCheck.adjustReferences();
+				account = accountToCheck;
 			}
 		}
-		return null;
+		return account;
+	}
+
+	@Override
+	public Iterable<Account> findAll() {
+		List<File> XMLFiles = findXMLFileByRegex(FILE_NAME_REGEX);
+		List<Account> accounts = new ArrayList<>();
+		for (File XMLFile : XMLFiles) {
+			accounts.add(readXMLFile(XMLFile));
+		}
+		return accounts;
 	}
 
 	@Override

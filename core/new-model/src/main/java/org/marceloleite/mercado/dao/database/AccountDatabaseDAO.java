@@ -19,6 +19,11 @@ public class AccountDatabaseDAO implements AccountDAO {
 	}
 
 	@Override
+	public Iterable<Account> findAll() {
+		return accountRepository.findAll();
+	}
+
+	@Override
 	public <S extends Account> S save(S account) {
 		return accountRepository.save(account);
 	}

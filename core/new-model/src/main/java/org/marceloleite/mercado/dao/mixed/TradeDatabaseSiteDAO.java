@@ -89,6 +89,11 @@ public class TradeDatabaseSiteDAO implements TradeDAO {
 		return tradeDatabaseDAO.findTopByOrderByTimeDesc();
 	}
 
+	@Override
+	public Iterable<Trade> findAll() {
+		throw new UnsupportedOperationException();
+	}
+
 	public static void setIgnoreValuesOnDatabase(boolean ignoreValuesOnDatabase) {
 		TradeDatabaseSiteDAO.ignoreValuesOnDatabase = ignoreValuesOnDatabase;
 	}

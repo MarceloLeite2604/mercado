@@ -1,26 +1,25 @@
-package org.marceloleite.mercado.retriever;
+package org.marceloleite.mercado;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.inject.Inject;
+
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.MercadoBigDecimal;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.TradeType;
-import org.marceloleite.mercado.data.TemporalTicker;
-import org.marceloleite.mercado.data.Trade;
-import org.marceloleite.mercado.databaseretriever.persistence.daos.TradeDAO;
-import org.marceloleite.mercado.databaseretriever.persistence.objects.TradePO;
-import org.marceloleite.mercado.retriever.filter.TradeTypeFilter;
-import org.marceloleite.mercado.siteretriever.converters.ListToMapTradeConverter;
+import org.marceloleite.mercado.dao.interfaces.TradeDAO;
+import org.marceloleite.mercado.model.TemporalTicker;
+import org.marceloleite.mercado.model.Trade;
+import org.springframework.stereotype.Component;
 
+@Component
 public class TemporalTickerCreator {
 	
-	private static TemporalTickerCreator instance;
-	
-	private TemporalTickerCreator() {
-	}
+	@Inject
+	private TradeDAO tradeDAO;
 	
 	public TemporalTicker create(Currency currency, TimeInterval timeInterval, Map<Long, Trade> trades) {
 
@@ -63,22 +62,22 @@ public class TemporalTickerCreator {
 					.mapToLong(trade -> trade.getId()).max().orElse(0);
 			if (lastTradeId != 0) {
 				Trade lastTrade = trades.get(lastTradeId);
-				last = lastTrade.getPrice();
+				last = new MercadoBigDecimal(lastTrade.getPrice());
 			}
 
 			long firstTradeId = trades.entrySet().stream().map(Entry<Long, Trade>::getValue)
 					.mapToLong(tradePO -> tradePO.getId()).min().orElse(0);
 			if (firstTradeId != 0) {
 				Trade firstTrade = trades.get(firstTradeId);
-				first = firstTrade.getPrice();
+				first = new MercadoBigDecimal(firstTrade.getPrice());
 			}
 
 			long lastSellingTradeId = sellingTrades.entrySet().stream().map(Entry<Long, Trade>::getValue)
 					.mapToLong(tradePO -> tradePO.getId()).max().orElse(0);
 			if (lastSellingTradeId != 0) {
-				buy = trades.get(lastSellingTradeId).getPrice();
+				buy = new MercadoBigDecimal(trades.get(lastSellingTradeId).getPrice());
 			} else {
-				TradePO previousBuyingTrade = new TradeDAO().retrievePreviousTrade(currency, TradeType.SELL,
+				Trade previousBuyingTrade = tradeDAO.retrievePreviousTrade(currency, TradeType.SELL,
 						timeInterval.getStart());
 				if (previousBuyingTrade != null) {
 					previousBuy = new MercadoBigDecimal(previousBuyingTrade.getPrice());
@@ -88,22 +87,21 @@ public class TemporalTickerCreator {
 			long lastBuyingTradeId = buyingTrades.entrySet().stream().map(Entry<Long, Trade>::getValue)
 					.mapToLong(tradePO -> tradePO.getId()).max().orElse(0);
 			if (lastBuyingTradeId != 0) {
-				sell = trades.get(lastBuyingTradeId).getPrice();
+				sell = new MercadoBigDecimal(trades.get(lastBuyingTradeId).getPrice());
 			} else {
-				TradePO previousSellingTrade = new TradeDAO().retrievePreviousTrade(currency, TradeType.BUY,
+				Trade previousSellingTrade = tradeDAO.retrievePreviousTrade(currency, TradeType.BUY,
 						timeInterval.getStart());
 				if (previousSellingTrade != null) {
 					previousSell = new MercadoBigDecimal(previousSellingTrade.getPrice());
 				}
 			}
 		} else {
-			TradeDAO tradeDAO = new TradeDAO();
-			TradePO previousBuyingTrade = tradeDAO.retrievePreviousTrade(currency, TradeType.SELL,
+			Trade previousBuyingTrade = tradeDAO.retrievePreviousTrade(currency, TradeType.SELL,
 					timeInterval.getStart());
 			if (previousBuyingTrade != null) {
 				previousBuy = new MercadoBigDecimal(previousBuyingTrade.getPrice());
 			}
-			TradePO previousSellingTrade = tradeDAO.retrievePreviousTrade(currency, TradeType.BUY,
+			Trade previousSellingTrade = tradeDAO.retrievePreviousTrade(currency, TradeType.BUY,
 					timeInterval.getStart());
 			if (previousSellingTrade != null) {
 				previousSell = new MercadoBigDecimal(previousSellingTrade.getPrice());
@@ -115,7 +113,7 @@ public class TemporalTickerCreator {
 				}
 			} else {
 				if (previousBuyingTrade != null) {
-					if (previousBuyingTrade.getId().getTradeId() > previousSellingTrade.getId().getTradeId()) {
+					if (previousBuyingTrade.getId() > previousSellingTrade.getId()) {
 						previousLast = new MercadoBigDecimal(previousBuyingTrade.getPrice());
 					} else {
 						previousLast = new MercadoBigDecimal(previousSellingTrade.getPrice());
@@ -127,14 +125,14 @@ public class TemporalTickerCreator {
 		}
 
 		temporalTicker = new TemporalTicker();
-		temporalTicker.setStart(timeInterval.getStart());
-		temporalTicker.setEnd(timeInterval.getEnd());
+		temporalTicker.setStartTime(timeInterval.getStart());
+		temporalTicker.setEndTime(timeInterval.getEnd());
 		temporalTicker.setCurrency(currency);
 		temporalTicker.setOrders(new Long(trades.size()));
 		temporalTicker.setHighestPrice(high);
 		temporalTicker.setAveragePrice(average);
 		temporalTicker.setLowestPrice(low);
-		temporalTicker.setVolumeTrades(vol);
+		temporalTicker.setVolumeTraded(vol);
 		temporalTicker.setFirstPrice(first);
 		temporalTicker.setLastPrice(last);
 		temporalTicker.setPreviousLastPrice(previousLast);
@@ -150,13 +148,6 @@ public class TemporalTickerCreator {
 	}
 
 	public TemporalTicker create(Currency currency, TimeInterval timeInterval, List<Trade> trades) {
-		return create(currency, timeInterval, new ListToMapTradeConverter().convertTo(trades));
-	}
-	
-	public static TemporalTickerCreator getInstance() {
-		if (instance == null ) {
-			instance = new TemporalTickerCreator();
-		}
-		return instance;
+		return create(currency, timeInterval, ListToMapTradeConverter.getInstance().convertTo(trades));
 	}
 }

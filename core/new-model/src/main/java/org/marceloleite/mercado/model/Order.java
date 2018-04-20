@@ -264,4 +264,12 @@ public class Order {
 		operation.setOrder(this);
 		getOperations().add(operation);
 	}
+
+	public void adjustReferences() {
+		if (operations != null) {
+			for (Operation operation : operations) {
+				operation.setOrder(this);
+			}
+		}
+	}
 }

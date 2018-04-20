@@ -59,7 +59,7 @@ public class Account {
 	@NotFound(action = NotFoundAction.IGNORE)
 	@Fetch(FetchMode.SUBSELECT)
 	private List<Strategy> strategies;
-	
+
 	@OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@NotFound(action = NotFoundAction.IGNORE)
 	@Fetch(FetchMode.SUBSELECT)
@@ -155,9 +155,42 @@ public class Account {
 		withdrawal.setAccount(this);
 		withdrawals.add(withdrawal);
 	}
-	
+
 	public void addOrder(Order order) {
 		order.setAccount(this);
 		orders.add(order);
+	}
+
+	public void adjustReferences() {
+
+		if (tapiInformation != null) {
+			tapiInformation.setAccount(this);
+		}
+
+		if (balances != null) {
+			for (Balance balance : balances) {
+				balance.setAccount(this);
+			}
+		}
+
+		if (withdrawals != null) {
+			for (Withdrawal withdrawal : withdrawals) {
+				withdrawal.setAccount(this);
+			}
+		}
+
+		if (strategies != null) {
+			for (Strategy strategy : strategies) {
+				strategy.setAccount(this);
+				strategy.adjustReferences();
+			}
+		}
+
+		if (orders != null) {
+			for (Order order : orders) {
+				order.setAccount(this);
+				order.adjustReferences();
+			}
+		}
 	}
 }

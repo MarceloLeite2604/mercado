@@ -1,6 +1,7 @@
 package org.marceloleite.mercado.dao.xml;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Named;
@@ -39,13 +40,24 @@ public class PropertyXMLDAO extends BaseXMLDAO<Property> implements PropertyDAO 
 			throw new RuntimeException("Property name cannot be null or empty.");
 		}
 		List<File> XMLFiles = findXMLFileByRegex(FILE_NAME_REGEX);
+		Property property = null;
 		for (File XMLFile : XMLFiles) {
-			Property property = readXMLFile(XMLFile);
-			if (name.equals(property.getName())) {
-				return property;
+			Property propertyFromXML = readXMLFile(XMLFile);
+			if (name.equals(propertyFromXML.getName())) {
+				property = propertyFromXML;
 			}
 		}
-		return null;
+		return property;
+	}
+	
+	@Override
+	public Iterable<Property> findAll() {
+		List<Property> properties = new ArrayList<>();
+		List<File> XMLFiles = findXMLFileByRegex(FILE_NAME_REGEX);
+		for (File XMLFile : XMLFiles) {
+			properties.add(readXMLFile(XMLFile));
+		}
+		return properties;
 	}
 
 	@Override
@@ -56,5 +68,5 @@ public class PropertyXMLDAO extends BaseXMLDAO<Property> implements PropertyDAO 
 	@Override
 	protected String createFileName(Property property) {
 		return String.format(FILE_NAME_TEMPLATE, property.getName());
-	}
+	}	
 }

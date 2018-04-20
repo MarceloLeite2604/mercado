@@ -5,6 +5,7 @@ import javax.inject.Named;
 
 import org.marceloleite.mercado.dao.database.repository.PropertyRepository;
 import org.marceloleite.mercado.dao.interfaces.PropertyDAO;
+import org.marceloleite.mercado.model.Account;
 import org.marceloleite.mercado.model.Property;
 
 @Named("PropertyDatabaseDAO")
@@ -16,6 +17,11 @@ public class PropertyDatabaseDAO implements PropertyDAO {
 	@Override
 	public Property findByName(String name) {
 		return propertyRepository.findByName(name);
+	}
+	
+	@Override
+	public Iterable<Property> findAll() {
+		return propertyRepository.findAll();
 	}
 
 	@Override

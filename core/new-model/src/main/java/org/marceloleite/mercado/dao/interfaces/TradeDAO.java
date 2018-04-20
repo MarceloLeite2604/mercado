@@ -13,4 +13,6 @@ public interface TradeDAO extends BaseDAO<Trade> {
 	public Trade findTopByOrderByTimeAsc();
 	
 	public Trade findTopByOrderByTimeDesc();
+	
+	public Trade findPreviousTradeOfSameType(Trade trade);
 }

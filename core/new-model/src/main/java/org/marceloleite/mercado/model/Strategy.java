@@ -106,4 +106,18 @@ public class Strategy {
 	public void setVariables(List<Variable> variables) {
 		this.variables = variables;
 	}
+
+	public void adjustReferences() {
+		if (parameters != null) {
+			for (Parameter parameter : parameters) {
+				parameter.setStrategy(this);
+			}
+		}
+		
+		if (variables != null) {
+			for (Variable variable : variables) {
+				variable.setStrategy(this);
+			}
+		}
+	}
 }

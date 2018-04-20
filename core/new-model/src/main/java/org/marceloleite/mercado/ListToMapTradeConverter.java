@@ -1,11 +1,11 @@
-package org.marceloleite.mercado.siteretriever.converters;
+package org.marceloleite.mercado;
 
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.marceloleite.mercado.commons.converter.Converter;
-import org.marceloleite.mercado.data.Trade;
+import org.marceloleite.mercado.model.Trade;
 
 public class ListToMapTradeConverter implements Converter<List<Trade>, Map<Long, Trade>> {
 	
@@ -15,8 +15,8 @@ public class ListToMapTradeConverter implements Converter<List<Trade>, Map<Long,
 	}
 
 	@Override
-	public Map<Long, Trade> convertTo(List<Trade> tradeList) {
-		return tradeList.stream()
+	public Map<Long, Trade> convertTo(List<Trade> trades) {
+		return trades.stream()
 			.map(jsonTrade -> jsonTrade)
 			.collect(Collectors.toConcurrentMap(Trade::getId, trade -> trade, (oldModel, newModel) -> newModel));
 	}

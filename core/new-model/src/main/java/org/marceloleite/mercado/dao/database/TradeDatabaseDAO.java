@@ -10,6 +10,7 @@ import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.dao.database.repository.TradeRepository;
 import org.marceloleite.mercado.dao.interfaces.TradeDAO;
+import org.marceloleite.mercado.model.Account;
 import org.marceloleite.mercado.model.Trade;
 
 @Named("TradeDatabaseDAO")
@@ -33,6 +34,11 @@ public class TradeDatabaseDAO implements TradeDAO {
 	@Override
 	public List<Trade> findByCurrencyAndTimeBetween(Currency currency, ZonedDateTime start, ZonedDateTime end) {
 		return tradeRepository.findByCurrencyAndTimeBetween(currency, start, end);
+	}
+	
+	@Override
+	public Iterable<Trade> findAll() {
+		return tradeRepository.findAll();
 	}
 	
 	public TimeInterval retrieveTimeIntervalAvailable(boolean retrieveFromCache) {
