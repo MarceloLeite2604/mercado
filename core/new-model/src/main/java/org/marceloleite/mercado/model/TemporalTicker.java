@@ -28,11 +28,11 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Table(name = "TEMPORAL_TICKERS")
 @JsonIgnoreProperties({ "id" })
 @JsonPropertyOrder({ "currency", "start", "end", "duration", "first", "last", "previousLast", "highest", "lowest",
-		"average", "lastBuy", "previousLastBuy", "lastSell", "previousLastSell", "orders",
+		"average", "buy", "previousBuy", "sell", "previousSell", "orders",
 		"buyOrders", "sellOrders", "volumeTraded" })
 @XmlRootElement(name = "temporalTicker")
 @XmlType(propOrder = { "currency", "start", "end", "duration", "first", "last", "previousLast", "highest", "lowest",
-		"average", "lastBuy", "previousLastBuy", "lastSell", "previousLastSell", "orders",
+		"average", "buy", "previousBuy", "sell", "previousSell", "orders",
 		"buyOrders", "sellOrders", "volumeTraded" })
 public class TemporalTicker {
 
@@ -44,7 +44,7 @@ public class TemporalTicker {
 	@Column(name = "CURRENCY", nullable = false, length = 4)
 	private Currency currency;
 
-	@Column(name = "START", nullable = false)
+	@Column(name = "\"START\"", nullable = false)
 	private ZonedDateTime start;
 
 	@Column(name = "END", nullable = false)
@@ -53,34 +53,34 @@ public class TemporalTicker {
 	@Column(name = "DURATION", nullable = false)
 	private Duration duration;
 
-	@Column(name = "FIRST", nullable = false, precision = 20, scale = 8)
+	@Column(name = "FIRST", nullable = true, precision = 20, scale = 8)
 	private BigDecimal first;
 
-	@Column(name = "LAST", nullable = false, precision = 20, scale = 8)
+	@Column(name = "LAST", nullable = true, precision = 20, scale = 8)
 	private BigDecimal last;
 
-	@Column(name = "PREVIOUS_LAST", nullable = false, precision = 20, scale = 8)
+	@Column(name = "PREVIOUS_LAST", nullable = true, precision = 20, scale = 8)
 	private BigDecimal previousLast;
 
-	@Column(name = "HIGHEST", nullable = false, precision = 20, scale = 8)
+	@Column(name = "HIGHEST", nullable = true, precision = 20, scale = 8)
 	private BigDecimal highest;
 
-	@Column(name = "LOWEST", nullable = false, precision = 20, scale = 8)
+	@Column(name = "LOWEST", nullable = true, precision = 20, scale = 8)
 	private BigDecimal lowest;
 
-	@Column(name = "AVERAGE", nullable = false, precision = 20, scale = 8)
+	@Column(name = "AVERAGE", nullable = true, precision = 20, scale = 8)
 	private BigDecimal average;
 
-	@Column(name = "BUY", nullable = false, precision = 20, scale = 8)
+	@Column(name = "BUY", nullable = true, precision = 20, scale = 8)
 	private BigDecimal buy;
 
-	@Column(name = "PREVIOUS_BUY", nullable = false, precision = 20, scale = 8)
+	@Column(name = "PREVIOUS_BUY", nullable = true, precision = 20, scale = 8)
 	private BigDecimal previousBuy;
 
-	@Column(name = "SELL", nullable = false, precision = 20, scale = 8)
+	@Column(name = "SELL", nullable = true, precision = 20, scale = 8)
 	private BigDecimal sell;
 
-	@Column(name = "PREVIOUS_SELL", nullable = false, precision = 20, scale = 8)
+	@Column(name = "PREVIOUS_SELL", nullable = true, precision = 20, scale = 8)
 	private BigDecimal previousSell;
 
 	@Column(name = "ORDERS", nullable = false)

@@ -81,9 +81,13 @@ public class TradeDatabaseDAO implements TradeDAO {
 	}
 
 	@Override
-	public Trade findFirstTradeOfCurrencyAndTypeAndOlderThan(Currency currency, TradeType type,
+	public Trade findFirstOfCurrencyAndTypeAndOlderThan(Currency currency, TradeType type,
 			ZonedDateTime time) {
-		return tradeRepository.findFirstTradeOfCurrencyAndTypeAndOlderThan(currency, type, time);
+		return tradeRepository.findFirstOfCurrencyAndTypeAndOlderThan(currency, type, time);
 
+	}
+	@Override
+	public Trade findTopByCurrencyAndTimeLessThanOrderByTimeDesc(Currency currency, ZonedDateTime time) {
+		return tradeRepository.findTopByCurrencyAndTimeLessThanOrderByTimeDesc(currency, time);
 	}
 }

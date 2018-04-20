@@ -7,6 +7,6 @@ import org.marceloleite.mercado.model.TemporalTicker;
 
 public interface TemporalTickerDAO extends BaseDAO<TemporalTicker> {
 	
-	public TemporalTicker findByCurrencyAndStartTimeAndEndTime(Currency currency, ZonedDateTime startTime, ZonedDateTime endTime);
+	public TemporalTicker findByCurrencyAndStartAndEnd(Currency currency, ZonedDateTime startTime, ZonedDateTime endTime);
 
 }

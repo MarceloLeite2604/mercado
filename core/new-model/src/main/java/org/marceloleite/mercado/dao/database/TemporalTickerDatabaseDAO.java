@@ -24,7 +24,7 @@ public class TemporalTickerDatabaseDAO implements TemporalTickerDAO {
 	private TemporalTickerRepository temporalTickerRepository;
 	
 	@Inject
-	@Named("TradesDatabaseSiteDAO")
+	@Named("TradeDatabaseSiteDAO")
 	private TradeDAO tradesDAO;
 	
 	@Inject
@@ -46,9 +46,9 @@ public class TemporalTickerDatabaseDAO implements TemporalTickerDAO {
 	}
 
 	@Override
-	public TemporalTicker findByCurrencyAndStartTimeAndEndTime(Currency currency, ZonedDateTime startTime,
+	public TemporalTicker findByCurrencyAndStartAndEnd(Currency currency, ZonedDateTime startTime,
 			ZonedDateTime endTime) {
-		TemporalTicker temporalTicker = temporalTickerRepository.findByCurrencyAndStartTimeAndEndTime(currency, startTime, endTime);
+		TemporalTicker temporalTicker = temporalTickerRepository.findByCurrencyAndStartAndEnd(currency, startTime, endTime);
 		if (temporalTicker == null) {
 			temporalTicker = createTemporalTicker(currency, startTime, endTime);
 		}

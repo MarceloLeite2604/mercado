@@ -18,7 +18,9 @@ public interface TradeRepository extends CrudRepository<Trade, Long> {
 
 	public Trade findTopByOrderByTimeDesc();
 
-	@Query("SELECT * FROM TRADES WHERE id = (SELECT max(id) FROM TRADES WHERE time = ( SELECT max(time) FROM TRADES WHERE time = :time AND currency = :currency AND time <= :time) ) AND currency = :currency")
-	public Trade findFirstTradeOfCurrencyAndTypeAndOlderThan(@Param("currency") Currency currency, @Param("type") TradeType type,
-			@Param("time") ZonedDateTime time);
+	public Trade findTopByCurrencyAndTimeLessThanOrderByTimeDesc(Currency currency, ZonedDateTime time);
+
+	@Query(value = "SELECT * FROM TRADES WHERE id = (SELECT max(id) FROM TRADES WHERE time = ( SELECT max(time) FROM TRADES WHERE type = :type AND currency = :currency AND time <= :time) ) AND currency = :currency", nativeQuery = true)
+	public Trade findFirstOfCurrencyAndTypeAndOlderThan(@Param("currency") Currency currency,
+			@Param("type") TradeType type, @Param("time") ZonedDateTime time);
 }

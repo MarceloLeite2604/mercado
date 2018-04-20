@@ -15,5 +15,7 @@ public interface TradeDAO extends BaseDAO<Trade> {
 	
 	public Trade findTopByOrderByTimeDesc();
 	
-	public Trade findFirstTradeOfCurrencyAndTypeAndOlderThan(Currency currency, TradeType type, ZonedDateTime time);
+	public Trade findFirstOfCurrencyAndTypeAndOlderThan(Currency currency, TradeType type, ZonedDateTime time);
+	
+	public Trade findTopByCurrencyAndTimeLessThanOrderByTimeDesc(Currency currency, ZonedDateTime time);
 }

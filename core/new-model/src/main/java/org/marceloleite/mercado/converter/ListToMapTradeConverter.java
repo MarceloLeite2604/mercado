@@ -1,4 +1,4 @@
-package org.marceloleite.mercado;
+package org.marceloleite.mercado.converter;
 
 import java.util.List;
 import java.util.Map;

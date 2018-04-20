@@ -26,10 +26,10 @@ import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.TradeType;
 import org.marceloleite.mercado.commons.converter.ObjectToJsonConverter;
 import org.marceloleite.mercado.commons.utils.ZonedDateTimeUtils;
-import org.marceloleite.mercado.dao.database.repository.TemporalTickerRepository;
 import org.marceloleite.mercado.dao.database.repository.TickerRepository;
 import org.marceloleite.mercado.dao.interfaces.AccountDAO;
 import org.marceloleite.mercado.dao.interfaces.PropertyDAO;
+import org.marceloleite.mercado.dao.interfaces.TemporalTickerDAO;
 import org.marceloleite.mercado.dao.interfaces.TradeDAO;
 import org.marceloleite.mercado.dao.site.siteretriever.OrderbookSiteRetriever;
 import org.marceloleite.mercado.dao.site.siteretriever.TickerSiteRetriever;
@@ -104,7 +104,8 @@ public class Main {
 	private TradeDAO tradeDAO;
 
 	@Inject
-	private TemporalTickerRepository temporalTickerRepository;
+	@Named("TemporalTickerDatabaseDAO")
+	private TemporalTickerDAO temporalTickerDAO;
 
 	@Inject
 	private TickerRepository tickerRepository;
@@ -222,9 +223,9 @@ public class Main {
 
 	private TemporalTicker createTemporalTicker() {
 		TemporalTicker temporalTicker = null;
-		temporalTicker = temporalTickerRepository.findByCurrencyAndStartTimeAndEndTime(CURRENCY, START_TIME, END_TIME);
+		temporalTicker = temporalTickerDAO.findByCurrencyAndStartAndEnd(CURRENCY, START_TIME, END_TIME);
 		if (temporalTicker == null) {
-			TemporalTicker.builder()
+			/*temporalTicker = */TemporalTicker.builder()
 					.currency(CURRENCY)
 					.start(START_TIME)
 					.end(END_TIME)
@@ -242,7 +243,7 @@ public class Main {
 					.orders(20L)
 					.buyOrders(8L)
 					.sellOrders(2L)
-					.volumeTraded(new BigDecimal("204"));
+					.volumeTraded(new BigDecimal("204")).build();
 		}
 		return temporalTicker;
 	}
@@ -331,7 +332,7 @@ public class Main {
 
 	private void persistTemporalTicker(TemporalTicker temporalTicker) {
 		LOGGER.info("Persisting temporal ticker.");
-		temporalTickerRepository.save(temporalTicker);
+		temporalTickerDAO.save(temporalTicker);
 	}
 
 	private void persistTicker(Ticker ticker) {

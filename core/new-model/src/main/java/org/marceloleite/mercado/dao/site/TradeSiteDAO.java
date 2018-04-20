@@ -41,8 +41,27 @@ public class TradeSiteDAO implements TradeDAO {
 	}
 
 	@Override
-	public Trade findFirstTradeOfCurrencyAndTypeAndOlderThan(Currency currency, TradeType type,
-			ZonedDateTime time) {
+	public Trade findTopByCurrencyAndTimeLessThanOrderByTimeDesc(Currency currency, ZonedDateTime time) {
+		Trade previousTrade = null;
+		int minutesToSubtract = 1;
+		ZonedDateTime end = ZonedDateTime.from(time);
+		while (previousTrade == null && minutesToSubtract < FIND_PREVIOUS_TRADE_LIMIT_MINUTES) {
+			minutesToSubtract *= 2;
+			ZonedDateTime start = end.minusMinutes(minutesToSubtract);
+			List<Trade> trades = findByCurrencyAndTimeBetween(currency, start, end);
+			if (!CollectionUtils.isEmpty(trades)) {
+				previousTrade = trades.stream()
+						.sorted(TradeComparatorByIdDesc.getInstance())
+						.findFirst()
+						.orElse(null);
+			}
+			end = start;
+		}
+		return previousTrade;
+	}
+
+	@Override
+	public Trade findFirstOfCurrencyAndTypeAndOlderThan(Currency currency, TradeType type, ZonedDateTime time) {
 		Trade previousTrade = null;
 		int minutesToSubtract = 1;
 		ZonedDateTime end = ZonedDateTime.from(time);

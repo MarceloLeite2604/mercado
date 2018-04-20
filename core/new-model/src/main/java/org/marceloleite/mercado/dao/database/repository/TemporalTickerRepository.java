@@ -8,5 +8,5 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface TemporalTickerRepository extends CrudRepository<TemporalTicker, Long> {
 
-	public TemporalTicker findByCurrencyAndStartTimeAndEndTime(Currency currency, ZonedDateTime startTime, ZonedDateTime endTime);
+	public TemporalTicker findByCurrencyAndStartAndEnd(Currency currency, ZonedDateTime start, ZonedDateTime end);
 }

@@ -94,11 +94,10 @@ public class TradeDatabaseSiteDAO implements TradeDAO {
 	}
 
 	@Override
-	public Trade findFirstTradeOfCurrencyAndTypeAndOlderThan(Currency currency, TradeType type,
-			ZonedDateTime time) {
-		Trade previousTrade = tradeDatabaseDAO.findFirstTradeOfCurrencyAndTypeAndOlderThan(currency, type, time);
+	public Trade findFirstOfCurrencyAndTypeAndOlderThan(Currency currency, TradeType type, ZonedDateTime time) {
+		Trade previousTrade = tradeDatabaseDAO.findFirstOfCurrencyAndTypeAndOlderThan(currency, type, time);
 		if (previousTrade == null) {
-			previousTrade = tradeSiteDAO.findFirstTradeOfCurrencyAndTypeAndOlderThan(currency, type, time);
+			previousTrade = tradeSiteDAO.findFirstOfCurrencyAndTypeAndOlderThan(currency, type, time);
 		}
 		return previousTrade;
 	}
@@ -110,5 +109,14 @@ public class TradeDatabaseSiteDAO implements TradeDAO {
 
 	public static void setIgnoreValuesOnDatabase(boolean ignoreValuesOnDatabase) {
 		TradeDatabaseSiteDAO.ignoreValuesOnDatabase = ignoreValuesOnDatabase;
+	}
+
+	@Override
+	public Trade findTopByCurrencyAndTimeLessThanOrderByTimeDesc(Currency currency, ZonedDateTime time) {
+		Trade previousTrade = tradeDatabaseDAO.findTopByCurrencyAndTimeLessThanOrderByTimeDesc(currency, time);
+		if (previousTrade == null) {
+			previousTrade = tradeSiteDAO.findTopByCurrencyAndTimeLessThanOrderByTimeDesc(currency, time);
+		}
+		return previousTrade;
 	}
 }
