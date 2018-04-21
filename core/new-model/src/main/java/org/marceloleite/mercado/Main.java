@@ -71,10 +71,10 @@ public class Main {
 
 	private static final Currency CURRENCY = Currency.LITECOIN;
 
-	private static final ZonedDateTime START_TIME = ZonedDateTime.of(LocalDateTime.of(2018, 04, 13, 18, 8, 0),
+	private static final ZonedDateTime START_TIME = ZonedDateTime.of(LocalDateTime.of(2018, 04, 13, 00, 0, 0),
 			ZonedDateTimeUtils.DEFAULT_ZONE_ID);
 
-	private static final ZonedDateTime END_TIME = ZonedDateTime.of(LocalDateTime.of(2018, 04, 13, 18, 9, 0),
+	private static final ZonedDateTime END_TIME = ZonedDateTime.of(LocalDateTime.of(2018, 04, 14, 00, 0, 0),
 			ZonedDateTimeUtils.DEFAULT_ZONE_ID);
 
 	private static final ZonedDateTime TICKER_TIME = ZonedDateTime.of(LocalDateTime.of(2018, 04, 13, 18, 9, 0),

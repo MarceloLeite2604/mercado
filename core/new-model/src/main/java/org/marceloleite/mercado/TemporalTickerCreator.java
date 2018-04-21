@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.marceloleite.mercado.checker.ValidTimeIntervalForTemporalTickerChecker;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.MercadoBigDecimal;
 import org.marceloleite.mercado.commons.TimeInterval;
@@ -28,13 +29,18 @@ public class TemporalTickerCreator {
 	@Inject
 	@Named("TradeDatabaseSiteDAO")
 	private TradeDAO tradeDAO;
-	
+
 	public TemporalTicker create(Currency currency, TimeInterval timeInterval, List<Trade> trades) {
 		return create(currency, timeInterval, ListToMapTradeConverter.getInstance()
 				.convertTo(trades));
 	}
 
 	public TemporalTicker create(Currency currency, TimeInterval timeInterval, Map<Long, Trade> trades) {
+
+		if (!ValidTimeIntervalForTemporalTickerChecker.getInstance()
+				.check(timeInterval)) {
+			throw new IllegalArgumentException("Time interval " + timeInterval + " is invalid for a Temporal Ticker.");
+		}
 
 		BigDecimal high;
 		BigDecimal average;
@@ -52,29 +58,30 @@ public class TemporalTickerCreator {
 		long sellOrders = 0;
 
 		if (!CollectionUtils.isEmpty(trades)) {
-			
+
 			Map<Long, Trade> buyingTrades = new TradeTypeFilter(TradeType.BUY).filter(trades);
 			Map<Long, Trade> sellingTrades = new TradeTypeFilter(TradeType.SELL).filter(trades);
-			
+
 			Trade lastSellingTrade = retrieveLast(sellingTrades);
 			Trade lastBuyingTrade = retrieveLast(buyingTrades);
 			Trade firstTrade = retrieveFirst(trades);
 			Trade lastTrade = retrieveLast(trades);
-			
+
 			high = retrieveHigh(trades);
 			average = retrieveAverage(trades);
 			low = retrieveLow(trades);
 			vol = retrieveVolumeTraded(trades);
 			first = createBigDecimalFromPrice(firstTrade);
-			
-			if ( lastTrade != null ) {
-				last = new BigDecimal(lastTrade.getPrice().toString());
+
+			if (lastTrade != null) {
+				last = new BigDecimal(lastTrade.getPrice()
+						.toString());
 				previousLast = null;
 			} else {
 				last = null;
 				previousLast = retrievePrevious(currency, timeInterval.getStart());
 			}
-			
+
 			if (lastSellingTrade != null) {
 				buy = createBigDecimalFromPrice(lastSellingTrade);
 				previousBuy = null;
@@ -90,13 +97,13 @@ public class TemporalTickerCreator {
 				sell = null;
 				previousSell = retrievePrevious(currency, TradeType.BUY, timeInterval.getStart());
 			}
-			
-			orders = trades.size();	
+
+			orders = trades.size();
 			buyOrders = sellingTrades.size();
 			sellOrders = buyingTrades.size();
-			
+
 		} else {
-			
+
 			high = null;
 			average = null;
 			low = null;
@@ -113,7 +120,7 @@ public class TemporalTickerCreator {
 			sellOrders = 0;
 
 		}
-		
+
 		return TemporalTicker.builder()
 				.currency(currency)
 				.start(timeInterval.getStart())
@@ -135,27 +142,25 @@ public class TemporalTickerCreator {
 				.volumeTraded(vol)
 				.build();
 	}
-	
+
 	private BigDecimal retrievePrevious(Currency currency, ZonedDateTime date) {
 		Trade previousTrade = tradeDAO.findTopByCurrencyAndTimeLessThanOrderByTimeDesc(currency, date);
 		return createBigDecimalFromPrice(previousTrade);
 	}
-	
+
 	private BigDecimal retrievePrevious(Currency currency, TradeType type, ZonedDateTime date) {
-		Trade previousTrade = tradeDAO.findFirstOfCurrencyAndTypeAndOlderThan(currency,
-				type, date);
+		Trade previousTrade = tradeDAO.findFirstOfCurrencyAndTypeAndOlderThan(currency, type, date);
 		return createBigDecimalFromPrice(previousTrade);
 	}
 
 	private BigDecimal createBigDecimalFromPrice(Trade trade) {
 		BigDecimal bigDecimal = null;
 		if (trade != null) {
-			bigDecimal = new BigDecimal(trade.getPrice().toString());
+			bigDecimal = new BigDecimal(trade.getPrice()
+					.toString());
 		}
 		return bigDecimal;
 	}
-
-	
 
 	private BigDecimal retrieveVolumeTraded(Map<Long, Trade> trades) {
 		BigDecimal vol;
@@ -201,17 +206,20 @@ public class TemporalTickerCreator {
 	}
 
 	private Trade retrieveFirst(Map<Long, Trade> trades) {
-		return retrieveFirstOrderingBy(trades, TradeComparatorById.getInstance(), "Could not find first trade on list.");
+		return retrieveFirstOrderingBy(trades, TradeComparatorById.getInstance(),
+				"Could not find first trade on list.");
 	}
-	
+
 	private Trade retrieveLast(Map<Long, Trade> trades) {
-		return retrieveFirstOrderingBy(trades, TradeComparatorByIdDesc.getInstance(), "Could not find last trade on list.");
+		return retrieveFirstOrderingBy(trades, TradeComparatorByIdDesc.getInstance(),
+				"Could not find last trade on list.");
 	}
-	
-	private Trade retrieveFirstOrderingBy(Map<Long, Trade> trades, Comparator<? extends Trade> comparator, String message) {
+
+	private Trade retrieveFirstOrderingBy(Map<Long, Trade> trades, Comparator<? super Trade> comparator,
+			String message) {
 		Trade lastTrade = trades.values()
 				.stream()
-				.sorted(TradeComparatorByIdDesc.getInstance())
+				.sorted(comparator)
 				.findFirst()
 				.orElseThrow(() -> new RuntimeException(message));
 		return lastTrade;
