@@ -23,6 +23,7 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
+import org.marceloleite.mercado.commons.Currency;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -30,9 +31,9 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Table(name = "STRATEGIES")
 @JsonIgnoreProperties({"id", "account"})
-@JsonPropertyOrder({ "className", "parameters", "variables" })
+@JsonPropertyOrder({ "currency", "className", "parameters", "variables" })
 @XmlRootElement(name = "strategy")
-@XmlType(propOrder = { "className", "parameters", "variables" })
+@XmlType(propOrder = { "currency", "className", "parameters", "variables" })
 public class Strategy {
 
 	@Id
@@ -44,9 +45,12 @@ public class Strategy {
 	@JoinColumn(name = "ACCO_ID", nullable = false, foreignKey = @ForeignKey(name = "STRA_ACCO_FK"))
 	private Account account;
 
+	@Column(name = "CURRENCY", length = 4, nullable = false)
+	private Currency currency;
+
 	@Column(name = "CLASS_NAME", length = 128, nullable = false)
 	private String className;
-
+	
 	@OneToMany(mappedBy = "strategy", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@NotFound(action = NotFoundAction.IGNORE)
 	@Fetch(FetchMode.SUBSELECT)
@@ -73,6 +77,15 @@ public class Strategy {
 
 	public void setAccount(Account account) {
 		this.account = account;
+	}
+
+	@XmlElement
+	public Currency getCurrency() {
+		return currency;
+	}
+
+	public void setCurrency(Currency currency) {
+		this.currency = currency;
 	}
 
 	@XmlElement

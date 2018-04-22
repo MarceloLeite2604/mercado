@@ -13,6 +13,7 @@ import org.marceloleite.mercado.commons.MercadoBigDecimal;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.properties.Property;
 import org.marceloleite.mercado.data.TemporalTicker;
+import org.marceloleite.mercado.strategy.AbstractStrategy;
 
 public class OriginalStrategy extends AbstractStrategy {
 

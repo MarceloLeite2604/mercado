@@ -32,9 +32,9 @@ import org.marceloleite.mercado.data.TemporalTicker;
 import org.marceloleite.mercado.data.Trade;
 import org.marceloleite.mercado.retriever.TemporalTickerCreator;
 import org.marceloleite.mercado.retriever.TradesRetriever;
-import org.marceloleite.mercado.strategies.AbstractStrategy;
 import org.marceloleite.mercado.strategies.sixth.graphic.SixStrategyGraphic;
 import org.marceloleite.mercado.strategies.sixth.graphic.SixthStrategyGraphicData;
+import org.marceloleite.mercado.strategy.AbstractStrategy;
 
 public class SixthStrategy extends AbstractStrategy {
 

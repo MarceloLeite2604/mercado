@@ -20,7 +20,7 @@ import org.marceloleite.mercado.commons.converter.ZonedDateTimeToStringConverter
 import org.marceloleite.mercado.commons.formatter.PercentageFormatter;
 import org.marceloleite.mercado.commons.properties.Property;
 import org.marceloleite.mercado.data.TemporalTicker;
-import org.marceloleite.mercado.strategies.AbstractStrategy;
+import org.marceloleite.mercado.strategy.AbstractStrategy;
 
 public class FourthStrategy extends AbstractStrategy {
 
