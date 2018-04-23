@@ -16,17 +16,21 @@ import org.marceloleite.mercado.model.Strategy;
 import org.marceloleite.mercado.model.Variable;
 import org.springframework.util.CollectionUtils;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+
 public abstract class AbstractStrategyExecutor implements StrategyExecutor {
 
 	private Strategy strategy;
-	
+
 	protected AbstractStrategyExecutor(Strategy strategy) {
 		super();
 		this.strategy = strategy;
 		setParameters(strategy);
 		setVariables(strategy);
 	}
-	
+
 	protected Currency getCurrency() {
 		return strategy.getCurrency();
 	}
@@ -51,12 +55,12 @@ public abstract class AbstractStrategyExecutor implements StrategyExecutor {
 			getLogger().info("No parameters defined for strategy \"" + strategy + "\".");
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public Map<String, Class<?>> getParameterDefinitions() {
 		return Collections.EMPTY_MAP;
 	}
-	
+
 	private List<String> retrieveParameterNames(Strategy strategy) {
 		return Optional.of(strategy.getParameters())
 				.orElseThrow(() -> new IllegalStateException(
@@ -65,7 +69,7 @@ public abstract class AbstractStrategyExecutor implements StrategyExecutor {
 				.map(Parameter::getName)
 				.collect(Collectors.toList());
 	}
-	
+
 	private void defineParameters(Strategy strategy) {
 		ObjectToJsonConverter objectToJsonConverter = new ObjectToJsonConverter();
 		Map<String, Class<?>> parameterDefinitions = getParameterDefinitions();
@@ -79,7 +83,7 @@ public abstract class AbstractStrategyExecutor implements StrategyExecutor {
 			setParameter(parameterObject);
 		}
 	}
-	
+
 	private void listParametersOnLog(Strategy strategy) {
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append("Parameters: ");
@@ -103,7 +107,7 @@ public abstract class AbstractStrategyExecutor implements StrategyExecutor {
 		defineVariables(strategy);
 		listVariablesOnLog(strategy);
 	}
-	
+
 	private void checkVariables(Strategy strategy) {
 		Map<String, Class<?>> variableDefinitions = getVariableDefinitions();
 		if (!CollectionUtils.isEmpty(variableDefinitions)) {
@@ -118,7 +122,7 @@ public abstract class AbstractStrategyExecutor implements StrategyExecutor {
 			getLogger().info("No variables defined for strategy \"" + strategy + "\".");
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public Map<String, Class<?>> getVariableDefinitions() {
 		return Collections.EMPTY_MAP;
@@ -146,8 +150,26 @@ public abstract class AbstractStrategyExecutor implements StrategyExecutor {
 		}
 		getLogger().info(stringBuilder.toString());
 	}
-	
+
 	protected Strategy getStrategy() {
+		List<Variable> variables = getVariables();
+		strategy.setVariables(variables);
+		return strategy;
+	}
+
+	private List<Variable> getVariables(Strategy strategy) {
+		
+		ObjectWriter writerWithDefaultPrettyPrinter = new ObjectMapper().writerWithDefaultPrettyPrinter();
+		List<String> variableNames = retrieveVariableNames(strategy);
+		for (String variableName : variableNames) {
+			Object object = getVariable(variableName);
+			try {	
+				writerWithDefaultPrettyPrinter.writeValueAsString(object);
+			} catch (JsonProcessingException exceptio) {
+				throw new RuntimeException("Error while retrieving Json value from variable \"" + var +"\" ")
+			}	
+		}
+		return null;
 		
 	}
 
@@ -164,6 +186,8 @@ public abstract class AbstractStrategyExecutor implements StrategyExecutor {
 	}
 
 	protected abstract void setParameter(Object parameterObject);
-	
+
 	protected abstract void setVariable(Object variableObject);
+
+	protected abstract Object getVariable(String variableName);
 }
