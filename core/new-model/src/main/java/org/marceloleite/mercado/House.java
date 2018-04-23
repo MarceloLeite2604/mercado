@@ -12,7 +12,7 @@ public interface House {
 	
 	void updateTemporalTickers(TimeInterval timeInterval);
 	
-	Map<Currency, TemporalTicker> getTemporalTickers();
+	TemporalTicker getTemporalTickerFor(Currency currency);
 	
 	OrderExecutor getOrderExecutor();
 	

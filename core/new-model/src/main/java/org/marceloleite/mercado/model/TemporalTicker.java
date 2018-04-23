@@ -3,6 +3,7 @@ package org.marceloleite.mercado.model;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.ZonedDateTime;
+import java.util.Optional;
 
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -17,6 +18,7 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.commons.converter.ObjectToJsonConverter;
 import org.marceloleite.mercado.model.attributeconverter.ZonedDateTimeAttributeConverter;
 import org.marceloleite.mercado.model.xmladapter.CurrencyXmlAdapter;
 import org.marceloleite.mercado.model.xmladapter.DurationXmlAdapter;
@@ -28,12 +30,10 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Table(name = "TEMPORAL_TICKERS")
 @JsonIgnoreProperties({ "id" })
 @JsonPropertyOrder({ "currency", "start", "end", "duration", "first", "last", "previousLast", "highest", "lowest",
-		"average", "buy", "previousBuy", "sell", "previousSell", "orders",
-		"buyOrders", "sellOrders", "volumeTraded" })
+		"average", "buy", "previousBuy", "sell", "previousSell", "orders", "buyOrders", "sellOrders", "volumeTraded" })
 @XmlRootElement(name = "temporalTicker")
 @XmlType(propOrder = { "currency", "start", "end", "duration", "first", "last", "previousLast", "highest", "lowest",
-		"average", "buy", "previousBuy", "sell", "previousSell", "orders",
-		"buyOrders", "sellOrders", "volumeTraded" })
+		"average", "buy", "previousBuy", "sell", "previousSell", "orders", "buyOrders", "sellOrders", "volumeTraded" })
 public class TemporalTicker {
 
 	@Id
@@ -98,7 +98,7 @@ public class TemporalTicker {
 	public TemporalTicker() {
 		super();
 	}
-	
+
 	private TemporalTicker(Builder builder) {
 		super();
 		this.currency = builder.currency;
@@ -323,99 +323,119 @@ public class TemporalTicker {
 
 		private Builder() {
 		}
-		
+
 		public Builder currency(Currency currency) {
 			this.currency = currency;
 			return this;
 		}
-		
+
 		public Builder start(ZonedDateTime start) {
 			this.start = start;
 			return this;
 		}
-		
+
 		public Builder end(ZonedDateTime end) {
 			this.end = end;
 			return this;
 		}
-		
+
 		public Builder duration(Duration duration) {
 			this.duration = duration;
 			return this;
 		}
-		
+
 		public Builder first(BigDecimal first) {
 			this.first = first;
 			return this;
 		}
-		
+
 		public Builder last(BigDecimal last) {
 			this.last = last;
 			return this;
 		}
-		
+
 		public Builder previousLast(BigDecimal previousLast) {
 			this.previousLast = previousLast;
 			return this;
 		}
-		
+
 		public Builder highest(BigDecimal highest) {
 			this.highest = highest;
 			return this;
 		}
-		
+
 		public Builder lowest(BigDecimal lowest) {
 			this.lowest = lowest;
 			return this;
 		}
-		
+
 		public Builder average(BigDecimal average) {
 			this.average = average;
 			return this;
 		}
-		
+
 		public Builder buy(BigDecimal buy) {
 			this.buy = buy;
 			return this;
 		}
-		
+
 		public Builder previousBuy(BigDecimal previousBuy) {
 			this.previousBuy = previousBuy;
 			return this;
 		}
-		
+
 		public Builder sell(BigDecimal sell) {
 			this.sell = sell;
 			return this;
 		}
-		
+
 		public Builder previousSell(BigDecimal previousSell) {
 			this.previousSell = previousSell;
 			return this;
 		}
-		
+
 		public Builder orders(Long orders) {
 			this.orders = orders;
 			return this;
 		}
-		
+
 		public Builder buyOrders(Long buyOrders) {
 			this.buyOrders = buyOrders;
 			return this;
 		}
-		
+
 		public Builder sellOrders(Long sellOrders) {
 			this.sellOrders = sellOrders;
 			return this;
 		}
-		
+
 		public Builder volumeTraded(BigDecimal volumeTraded) {
 			this.volumeTraded = volumeTraded;
 			return this;
 		}
-		
+
 		public TemporalTicker build() {
 			return new TemporalTicker(this);
 		}
+	}
+
+	public BigDecimal getCurrentOrPreviousLast() {
+		return Optional.ofNullable(last)
+				.orElse(previousLast);
+	}
+
+	public BigDecimal getCurrentOrPreviousBuy() {
+		return Optional.ofNullable(buy)
+				.orElse(previousBuy);
+	}
+
+	public BigDecimal getCurrentOrPreviousSell() {
+		return Optional.ofNullable(sell)
+				.orElse(previousSell);
+	}
+
+	public TemporalTicker makeDeepCopy() {
+		ObjectToJsonConverter objectToJsonConverter = new ObjectToJsonConverter();
+		return objectToJsonConverter.convertFromToObject(objectToJsonConverter.convertTo(this), this.getClass());
 	}
 }

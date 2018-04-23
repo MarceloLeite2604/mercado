@@ -1,6 +1,8 @@
 package org.marceloleite.mercado.model;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -21,6 +23,8 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
+import org.marceloleite.mercado.CurrencyAmount;
+import org.marceloleite.mercado.commons.Currency;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -192,5 +196,21 @@ public class Account {
 				order.adjustReferences();
 			}
 		}
+	}
+
+	public boolean hasPositiveBalanceOf(Currency currency) {
+		BigDecimal balance = getBalanceFor(currency);
+		return (balance.compareTo(BigDecimal.ZERO) > 0);
+	}
+
+	public boolean hasBalanceFor(CurrencyAmount currencyAmount) {
+		return (getBalanceFor(currencyAmount.getCurrency()).compareTo(currencyAmount.getAmount()) >= 0);
+	}
+
+	public BigDecimal getBalanceFor(Currency currency) {
+		balances.stream()
+				.collect(Collectors.toMap(Balance::getCurrency, Balance::getAmount))
+				.getOrDefault(currency, new BigDecimal("0"));
+		return null;
 	}
 }

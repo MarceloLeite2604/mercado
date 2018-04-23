@@ -42,9 +42,9 @@ public abstract class AbstractStrategyExecutor implements StrategyExecutor {
 	}
 
 	private void checkParameters(Strategy strategy) {
-		Map<String, Class<?>> parameterDefinitions = getParameterDefinitions();
+		Map<String, ParameterDefinition> parameterDefinitions = getParameterDefinitions();
 		if (!CollectionUtils.isEmpty(parameterDefinitions)) {
-			List<String> parameterNames = retrieveParameterNames(strategy);
+			List<String> parameterNames = retrieveInformedParameterNames(strategy);
 			for (String parameterDefinitionName : parameterDefinitions.keySet()) {
 				if (!parameterNames.contains(parameterDefinitionName)) {
 					throw new IllegalStateException("Could not find parameter \"" + parameterDefinitionName
@@ -56,12 +56,7 @@ public abstract class AbstractStrategyExecutor implements StrategyExecutor {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	public Map<String, Class<?>> getParameterDefinitions() {
-		return Collections.EMPTY_MAP;
-	}
-
-	private List<String> retrieveParameterNames(Strategy strategy) {
+	private List<String> retrieveInformedParameterNames(Strategy strategy) {
 		return Optional.of(strategy.getParameters())
 				.orElseThrow(() -> new IllegalStateException(
 						"Strategy \"" + strategy + " does not have any parameter defined."))
@@ -72,15 +67,18 @@ public abstract class AbstractStrategyExecutor implements StrategyExecutor {
 
 	private void defineParameters(Strategy strategy) {
 		ObjectToJsonConverter objectToJsonConverter = new ObjectToJsonConverter();
-		Map<String, Class<?>> parameterDefinitions = getParameterDefinitions();
+		Map<String, ParameterDefinition> parameterDefinitions = getParameterDefinitions();
 		List<Parameter> parameters = strategy.getParameters();
 		Map<String, Parameter> parameterValues = parameters.stream()
 				.collect(Collectors.toMap(Parameter::getName, parameter -> parameter));
-		for (Entry<String, Class<?>> parameterDefinition : parameterDefinitions.entrySet()) {
-			String json = parameterValues.get(parameterDefinition.getKey())
+		for (Entry<String, ParameterDefinition> parameterDefinitionEntry : parameterDefinitions.entrySet()) {
+			String parameterName = parameterDefinitionEntry.getKey();
+			String json = parameterValues.get(parameterName)
 					.getValue();
-			Object parameterObject = objectToJsonConverter.convertFromToObject(json, parameterDefinition.getValue());
-			setParameter(parameterObject);
+			ParameterDefinition parameterDefinition = parameterDefinitionEntry.getValue();
+			Object parameterObject = objectToJsonConverter.convertFromToObject(json,
+					parameterDefinition);
+			setParameter(parameterDefinition, parameterObject);
 		}
 	}
 
@@ -124,17 +122,17 @@ public abstract class AbstractStrategyExecutor implements StrategyExecutor {
 	}
 
 	@SuppressWarnings("unchecked")
-	public Map<String, Class<?>> getVariableDefinitions() {
+	public Map<String, VariableDefinitions> getVariableDefinitions() {
 		return Collections.EMPTY_MAP;
 	}
 
 	private void defineVariables(Strategy strategy) {
 		ObjectToJsonConverter objectToJsonConverter = new ObjectToJsonConverter();
-		Map<String, Class<?>> parameterDefinitions = getParameterDefinitions();
+		Map<String, VariableDefinition> variableDefinitions = getVariableDefinitions();
 		List<Parameter> parameters = strategy.getParameters();
 		Map<String, Parameter> parameterValues = parameters.stream()
 				.collect(Collectors.toMap(Parameter::getName, parameter -> parameter));
-		for (Entry<String, Class<?>> parameterDefinition : parameterDefinitions.entrySet()) {
+		for (Entry<String, Class<?>> variableDefinition : variableDefinitions.entrySet()) {
 			String json = parameterValues.get(parameterDefinition.getKey())
 					.getValue();
 			Object parameterObject = objectToJsonConverter.convertFromToObject(json, parameterDefinition.getValue());
@@ -151,26 +149,29 @@ public abstract class AbstractStrategyExecutor implements StrategyExecutor {
 		getLogger().info(stringBuilder.toString());
 	}
 
-	protected Strategy getStrategy() {
-		List<Variable> variables = getVariables();
+	@Override
+	public Strategy getStrategy() {
+		List<Variable> variables = getVariables(strategy);
 		strategy.setVariables(variables);
 		return strategy;
 	}
 
 	private List<Variable> getVariables(Strategy strategy) {
-		
 		ObjectWriter writerWithDefaultPrettyPrinter = new ObjectMapper().writerWithDefaultPrettyPrinter();
-		List<String> variableNames = retrieveVariableNames(strategy);
-		for (String variableName : variableNames) {
-			Object object = getVariable(variableName);
-			try {	
-				writerWithDefaultPrettyPrinter.writeValueAsString(object);
-			} catch (JsonProcessingException exceptio) {
-				throw new RuntimeException("Error while retrieving Json value from variable \"" + var +"\" ")
-			}	
+		List<Variable> variables = strategy.getVariables();
+		for (Variable variable : variables) {
+			Object object = getVariable(variable.getName());
+			try {
+				String value = writerWithDefaultPrettyPrinter.writeValueAsString(object);
+				variable.setValue(value);
+			} catch (JsonProcessingException exception) {
+				throw new RuntimeException("Error while retrieving Json value from variable \"" + variable.getName()
+						+ "\" of class \"" + object.getClass()
+								.getName()
+						+ "\".", exception);
+			}
 		}
-		return null;
-		
+		return variables;
 	}
 
 	private Logger getLogger() {
@@ -185,9 +186,12 @@ public abstract class AbstractStrategyExecutor implements StrategyExecutor {
 	public void afterFinish() {
 	}
 
-	protected abstract void setParameter(Object parameterObject);
+	protected abstract void setParameter(ParameterDefinition parameterDefinition, Object parameterObject);
 
 	protected abstract void setVariable(Object variableObject);
 
 	protected abstract Object getVariable(String variableName);
+
+	protected abstract Map<String, ParameterDefinition> getParameterDefinitions();
+
 }

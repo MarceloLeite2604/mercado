@@ -1,8 +1,9 @@
 package org.marceloleite.mercado.base.model;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.marceloleite.mercado.commons.Currency;
+import java.util.Currency;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
+
 import org.marceloleite.mercado.commons.MercadoBigDecimal;
 import org.marceloleite.mercado.commons.VariationCalculator;
 import org.marceloleite.mercado.commons.formatter.PercentageFormatter;

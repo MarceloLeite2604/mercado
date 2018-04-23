@@ -1,12 +1,24 @@
 package org.marceloleite.mercado.commons;
 
 public class VariationCalculator {
+	
+	private static VariationCalculator instance;
+	
+	private VariationCalculator() {
+	}
 
-	public MercadoBigDecimal calculate(MercadoBigDecimal  firstValue, MercadoBigDecimal  secondValue) {
-		if (secondValue.compareTo(MercadoBigDecimal.ZERO) == 0) {
-			return MercadoBigDecimal.POSITIVE_INFINITY;
+	public double calculate(double firstValue, double secondValue) {
+		if (secondValue == 0.0) {
+			return Double.POSITIVE_INFINITY;
 		} else {
-			return new MercadoBigDecimal(firstValue.divide(secondValue).subtract(MercadoBigDecimal.ONE));
+			return firstValue/secondValue;
 		}
+	}
+	
+	public static VariationCalculator getInstance() {
+		if (instance == null) {
+			instance = new VariationCalculator();
+		}
+		return instance;
 	}
 }

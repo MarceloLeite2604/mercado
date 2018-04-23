@@ -1,60 +1,50 @@
 package org.marceloleite.mercado.strategies.first;
 
-import org.marceloleite.mercado.commons.properties.Property;
-import org.marceloleite.mercado.strategies.StrategyPropertyUtils;
+import org.marceloleite.mercado.strategy.StrategyParameterDefinition;
 
-public enum FirstStrategyParameter implements Property {
+public enum FirstStrategyParameter implements StrategyParameterDefinition {
 
-	GROWTH_PERCENTAGE_THRESHOLD("growthPercentageThreshold"),
-	SHRINK_PERCENTAGE_THRESHOLD("shrinkPercentageThreshold"),
-	BUY_STEP_FACTORIAL_NUMBER("buyStepFactorialNumber"),
-	SELL_STEP_FACTORIAL_NUMBER("sellStepFactorialNumber");
+	GROWTH_PERCENTAGE_THRESHOLD("growthPercentageThreshold", Double.class, true),
+	SHRINK_PERCENTAGE_THRESHOLD("shrinkPercentageThreshold", Double.class, true),
+	BUY_STEP_FACTORIAL_NUMBER("buyStepFactorialNumber", Long.class, true),
+	SELL_STEP_FACTORIAL_NUMBER("sellStepFactorialNumber", Long.class, true);
 
 	private String name;
 
-	private String value;
+	private Class<?> clazz;
 
-	private FirstStrategyParameter(String name) {
+	private boolean required;
+
+	private FirstStrategyParameter(String name, Class<?> clazz, boolean required) {
 		this.name = name;
+		this.clazz = clazz;
+		this.required = required;
 	}
 
-	@Override
 	public String getName() {
 		return name;
 	}
 
-	@Override
-	public void setName(String name) {
-		throw new UnsupportedOperationException();
-
+	public Class<?> getClazz() {
+		return clazz;
 	}
 
-	@Override
-	public String getValue() {
-		return value;
-	}
-
-	@Override
-	public void setValue(String value) {
-		this.value = value;
-	}
-
-	@Override
 	public boolean isRequired() {
-		return true;
+		return required;
 	}
-	
+
 	public static FirstStrategyParameter findByName(String name) {
-		return (FirstStrategyParameter)StrategyPropertyUtils.findByName(FirstStrategyParameter.class, name);
-	}
 
-	@Override
-	public String getDefaultValue() {
-		return null;
-	}
+		if (name == null) {
+			throw new IllegalArgumentException("Parameter name is null.");
+		}
 
-	@Override
-	public boolean isEncrypted() {
-		return false;
-	}
+		for (FirstStrategyParameter firstStrategyParameter : FirstStrategyParameter.values()) {
+			if (name.equals(firstStrategyParameter.getName())) {
+				return firstStrategyParameter;
+			}
+		}
+
+		throw new IllegalArgumentException("Could not find a property with name \"" + name + "\".");
+	}	
 }

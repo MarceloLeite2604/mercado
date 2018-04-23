@@ -34,7 +34,6 @@ import org.marceloleite.mercado.dao.interfaces.TradeDAO;
 import org.marceloleite.mercado.dao.site.siteretriever.OrderbookSiteRetriever;
 import org.marceloleite.mercado.dao.site.siteretriever.TickerSiteRetriever;
 import org.marceloleite.mercado.dao.site.siteretriever.trade.TradeSiteRetriever;
-import org.marceloleite.mercado.dao.xml.AccountXMLDAO;
 import org.marceloleite.mercado.model.Account;
 import org.marceloleite.mercado.model.Balance;
 import org.marceloleite.mercado.model.Order;
@@ -51,7 +50,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
@@ -119,34 +121,38 @@ public class Main {
 	public CommandLineRunner commandLineRunner() {
 		return (args) -> {
 
-			AccountXMLDAO.setXMLDirectory("output/");
+//			AccountXMLDAO.setXMLDirectory("output/");
+//
+//			Account account = createAccount();
+//			persistAccount(account);
+//			writeJson(account, "account");
+//
+//			Property property = createProperty();
+//			persistProperty(property);
+//			writeXML(property, "property");
+//			writeJson(property, "property");
+//
+//			TemporalTicker temporalTicker = createTemporalTicker();
+//			persistTemporalTicker(temporalTicker);
+//			writeXML(temporalTicker, "temporalTicker");
+//			writeJson(temporalTicker, "temporalTicker");
+//
+//			Ticker ticker = createTicker();
+//			persistTicker(ticker);
+//			writeXML(ticker, "ticker");
+//			writeJson(ticker, "ticker");
 
-			Account account = createAccount();
-			persistAccount(account);
-			writeJson(account, "account");
-
-			Property property = createProperty();
-			persistProperty(property);
-			writeXML(property, "property");
-			writeJson(property, "property");
-
-			TemporalTicker temporalTicker = createTemporalTicker();
-			persistTemporalTicker(temporalTicker);
-			writeXML(temporalTicker, "temporalTicker");
-			writeJson(temporalTicker, "temporalTicker");
-
-			Ticker ticker = createTicker();
-			persistTicker(ticker);
-			writeXML(ticker, "ticker");
-			writeJson(ticker, "ticker");
-
-			/*
-			 * Trade trade = createTrade(); persistTrade(trade); writeXML(trade, "trade");
-			 * writeJson(trade, "trade");
-			 */
-			List<Trade> trades = tradeDAO.findByCurrencyAndTimeBetween(CURRENCY, TRADE_FIND_START_TIME,
-					TRADE_FIND_END_TIME);
-			LOGGER.info("Total trades found: " + trades.size());
+//			List<Trade> trades = tradeDAO.findByCurrencyAndTimeBetween(CURRENCY, TRADE_FIND_START_TIME,
+//			TRADE_FIND_END_TIME);
+//	        LOGGER.info("Total trades found: " + trades.size());
+			
+			double nan = Double.NaN;
+			double posInfinity = Double.POSITIVE_INFINITY;
+			double negInfinity = Double.NEGATIVE_INFINITY;
+			
+			System.out.println("NaN: " + Double.isFinite(nan));
+			System.out.println("PosInfinity: " + Double.isFinite(posInfinity));
+			System.out.println("NegInfinity: " + Double.isFinite(negInfinity));
 		};
 	}
 
@@ -174,22 +180,23 @@ public class Main {
 			withdrawal.setCurrency(Currency.REAL);
 			withdrawal.setAmount(new BigDecimal("1000"));
 
-			Order order = new Order();
-			order.setCreated(ZonedDateTimeUtils.now());
-			order.setQuantity(new BigDecimal("0.23"));
-			order.setExecutedPriceAverage(new BigDecimal("32000"));
-			order.setExecutedQuantity(new BigDecimal("0.035734"));
-			order.setFee(new BigDecimal("14"));
-			order.setFirstCurrency(Currency.REAL);
-			order.setSecondCurrency(Currency.LITECOIN);
-			order.setHasFills(true);
-			order.setIntended(ZonedDateTimeUtils.now()
-					.minusMinutes(10));
-			order.setLimitPrice(new BigDecimal("32200"));
-			order.setStatus(OrderStatus.FILLED);
-			order.setType(OrderType.SELL);
-			order.setUpdated(ZonedDateTimeUtils.now()
-					.minusMinutes(5));
+			Order order = Order.builder()
+					.setCreated(ZonedDateTimeUtils.now())
+					.setQuantity(new BigDecimal("0.23"))
+					.setExecutedPriceAverage(new BigDecimal("32000"))
+					.setExecutedQuantity(new BigDecimal("0.035734"))
+					.setFee(new BigDecimal("14"))
+					.setFirstCurrency(Currency.REAL)
+					.setSecondCurrency(Currency.LITECOIN)
+					.setHasFills(true)
+					.setIntended(ZonedDateTimeUtils.now()
+							.minusMinutes(10))
+					.setLimitPrice(new BigDecimal("32200"))
+					.setStatus(OrderStatus.FILLED)
+					.setType(OrderType.SELL)
+					.setUpdated(ZonedDateTimeUtils.now()
+							.minusMinutes(5))
+					.build();
 
 			account = new Account();
 			account.setOwner(ACCOUNT_OWNER);
@@ -225,7 +232,7 @@ public class Main {
 		TemporalTicker temporalTicker = null;
 		temporalTicker = temporalTickerDAO.findByCurrencyAndStartAndEnd(CURRENCY, START_TIME, END_TIME);
 		if (temporalTicker == null) {
-			/*temporalTicker = */TemporalTicker.builder()
+			/* temporalTicker = */TemporalTicker.builder()
 					.currency(CURRENCY)
 					.start(START_TIME)
 					.end(END_TIME)
@@ -243,7 +250,8 @@ public class Main {
 					.orders(20L)
 					.buyOrders(8L)
 					.sellOrders(2L)
-					.volumeTraded(new BigDecimal("204")).build();
+					.volumeTraded(new BigDecimal("204"))
+					.build();
 		}
 		return temporalTicker;
 	}

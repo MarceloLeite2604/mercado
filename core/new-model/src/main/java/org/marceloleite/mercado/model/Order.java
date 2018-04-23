@@ -108,6 +108,22 @@ public class Order {
 	@Fetch(FetchMode.SUBSELECT)
 	private List<Operation> operations;
 
+	private Order(Builder builder) {
+		this.firstCurrency = builder.firstCurrency;
+		this.secondCurrency = builder.secondCurrency;
+		this.type = builder.type;
+		this.status = builder.status;
+		this.hasFills = builder.hasFills;
+		this.quantity = builder.quantity;
+		this.limitPrice = builder.limitPrice;
+		this.executedQuantity = builder.executedQuantity;
+		this.executedPriceAverage = builder.executedPriceAverage;
+		this.fee = builder.fee;
+		this.created = builder.created;
+		this.updated = builder.updated;
+		this.intended = builder.intended;
+	}
+
 	@XmlTransient
 	public Long getId() {
 		return id;
@@ -270,6 +286,86 @@ public class Order {
 			for (Operation operation : operations) {
 				operation.setOrder(this);
 			}
+		}
+	}
+	
+	public static Builder builder() {
+		return new Builder();
+	}
+	
+	public static class Builder {
+		private Currency firstCurrency;
+		private Currency secondCurrency;
+		private OrderType type;
+		private OrderStatus status;
+		private Boolean hasFills;
+		private BigDecimal quantity;
+		private BigDecimal limitPrice;
+		private BigDecimal executedQuantity;
+		private BigDecimal executedPriceAverage;
+		private BigDecimal fee;
+		private ZonedDateTime created;
+		private ZonedDateTime updated;
+		private ZonedDateTime intended;
+		
+		private Builder() {
+		}
+		
+		public Builder setFirstCurrency(Currency firstCurrency) {
+			this.firstCurrency = firstCurrency;
+			return this;
+		}
+		public Builder setSecondCurrency(Currency secondCurrency) {
+			this.secondCurrency = secondCurrency;
+			return this;
+		}
+		public Builder setType(OrderType type) {
+			this.type = type;
+			return this;
+		}
+		public Builder setStatus(OrderStatus status) {
+			this.status = status;
+			return this;
+		}
+		public Builder setHasFills(Boolean hasFills) {
+			this.hasFills = hasFills;
+			return this;
+		}
+		public Builder setQuantity(BigDecimal quantity) {
+			this.quantity = quantity;
+			return this;
+		}
+		public Builder setLimitPrice(BigDecimal limitPrice) {
+			this.limitPrice = limitPrice;
+			return this;
+		}
+		public Builder setExecutedQuantity(BigDecimal executedQuantity) {
+			this.executedQuantity = executedQuantity;
+			return this;
+		}
+		public Builder setExecutedPriceAverage(BigDecimal executedPriceAverage) {
+			this.executedPriceAverage = executedPriceAverage;
+			return this;
+		}
+		public Builder setFee(BigDecimal fee) {
+			this.fee = fee;
+			return this;
+		}
+		public Builder setCreated(ZonedDateTime created) {
+			this.created = created;
+			return this;
+		}
+		public Builder setUpdated(ZonedDateTime updated) {
+			this.updated = updated;
+			return this;
+		}
+		public Builder setIntended(ZonedDateTime intended) {
+			this.intended = intended;
+			return this;
+		}
+		
+		public Order build() {
+			return new Order(this);
 		}
 	}
 }

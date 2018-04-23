@@ -168,7 +168,7 @@ public class Statistics {
 	@Override
 	public String toString() {
 		StringBuilder stringBuilder = new StringBuilder();
-		NonDigitalCurrencyFormatter nonDigitalCurrencyFormatter = new NonDigitalCurrencyFormatter();
+		NonDigitalCurrencyFormatter nonDigitalCurrencyFormatter = NonDigitalCurrencyFormatter.getInstance();
 		stringBuilder.append("[ratio: " + new PercentageFormatter().format(ratio));
 		stringBuilder.append(", base: " + nonDigitalCurrencyFormatter.format(base));
 		stringBuilder.append(", average: " + nonDigitalCurrencyFormatter.format(average));

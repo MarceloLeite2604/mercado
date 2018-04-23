@@ -1,16 +1,28 @@
 package org.marceloleite.mercado.commons.formatter;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
-
-import org.marceloleite.mercado.commons.MercadoBigDecimal;
 
 public class DigitalCurrencyFormatter {
 	
+	private static DigitalCurrencyFormatter instance;
+	
 	private static final String NUMBER_FORMAT = "0.00000000";
 	
-	public String format(MercadoBigDecimal amount) {
+	private DigitalCurrencyFormatter() {
+		
+	}
+	
+	public String format(BigDecimal amount) {
 		DecimalFormat decimalFormat = new DecimalFormat(NUMBER_FORMAT);
 		return decimalFormat.format(amount);
+	}
+	
+	public static DigitalCurrencyFormatter getInstance() {
+		if (instance == null) {
+			instance = new DigitalCurrencyFormatter(); 
+		}
+		return instance;
 	}
 
 }
