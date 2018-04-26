@@ -1,55 +1,60 @@
 package org.marceloleite.mercado.strategies.fourth;
 
-import org.marceloleite.mercado.commons.properties.Property;
-import org.marceloleite.mercado.strategies.StrategyPropertyUtils;
+import java.util.Map;
 
-public enum FourthStrategyParameter implements Property {
+import org.marceloleite.mercado.ObjectDefinitionUtils;
+import org.marceloleite.mercado.strategy.ObjectDefinition;
+
+public enum FourthStrategyParameter implements ObjectDefinition {
 	
-	GROWTH_PERCENTAGE_THRESHOLD("growthPercentageThreshold"),
-	SHRINK_PERCENTAGE_THRESHOLD("shrinkPercentageThreshold"),
-	CIRCULAR_ARRAY_SIZE("circularArraySize");
+	GROWTH_PERCENTAGE_THRESHOLD("growthPercentageThreshold", Double.class),
+	SHRINK_PERCENTAGE_THRESHOLD("shrinkPercentageThreshold", Double.class),
+	CIRCULAR_ARRAY_SIZE("circularArraySize", Integer.class);
 	
 	private String name;
-	
-	private String value;
 
-	private FourthStrategyParameter(String name) {
+	private Class<?> objectClass;
+
+	private String defaultValue;
+
+	private FourthStrategyParameter(String name, Class<?> clazz, String defaultValue) {
 		this.name = name;
+		this.objectClass = clazz;
+		this.defaultValue = defaultValue;
+	}
+	
+	private FourthStrategyParameter(String name, Class<?> clazz) {
+		this.name = name;
+		this.objectClass = clazz;
+		this.defaultValue = null;
 	}
 
+	@Override
 	public String getName() {
 		return name;
 	}
 
-	public void setName(String name) {
-		throw new UnsupportedOperationException();
+	@Override
+	public Class<?> getObjectClass() {
+		return objectClass;
 	}
-
-	public String getValue() {
-		return value;
-	}
-
-	public void setValue(String value) {
-		this.value = value;
+	
+	@Override
+	public String getDefaultValue() {
+		return defaultValue;
 	}
 
 	@Override
 	public boolean isRequired() {
-		return true;
+		return (defaultValue == null);
+	}
+	
+	public static Map<String, ObjectDefinition> getObjectDefinitions() {
+		return ObjectDefinitionUtils.getInstance()
+				.elaborateObjectDefinitionsMap(values());
 	}
 	
 	public static FourthStrategyParameter findByName(String name) {
-		return (FourthStrategyParameter)StrategyPropertyUtils.findByName(FourthStrategyParameter.class, name);
+		return (FourthStrategyParameter) ObjectDefinitionUtils.findByName(FourthStrategyParameter.class, name);
 	}
-
-	@Override
-	public String getDefaultValue() {
-		return null;
-	}
-
-	@Override
-	public boolean isEncrypted() {
-		return false;
-	}
-
 }

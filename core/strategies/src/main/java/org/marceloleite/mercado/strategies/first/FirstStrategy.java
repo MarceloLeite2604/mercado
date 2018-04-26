@@ -1,9 +1,7 @@
 package org.marceloleite.mercado.strategies.first;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,12 +11,9 @@ import org.marceloleite.mercado.House;
 import org.marceloleite.mercado.SellOrderBuilder;
 import org.marceloleite.mercado.TemporalTickerVariation;
 import org.marceloleite.mercado.commons.Currency;
-import org.marceloleite.mercado.commons.MercadoBigDecimal;
 import org.marceloleite.mercado.commons.OrderType;
 import org.marceloleite.mercado.commons.TimeInterval;
-import org.marceloleite.mercado.commons.converter.ObjectToJsonConverter;
 import org.marceloleite.mercado.commons.formatter.PercentageFormatter;
-import org.marceloleite.mercado.commons.properties.Property;
 import org.marceloleite.mercado.commons.utils.MathUtils;
 import org.marceloleite.mercado.model.Account;
 import org.marceloleite.mercado.model.Order;
@@ -28,6 +23,7 @@ import org.marceloleite.mercado.orderanalyser.NoBalanceForMinimalValueOrderAnaly
 import org.marceloleite.mercado.orderanalyser.NoBalanceOrderAnalyserException;
 import org.marceloleite.mercado.orderanalyser.OrderAnalyser;
 import org.marceloleite.mercado.strategy.AbstractStrategyExecutor;
+import org.marceloleite.mercado.strategy.ObjectDefinition;
 
 public class FirstStrategy extends AbstractStrategyExecutor {
 
@@ -265,35 +261,21 @@ public class FirstStrategy extends AbstractStrategyExecutor {
 	}
 
 	@Override
-	public Property retrieveVariable(String name) {
-		FirstStrategyVariable firstStrategyVariable = FirstStrategyVariable.findByName(name);
-		switch (firstStrategyVariable) {
-		case BUY_SELL_STEP:
-			firstStrategyVariable.setValue(Long.toString(buySellStep.getCurrentStep()));
-			break;
-		case BASE_TEMPORAL_TICKER:
-			firstStrategyVariable.setName(new ObjectToJsonConverter().convertTo(baseTemporalTicker));
-			break;
-		}
-		return firstStrategyVariable;
-	}
-
-	@Override
-	public void defineParameter(Property parameter) {
-		FirstStrategyParameter firstStrategyParameter = FirstStrategyParameter.findByName(parameter.getName());
+	protected void setParameter(String name, Object object) {
+		FirstStrategyParameter firstStrategyParameter = FirstStrategyParameter.findByName(name);
 
 		switch (firstStrategyParameter) {
 		case BUY_STEP_FACTORIAL_NUMBER:
-			buySteps = Long.parseLong(parameter.getValue());
+			buySteps = (Long) object;
 			break;
 		case GROWTH_PERCENTAGE_THRESHOLD:
-			growthPercentageThreshold = new MercadoBigDecimal(parameter.getValue());
+			growthPercentageThreshold = (Double) object;
 			break;
 		case SELL_STEP_FACTORIAL_NUMBER:
-			sellSteps = Long.parseLong(parameter.getValue());
+			sellSteps = (Long) object;
 			break;
 		case SHRINK_PERCENTAGE_THRESHOLD:
-			shrinkPercentageThreshold = new MercadoBigDecimal(parameter.getValue());
+			shrinkPercentageThreshold = (Double) object;
 			break;
 		}
 
@@ -303,43 +285,45 @@ public class FirstStrategy extends AbstractStrategyExecutor {
 	}
 
 	@Override
-	public void defineVariable(Property variable) {
-		FirstStrategyVariable firstStrategyVariable = FirstStrategyVariable.findByName(variable.getName());
+	protected void setVariable(String name, Object object) {
+		FirstStrategyVariable firstStrategyVariable = FirstStrategyVariable.findByName(name);
 
 		switch (firstStrategyVariable) {
 		case BUY_SELL_STEP:
-			long currentStep = Long.parseLong(firstStrategyVariable.getValue());
-			this.buySellStep.setCurrentStep(currentStep);
+			this.buySellStep.setCurrentStep((Long) object);
 			break;
 		case BASE_TEMPORAL_TICKER:
-			this.baseTemporalTicker = new ObjectToJsonConverter().convertFromToObject(variable.getName(),
-					baseTemporalTicker);
+			this.baseTemporalTicker = (TemporalTicker) object;
 			break;
+		default:
+			throw new IllegalStateException("Unrecognized variable \"" + name + "\".");
 		}
 	}
 
 	@Override
-	protected void setParameter(ParameterDefintion parameterDefinition, Object parameterObject) {
-		// TODO Auto-generated method stub
-
+	protected Object getVariable(String name) {
+		Object result;
+		FirstStrategyVariable firstStrategyVariable = FirstStrategyVariable.findByName(name);
+		switch (firstStrategyVariable) {
+		case BUY_SELL_STEP:
+			result = Long.toString(buySellStep.getCurrentStep());
+			break;
+		case BASE_TEMPORAL_TICKER:
+			result = baseTemporalTicker;
+			break;
+		default:
+			throw new IllegalArgumentException("Unknown variable \"" + name + "\".");
+		}
+		return (Object) result;
 	}
 
 	@Override
-	protected void setVariable(Object variableObject) {
-		// TODO Auto-generated method stub
-
+	protected Map<String, ObjectDefinition> getParameterDefinitions() {
+		return FirstStrategyParameter.getObjectDefinitions();
 	}
 
 	@Override
-	protected Object getVariable(String variableName) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	protected Map<String, Class<?>> getParameterDefinitions() {
-		return Arrays.asList(FirstStrategyParameter.values())
-				.stream()
-				.collect(Collectors.toMap(FirstStrategyParameter::getName, FirstStrategyParameter::getClazz));
+	protected Map<String, ObjectDefinition> getVariableDefinitions() {
+		return FirstStrategyVariable.getObjectDefinitions();
 	}
 }

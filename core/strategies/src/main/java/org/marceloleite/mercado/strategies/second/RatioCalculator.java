@@ -3,8 +3,12 @@ package org.marceloleite.mercado.strategies.second;
 import org.marceloleite.mercado.commons.MercadoBigDecimal;
 
 public class RatioCalculator {
+	
+	private static RatioCalculator instance;
+	
+	private RatioCalculator() {}
 
-	public MercadoBigDecimal calculate(MercadoBigDecimal firstValue, MercadoBigDecimal secondValue) {
+	public MercadoBigDecimal calculate(double firstValue, double secondValue) {
 		MercadoBigDecimal result;
 		if ( firstValue.compareTo(MercadoBigDecimal.ZERO) == 0 ) {
 			if ( secondValue.compareTo(MercadoBigDecimal.ZERO) == 0) {
@@ -21,5 +25,12 @@ public class RatioCalculator {
 			}
 		}
 		return result;
+	}
+	
+	public static RatioCalculator getInstance() {
+		if (instance == null) {
+			instance = new RatioCalculator();
+		}
+		return instance;
 	}
 }

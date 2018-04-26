@@ -1,19 +1,30 @@
 package org.marceloleite.mercado.strategies.first;
 
-import org.marceloleite.mercado.commons.properties.Property;
-import org.marceloleite.mercado.strategies.StrategyPropertyUtils;
+import java.util.Map;
 
-public enum FirstStrategyVariable implements Property {
+import org.marceloleite.mercado.ObjectDefinitionUtils;
+import org.marceloleite.mercado.model.TemporalTicker;
+import org.marceloleite.mercado.strategy.ObjectDefinition;
 
-	BUY_SELL_STEP("buySellStep"),
-	BASE_TEMPORAL_TICKER("baseTemporalTicker");
+public enum FirstStrategyVariable implements ObjectDefinition {
+
+	BUY_SELL_STEP("buySellStep", Long.class),
+	BASE_TEMPORAL_TICKER("baseTemporalTicker", TemporalTicker.class);
 
 	private String name;
 
-	private String value;
+	private Class<?> objectClass;
 
-	private FirstStrategyVariable(String name) {
+	private String defaultValue;
+
+	private FirstStrategyVariable(String name, Class<?> objectClass, String defaultValue) {
 		this.name = name;
+		this.objectClass = objectClass;
+		this.defaultValue = defaultValue;
+	}
+
+	private FirstStrategyVariable(String name, Class<?> objectClass) {
+		this(name, objectClass, null);
 	}
 
 	@Override
@@ -22,37 +33,26 @@ public enum FirstStrategyVariable implements Property {
 	}
 
 	@Override
-	public void setName(String name) {
-		throw new UnsupportedOperationException();
-
-	}
-
-	@Override
-	public String getValue() {
-		return value;
-	}
-
-	@Override
-	public void setValue(String value) {
-		this.value = value;
-	}
-
-	@Override
-	public boolean isRequired() {
-		return true;
-	}
-
-	public static FirstStrategyVariable findByName(String name) {
-		return (FirstStrategyVariable)StrategyPropertyUtils.findByName(FirstStrategyVariable.class, name);
+	public Class<?> getObjectClass() {
+		return objectClass;
 	}
 
 	@Override
 	public String getDefaultValue() {
-		return null;
+		return defaultValue;
 	}
 
 	@Override
-	public boolean isEncrypted() {
-		return false;
+	public boolean isRequired() {
+		return (defaultValue == null);
+	}
+
+	public static FirstStrategyVariable findByName(String name) {
+		return (FirstStrategyVariable) ObjectDefinitionUtils.findByName(FirstStrategyVariable.class, name);
+	}
+
+	public static Map<String, ObjectDefinition> getObjectDefinitions() {
+		return ObjectDefinitionUtils.getInstance()
+				.elaborateObjectDefinitionsMap(values());
 	}
 }

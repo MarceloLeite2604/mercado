@@ -1,44 +1,41 @@
 package org.marceloleite.mercado.strategies.fourth;
 
-import org.marceloleite.mercado.commons.properties.Property;
-import org.marceloleite.mercado.strategies.StrategyPropertyUtils;
+import java.util.Map;
 
-public enum FourthStrategyVariable implements Property {
+import org.marceloleite.mercado.ObjectDefinitionUtils;
+import org.marceloleite.mercado.strategy.ObjectDefinition;
+
+public enum FourthStrategyVariable implements ObjectDefinition {
 	
 	BASE_TEMPORAL_TICKER("baseTemporalTicker"),
 	STATUS("status"),
 	CIRCULAR_ARRAY("CircularArray");
 
 	private String name;
-
-	private String value;
+	
+	private Class<?> objectClass;
 
 	private FourthStrategyVariable(String name) {
 		this.name = name;
 	}
 
+	@Override
 	public String getName() {
 		return name;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	@Override
+	public Class<?> getObjectClass() {
+		return objectClass;
 	}
 
-	public String getValue() {
-		return value;
-	}
-
-	public void setValue(String value) {
-		this.value = value;
-	}
-
+	@Override
 	public boolean isRequired() {
 		return true;
 	}
 	
 	public static FourthStrategyVariable findByName(String name) {
-		return (FourthStrategyVariable)StrategyPropertyUtils.findByName(FourthStrategyVariable.class, name);
+		return (FourthStrategyVariable)ObjectDefinitionUtils.findByName(FourthStrategyVariable.class, name);
 	}
 
 	@Override
@@ -46,8 +43,8 @@ public enum FourthStrategyVariable implements Property {
 		return null;
 	}
 
-	@Override
-	public boolean isEncrypted() {
-		return false;
+	public static Map<String, ObjectDefinition> getObjectDefinitions() {
+		return ObjectDefinitionUtils.getInstance()
+				.elaborateObjectDefinitionsMap(values());
 	}
 }

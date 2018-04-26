@@ -1,6 +1,5 @@
 package org.marceloleite.mercado.strategy;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -42,7 +41,7 @@ public abstract class AbstractStrategyExecutor implements StrategyExecutor {
 	}
 
 	private void checkParameters(Strategy strategy) {
-		Map<String, ParameterDefinition> parameterDefinitions = getParameterDefinitions();
+		Map<String, ObjectDefinition> parameterDefinitions = getParameterDefinitions();
 		if (!CollectionUtils.isEmpty(parameterDefinitions)) {
 			List<String> parameterNames = retrieveInformedParameterNames(strategy);
 			for (String parameterDefinitionName : parameterDefinitions.keySet()) {
@@ -67,19 +66,23 @@ public abstract class AbstractStrategyExecutor implements StrategyExecutor {
 
 	private void defineParameters(Strategy strategy) {
 		ObjectToJsonConverter objectToJsonConverter = new ObjectToJsonConverter();
-		Map<String, ParameterDefinition> parameterDefinitions = getParameterDefinitions();
-		List<Parameter> parameters = strategy.getParameters();
-		Map<String, Parameter> parameterValues = parameters.stream()
-				.collect(Collectors.toMap(Parameter::getName, parameter -> parameter));
-		for (Entry<String, ParameterDefinition> parameterDefinitionEntry : parameterDefinitions.entrySet()) {
+		Map<String, ObjectDefinition> parameterDefinitions = getParameterDefinitions();
+		Map<String, Parameter> parameterValues = getParameterValues(strategy);
+		for (Entry<String, ObjectDefinition> parameterDefinitionEntry : parameterDefinitions.entrySet()) {
 			String parameterName = parameterDefinitionEntry.getKey();
 			String json = parameterValues.get(parameterName)
 					.getValue();
-			ParameterDefinition parameterDefinition = parameterDefinitionEntry.getValue();
-			Object parameterObject = objectToJsonConverter.convertFromToObject(json,
-					parameterDefinition);
-			setParameter(parameterDefinition, parameterObject);
+			ObjectDefinition parameterDefinition = parameterDefinitionEntry.getValue();
+			Object parameterObject = objectToJsonConverter.convertFromToObject(json, parameterDefinition);
+			setParameter(parameterDefinition.getName(), parameterObject);
 		}
+	}
+
+	private Map<String, Parameter> getParameterValues(Strategy strategy) {
+		Map<String, Parameter> parameterValues = strategy.getParameters()
+				.stream()
+				.collect(Collectors.toMap(Parameter::getName, parameter -> parameter));
+		return parameterValues;
 	}
 
 	private void listParametersOnLog(Strategy strategy) {
@@ -107,7 +110,7 @@ public abstract class AbstractStrategyExecutor implements StrategyExecutor {
 	}
 
 	private void checkVariables(Strategy strategy) {
-		Map<String, Class<?>> variableDefinitions = getVariableDefinitions();
+		Map<String, ObjectDefinition> variableDefinitions = getVariableDefinitions();
 		if (!CollectionUtils.isEmpty(variableDefinitions)) {
 			List<String> variableNames = retrieveVariableNames(strategy);
 			for (String variableDefinitionName : variableDefinitions.keySet()) {
@@ -121,23 +124,24 @@ public abstract class AbstractStrategyExecutor implements StrategyExecutor {
 		}
 	}
 
-	@SuppressWarnings("unchecked")
-	public Map<String, VariableDefinitions> getVariableDefinitions() {
-		return Collections.EMPTY_MAP;
-	}
-
 	private void defineVariables(Strategy strategy) {
 		ObjectToJsonConverter objectToJsonConverter = new ObjectToJsonConverter();
-		Map<String, VariableDefinition> variableDefinitions = getVariableDefinitions();
-		List<Parameter> parameters = strategy.getParameters();
-		Map<String, Parameter> parameterValues = parameters.stream()
-				.collect(Collectors.toMap(Parameter::getName, parameter -> parameter));
-		for (Entry<String, Class<?>> variableDefinition : variableDefinitions.entrySet()) {
-			String json = parameterValues.get(parameterDefinition.getKey())
+		Map<String, ObjectDefinition> variableDefinitions = getVariableDefinitions();
+		Map<String, Variable> variableValues = getVariableValues(strategy);
+		for (Entry<String, ObjectDefinition> variableDefinition : variableDefinitions.entrySet()) {
+			String value = variableValues.get(variableDefinition.getKey())
 					.getValue();
-			Object parameterObject = objectToJsonConverter.convertFromToObject(json, parameterDefinition.getValue());
-			setVariable(parameterObject);
+			ObjectDefinition objectDefinition = variableDefinition.getValue();
+			Object variableObject = objectToJsonConverter.convertFromToObject(value, objectDefinition.getClass());
+			setVariable(objectDefinition.getName(), variableObject);
 		}
+	}
+
+	private Map<String, Variable> getVariableValues(Strategy strategy) {
+		Map<String, Variable> parameterValues = strategy.getVariables()
+				.stream()
+				.collect(Collectors.toMap(Variable::getName, variable -> variable));
+		return parameterValues;
 	}
 
 	private void listVariablesOnLog(Strategy strategy) {
@@ -186,12 +190,13 @@ public abstract class AbstractStrategyExecutor implements StrategyExecutor {
 	public void afterFinish() {
 	}
 
-	protected abstract void setParameter(ParameterDefinition parameterDefinition, Object parameterObject);
+	protected abstract void setParameter(String name, Object object);
 
-	protected abstract void setVariable(Object variableObject);
+	protected abstract void setVariable(String name, Object object);
 
-	protected abstract Object getVariable(String variableName);
+	protected abstract Object getVariable(String name);
 
-	protected abstract Map<String, ParameterDefinition> getParameterDefinitions();
+	protected abstract Map<String, ObjectDefinition> getParameterDefinitions();
 
+	protected abstract Map<String, ObjectDefinition> getVariableDefinitions();
 }

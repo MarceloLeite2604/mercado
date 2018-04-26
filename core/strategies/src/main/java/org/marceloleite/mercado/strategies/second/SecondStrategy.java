@@ -1,12 +1,12 @@
 package org.marceloleite.mercado.strategies.second;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.marceloleite.mercado.base.model.Account;
-import org.marceloleite.mercado.base.model.House;
-import org.marceloleite.mercado.base.model.TemporalTickerVariation;
+import org.marceloleite.mercado.House;
+import org.marceloleite.mercado.TemporalTickerVariation;
 import org.marceloleite.mercado.commons.CircularArray;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.MercadoBigDecimal;
@@ -16,10 +16,12 @@ import org.marceloleite.mercado.commons.converter.ZonedDateTimeToStringConverter
 import org.marceloleite.mercado.commons.formatter.DigitalCurrencyFormatter;
 import org.marceloleite.mercado.commons.formatter.PercentageFormatter;
 import org.marceloleite.mercado.commons.properties.Property;
-import org.marceloleite.mercado.data.TemporalTicker;
-import org.marceloleite.mercado.strategy.AbstractStrategy;
+import org.marceloleite.mercado.model.Account;
+import org.marceloleite.mercado.model.Strategy;
+import org.marceloleite.mercado.model.TemporalTicker;
+import org.marceloleite.mercado.strategy.AbstractStrategyExecutor;
 
-public class SecondStrategy extends AbstractStrategy {
+public class SecondStrategy extends AbstractStrategyExecutor {
 
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = LogManager.getLogger(SecondStrategy.class);
@@ -38,8 +40,8 @@ public class SecondStrategy extends AbstractStrategy {
 	
 	private CircularArray<MercadoBigDecimal> lastFirstRatioCircularArray;
 
-	public SecondStrategy(Currency currency) {
-		this.currency = currency;
+	public SecondStrategy(Strategy strategy) {
+		super(strategy);
 		this.temporalTickerVariationCircularArray = new CircularArray<>(TOTAL_TIME_INTERVAL_TO_ANALYZE);
 		this.temporalTickerCircularArray = new CircularArray<>(TOTAL_TIME_INTERVAL_TO_ANALYZE + 1);
 		this.bosoCircularArray = new CircularArray<>(TOTAL_TIME_INTERVAL_TO_ANALYZE + 1);
@@ -48,19 +50,14 @@ public class SecondStrategy extends AbstractStrategy {
 	}
 
 	@Override
-	public void check(TimeInterval simulationTimeInterval, Account account, House house) {
+	public void execute(TimeInterval timeInterval, Account account, House house) {
 		updateCircularArrays(house);
 		analyze();
 	}
 
-	@Override
-	public void setCurrency(Currency currency) {
-		this.currency = currency;
-	}
-
 	private void updateCircularArrays(House house) {
 		TemporalTicker lastTemporalTicker = temporalTickerCircularArray.last();
-		TemporalTicker currentTemporalTicker = house.getTemporalTickers().get(currency);
+		TemporalTicker currentTemporalTicker = house.getTemporalTickerFor(getCurrency());
 		bosoCircularArray.add(calulateBuySellRatio(currentTemporalTicker));
 		if (lastTemporalTicker != null) {
 			TemporalTickerVariation temporalTickerVariation = new TemporalTickerVariation(lastTemporalTicker,
@@ -75,19 +72,16 @@ public class SecondStrategy extends AbstractStrategy {
 	}
 
 	private MercadoBigDecimal calculateLastFirstRatio(TemporalTicker currentTemporalTicker) {
-		MercadoBigDecimal first = currentTemporalTicker.getFirstPrice();
-		MercadoBigDecimal last = currentTemporalTicker.getLastPrice();
-		return new RatioCalculator().calculate(last, first);
+		double first = currentTemporalTicker.getFirst().doubleValue();
+		double last = currentTemporalTicker.getLast().doubleValue();
+		return RatioCalculator.getInstance().calculate(last, first);
 	}
 
 	private MercadoBigDecimal calulateBuySellRatio(TemporalTicker temporalTicker) {
-		MercadoBigDecimal buyOrders = new MercadoBigDecimal(temporalTicker.getBuyOrders());
-		MercadoBigDecimal sellOrders = new MercadoBigDecimal(temporalTicker.getSellOrders());
-		return new RatioCalculator().calculate(buyOrders, sellOrders);
+		double buyOrders = temporalTicker.getBuyOrders().doubleValue();
+		double sellOrders = temporalTicker.getSellOrders().doubleValue();
+		return RatioCalculator.getInstance().calculate(buyOrders, sellOrders);
 	}
-
-	DigitalCurrencyFormatter digitalCurrencyFormatter = new DigitalCurrencyFormatter();
-	PercentageFormatter percentageFormatter = new PercentageFormatter();
 
 	private void analyze() {
 		System.out.println("Current status: ");

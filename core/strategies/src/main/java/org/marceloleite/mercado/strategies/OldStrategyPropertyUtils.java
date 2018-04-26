@@ -6,7 +6,7 @@ import java.util.List;
 import org.marceloleite.mercado.commons.properties.Property;
 import org.marceloleite.mercado.commons.properties.StandardProperty;
 
-public abstract class StrategyPropertyUtils {
+public abstract class OldStrategyPropertyUtils {
 
 	public static Enum<? extends Property> findByName(Class<? extends Enum<? extends Property>> enumClass, String name) {
 		if (name == null || name.isEmpty()) {

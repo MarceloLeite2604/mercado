@@ -1,50 +1,59 @@
 package org.marceloleite.mercado.strategies.first;
 
-import org.marceloleite.mercado.strategy.StrategyParameterDefinition;
+import java.util.Map;
 
-public enum FirstStrategyParameter implements StrategyParameterDefinition {
+import org.marceloleite.mercado.ObjectDefinitionUtils;
+import org.marceloleite.mercado.strategy.ObjectDefinition;
 
-	GROWTH_PERCENTAGE_THRESHOLD("growthPercentageThreshold", Double.class, true),
-	SHRINK_PERCENTAGE_THRESHOLD("shrinkPercentageThreshold", Double.class, true),
-	BUY_STEP_FACTORIAL_NUMBER("buyStepFactorialNumber", Long.class, true),
-	SELL_STEP_FACTORIAL_NUMBER("sellStepFactorialNumber", Long.class, true);
+public enum FirstStrategyParameter implements ObjectDefinition {
+
+	GROWTH_PERCENTAGE_THRESHOLD("growthPercentageThreshold", Double.class),
+	SHRINK_PERCENTAGE_THRESHOLD("shrinkPercentageThreshold", Double.class),
+	BUY_STEP_FACTORIAL_NUMBER("buyStepFactorialNumber", Long.class),
+	SELL_STEP_FACTORIAL_NUMBER("sellStepFactorialNumber", Long.class);
 
 	private String name;
 
-	private Class<?> clazz;
+	private Class<?> objectClass;
 
-	private boolean required;
+	private String defaultValue;
 
-	private FirstStrategyParameter(String name, Class<?> clazz, boolean required) {
+	private FirstStrategyParameter(String name, Class<?> objectClass, String defaultValue) {
 		this.name = name;
-		this.clazz = clazz;
-		this.required = required;
+		this.objectClass = objectClass;
+		this.defaultValue = defaultValue;
 	}
 
+	private FirstStrategyParameter(String name, Class<?> objectClass) {
+		this(name, objectClass, null);
+	}
+
+	@Override
 	public String getName() {
 		return name;
 	}
 
-	public Class<?> getClazz() {
-		return clazz;
+	@Override
+	public Class<?> getObjectClass() {
+		return objectClass;
 	}
 
+	@Override
+	public String getDefaultValue() {
+		return defaultValue;
+	}
+
+	@Override
 	public boolean isRequired() {
-		return required;
+		return (defaultValue == null);
 	}
 
 	public static FirstStrategyParameter findByName(String name) {
+		return (FirstStrategyParameter) ObjectDefinitionUtils.findByName(FirstStrategyParameter.class, name);
+	}
 
-		if (name == null) {
-			throw new IllegalArgumentException("Parameter name is null.");
-		}
-
-		for (FirstStrategyParameter firstStrategyParameter : FirstStrategyParameter.values()) {
-			if (name.equals(firstStrategyParameter.getName())) {
-				return firstStrategyParameter;
-			}
-		}
-
-		throw new IllegalArgumentException("Could not find a property with name \"" + name + "\".");
-	}	
+	public static Map<String, ObjectDefinition> getObjectDefinitions() {
+		return ObjectDefinitionUtils.getInstance()
+				.elaborateObjectDefinitionsMap(values());
+	}
 }
