@@ -1,44 +1,34 @@
 package org.marceloleite.mercado.strategies.fifth;
 
-import org.marceloleite.mercado.commons.properties.Property;
-import org.marceloleite.mercado.strategies.StrategyPropertyUtils;
+import java.util.Map;
 
-public enum FifthStrategyVariable implements Property {
-	
-	WORKING_AMOUNT_CURRENCY("workingAmountCurrency"),
-	BASE_TEMPORAL_TICKER("baseTemporalTicker"),
-	STATUS("status");
+import org.marceloleite.mercado.ObjectDefinitionUtils;
+import org.marceloleite.mercado.model.TemporalTicker;
+import org.marceloleite.mercado.strategy.ObjectDefinition;
+
+public enum FifthStrategyVariable implements ObjectDefinition {
+
+	WORKING_AMOUNT_CURRENCY("workingAmountCurrency", Double.class),
+	BASE_TEMPORAL_TICKER("baseTemporalTicker", TemporalTicker.class),
+	STATUS("status", FifthStrategyStatus.class);
 
 	private String name;
 
-	private String value;
+	private Class<?> objectClass;
 
-	private FifthStrategyVariable(String name) {
+	private FifthStrategyVariable(String name, Class<?> objectClass) {
 		this.name = name;
+		this.objectClass = objectClass;
 	}
 
+	@Override
 	public String getName() {
 		return name;
 	}
 
-	public void setName(String name) {
-		throw new UnsupportedOperationException(); 
-	}
-
-	public String getValue() {
-		return value;
-	}
-
-	public void setValue(String value) {
-		this.value = value;
-	}
-
-	public boolean isRequired() {
-		return true;
-	}
-	
-	public static FifthStrategyVariable findByName(String name) {
-		return (FifthStrategyVariable)StrategyPropertyUtils.findByName(FifthStrategyVariable.class, name);
+	@Override
+	public Class<?> getObjectClass() {
+		return objectClass;
 	}
 
 	@Override
@@ -46,8 +36,17 @@ public enum FifthStrategyVariable implements Property {
 		return null;
 	}
 
-	@Override
-	public boolean isEncrypted() {
-		return false;
+	public boolean isRequired() {
+		return true;
+	}
+
+	public static FifthStrategyVariable findByName(String name) {
+		return (FifthStrategyVariable) ObjectDefinitionUtils.getInstance()
+				.findByName(FifthStrategyVariable.class, name);
+	}
+
+	public static Map<String, ObjectDefinition> getObjectDefinitions() {
+		return ObjectDefinitionUtils.getInstance()
+				.elaborateObjectDefinitionsMap(values());
 	}
 }

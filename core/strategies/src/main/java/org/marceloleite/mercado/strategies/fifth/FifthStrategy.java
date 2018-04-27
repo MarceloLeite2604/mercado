@@ -1,88 +1,80 @@
 package org.marceloleite.mercado.strategies.fifth;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.marceloleite.mercado.base.model.Account;
-import org.marceloleite.mercado.base.model.CurrencyAmount;
-import org.marceloleite.mercado.base.model.House;
-import org.marceloleite.mercado.base.model.Order;
-import org.marceloleite.mercado.base.model.TemporalTickerVariation;
-import org.marceloleite.mercado.base.model.order.BuyOrderBuilder;
-import org.marceloleite.mercado.base.model.order.SellOrderBuilder;
-import org.marceloleite.mercado.base.model.order.analyser.NoBalanceForMinimalValueOrderAnalyserException;
-import org.marceloleite.mercado.base.model.order.analyser.NoBalanceOrderAnalyserException;
-import org.marceloleite.mercado.base.model.order.analyser.OrderAnalyser;
+import org.marceloleite.mercado.BuyOrderBuilder;
+import org.marceloleite.mercado.CurrencyAmount;
+import org.marceloleite.mercado.House;
+import org.marceloleite.mercado.SellOrderBuilder;
+import org.marceloleite.mercado.TemporalTickerVariation;
 import org.marceloleite.mercado.commons.CircularArray;
 import org.marceloleite.mercado.commons.Currency;
-import org.marceloleite.mercado.commons.MercadoBigDecimal;
 import org.marceloleite.mercado.commons.OrderType;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.VariationCalculator;
-import org.marceloleite.mercado.commons.converter.ObjectToJsonConverter;
 import org.marceloleite.mercado.commons.converter.ZonedDateTimeToStringConverter;
 import org.marceloleite.mercado.commons.formatter.NonDigitalCurrencyFormatter;
 import org.marceloleite.mercado.commons.formatter.PercentageFormatter;
-import org.marceloleite.mercado.commons.properties.Property;
-import org.marceloleite.mercado.data.TemporalTicker;
-import org.marceloleite.mercado.strategy.AbstractStrategy;
+import org.marceloleite.mercado.model.Account;
+import org.marceloleite.mercado.model.Order;
+import org.marceloleite.mercado.model.Strategy;
+import org.marceloleite.mercado.model.TemporalTicker;
+import org.marceloleite.mercado.orderanalyser.NoBalanceForMinimalValueOrderAnalyserException;
+import org.marceloleite.mercado.orderanalyser.NoBalanceOrderAnalyserException;
+import org.marceloleite.mercado.orderanalyser.OrderAnalyser;
+import org.marceloleite.mercado.strategy.AbstractStrategyExecutor;
+import org.marceloleite.mercado.strategy.ObjectDefinition;
 
-public class FifthStrategy extends AbstractStrategy {
+public class FifthStrategy extends AbstractStrategyExecutor {
 
 	private static final Logger LOGGER = LogManager.getLogger(FifthStrategy.class);
 
-	private MercadoBigDecimal growthPercentageThreshold;
+	private double growthPercentageThreshold;
 
-	private MercadoBigDecimal shrinkPercentageThreshold;
-
-	private Currency currency;
+	private double shrinkPercentageThreshold;
 
 	private TemporalTicker baseTemporalTicker;
 
 	private FifthStrategyStatus status;
 
-	private MercadoBigDecimal workingAmountCurrency;
+	private BigDecimal workingAmountCurrency;
 
 	private int circularArraySize;
 
 	private CircularArray<TemporalTicker> temporalTickerCircularArray;
 
-	public FifthStrategy(Currency currency) {
-		super(FifthStrategyParameter.class, FifthStrategyVariable.class);
-		this.currency = currency;
+	public FifthStrategy(Strategy strategy) {
+		super(strategy);
 		this.status = FifthStrategyStatus.UNDEFINED;
 	}
 
-	public FifthStrategy() {
-		this(null);
-	}
-
 	@Override
-	public void setCurrency(Currency currency) {
-		this.currency = currency;
-	}
-
-	@Override
-	public void check(TimeInterval simulationTimeInterval, Account account, House house) {
-		TemporalTicker temporalTicker = house.getTemporalTickers().get(currency);
+	public void execute(TimeInterval timeInterval, Account account, House house) {
+		TemporalTicker temporalTicker = house.getTemporalTickerFor(getCurrency());
 		setBaseIfNull(temporalTicker);
-		TemporalTickerVariation temporalTickerVariation = generateTemporalTickerVariation(simulationTimeInterval,
-				house);
+		TemporalTickerVariation temporalTickerVariation = generateTemporalTickerVariation(timeInterval, house);
 		if (temporalTickerVariation != null) {
 			temporalTickerCircularArray = addToTemporalTickerCircularArray(temporalTickerCircularArray, temporalTicker);
-			MercadoBigDecimal nextPrice = calculateNextPrice(temporalTicker);
-			MercadoBigDecimal lastVariation = new VariationCalculator().calculate(nextPrice,
-					baseTemporalTicker.retrieveCurrentOrPreviousLastPrice());
+			BigDecimal nextPrice = calculateNextPrice(temporalTicker);
+			double lastVariation = VariationCalculator.getInstance()
+					.calculate(nextPrice, baseTemporalTicker.getCurrentOrPreviousLast());
 			StringBuilder stringBuilderDebug = new StringBuilder();
-			stringBuilderDebug.append("Variation: " + new PercentageFormatter().format(lastVariation));
-			MercadoBigDecimal baseLastPrice = baseTemporalTicker.retrieveCurrentOrPreviousLastPrice();
-			stringBuilderDebug.append(", base: " + new NonDigitalCurrencyFormatter().format(baseLastPrice));
-			MercadoBigDecimal lastPrice = temporalTicker.retrieveCurrentOrPreviousLastPrice();
-			stringBuilderDebug.append(", last: " + new NonDigitalCurrencyFormatter().format(lastPrice));
-			stringBuilderDebug.append(", next: " + new NonDigitalCurrencyFormatter().format(nextPrice));
+			stringBuilderDebug.append("Variation: " + PercentageFormatter.getInstance()
+					.format(lastVariation));
+			BigDecimal baseLastPrice = baseTemporalTicker.getCurrentOrPreviousLast();
+			stringBuilderDebug.append(", base: " + NonDigitalCurrencyFormatter.getInstance()
+					.format(baseLastPrice));
+			BigDecimal lastPrice = temporalTicker.getCurrentOrPreviousLast();
+			stringBuilderDebug.append(", last: " + NonDigitalCurrencyFormatter.getInstance()
+					.format(lastPrice));
+			stringBuilderDebug.append(", next: " + NonDigitalCurrencyFormatter.getInstance()
+					.format(nextPrice));
 			// MercadoBigDecimal lastVariation = retrieveLastVariation();
 			/*
 			 * LOGGER.debug( simulationTimeInterval + ": Last variation is " + new
@@ -91,31 +83,25 @@ public class FifthStrategy extends AbstractStrategy {
 			Order order = null;
 			switch (status) {
 			case UNDEFINED:
-				if (lastVariation.compareTo(MercadoBigDecimal.NOT_A_NUMBER) != 0
-						&& lastVariation.compareTo(MercadoBigDecimal.ZERO) > 0) {
-
+				if (Double.isFinite(lastVariation) && lastVariation > 0) {
 					updateBase(house);
-					order = createBuyOrder(simulationTimeInterval, account, house);
+					order = createBuyOrder(timeInterval, account, house);
 				}
 				break;
 			case SAVED:
-				if (!lastVariation.equals(MercadoBigDecimal.NOT_A_NUMBER)
-						&& lastVariation.compareTo(MercadoBigDecimal.ZERO) < 0) {
+				if (Double.isFinite(lastVariation) && lastVariation < 0) {
 					updateBase(house);
-				} else if (!lastVariation.equals(MercadoBigDecimal.NOT_A_NUMBER)
-						&& lastVariation.compareTo(growthPercentageThreshold) >= 0) {
+				} else if (Double.isFinite(lastVariation) && lastVariation >= growthPercentageThreshold) {
 					updateBase(house);
-					order = createBuyOrder(simulationTimeInterval, account, house);
+					order = createBuyOrder(timeInterval, account, house);
 				}
 				break;
 			case APPLIED:
-				if (!lastVariation.equals(MercadoBigDecimal.NOT_A_NUMBER)
-						&& lastVariation.compareTo(MercadoBigDecimal.ZERO) > 0) {
+				if (Double.isFinite(lastVariation) && lastVariation > 0) {
 					updateBase(house);
-				} else if (!lastVariation.equals(MercadoBigDecimal.NOT_A_NUMBER)
-						&& lastVariation.compareTo(shrinkPercentageThreshold) <= 0) {
+				} else if (Double.isFinite(lastVariation) && lastVariation <= shrinkPercentageThreshold) {
 					updateBase(house);
-					order = createSellOrder(simulationTimeInterval, account, house);
+					order = createSellOrder(timeInterval, account, house);
 				}
 				break;
 			}
@@ -130,40 +116,44 @@ public class FifthStrategy extends AbstractStrategy {
 			CircularArray<TemporalTicker> temporalTickerCircularArray, TemporalTicker temporalTicker) {
 		temporalTickerCircularArray.add(temporalTicker);
 		if (temporalTickerCircularArray.getOccupiedPositions() < circularArraySize) {
-			for (int counter = temporalTickerCircularArray.getOccupiedPositions(); counter < circularArraySize; counter++) {
+			for (int counter = temporalTickerCircularArray
+					.getOccupiedPositions(); counter < circularArraySize; counter++) {
 				temporalTickerCircularArray.add(temporalTicker);
 			}
 		}
 		return temporalTickerCircularArray;
 	}
 
-	private MercadoBigDecimal calculateNextPrice(TemporalTicker currentTemporalTicker) {
+	private BigDecimal calculateNextPrice(TemporalTicker currentTemporalTicker) {
 		List<TemporalTicker> temporalTickersList = temporalTickerCircularArray.asList();
-		List<MercadoBigDecimal> lasts = temporalTickersList.stream()
-				.map(temporalTicker -> temporalTicker.retrieveCurrentOrPreviousLastPrice()).collect(Collectors.toList());
-		List<MercadoBigDecimal> derivativeLasts = new ArrayList<>();
-		MercadoBigDecimal previousLast = new MercadoBigDecimal("0");
-		MercadoBigDecimal sumLast = new MercadoBigDecimal("0");
+		List<BigDecimal> lasts = temporalTickersList.stream()
+				.map(temporalTicker -> temporalTicker.getCurrentOrPreviousLast())
+				.collect(Collectors.toList());
+		List<BigDecimal> derivativeLasts = new ArrayList<>();
+		BigDecimal previousLast = new BigDecimal("0");
+		BigDecimal sumLast = new BigDecimal("0");
 		for (int counter = 0; counter < lasts.size(); counter++) {
 			if (counter == 0) {
-				previousLast = baseTemporalTicker.retrieveCurrentOrPreviousLastPrice();
+				previousLast = baseTemporalTicker.getCurrentOrPreviousLast();
 			} else {
 				previousLast = lasts.get(counter - 1);
 			}
-			MercadoBigDecimal currentLast = lasts.get(counter);
+			BigDecimal currentLast = lasts.get(counter);
 
 			derivativeLasts.add(currentLast.subtract(previousLast));
 			sumLast = sumLast.add(currentLast);
 		}
 
-		double sum = derivativeLasts.parallelStream().mapToDouble(derivativeLast -> derivativeLast.doubleValue()).sum();
-		MercadoBigDecimal derivativeLastSum = new MercadoBigDecimal(sum);
-		
-		MercadoBigDecimal arraySize = new MercadoBigDecimal(temporalTickerCircularArray.getOccupiedPositions());
-		MercadoBigDecimal variation = derivativeLastSum.divide(arraySize);
+		double sum = derivativeLasts.parallelStream()
+				.mapToDouble(derivativeLast -> derivativeLast.doubleValue())
+				.sum();
+		BigDecimal derivativeLastSum = new BigDecimal(sum);
 
-		MercadoBigDecimal averageLast = sumLast.divide(arraySize);
-		
+		BigDecimal arraySize = new BigDecimal(temporalTickerCircularArray.getOccupiedPositions());
+		BigDecimal variation = derivativeLastSum.divide(arraySize);
+
+		BigDecimal averageLast = sumLast.divide(arraySize);
+
 		return averageLast.add(variation);
 	}
 
@@ -175,15 +165,15 @@ public class FifthStrategy extends AbstractStrategy {
 	}
 
 	private void updateBase(House house) {
-		TemporalTicker temporalTicker = house.getTemporalTickers().get(currency);
+		TemporalTicker temporalTicker = house.getTemporalTickerFor(getCurrency());
 		if (temporalTicker != null) {
 			baseTemporalTicker = temporalTicker;
 		}
 	}
 
 	private Order createSellOrder(TimeInterval simulationTimeInterval, Account account, House house) {
-		OrderAnalyser orderAnalyser = new OrderAnalyser(account.getBalance(), OrderType.SELL,
-				calculateCurrencyAmountUnitPrice(house), Currency.REAL, currency);
+		OrderAnalyser orderAnalyser = new OrderAnalyser(account, OrderType.SELL,
+				calculateCurrencyAmountUnitPrice(house), Currency.REAL, getCurrency());
 		try {
 			orderAnalyser.setSecond(calculateOrderAmount(orderAnalyser, account));
 		} catch (NoBalanceForMinimalValueOrderAnalyserException | NoBalanceOrderAnalyserException exception) {
@@ -192,15 +182,17 @@ public class FifthStrategy extends AbstractStrategy {
 		}
 
 		Order order = new SellOrderBuilder().toExecuteOn(simulationTimeInterval.getStart())
-				.selling(orderAnalyser.getSecond()).receivingUnitPriceOf(orderAnalyser.getUnitPrice()).build();
-		LOGGER.info(ZonedDateTimeToStringConverter.getInstance().convertTo(simulationTimeInterval.getStart()) + ": Created "
-				+ order + ".");
+				.selling(orderAnalyser.getSecond())
+				.receivingUnitPriceOf(orderAnalyser.getUnitPrice())
+				.build();
+		LOGGER.info(ZonedDateTimeToStringConverter.getInstance()
+				.convertTo(simulationTimeInterval.getStart()) + ": Created " + order + ".");
 		return order;
 	}
 
 	private Order createBuyOrder(TimeInterval simulationTimeInterval, Account account, House house) {
-		OrderAnalyser orderAnalyser = new OrderAnalyser(account.getBalance(), OrderType.BUY,
-				calculateCurrencyAmountUnitPrice(house), Currency.REAL, currency);
+		OrderAnalyser orderAnalyser = new OrderAnalyser(account, OrderType.BUY, calculateCurrencyAmountUnitPrice(house),
+				Currency.REAL, getCurrency());
 
 		try {
 			orderAnalyser.setFirst(calculateOrderAmount(orderAnalyser, account));
@@ -210,22 +202,23 @@ public class FifthStrategy extends AbstractStrategy {
 		}
 
 		Order order = new BuyOrderBuilder().toExecuteOn(simulationTimeInterval.getStart())
-				.buying(orderAnalyser.getSecond()).payingUnitPriceOf(orderAnalyser.getUnitPrice()).build();
-		LOGGER.info(ZonedDateTimeToStringConverter.getInstance().convertTo(simulationTimeInterval.getStart()) + ": Created "
-				+ order + ".");
+				.buying(orderAnalyser.getSecond())
+				.payingUnitPriceOf(orderAnalyser.getUnitPrice())
+				.build();
+		LOGGER.info(ZonedDateTimeToStringConverter.getInstance()
+				.convertTo(simulationTimeInterval.getStart()) + ": Created " + order + ".");
 		return order;
 	}
 
 	private CurrencyAmount calculateOrderAmount(OrderAnalyser orderAnalyser, Account account) {
-		Currency currency = (orderAnalyser.getOrderType() == OrderType.SELL ? this.currency : Currency.REAL);
-		CurrencyAmount balance = account.getBalance().get(currency);
-		CurrencyAmount orderAmount = new CurrencyAmount(balance);
+		Currency currency = (orderAnalyser.getOrderType() == OrderType.SELL ? getCurrency() : Currency.REAL);
+		CurrencyAmount orderAmount = new CurrencyAmount(currency, account.getBalanceFor(currency));
 		LOGGER.debug("Order amount is " + orderAmount + ".");
 		return orderAmount;
 	}
 
 	private TemporalTickerVariation generateTemporalTickerVariation(TimeInterval simulationTimeInterval, House house) {
-		TemporalTicker currentTemporalTicker = house.getTemporalTickers().get(currency);
+		TemporalTicker currentTemporalTicker = house.getTemporalTickerFor(getCurrency());
 		if (currentTemporalTicker == null) {
 			throw new RuntimeException("No temporal ticker for time interval " + simulationTimeInterval);
 		}
@@ -237,7 +230,8 @@ public class FifthStrategy extends AbstractStrategy {
 	}
 
 	private void executeOrder(Order order, Account account, House house) {
-		house.getOrderExecutor().placeOrder(order, house, account);
+		house.getOrderExecutor()
+				.placeOrder(order, house, account);
 
 		switch (order.getStatus()) {
 		case OPEN:
@@ -260,68 +254,76 @@ public class FifthStrategy extends AbstractStrategy {
 		}
 	}
 
-	@Override
-	protected Property retrieveVariable(String name) {
-		FifthStrategyVariable fifthStrategyVariable = FifthStrategyVariable.findByName(name);
-		ObjectToJsonConverter objectToJsonConverter = new ObjectToJsonConverter();
-		String json = null;
-		switch (fifthStrategyVariable) {
-		case BASE_TEMPORAL_TICKER:
-			json = objectToJsonConverter.convertTo(baseTemporalTicker);
-			break;
-		case STATUS:
-			json = objectToJsonConverter.convertTo(status);
-			break;
-		case WORKING_AMOUNT_CURRENCY:
-			json = objectToJsonConverter.convertTo(workingAmountCurrency);
-			break;
-		}
-
-		fifthStrategyVariable.setValue(json);
-		return fifthStrategyVariable;
+	private CurrencyAmount calculateCurrencyAmountUnitPrice(House house) {
+		BigDecimal lastPrice = house.getTemporalTickerFor(getCurrency())
+				.getCurrentOrPreviousLast();
+		return new CurrencyAmount(Currency.REAL, lastPrice);
 	}
 
 	@Override
-	protected void defineVariable(Property variable) {
-		FifthStrategyVariable strategyVariable = FifthStrategyVariable.findByName(variable.getName());
-		ObjectToJsonConverter objectToJsonConverter = new ObjectToJsonConverter();
-		switch (strategyVariable) {
-		case BASE_TEMPORAL_TICKER:
-			baseTemporalTicker = new TemporalTicker();
-			baseTemporalTicker = objectToJsonConverter.convertFromToObject(variable.getValue(), baseTemporalTicker);
-			break;
-		case STATUS:
-			status = objectToJsonConverter.convertFromToObject(variable.getValue(), status);
-			break;
-		case WORKING_AMOUNT_CURRENCY:
-			workingAmountCurrency = new MercadoBigDecimal();
-			workingAmountCurrency = objectToJsonConverter.convertFromToObject(variable.getValue(),
-					workingAmountCurrency);
-			break;
-		}
-	}
-
-	@Override
-	protected void defineParameter(Property parameter) {
-		FifthStrategyParameter strategyParameter = FifthStrategyParameter.findByName(parameter.getName());
-		switch (strategyParameter) {
+	protected void setParameter(String name, Object object) {
+		switch (FifthStrategyParameter.findByName(name)) {
 		case GROWTH_PERCENTAGE_THRESHOLD:
-			growthPercentageThreshold = new MercadoBigDecimal(parameter.getValue());
+			growthPercentageThreshold = (Double) object;
 			break;
 		case SHRINK_PERCENTAGE_THRESHOLD:
-			shrinkPercentageThreshold = new MercadoBigDecimal(parameter.getValue());
+			shrinkPercentageThreshold = (Double) object;
 			break;
 		case WORKING_AMOUNT_CURRENCY:
-			workingAmountCurrency = new MercadoBigDecimal(parameter.getValue());
+			workingAmountCurrency = (BigDecimal) object;
 			break;
 		case CIRCULAR_ARRAY_SIZE:
-			circularArraySize = Integer.parseInt(parameter.getValue());
-			temporalTickerCircularArray = new CircularArray<>(circularArraySize);
+			temporalTickerCircularArray = new CircularArray<>((Integer) object);
+			break;
+		default:
+			throw new IllegalArgumentException("Unknown parameter \"" + name + "\".");
 		}
 	}
 
-	private CurrencyAmount calculateCurrencyAmountUnitPrice(House house) {
-		MercadoBigDecimal lastPrice = house.getTemporalTickers().get(currency).retrieveCurrentOrPreviousLastPrice();
-		return new CurrencyAmount(Currency.REAL, lastPrice);
+	@Override
+	protected void setVariable(String name, Object object) {
+		switch (FifthStrategyVariable.findByName(name)) {
+		case BASE_TEMPORAL_TICKER:
+			baseTemporalTicker = (TemporalTicker) object;
+			break;
+		case STATUS:
+			status = (FifthStrategyStatus) object;
+			break;
+		case WORKING_AMOUNT_CURRENCY:
+			workingAmountCurrency = (BigDecimal) object;
+			break;
+		default:
+			throw new IllegalArgumentException("Unknown variable \"" + name + "\".");
+		}
+	}
+
+	@Override
+	protected Object getVariable(String name) {
+		Object result = null;
+		switch (FifthStrategyVariable.findByName(name)) {
+		case BASE_TEMPORAL_TICKER:
+			result = baseTemporalTicker;
+			break;
+		case STATUS:
+			result = status;
+			break;
+		case WORKING_AMOUNT_CURRENCY:
+			result = workingAmountCurrency;
+			break;
+		default:
+			throw new IllegalArgumentException("Unknown variable \"" + name + "\".");
+		}
+		return result;
+	}
+
+	@Override
+	protected Map<String, ObjectDefinition> getParameterDefinitions() {
+		return FifthStrategyParameter.getObjectDefinitions();
+	}
+
+	@Override
+	protected Map<String, ObjectDefinition> getVariableDefinitions() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

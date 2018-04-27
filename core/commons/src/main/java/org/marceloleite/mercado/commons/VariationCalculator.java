@@ -1,5 +1,7 @@
 package org.marceloleite.mercado.commons;
 
+import java.math.BigDecimal;
+
 public class VariationCalculator {
 	
 	private static VariationCalculator instance;
@@ -13,6 +15,10 @@ public class VariationCalculator {
 		} else {
 			return firstValue/secondValue;
 		}
+	}
+	
+	public double calculate(BigDecimal firstValue, BigDecimal secondValue) {
+		return calculate(firstValue.doubleValue(), secondValue.doubleValue());
 	}
 	
 	public static VariationCalculator getInstance() {
