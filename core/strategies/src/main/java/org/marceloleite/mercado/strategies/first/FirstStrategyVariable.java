@@ -48,7 +48,7 @@ public enum FirstStrategyVariable implements ObjectDefinition {
 	}
 
 	public static FirstStrategyVariable findByName(String name) {
-		return (FirstStrategyVariable) ObjectDefinitionUtils.findByName(FirstStrategyVariable.class, name);
+		return (FirstStrategyVariable) ObjectDefinitionUtils.getInstance().findByName(FirstStrategyVariable.class, name);
 	}
 
 	public static Map<String, ObjectDefinition> getObjectDefinitions() {

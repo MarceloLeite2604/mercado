@@ -55,6 +55,6 @@ public enum FourthStrategyParameter implements ObjectDefinition {
 	}
 	
 	public static FourthStrategyParameter findByName(String name) {
-		return (FourthStrategyParameter) ObjectDefinitionUtils.findByName(FourthStrategyParameter.class, name);
+		return (FourthStrategyParameter) ObjectDefinitionUtils.getInstance().findByName(FourthStrategyParameter.class, name);
 	}
 }

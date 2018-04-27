@@ -1,27 +1,24 @@
 package org.marceloleite.mercado.strategies.second;
 
-import org.marceloleite.mercado.commons.MercadoBigDecimal;
-
 public class RatioCalculator {
 	
 	private static RatioCalculator instance;
 	
 	private RatioCalculator() {}
 
-	public MercadoBigDecimal calculate(double firstValue, double secondValue) {
-		MercadoBigDecimal result;
-		if ( firstValue.compareTo(MercadoBigDecimal.ZERO) == 0 ) {
-			if ( secondValue.compareTo(MercadoBigDecimal.ZERO) == 0) {
-				result = new MercadoBigDecimal("1.0");
+	public Double calculate(double firstValue, double secondValue) {
+		double result;
+		if ( firstValue  == 0 ) {
+			if ( secondValue  == 0) {
+				result = 0.0;
 			} else {
-				result = new MercadoBigDecimal("0.0");
+				result = 0.0;
 			}
 		} else {
-			if ( secondValue.compareTo(MercadoBigDecimal.ZERO) == 0 ) {
-				/* TODO: Create a constant for positive infinity. */
-				result = MercadoBigDecimal.POSITIVE_INFINITY;
+			if ( secondValue  == 0 ) {
+				result = Double.POSITIVE_INFINITY;
 			} else {
-				result = firstValue.divide(secondValue); 
+				result = firstValue/secondValue; 
 			}
 		}
 		return result;

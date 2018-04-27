@@ -1,48 +1,36 @@
 package org.marceloleite.mercado.strategies.second;
 
-import org.marceloleite.mercado.commons.properties.Property;
-import org.marceloleite.mercado.commons.properties.StandardProperty;
+import java.util.Map;
 
-public enum SecondStrategyParameter implements Property {
+import org.marceloleite.mercado.ObjectDefinitionUtils;
+import org.marceloleite.mercado.strategy.ObjectDefinition;
+
+public enum SecondStrategyParameter implements ObjectDefinition {
 	
-	TOTAL_TIME_INTERVAL_TO_ANALYZE("totalTimeIntervalToAnalyze");
+	TOTAL_TIME_INTERVAL_TO_ANALYZE("totalTimeIntervalToAnalyze", Integer.class);
 
 	private String name;
+	private Class<?> objectClass;
+	private String defaultValue;
 	
-	private String value;
+	private SecondStrategyParameter(String name, Class<?> objectClass) {
+		this(name, objectClass, null);
+	}
 
-	private SecondStrategyParameter(String name) {
+	private SecondStrategyParameter(String name, Class<?> objectClass, String defaultValue) {
 		this.name = name;
+		this.objectClass = objectClass;
+		this.defaultValue = defaultValue;
 	}
 
 	@Override
 	public String getName() {
 		return this.name;
 	}
-
-	@Override
-	public void setName(String name) {
-		throw new UnsupportedOperationException();
-		
-	}
-
-	@Override
-	public String getValue() {
-		return this.value;
-	}
-
-	@Override
-	public void setValue(String value) {
-		this.value = value;
-	}
-
-	@Override
-	public boolean isRequired() {
-		return true;
-	}
 	
-	public StandardProperty toStandardProperty() {
-		return new StandardProperty(name, value, true);
+	@Override
+	public Class<?> getObjectClass() {
+		return objectClass;
 	}
 
 	@Override
@@ -51,7 +39,16 @@ public enum SecondStrategyParameter implements Property {
 	}
 
 	@Override
-	public boolean isEncrypted() {
-		return false;
+	public boolean isRequired() {
+		return (defaultValue == null);
 	}
+	
+	public static Map<String, ObjectDefinition> getObjectDefinitions() {
+		return ObjectDefinitionUtils.getInstance()
+				.elaborateObjectDefinitionsMap(values());
+	}
+
+	public static SecondStrategyParameter findByName(String name) {
+		return (SecondStrategyParameter)ObjectDefinitionUtils.getInstance().findByName(SecondStrategyParameter.class, name);
+	}	
 }

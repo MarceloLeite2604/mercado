@@ -4,9 +4,8 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import org.marceloleite.mercado.base.model.TemporalTickerVariation;
+import org.marceloleite.mercado.TemporalTickerVariation;
 import org.marceloleite.mercado.commons.CircularArray;
-import org.marceloleite.mercado.commons.MercadoBigDecimal;
 
 public class VariationCircularArrayPivot {
 
@@ -17,15 +16,15 @@ public class VariationCircularArrayPivot {
 		this.temporalTickerVariationCircularArray = temporalTickerVariationCircularArray;
 	}
 
-	public List<MercadoBigDecimal> getOrderVariations() {
+	public List<Double> getOrderVariations() {
 		return elaborateList(TemporalTickerVariation::getOrderVariation);
 	}
 	
-	public List<MercadoBigDecimal> getHighVariations() {
+	public List<Double> getHighVariations() {
 		return elaborateList(TemporalTickerVariation::getHighVariation);
 	}
 	
-	private List<MercadoBigDecimal> elaborateList(Function<? super TemporalTickerVariation, ? extends MercadoBigDecimal> function) {
+	private List<Double> elaborateList(Function<? super TemporalTickerVariation, ? extends Double> function) {
 		return temporalTickerVariationCircularArray.asList().stream().map(function).collect(Collectors.toList());
 	}
 }

@@ -35,7 +35,7 @@ public enum FourthStrategyVariable implements ObjectDefinition {
 	}
 	
 	public static FourthStrategyVariable findByName(String name) {
-		return (FourthStrategyVariable)ObjectDefinitionUtils.findByName(FourthStrategyVariable.class, name);
+		return (FourthStrategyVariable)ObjectDefinitionUtils.getInstance().findByName(FourthStrategyVariable.class, name);
 	}
 
 	@Override

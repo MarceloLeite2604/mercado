@@ -40,7 +40,7 @@ public class ObjectDefinitionUtils {
 				.orElse(null);
 	}
 	
-	public static Enum<? extends ObjectDefinition> findByName(Class<? extends Enum<? extends ObjectDefinition>> enumClass, String name) {
+	public Enum<? extends ObjectDefinition> findByName(Class<? extends Enum<? extends ObjectDefinition>> enumClass, String name) {
 		if (name == null || name.isEmpty()) {
 			throw new IllegalArgumentException("Parameter name is empty.");
 		}

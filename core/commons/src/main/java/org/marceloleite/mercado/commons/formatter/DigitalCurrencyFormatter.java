@@ -18,6 +18,10 @@ public class DigitalCurrencyFormatter {
 		return decimalFormat.format(amount);
 	}
 	
+	public String format(Double amount) {
+		return format(new BigDecimal(amount));
+	}
+	
 	public static DigitalCurrencyFormatter getInstance() {
 		if (instance == null) {
 			instance = new DigitalCurrencyFormatter(); 

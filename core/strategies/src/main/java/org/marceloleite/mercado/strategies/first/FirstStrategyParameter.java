@@ -49,7 +49,7 @@ public enum FirstStrategyParameter implements ObjectDefinition {
 	}
 
 	public static FirstStrategyParameter findByName(String name) {
-		return (FirstStrategyParameter) ObjectDefinitionUtils.findByName(FirstStrategyParameter.class, name);
+		return (FirstStrategyParameter) ObjectDefinitionUtils.getInstance().findByName(FirstStrategyParameter.class, name);
 	}
 
 	public static Map<String, ObjectDefinition> getObjectDefinitions() {
