@@ -22,7 +22,7 @@ import org.marceloleite.mercado.commons.graphic.GraphicData;
 import org.marceloleite.mercado.commons.graphic.GraphicStrokeType;
 import org.marceloleite.mercado.commons.graphic.MercadoRangeAxis;
 import org.marceloleite.mercado.commons.utils.ZonedDateTimeUtils;
-import org.marceloleite.mercado.retriever.email.EmailMessage;
+import org.marceloleite.mercado.email.EmailMessage;
 
 public class SixStrategyGraphic {
 

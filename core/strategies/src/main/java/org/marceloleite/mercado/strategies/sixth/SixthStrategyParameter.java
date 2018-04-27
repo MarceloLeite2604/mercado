@@ -1,55 +1,42 @@
 package org.marceloleite.mercado.strategies.sixth;
 
-import org.marceloleite.mercado.commons.properties.Property;
-import org.marceloleite.mercado.strategies.StrategyPropertyUtils;
+import org.marceloleite.mercado.ObjectDefinitionUtils;
+import org.marceloleite.mercado.strategy.ObjectDefinition;
 
-public enum SixthStrategyParameter implements Property {
+public enum SixthStrategyParameter implements ObjectDefinition {
 	
-	GROWTH_PERCENTAGE_THRESHOLD("growthPercentageThreshold"),
-	SHRINK_PERCENTAGE_THRESHOLD("shrinkPercentageThreshold"),
-	WORKING_AMOUNT_CURRENCY("workingAmountCurrency"),
-	CIRCULAR_ARRAY_SIZE("circularArraySize"),
-	INITIAL_STATUS("initialStatus", "saved"),
-	NEXT_VALUE_STEPS("nextValueSteps", "1"),
-	GENERATE_DAILY_GRAPHIC("generateDailyGraphic", "false");
+	GROWTH_PERCENTAGE_THRESHOLD("growthPercentageThreshold", Double.class),
+	SHRINK_PERCENTAGE_THRESHOLD("shrinkPercentageThreshold", Double.class),
+	WORKING_AMOUNT_CURRENCY("workingAmountCurrency", Double.class),
+	CIRCULAR_ARRAY_SIZE("circularArraySize", Integer.class),
+	INITIAL_STATUS("initialStatus", SixthStrategyStatus.class, "saved"),
+	NEXT_VALUE_STEPS("nextValueSteps", Integer.class, "1"),
+	GENERATE_DAILY_GRAPHIC("generateDailyGraphic", Boolean.class, "false");
 
 	private String name;
 
-	private String value;
+	private Class<?> objectClass;
 	
 	private String defaultValue;
+	
+	private SixthStrategyParameter(String name, Class<?> objectClass) {
+		this(name, objectClass, null);
+	}
 
-	private SixthStrategyParameter(String name, String defaultValue) {
+	private SixthStrategyParameter(String name, Class<?> objectClass, String defaultValue) {
 		this.name = name;
+		this.objectClass = objectClass;
 		this.defaultValue = defaultValue;
 	}
 	
-	private SixthStrategyParameter(String name) {
-		this(name, null);
-	}
-
+	@Override
 	public String getName() {
 		return name;
 	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getValue() {
-		return value;
-	}
-
-	public void setValue(String value) {
-		this.value = value;
-	}
-
-	public boolean isRequired() {
-		return (defaultValue == null);
-	}
-
-	public static SixthStrategyParameter findByName(String name) {
-		return (SixthStrategyParameter)StrategyPropertyUtils.findByName(SixthStrategyParameter.class, name);
+	
+	@Override
+	public Class<?> getObjectClass() {
+		return objectClass;
 	}
 
 	@Override
@@ -58,8 +45,11 @@ public enum SixthStrategyParameter implements Property {
 	}
 
 	@Override
-	public boolean isEncrypted() {
-		return false;
+	public boolean isRequired() {
+		return (defaultValue == null);
 	}
 
+	public static SixthStrategyParameter findByName(String name) {
+		return (SixthStrategyParameter)ObjectDefinitionUtils.getInstance().findByName(SixthStrategyParameter.class, name);
+	}
 }

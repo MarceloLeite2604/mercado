@@ -12,6 +12,10 @@ public class NonDigitalCurrencyFormatter {
 	private NonDigitalCurrencyFormatter() {
 		
 	}
+	
+	public String format(double amount) {
+		return format(new BigDecimal(amount));
+	}
 
 	public String format(BigDecimal amount) {
 		DecimalFormat decimalFormat = new DecimalFormat(NUMBER_FORMAT);

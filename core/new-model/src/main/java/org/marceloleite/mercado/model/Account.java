@@ -206,7 +206,7 @@ public class Account {
 	public boolean hasBalanceFor(CurrencyAmount currencyAmount) {
 		return (getBalanceFor(currencyAmount.getCurrency()).compareTo(currencyAmount.getAmount()) >= 0);
 	}
-
+	
 	public BigDecimal getBalanceFor(Currency currency) {
 		balances.stream()
 				.collect(Collectors.toMap(Balance::getCurrency, Balance::getAmount))

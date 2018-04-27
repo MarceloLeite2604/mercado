@@ -7,57 +7,58 @@ import org.marceloleite.mercado.commons.formatter.PercentageFormatter;
 
 public class Statistics {
 
-	private MercadoBigDecimal base;
+	private Double base;
 
-	private CircularArray<MercadoBigDecimal> circularArray;
-	
-	private MercadoBigDecimal summation;
+	private CircularArray<Double> circularArray;
 
-	private MercadoBigDecimal derivativeLastsSummation;
+	private double summation;
 
-	private MercadoBigDecimal variation;
+	private double derivativeLastsSummation;
 
-	private MercadoBigDecimal average;
+	private double variation;
 
-	private MercadoBigDecimal next;
+	private double average;
 
-	private MercadoBigDecimal ratio;
-	
-	private MercadoBigDecimal nextValueSteps;
+	private double next;
+
+	private double ratio;
+
+	private int nextValueSteps;
 
 	public Statistics(int circularArraySize, int nextValueSteps) {
 		super();
 		this.circularArray = new CircularArray<>(circularArraySize);
-		this.nextValueSteps = new MercadoBigDecimal(nextValueSteps);
-		this.summation = new MercadoBigDecimal("0");
-		this.derivativeLastsSummation = new MercadoBigDecimal("0");
+		this.nextValueSteps = nextValueSteps;
+		this.summation = 0.0;
+		this.derivativeLastsSummation = 0.0;
+		this.base = null;
 	}
 
-	public void setBase(MercadoBigDecimal base) {
+	public void setBase(double base) {
 		this.base = base;
 	}
 
-	public MercadoBigDecimal getBase() {
+	public double getBase() {
 		return base;
 	}
 
-	public MercadoBigDecimal getVariation() {
+	public double getVariation() {
 		return variation;
 	}
 
-	public MercadoBigDecimal getAverage() {
+	public double getAverage() {
 		return average;
 	}
 
-	public MercadoBigDecimal getNext() {
+	public double getNext() {
 		return next;
 	}
-	
-	public MercadoBigDecimal getRatio() {
+
+	public double getRatio() {
 		return ratio;
 	}
 
-	public void add(MercadoBigDecimal value) {
+	public void add(double value) {
 		if (!circularArray.isFilled()) {
 			circularArray.add(value);
 			calculateValues();
@@ -68,29 +69,28 @@ public class Statistics {
 		}
 	}
 
-	private MercadoBigDecimal calculateNext() {
-		if (variation.equals(MercadoBigDecimal.NOT_A_NUMBER)) {
-			return new MercadoBigDecimal(MercadoBigDecimal.NOT_A_NUMBER);
+	private double calculateNext() {
+		if (Double.isFinite(variation)) {
+			return average + (variation * nextValueSteps);
 		} else {
-			return average.add(variation.multiply(nextValueSteps));
+			return Double.NaN;
 		}
 	}
 
 	private void calculatePreAddValues() {
 		if (circularArray.isFilled()) {
-			MercadoBigDecimal firstLastPrice = circularArray.get(0);
-			MercadoBigDecimal secondLastPrice = circularArray.get(1);
+			double firstLastPrice = circularArray.get(0);
+			double secondLastPrice = circularArray.get(1);
 
-			MercadoBigDecimal subtract = secondLastPrice.subtract(firstLastPrice);
+			double subtract = secondLastPrice - firstLastPrice;
 
-			derivativeLastsSummation = derivativeLastsSummation.subtract(subtract);
-			summation = summation.subtract(firstLastPrice);
+			derivativeLastsSummation -= subtract;
+			summation -= firstLastPrice;
 		}
 	}
 
 	private void calculatePosAddValues() {
-		MercadoBigDecimal currentLastPrice = circularArray
-				.get(circularArray.getOccupiedPositions() - 1);
+		double currentLastPrice = circularArray.get(circularArray.getOccupiedPositions() - 1);
 
 		int previousPosition = 0;
 		if (circularArray.getOccupiedPositions() <= 1) {
@@ -98,12 +98,12 @@ public class Statistics {
 		} else {
 			previousPosition = circularArray.getOccupiedPositions() - 2;
 		}
-		MercadoBigDecimal previousLastPrice = circularArray.get(previousPosition);
+		double previousLastPrice = circularArray.get(previousPosition);
 
-		MercadoBigDecimal subtract = currentLastPrice.subtract(previousLastPrice);
+		double subtract = currentLastPrice - previousLastPrice;
 
-		derivativeLastsSummation = derivativeLastsSummation.add(subtract);
-		summation = summation.add(currentLastPrice);
+		derivativeLastsSummation += subtract;
+		summation += currentLastPrice;
 		average = calculateAverage();
 		variation = calculateVariation();
 		next = calculateNext();
@@ -111,22 +111,22 @@ public class Statistics {
 	}
 
 	private void calculateValues() {
-		List<MercadoBigDecimal> list = circularArray.asList();
-		MercadoBigDecimal previousLast = null;
-		summation = new MercadoBigDecimal("0");
-		derivativeLastsSummation = new MercadoBigDecimal("0");
+		List<Double> list = circularArray.asList();
+		double previousLast;
+		summation = 0.0;
+		derivativeLastsSummation = 0.0;
 		for (int counter = 0; counter < list.size(); counter++) {
 			if (counter == 0) {
 				previousLast = list.get(counter);
 			} else {
 				previousLast = list.get(counter - 1);
 			}
-			MercadoBigDecimal currentLast = list.get(counter);
+			
+			double currentLast = list.get(counter);
+			double subtract = currentLast - previousLast;
 
-			MercadoBigDecimal subtract = currentLast.subtract(previousLast);
-
-			derivativeLastsSummation = derivativeLastsSummation.add(subtract);
-			summation = summation.add(currentLast);
+			derivativeLastsSummation += subtract;
+			summation += currentLast;
 		}
 		average = calculateAverage();
 		variation = calculateVariation();
@@ -134,50 +134,54 @@ public class Statistics {
 		ratio = calculateRatio();
 	}
 
-	private MercadoBigDecimal calculateVariation() {
+	private double calculateVariation() {
 		if (circularArray.getOccupiedPositions() == 0) {
-			return new MercadoBigDecimal(MercadoBigDecimal.NOT_A_NUMBER);
+			return Double.NaN;
 		} else {
-			return derivativeLastsSummation
-					.divide(new MercadoBigDecimal(circularArray.getOccupiedPositions()));
+			return derivativeLastsSummation / circularArray.getOccupiedPositions();
 		}
 	}
 
-	private MercadoBigDecimal calculateAverage() {
+	private Double calculateAverage() {
 		if (circularArray.getOccupiedPositions() == 0) {
-			return new MercadoBigDecimal(MercadoBigDecimal.NOT_A_NUMBER);
+			return Double.NaN;
 		} else {
-			return summation.divide(new MercadoBigDecimal(circularArray.getOccupiedPositions()));
+			return summation / circularArray.getOccupiedPositions();
 		}
 	}
 
-	private MercadoBigDecimal calculateRatio() {
-		if (next.equals(MercadoBigDecimal.NOT_A_NUMBER)) {
-			return new MercadoBigDecimal(MercadoBigDecimal.NOT_A_NUMBER);
+	private double calculateRatio() {
+		if (!Double.isFinite(next)) {
+			return Double.NaN;
 		} else {
-			MercadoBigDecimal first;
-			if ( base != null) {
+			double first;
+			if (base != null) {
 				first = base;
 			} else {
 				first = average;
 			}
-			return new VariationCalculator().calculate(average, first);
+			return VariationCalculator.getInstance()
+					.calculate(average, first);
 		}
 	}
-	
+
 	@Override
 	public String toString() {
 		StringBuilder stringBuilder = new StringBuilder();
-		NonDigitalCurrencyFormatter nonDigitalCurrencyFormatter = NonDigitalCurrencyFormatter.getInstance();
-		stringBuilder.append("[ratio: " + new PercentageFormatter().format(ratio));
-		stringBuilder.append(", base: " + nonDigitalCurrencyFormatter.format(base));
-		stringBuilder.append(", average: " + nonDigitalCurrencyFormatter.format(average));
-		stringBuilder.append(", variation: " + nonDigitalCurrencyFormatter.format(variation));
-		stringBuilder.append(", next: " + nonDigitalCurrencyFormatter.format(next) + "]");
+		stringBuilder.append("[ratio: " + PercentageFormatter.getInstance()
+				.format(ratio));
+		stringBuilder.append(", base: " + NonDigitalCurrencyFormatter.getInstance()
+				.format(base));
+		stringBuilder.append(", average: " + NonDigitalCurrencyFormatter.getInstance()
+				.format(average));
+		stringBuilder.append(", variation: " + NonDigitalCurrencyFormatter.getInstance()
+				.format(variation));
+		stringBuilder.append(", next: " + NonDigitalCurrencyFormatter.getInstance()
+				.format(next) + "]");
 		return stringBuilder.toString();
 	}
 
-	public CircularArray<MercadoBigDecimal> getCircularArray() {
+	public CircularArray<Double> getCircularArray() {
 		return circularArray;
 	}
 }

@@ -1,6 +1,7 @@
 package org.marceloleite.mercado.strategies;
 
 import java.math.BigDecimal;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -14,6 +15,7 @@ import org.marceloleite.mercado.model.Order;
 import org.marceloleite.mercado.model.Strategy;
 import org.marceloleite.mercado.model.TemporalTicker;
 import org.marceloleite.mercado.strategy.AbstractStrategyExecutor;
+import org.marceloleite.mercado.strategy.ObjectDefinition;
 
 public class OriginalStrategy extends AbstractStrategyExecutor {
 
@@ -25,9 +27,8 @@ public class OriginalStrategy extends AbstractStrategyExecutor {
 
 	@Override
 	public void execute(TimeInterval timeInterval, Account account, House house) {
-		if (house.getTemporalTickers()
-				.get(getCurrency()) != null) {
-			if (account.hasPositiveBalanceFor(getCurrency())) {
+		if (house.getTemporalTickerFor(getCurrency()) != null) {
+			if (account.hasPositiveBalanceOf(getCurrency())) {
 				CurrencyAmount currencyAmountToPay = new CurrencyAmount(Currency.REAL,
 						account.getBalanceFor(Currency.REAL));
 				CurrencyAmount currencyAmountUnitPrice = calculateCurrencyAmountUnitPrice(house);
@@ -70,23 +71,32 @@ public class OriginalStrategy extends AbstractStrategyExecutor {
 	}
 
 	private CurrencyAmount calculateCurrencyAmountUnitPrice(House house) {
-		TemporalTicker temporalTicker = house.getTemporalTickers()
-				.get(getCurrency());
+		TemporalTicker temporalTicker = house.getTemporalTickerFor(getCurrency());
 		BigDecimal lastPrice = temporalTicker.getCurrentOrPreviousLast();
 		CurrencyAmount currencyAmountUnitPrice = new CurrencyAmount(Currency.REAL, lastPrice);
 		return currencyAmountUnitPrice;
 	}
 
 	@Override
-	protected void setParameter(Object parameterObject) {
+	protected void setParameter(String name, Object object) {
 	}
 
 	@Override
-	protected void setVariable(Object variableObject) {
+	protected void setVariable(String name, Object object) {
 	}
 
 	@Override
-	protected Object getVariable(String variableName) {
+	protected Object getVariable(String name) {
+		return null;
+	}
+
+	@Override
+	protected Map<String, ObjectDefinition> getParameterDefinitions() {
+		return null;
+	}
+
+	@Override
+	protected Map<String, ObjectDefinition> getVariableDefinitions() {
 		return null;
 	}
 }
