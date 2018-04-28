@@ -1,43 +1,33 @@
 package org.marceloleite.mercado.strategies.third;
 
-import org.marceloleite.mercado.commons.properties.Property;
-import org.marceloleite.mercado.strategies.StrategyPropertyUtils;
+import java.util.Map;
 
-public enum ThirdStrategyVariable implements Property {
-	
-	BASE_TEMPORAL_TICKER("baseTemporalTicker"),
-	STATUS("status");
+import org.marceloleite.mercado.ObjectDefinitionUtils;
+import org.marceloleite.mercado.model.TemporalTicker;
+import org.marceloleite.mercado.strategy.ObjectDefinition;
+
+public enum ThirdStrategyVariable implements ObjectDefinition {
+
+	BASE_TEMPORAL_TICKER("baseTemporalTicker", TemporalTicker.class),
+	STATUS("status", ThirdStrategyStatus.class);
 
 	private String name;
 
-	private String value;
+	private Class<?> objectClass;
 
-	private ThirdStrategyVariable(String name) {
+	private ThirdStrategyVariable(String name, Class<?> objectClass) {
 		this.name = name;
+		this.objectClass = objectClass;
 	}
 
+	@Override
 	public String getName() {
 		return name;
 	}
 
-	public void setName(String name) {
-		throw new UnsupportedOperationException(); 
-	}
-
-	public String getValue() {
-		return value;
-	}
-
-	public void setValue(String value) {
-		this.value = value;
-	}
-
-	public boolean isRequired() {
-		return true;
-	}
-	
-	public static ThirdStrategyVariable findByName(String name) {
-		return (ThirdStrategyVariable)StrategyPropertyUtils.findByName(ThirdStrategyVariable.class, name);
+	@Override
+	public Class<?> getObjectClass() {
+		return objectClass;
 	}
 
 	@Override
@@ -46,7 +36,17 @@ public enum ThirdStrategyVariable implements Property {
 	}
 
 	@Override
-	public boolean isEncrypted() {
-		return false;
+	public boolean isRequired() {
+		return true;
+	}
+
+	public static ThirdStrategyVariable findByName(String name) {
+		return (ThirdStrategyVariable) ObjectDefinitionUtils.getInstance()
+				.findByName(ThirdStrategyVariable.class, name);
+	}
+
+	public static Map<String, ObjectDefinition> getObjectDefinitions() {
+		return ObjectDefinitionUtils.getInstance()
+				.elaborateObjectDefinitionsMap(values());
 	}
 }

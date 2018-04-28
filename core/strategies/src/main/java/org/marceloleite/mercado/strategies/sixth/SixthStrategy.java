@@ -416,13 +416,11 @@ public class SixthStrategy extends AbstractStrategyExecutor {
 
 	@Override
 	protected Map<String, ObjectDefinition> getParameterDefinitions() {
-		// TODO Auto-generated method stub
-		return null;
+		return SixthStrategyParameter.getObjectDefinitions();
 	}
 
 	@Override
 	protected Map<String, ObjectDefinition> getVariableDefinitions() {
-		// TODO Auto-generated method stub
-		return null;
+		return SixthStrategyVariable.getObjectDefinitions();
 	}
 }

@@ -1,5 +1,7 @@
 package org.marceloleite.mercado.strategies.sixth;
 
+import java.util.Map;
+
 import org.marceloleite.mercado.ObjectDefinitionUtils;
 import org.marceloleite.mercado.model.TemporalTicker;
 import org.marceloleite.mercado.strategy.ObjectDefinition;
@@ -48,5 +50,10 @@ public enum SixthStrategyVariable implements ObjectDefinition {
 	public static SixthStrategyVariable findByName(String name) {
 		return (SixthStrategyVariable) ObjectDefinitionUtils.getInstance()
 				.findByName(SixthStrategyVariable.class, name);
+	}
+	
+	public static Map<String, ObjectDefinition> getObjectDefinitions() {
+		return ObjectDefinitionUtils.getInstance()
+				.elaborateObjectDefinitionsMap(values());
 	}
 }

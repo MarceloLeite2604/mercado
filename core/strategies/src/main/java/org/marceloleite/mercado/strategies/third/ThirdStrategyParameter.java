@@ -1,53 +1,57 @@
 package org.marceloleite.mercado.strategies.third;
 
-import org.marceloleite.mercado.commons.properties.Property;
-import org.marceloleite.mercado.strategies.StrategyPropertyUtils;
+import java.util.Map;
 
-public enum ThirdStrategyParameter implements Property {
+import org.marceloleite.mercado.ObjectDefinitionUtils;
+import org.marceloleite.mercado.strategy.ObjectDefinition;
+
+public enum ThirdStrategyParameter implements ObjectDefinition {
 	
-	GROWTH_PERCENTAGE_THRESHOLD("growthPercentageThreshold"),
-	SHRINK_PERCENTAGE_THRESHOLD("shrinkPercentageThreshold");
+	GROWTH_PERCENTAGE_THRESHOLD("growthPercentageThreshold", Double.class),
+	SHRINK_PERCENTAGE_THRESHOLD("shrinkPercentageThreshold", Double.class);
 
 	private String name;
+	
+	private Class<?> objectClass;
+	
+	private String defaultValue;
 
-	private String value;
-
-	private ThirdStrategyParameter(String name) {
+	private ThirdStrategyParameter(String name, Class<?> objectClass, String defaultValue) {
 		this.name = name;
+		this.objectClass = objectClass;
+		this.defaultValue = defaultValue;
+	}
+	
+	private ThirdStrategyParameter(String name, Class<?> objectClass) {
+		this(name, objectClass, null);
 	}
 
+	@Override
 	public String getName() {
 		return name;
 	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getValue() {
-		return value;
-	}
-
-	public void setValue(String value) {
-		this.value = value;
-	}
-
-	public boolean isRequired() {
-		return true;
-	}
-
-	public static ThirdStrategyParameter findByName(String name) {
-		return (ThirdStrategyParameter)StrategyPropertyUtils.findByName(ThirdStrategyParameter.class, name);
+	
+	@Override
+	public Class<?> getObjectClass() {
+		return objectClass;
 	}
 
 	@Override
 	public String getDefaultValue() {
-		return null;
+		return defaultValue;
 	}
 
 	@Override
-	public boolean isEncrypted() {
-		return false;
+	public boolean isRequired() {
+		return (defaultValue == null);
 	}
 
+	public static ThirdStrategyParameter findByName(String name) {
+		return (ThirdStrategyParameter)ObjectDefinitionUtils.getInstance().findByName(ThirdStrategyParameter.class, name);
+	}
+	
+	public static Map<String, ObjectDefinition> getObjectDefinitions() {
+		return ObjectDefinitionUtils.getInstance()
+				.elaborateObjectDefinitionsMap(values());
+	}
 }
