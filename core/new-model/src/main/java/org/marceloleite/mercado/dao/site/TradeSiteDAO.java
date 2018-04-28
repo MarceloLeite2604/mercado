@@ -2,6 +2,7 @@ package org.marceloleite.mercado.dao.site;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -100,6 +101,11 @@ public class TradeSiteDAO implements TradeDAO {
 
 	@Override
 	public Iterable<Trade> findAll() {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public <S extends Trade> Optional<S> findById(Long id) {
 		throw new UnsupportedOperationException();
 	}
 

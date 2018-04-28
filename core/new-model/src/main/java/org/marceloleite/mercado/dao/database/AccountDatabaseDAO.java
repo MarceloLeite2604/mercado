@@ -1,5 +1,7 @@
 package org.marceloleite.mercado.dao.database;
 
+import java.util.Optional;
+
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -33,5 +35,11 @@ public class AccountDatabaseDAO implements AccountDAO {
 	@Override
 	public <S extends Account> Iterable<S> saveAll(Iterable<S> accounts) {
 		return accountRepository.saveAll(accounts);
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public <S extends Account> Optional<S> findById(Long id) {
+		return (Optional<S>) accountRepository.findById(id);
 	}
 }

@@ -2,35 +2,43 @@ package org.marceloleite.mercado.email;
 
 import org.marceloleite.mercado.commons.encryption.Encrypt;
 import org.marceloleite.mercado.commons.properties.SystemProperty;
-import org.marceloleite.mercado.databaseretriever.persistence.daos.PropertyDAO;
-import org.marceloleite.mercado.databaseretriever.persistence.objects.PropertyPO;
+import org.marceloleite.mercado.dao.interfaces.PropertyDAO;
+import org.marceloleite.mercado.model.Property;
 
 public class UsernameRetriever {
+	
+	private static UsernameRetriever instance;
 
 	private static String username;
+	
+	private PropertyDAO propertyDAO;
 
-	public static String retrieveUsername() {
+	public String retrieveUsername() {
 		if (username == null) {
-			PropertyPO propertyPO = retrieveProperty(SystemProperty.EMAIL_USERNAME.getName());
-			String encryptedUsername = propertyPO.getValue();
-			username = new Encrypt().decrypt(encryptedUsername);
+			Property property = retrieveProperty(SystemProperty.EMAIL_USERNAME.getName());
+			username = new Encrypt().decrypt(property.getValue());
 		}
 		return username;
 	}
 
-	private static PropertyPO retrieveProperty(String propertyName) {
-		PropertyPO propertyPoToEnquire = new PropertyPO();
-		propertyPoToEnquire.setName(propertyName);
-		PropertyPO propertyPO = new PropertyDAO().findById(propertyPoToEnquire);
+	private Property retrieveProperty(String name) {
+		Property property = propertyDAO.findByName(name);
 
-		if (propertyPO == null) {
+		if (property == null) {
 			throw new RuntimeException(
-					"Could not find property \"" + propertyPoToEnquire.getName() + "\" on database.");
+					"Could not find property \"" + name + "\".");
 		}
 
-		if (propertyPO.getValue() == null) {
-			throw new RuntimeException("The property \"" + propertyPoToEnquire.getName() + "\" does not have a value.");
+		if (property.getValue() == null) {
+			throw new RuntimeException("The property \"" + name + "\" does not have a value.");
 		}
-		return propertyPO;
+		return property;
+	}
+	
+	public static UsernameRetriever getInstance() {
+		if (instance == null ) {
+			instance = new UsernameRetriever();
+		}
+		return instance;
 	}
 }

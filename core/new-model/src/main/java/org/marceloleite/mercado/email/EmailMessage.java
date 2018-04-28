@@ -82,14 +82,14 @@ public class EmailMessage {
 	}
 
 	private MimeMessage createMimeMessage() {
-		MimeMessage mimeMessage = new MimeMessage(SessionCreator.createSession());
+		MimeMessage mimeMessage = new MimeMessage(SessionCreator.getInstante().getSession());
 
 		Address[] toAddresses = createAddresses(this.toAddresses);
 		Address[] ccAddresses = createAddresses(this.ccAddresses);
 		Address[] bccAddresses = createAddresses(this.bccAddresses);
 
 		try {
-			mimeMessage.setFrom(new InternetAddress(UsernameRetriever.retrieveUsername()));
+			mimeMessage.setFrom(new InternetAddress(UsernameRetriever.getInstance().retrieveUsername()));
 			mimeMessage.setRecipients(Message.RecipientType.TO, toAddresses);
 			mimeMessage.setRecipients(Message.RecipientType.CC, ccAddresses);
 			mimeMessage.setRecipients(Message.RecipientType.BCC, bccAddresses);

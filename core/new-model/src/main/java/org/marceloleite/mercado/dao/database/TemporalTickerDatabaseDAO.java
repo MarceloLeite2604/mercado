@@ -2,6 +2,7 @@ package org.marceloleite.mercado.dao.database;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -58,6 +59,12 @@ public class TemporalTickerDatabaseDAO implements TemporalTickerDAO {
 	private TemporalTicker createTemporalTicker(Currency currency, ZonedDateTime start, ZonedDateTime end) {
 		List<Trade> trades = tradesDAO.findByCurrencyAndTimeBetween(currency, start, end);
 		return temporalTickerCreator.create(currency, new TimeInterval(start, end), trades);
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public <S extends TemporalTicker> Optional<S> findById(Long id) {
+		return (Optional<S>) temporalTickerRepository.findById(id);
 	}
 
 }

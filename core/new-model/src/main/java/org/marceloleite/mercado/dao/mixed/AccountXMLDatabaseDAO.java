@@ -53,4 +53,9 @@ public class AccountXMLDatabaseDAO implements AccountDAO {
 	public <S extends Account> S save(S account) {
 		return accountDatabaseDAO.save(account);
 	}
+
+	@Override
+	public <S extends Account> Optional<S> findById(Long id) {
+		return accountDatabaseDAO.findById(id);
+	}
 }

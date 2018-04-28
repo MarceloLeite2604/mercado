@@ -3,6 +3,7 @@ package org.marceloleite.mercado.dao.xml;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.inject.Named;
 
@@ -69,5 +70,10 @@ public class AccountXMLDAO extends BaseXMLDAO<Account> implements AccountDAO {
 	@Override
 	protected String getEntityDirectory() {
 		return ENTITY_DIRECTORY;
+	}
+
+	@Override
+	public <S extends Account> Optional<S> findById(Long id) {
+		throw new UnsupportedOperationException();
 	}
 }

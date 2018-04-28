@@ -2,6 +2,7 @@ package org.marceloleite.mercado.dao.database;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -81,13 +82,19 @@ public class TradeDatabaseDAO implements TradeDAO {
 	}
 
 	@Override
-	public Trade findFirstOfCurrencyAndTypeAndOlderThan(Currency currency, TradeType type,
-			ZonedDateTime time) {
+	public Trade findFirstOfCurrencyAndTypeAndOlderThan(Currency currency, TradeType type, ZonedDateTime time) {
 		return tradeRepository.findFirstOfCurrencyAndTypeAndOlderThan(currency, type, time);
 
 	}
+
 	@Override
 	public Trade findTopByCurrencyAndTimeLessThanOrderByTimeDesc(Currency currency, ZonedDateTime time) {
 		return tradeRepository.findTopByCurrencyAndTimeLessThanOrderByTimeDesc(currency, time);
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public <S extends Trade> Optional<S> findById(Long id) {
+		return (Optional<S>) tradeRepository.findById(id);
 	}
 }

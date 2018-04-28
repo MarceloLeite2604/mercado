@@ -1,11 +1,12 @@
 package org.marceloleite.mercado.dao.database;
 
+import java.util.Optional;
+
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.marceloleite.mercado.dao.database.repository.PropertyRepository;
 import org.marceloleite.mercado.dao.interfaces.PropertyDAO;
-import org.marceloleite.mercado.model.Account;
 import org.marceloleite.mercado.model.Property;
 import org.springframework.stereotype.Repository;
 
@@ -34,5 +35,11 @@ public class PropertyDatabaseDAO implements PropertyDAO {
 	@Override
 	public <S extends Property> Iterable<S> saveAll(Iterable<S> entities) {
 		return propertyRepository.saveAll(entities);
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public <S extends Property> Optional<S> findById(Long id) {
+		return (Optional<S>) propertyRepository.findById(id);
 	}
 }

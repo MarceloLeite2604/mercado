@@ -8,14 +8,38 @@ import javax.mail.Session;
 
 import org.marceloleite.mercado.commons.encryption.Encrypt;
 import org.marceloleite.mercado.commons.properties.SystemProperty;
-import org.marceloleite.mercado.databaseretriever.persistence.daos.PropertyDAO;
-import org.marceloleite.mercado.databaseretriever.persistence.objects.PropertyPO;
+import org.marceloleite.mercado.dao.interfaces.PropertyDAO;
+import org.marceloleite.mercado.model.Property;
 
 public class SessionCreator {
+	
+	private static SessionCreator instance;
+	
+	private Session session;
 
-	public static Properties properties;
+	public Properties properties;
+	
+	private PropertyDAO propertyDAO;
+	
+	private SessionCreator() {
+		super();
+		createProperties();
+		createSession();
+	}
+	
+	public Session getSession() {
+		return session;
+	}
 
-	static {
+	private void createSession() {
+		session = Session.getInstance(properties, new Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(UsernameRetriever.getInstance().retrieveUsername(), retrievePassword());
+			}
+		});
+	}
+
+	private void createProperties() {
 		properties = new Properties();
 		properties.put("mail.smtp.auth", "true");
 		properties.put("mail.smtp.starttls.enable", "true");
@@ -23,38 +47,29 @@ public class SessionCreator {
 		properties.put("mail.smtp.port", "587");
 	}
 
-	private static Session session;
+	private Property retrieveProperty(String name) {
+		Property property = propertyDAO.findByName(name);
 
-	public static Session createSession() {
-		if (session == null) {
-			session = Session.getInstance(properties, new Authenticator() {
-				protected PasswordAuthentication getPasswordAuthentication() {
-					return new PasswordAuthentication(UsernameRetriever.retrieveUsername(), retrievePassword());
-				}
-			});
-		}
-		return session;
-	}
-
-	private static PropertyPO retrieveProperty(String propertyName) {
-		PropertyPO propertyPoToEnquire = new PropertyPO();
-		propertyPoToEnquire.setName(propertyName);
-		PropertyPO propertyPO = new PropertyDAO().findById(propertyPoToEnquire);
-
-		if (propertyPO == null) {
+		if (property == null) {
 			throw new RuntimeException(
-					"Could not find property \"" + propertyPoToEnquire.getName() + "\" on database.");
+					"Could not find property \"" + name + "\".");
 		}
 
-		if (propertyPO.getValue() == null) {
-			throw new RuntimeException("The property \"" + propertyPoToEnquire.getName() + "\" does not have a value.");
+		if (property.getValue() == null) {
+			throw new RuntimeException("Property \"" + name + "\" does not have a value.");
 		}
-		return propertyPO;
+		return property;
 	}
 
-	private static String retrievePassword() {
-		PropertyPO propertyPO = retrieveProperty(SystemProperty.EMAIL_PASSWORD.getName());
-		String encryptedPassword = propertyPO.getValue();
-		return new Encrypt().decrypt(encryptedPassword);
+	private String retrievePassword() {
+		Property property = retrieveProperty(SystemProperty.EMAIL_PASSWORD.getName());
+		return new Encrypt().decrypt(property.getValue());
+	}
+	
+	public static SessionCreator getInstante() {
+		if (instance == null ) {
+			instance = new SessionCreator();
+		}
+		return instance;
 	}
 }

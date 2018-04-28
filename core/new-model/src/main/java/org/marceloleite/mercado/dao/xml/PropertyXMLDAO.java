@@ -3,6 +3,7 @@ package org.marceloleite.mercado.dao.xml;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.inject.Named;
 
@@ -68,5 +69,10 @@ public class PropertyXMLDAO extends BaseXMLDAO<Property> implements PropertyDAO 
 	@Override
 	protected String createFileName(Property property) {
 		return String.format(FILE_NAME_TEMPLATE, property.getName());
+	}
+
+	@Override
+	public <S extends Property> Optional<S> findById(Long id) {
+		throw new UnsupportedOperationException();
 	}	
 }

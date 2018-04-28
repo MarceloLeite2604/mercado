@@ -2,6 +2,7 @@ package org.marceloleite.mercado.dao.mixed;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -118,5 +119,10 @@ public class TradeDatabaseSiteDAO implements TradeDAO {
 			previousTrade = tradeSiteDAO.findTopByCurrencyAndTimeLessThanOrderByTimeDesc(currency, time);
 		}
 		return previousTrade;
+	}
+
+	@Override
+	public <S extends Trade> Optional<S> findById(Long id) {
+		return tradeDatabaseDAO.findById(id);
 	}
 }
