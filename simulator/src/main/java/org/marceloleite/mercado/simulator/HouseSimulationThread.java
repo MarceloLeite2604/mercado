@@ -2,13 +2,12 @@ package org.marceloleite.mercado.simulator;
 
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.concurrent.Semaphore;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
-import org.marceloleite.mercado.data.TemporalTicker;
+import org.marceloleite.mercado.model.TemporalTicker;
 
 public class HouseSimulationThread extends Thread {
 	
@@ -18,21 +17,19 @@ public class HouseSimulationThread extends Thread {
 	private static final String THREAD_NAME = "House Simulation";
 
 	private SimulationHouse house;
+	
 	private TreeMap<TimeInterval, Map<Currency, TemporalTicker>> temporalTickersDataModelsByTimeInterval;
+	
 	private Boolean finished;
-	private Semaphore updateSemaphore;
-	private Semaphore runSimulationSemaphore;
-
-	public HouseSimulationThread(SimulationHouse house, Semaphore updateSemaphore, Semaphore runSimulationSemaphore) {
+	
+	public HouseSimulationThread(SimulationHouse house) {
 		super();
 		this.house = house;
 		this.temporalTickersDataModelsByTimeInterval = null;
 		this.finished = false;
-		this.updateSemaphore = updateSemaphore;
-		this.runSimulationSemaphore = runSimulationSemaphore;
 	}
 
-	public void setTemporalTickersPOByTimeInterval(
+	public void setTemporalTickers(
 			TreeMap<TimeInterval, Map<Currency, TemporalTicker>> temporalTickersDataModelsByTimeInterval) {
 		this.temporalTickersDataModelsByTimeInterval = temporalTickersDataModelsByTimeInterval;
 	}
@@ -41,19 +38,21 @@ public class HouseSimulationThread extends Thread {
 	public void run() {
 		currentThread().setName(THREAD_NAME);
 
+		house.beforeStart();
+		
 		while (!isFinished()) {
 			aquireSemaphore();
 			if (!isFinished()) {
-				house.executeTemporalEvents(temporalTickersDataModelsByTimeInterval);
+				house.process(temporalTickersDataModelsByTimeInterval);
 			}
-			updateSemaphore.release();
+			Semaphores.getInstance().getUpdateSemaphore().release();
 		}
-		house.finishTemporalEvents();
+		house.afterFinish();
 	}
 
 	private void aquireSemaphore() {
 		try {
-			runSimulationSemaphore.acquire();
+			Semaphores.getInstance().getRunSimulationSemaphore().acquire();
 		} catch (InterruptedException exception) {
 			throw new RuntimeException(exception);
 		}

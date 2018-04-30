@@ -7,6 +7,6 @@ public class ObjectUtils {
 	@SuppressWarnings("unchecked")
 	public static <T> T makeDeepCopy(T object) {
 		ObjectToJsonConverter objectToJsonConverter = new ObjectToJsonConverter();
-		return (T) objectToJsonConverter.convertFromToObject(objectToJsonConverter.convertTo(this), object.getClass());
+		return (T) objectToJsonConverter.convertFromToObject(objectToJsonConverter.convertTo(object), object.getClass());
 	}
 }

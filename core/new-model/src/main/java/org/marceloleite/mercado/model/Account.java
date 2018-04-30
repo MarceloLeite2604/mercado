@@ -1,8 +1,9 @@
 package org.marceloleite.mercado.model;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -25,6 +26,7 @@ import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 import org.marceloleite.mercado.CurrencyAmount;
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.strategy.StrategyExecutor;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -68,6 +70,8 @@ public class Account {
 	@NotFound(action = NotFoundAction.IGNORE)
 	@Fetch(FetchMode.SUBSELECT)
 	private List<Order> orders;
+
+	private List<StrategyExecutor> strategyExecutors;
 
 	@XmlTransient
 	public Long getId() {
@@ -206,11 +210,54 @@ public class Account {
 	public boolean hasBalanceFor(CurrencyAmount currencyAmount) {
 		return (getBalanceFor(currencyAmount.getCurrency()).compareTo(currencyAmount.getAmount()) >= 0);
 	}
-	
+
 	public BigDecimal getBalanceFor(Currency currency) {
-		balances.stream()
-				.collect(Collectors.toMap(Balance::getCurrency, Balance::getAmount))
-				.getOrDefault(currency, new BigDecimal("0"));
-		return null;
+		return findOrCreateBalance(currency).getAmount();
+	}
+
+	@XmlTransient
+	public List<StrategyExecutor> getStrategyExecutors() {
+		return Optional.ofNullable(strategyExecutors)
+				.orElse(new ArrayList<>());
+	}
+
+	public boolean addStrategyExecutor(StrategyExecutor strategyExecutor) {
+		List<StrategyExecutor> strategyExecutors = getStrategyExecutors();
+		return strategyExecutors.add(strategyExecutor);
+	}
+
+	public void setBalanceFor(Currency currency, CurrencyAmount balanceCurrencyAmount) {
+		Balance balance = findOrCreateBalance(currency);
+
+		balance.setAmount(new BigDecimal("0"));
+	}
+
+	private Balance findOrCreateBalance(Currency currency) {
+		Balance balance = findBalance(currency);
+
+		if (balance == null) {
+			balance = createNewBalance(currency);
+			balances.add(balance);
+		}
+
+		return balance;
+	}
+
+	private Balance createNewBalance(Currency currency) {
+		Balance balance;
+		balance = new Balance();
+		balance.setCurrency(currency);
+		balance.setAmount(new BigDecimal("0"));
+		balance.setAccount(this);
+		return balance;
+	}
+
+	private Balance findBalance(Currency currency) {
+		Balance balance = balances.stream()
+				.filter(analysedBalance -> analysedBalance.getCurrency()
+						.equals(currency))
+				.findFirst()
+				.orElse(null);
+		return balance;
 	}
 }

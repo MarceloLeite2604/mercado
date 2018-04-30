@@ -17,6 +17,7 @@ import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
+import org.marceloleite.mercado.CurrencyAmount;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.model.xmladapter.CurrencyXmlAdapter;
 
@@ -81,5 +82,14 @@ public class Balance {
 
 	public void setAmount(BigDecimal amount) {
 		this.amount = amount;
+	}
+	
+	public CurrencyAmount asCurrencyAmount() {
+		return new CurrencyAmount(currency, amount);
+	}
+	
+	@Override
+	public String toString() {
+		return asCurrencyAmount().toString();
 	}
 }

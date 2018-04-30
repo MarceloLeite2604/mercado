@@ -1,27 +1,26 @@
 package org.marceloleite.mercado.simulator;
 
+import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.Map;
+import java.util.Optional;
 import java.util.TreeMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.Semaphore;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.marceloleite.mercado.base.model.Account;
-import org.marceloleite.mercado.base.model.Balance;
-import org.marceloleite.mercado.base.model.CurrencyAmount;
+import org.marceloleite.mercado.CurrencyAmount;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.MercadoBigDecimal;
 import org.marceloleite.mercado.commons.TimeDivisionController;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.converter.ZonedDateTimeToStringConverter;
-import org.marceloleite.mercado.data.TemporalTicker;
-import org.marceloleite.mercado.databaseretriever.persistence.EntityManagerController;
+import org.marceloleite.mercado.model.Account;
+import org.marceloleite.mercado.model.TemporalTicker;
 import org.marceloleite.mercado.simulator.property.SimulatorPropertiesRetriever;
 
 public class Simulator {
@@ -37,24 +36,17 @@ public class Simulator {
 	private SimulatorPropertiesRetriever simulatorPropertiesRetriever;
 
 	public Simulator() {
-		this.house = new SimulationHouse();
+		this.house = SimulationHouse.builder()
+				.build();
 	}
 
 	private void configure() {
 		simulatorPropertiesRetriever = new SimulatorPropertiesRetriever();
-		configureEntityManagerController();
 		ZonedDateTime startTime = simulatorPropertiesRetriever.retrieveStartTime();
 		ZonedDateTime endTime = simulatorPropertiesRetriever.retrieveEndTime();
 		this.stepDuration = simulatorPropertiesRetriever.retrieveStepDurationTime();
 		Duration retrievingDuration = simulatorPropertiesRetriever.retrieveRetrievingDurationTime();
 		timeDivisionController = new TimeDivisionController(startTime, endTime, retrievingDuration);
-	}
-
-	private void configureEntityManagerController() {
-		String persistenceFileName = simulatorPropertiesRetriever.retrievePersistencePropertyFile();
-		if (persistenceFileName != null) {
-			EntityManagerController.setPersistenceFileName(persistenceFileName);
-		}
 	}
 
 	public void runSimulation() {
@@ -68,25 +60,21 @@ public class Simulator {
 		ExecutorService executor = Executors.newFixedThreadPool(2);
 		try {
 			Future<TreeMap<TimeInterval, Map<Currency, TemporalTicker>>> future;
-			Semaphore updateHouseThreadSemaphore = new Semaphore(1);
-			Semaphore runSimulationSemaphore = new Semaphore(0);
-			HouseSimulationThread houseSimulationThread = new HouseSimulationThread(house, updateHouseThreadSemaphore,
-					runSimulationSemaphore);
+			HouseSimulationThread houseSimulationThread = new HouseSimulationThread(house);
 			executor.execute(houseSimulationThread);
 
-			TreeMap<TimeInterval, Map<Currency, TemporalTicker>> temporalTickersDataModelByTimeInterval = null;
+			TreeMap<TimeInterval, Map<Currency, TemporalTicker>> temporalTickersByTimeInterval = null;
 			for (TimeInterval stepTimeInterval : timeDivisionController.geTimeIntervals()) {
 				logSimulationStep(stepTimeInterval);
 				TimeDivisionController timeDivisionController = new TimeDivisionController(stepTimeInterval,
 						stepDuration);
 				future = executor.submit(new TemporalTickerRetrieverCallable(timeDivisionController));
 
-				temporalTickersDataModelByTimeInterval = future.get();
-				updateHouseThread(houseSimulationThread, temporalTickersDataModelByTimeInterval,
-						updateHouseThreadSemaphore, runSimulationSemaphore);
+				temporalTickersByTimeInterval = future.get();
+				updateHouseThread(houseSimulationThread, temporalTickersByTimeInterval);
 
 			}
-			finishExecution(houseSimulationThread, updateHouseThreadSemaphore, runSimulationSemaphore);
+			finishExecution(houseSimulationThread);
 			logAccountsBalance(true);
 			LOGGER.info("Simulation finished.");
 		} catch (InterruptedException | ExecutionException exception) {
@@ -96,24 +84,30 @@ public class Simulator {
 		}
 	}
 
-	private void finishExecution(HouseSimulationThread houseSimulationThread, Semaphore updateHouseThreadSemaphore,
-			Semaphore runSimulationSemaphore) {
+	private void finishExecution(HouseSimulationThread houseSimulationThread) {
 		try {
-			updateHouseThreadSemaphore.acquire();
+			Semaphores.getInstance()
+					.getUpdateSemaphore()
+					.acquire();
 			houseSimulationThread.setFinished(true);
-			runSimulationSemaphore.release();
+			Semaphores.getInstance()
+					.getRunSimulationSemaphore()
+					.release();
 		} catch (InterruptedException exception) {
 			throw new RuntimeException(exception);
 		}
 	}
 
 	private void updateHouseThread(HouseSimulationThread houseSimulationThread,
-			TreeMap<TimeInterval, Map<Currency, TemporalTicker>> temporalTickersDataModelsByTimeInterval,
-			Semaphore updateHouseThreadSemaphore, Semaphore runSimulationSemaphore) {
+			TreeMap<TimeInterval, Map<Currency, TemporalTicker>> temporalTickersDataModelsByTimeInterval) {
 		try {
-			updateHouseThreadSemaphore.acquire();
-			houseSimulationThread.setTemporalTickersPOByTimeInterval(temporalTickersDataModelsByTimeInterval);
-			runSimulationSemaphore.release();
+			Semaphores.getInstance()
+					.getUpdateSemaphore()
+					.acquire();
+			houseSimulationThread.setTemporalTickers(temporalTickersDataModelsByTimeInterval);
+			Semaphores.getInstance()
+					.getRunSimulationSemaphore()
+					.release();
 		} catch (InterruptedException exception) {
 			throw new RuntimeException(exception);
 		}
@@ -122,11 +116,8 @@ public class Simulator {
 	private void logAccountsBalance(boolean printTotalWorth) {
 		for (Account account : house.getAccounts()) {
 			LOGGER.info("Account \"" + account.getOwner() + "\":");
-			Balance balance = account.getBalance();
-
-			for (CurrencyAmount currencyAmount : balance.values()) {
-				LOGGER.info("\t" + currencyAmount);
-			}
+			account.getBalances()
+					.forEach(balance -> LOGGER.info("\t" + balance));
 
 			if (printTotalWorth) {
 				logTotalWorth(account);
@@ -136,27 +127,18 @@ public class Simulator {
 
 	private void logTotalWorth(Account account) {
 		CurrencyAmount totalRealAmount = new CurrencyAmount(Currency.REAL, new MercadoBigDecimal("0.0"));
-		Balance balance = account.getBalance();
-
 		for (Currency currency : Currency.values()) {
+			BigDecimal balance = Optional.ofNullable(account.getBalanceFor(currency))
+					.orElse(new BigDecimal("0"));
 			if (currency.isDigital()) {
-				TemporalTicker temporalTicker = house.getTemporalTickers().get(currency);
+				TemporalTicker temporalTicker = house.getTemporalTickerFor(currency);
 				if (temporalTicker != null) {
-					CurrencyAmount currencyAmount = balance.get(currency);
-					if (currencyAmount != null) {
-						MercadoBigDecimal last = temporalTicker.getLastPrice();
-						if (last.compareTo(MercadoBigDecimal.ZERO) == 0) {
-							last = temporalTicker.getPreviousLastPrice();
-						}
-						totalRealAmount
-								.setAmount(totalRealAmount.getAmount().add(currencyAmount.getAmount().multiply(last)));
-					}
+					totalRealAmount.setAmount(totalRealAmount.getAmount()
+							.add(balance.multiply(temporalTicker.getCurrentOrPreviousLast())));
 				}
 			} else {
-				CurrencyAmount currencyAmount = balance.get(currency);
-				if (currencyAmount != null) {
-					totalRealAmount.setAmount(totalRealAmount.getAmount().add(currencyAmount.getAmount()));
-				}
+				totalRealAmount.setAmount(totalRealAmount.getAmount()
+						.add(balance));
 			}
 		}
 		LOGGER.info("\tTotal in " + Currency.REAL + ": " + totalRealAmount);
@@ -167,7 +149,9 @@ public class Simulator {
 	}
 
 	private void logSimulationStep(TimeInterval timeInterval) {
-		LOGGER.info("From: " + ZonedDateTimeToStringConverter.getInstance().convertTo(timeInterval.getStart()) + " to: "
-				+ ZonedDateTimeToStringConverter.getInstance().convertTo(timeInterval.getEnd()));
+		LOGGER.info("From: " + ZonedDateTimeToStringConverter.getInstance()
+				.convertTo(timeInterval.getStart()) + " to: "
+				+ ZonedDateTimeToStringConverter.getInstance()
+						.convertTo(timeInterval.getEnd()));
 	}
 }
