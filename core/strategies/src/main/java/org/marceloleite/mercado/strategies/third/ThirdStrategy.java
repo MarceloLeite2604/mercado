@@ -138,7 +138,9 @@ public class ThirdStrategy extends AbstractStrategyExecutor {
 
 	private CurrencyAmount calculateOrderAmount(OrderType orderType, Account account) {
 		Currency currency = (orderType == OrderType.SELL ? getCurrency() : Currency.REAL);
-		CurrencyAmount orderAmount = new CurrencyAmount(currency, account.getBalanceFor(currency));
+		CurrencyAmount orderAmount = account.getWallet()
+				.getBalanceFor(currency)
+				.asCurrencyAmount();
 		LOGGER.debug("Order amount is " + orderAmount + ".");
 		return orderAmount;
 	}

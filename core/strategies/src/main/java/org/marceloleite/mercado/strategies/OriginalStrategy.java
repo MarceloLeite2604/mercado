@@ -28,9 +28,11 @@ public class OriginalStrategy extends AbstractStrategyExecutor {
 	@Override
 	public void execute(TimeInterval timeInterval, Account account, House house) {
 		if (house.getTemporalTickerFor(getCurrency()) != null) {
-			if (account.hasPositiveBalanceOf(getCurrency())) {
-				CurrencyAmount currencyAmountToPay = new CurrencyAmount(Currency.REAL,
-						account.getBalanceFor(Currency.REAL));
+			if (account.getWallet()
+					.hasPositiveBalanceOf(getCurrency())) {
+				CurrencyAmount currencyAmountToPay = account.getWallet()
+						.getBalanceFor(Currency.REAL)
+						.asCurrencyAmount();
 				CurrencyAmount currencyAmountUnitPrice = calculateCurrencyAmountUnitPrice(house);
 				CurrencyAmount currencyAmountToBuy = calculateCurrencyAmountToBuy(currencyAmountToPay,
 						currencyAmountUnitPrice);

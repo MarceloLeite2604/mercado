@@ -65,7 +65,8 @@ public class FirstStrategy extends AbstractStrategyExecutor {
 			TemporalTickerVariation temporalTickerVariation) {
 		double lastVariation = temporalTickerVariation.getLastVariation();
 		if (lastVariation <= shrinkPercentageThreshold) {
-			if (account.hasPositiveBalanceOf(getCurrency())) {
+			if (account.getWallet()
+					.hasPositiveBalanceOf(getCurrency())) {
 				/*
 				 * LOGGER.debug(new
 				 * ZonedDateTimeToStringConverter().convertTo(simulationTimeInterval.getEnd()) +
@@ -141,7 +142,8 @@ public class FirstStrategy extends AbstractStrategyExecutor {
 			// LOGGER.debug(ZonedDateTimeToStringConverter.getInstance().convertTo(timeInterval.getEnd())
 			// + ": Growth threshold reached.");
 
-			if (account.hasPositiveBalanceOf(Currency.REAL)) {
+			if (account.getWallet()
+					.hasPositiveBalanceOf(Currency.REAL)) {
 				Order order = createBuyOrder(timeInterval, house, account);
 				if (order != null) {
 					executeOrder(order, account, house);
@@ -213,7 +215,9 @@ public class FirstStrategy extends AbstractStrategyExecutor {
 	}
 
 	private void setBase(Account account, House house) {
-		baseRealAmount = new CurrencyAmount(Currency.REAL, account.getBalanceFor(getCurrency()));
+		baseRealAmount = account.getWallet()
+				.getBalanceFor(getCurrency())
+				.asCurrencyAmount();
 		LOGGER.debug("Base is " + baseRealAmount + ".");
 		baseTemporalTicker = house.getTemporalTickerFor(getCurrency());
 	}

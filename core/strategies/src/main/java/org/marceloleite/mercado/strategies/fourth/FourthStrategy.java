@@ -149,7 +149,9 @@ public class FourthStrategy extends AbstractStrategyExecutor {
 
 	private CurrencyAmount calculateOrderAmount(OrderType orderType, Account account) {
 		Currency currency = (orderType == OrderType.SELL ? this.currency : Currency.REAL);
-		CurrencyAmount balance = new CurrencyAmount(getCurrency(), account.getBalanceFor(getCurrency()));
+		CurrencyAmount balance = account.getWallet()
+				.getBalanceFor(getCurrency())
+				.asCurrencyAmount();
 		LOGGER.debug("Balance amount: " + balance + ".");
 
 		if (MinimalAmounts.isAmountLowerThanMinimal(balance)) {

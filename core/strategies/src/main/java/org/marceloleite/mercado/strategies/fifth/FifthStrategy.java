@@ -212,7 +212,9 @@ public class FifthStrategy extends AbstractStrategyExecutor {
 
 	private CurrencyAmount calculateOrderAmount(OrderAnalyser orderAnalyser, Account account) {
 		Currency currency = (orderAnalyser.getOrderType() == OrderType.SELL ? getCurrency() : Currency.REAL);
-		CurrencyAmount orderAmount = new CurrencyAmount(currency, account.getBalanceFor(currency));
+		CurrencyAmount orderAmount = account.getWallet()
+				.getBalanceFor(currency)
+				.asCurrencyAmount();
 		LOGGER.debug("Order amount is " + orderAmount + ".");
 		return orderAmount;
 	}

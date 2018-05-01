@@ -268,21 +268,26 @@ public class SixthStrategy extends AbstractStrategyExecutor {
 		case BUY:
 			currency = Currency.REAL;
 			if (workingAmountCurrency.compareTo(BigDecimal.ZERO) > 0) {
-				if (account.getBalanceFor(currency)
+				if (account.getWallet()
+						.getBalanceFor(currency)
+						.getAmount()
 						.compareTo(workingAmountCurrency) > 0) {
 					amount = workingAmountCurrency;
 				} else {
-					amount = new BigDecimal(account.getBalanceFor(currency)
+					amount = new BigDecimal(account.getWallet()
+							.getBalanceFor(currency)
 							.toString());
 				}
 			} else {
-				amount = new BigDecimal(account.getBalanceFor(currency)
+				amount = new BigDecimal(account.getWallet()
+						.getBalanceFor(currency)
 						.toString());
 			}
 			break;
 		case SELL:
 			currency = getCurrency();
-			amount = new BigDecimal(account.getBalanceFor(currency)
+			amount = new BigDecimal(account.getWallet()
+					.getBalanceFor(currency)
 					.toString());
 			break;
 		}
