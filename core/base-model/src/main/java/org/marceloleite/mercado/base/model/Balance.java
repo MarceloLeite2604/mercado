@@ -1,16 +1,16 @@
 package org.marceloleite.mercado.base.model;
 
 import java.util.ArrayList;
+import java.util.Currency;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.base.model.converter.CurrencyAmountToBalanceDataConverter;
 import org.marceloleite.mercado.base.model.order.MinimalAmounts;
-import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.MercadoBigDecimal;
 import org.marceloleite.mercado.data.BalanceData;
 

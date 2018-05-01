@@ -1,6 +1,5 @@
 package org.marceloleite.mercado.model;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -24,8 +23,6 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
-import org.marceloleite.mercado.CurrencyAmount;
-import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.strategy.StrategyExecutor;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -55,7 +52,7 @@ public class Account {
 
 	@OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@Fetch(FetchMode.SUBSELECT)
-	private List<Balance> balances;
+	private Wallet wallet;
 
 	@OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@Fetch(FetchMode.SUBSELECT)
@@ -109,14 +106,14 @@ public class Account {
 		this.tapiInformation = tapiInformation;
 	}
 
-	@XmlElementWrapper(name = "balances")
+	@XmlElementWrapper(name = "wallet")
 	@XmlElement
-	public List<Balance> getBalances() {
-		return balances;
+	public Wallet getWallet() {
+		return wallet;
 	}
 
-	public void setBalances(List<Balance> balances) {
-		this.balances = balances;
+	public void setWallet(Wallet wallet) {
+		this.wallet = wallet;
 	}
 
 	@XmlElementWrapper(name = "withdrawals")
@@ -156,7 +153,7 @@ public class Account {
 
 	public void addBalance(Balance balance) {
 		balance.setAccount(this);
-		balances.add(balance);
+		wallet.add(balance);
 	}
 
 	public void addWithdrawal(Withdrawal withdrawal) {
@@ -175,8 +172,8 @@ public class Account {
 			tapiInformation.setAccount(this);
 		}
 
-		if (balances != null) {
-			for (Balance balance : balances) {
+		if (wallet != null) {
+			for (Balance balance : wallet) {
 				balance.setAccount(this);
 			}
 		}
@@ -202,19 +199,6 @@ public class Account {
 		}
 	}
 
-	public boolean hasPositiveBalanceOf(Currency currency) {
-		BigDecimal balance = getBalanceFor(currency);
-		return (balance.compareTo(BigDecimal.ZERO) > 0);
-	}
-
-	public boolean hasBalanceFor(CurrencyAmount currencyAmount) {
-		return (getBalanceFor(currencyAmount.getCurrency()).compareTo(currencyAmount.getAmount()) >= 0);
-	}
-
-	public BigDecimal getBalanceFor(Currency currency) {
-		return findOrCreateBalance(currency).getAmount();
-	}
-
 	@XmlTransient
 	public List<StrategyExecutor> getStrategyExecutors() {
 		return Optional.ofNullable(strategyExecutors)
@@ -224,40 +208,5 @@ public class Account {
 	public boolean addStrategyExecutor(StrategyExecutor strategyExecutor) {
 		List<StrategyExecutor> strategyExecutors = getStrategyExecutors();
 		return strategyExecutors.add(strategyExecutor);
-	}
-
-	public void setBalanceFor(Currency currency, CurrencyAmount balanceCurrencyAmount) {
-		Balance balance = findOrCreateBalance(currency);
-
-		balance.setAmount(new BigDecimal("0"));
-	}
-
-	private Balance findOrCreateBalance(Currency currency) {
-		Balance balance = findBalance(currency);
-
-		if (balance == null) {
-			balance = createNewBalance(currency);
-			balances.add(balance);
-		}
-
-		return balance;
-	}
-
-	private Balance createNewBalance(Currency currency) {
-		Balance balance;
-		balance = new Balance();
-		balance.setCurrency(currency);
-		balance.setAmount(new BigDecimal("0"));
-		balance.setAccount(this);
-		return balance;
-	}
-
-	private Balance findBalance(Currency currency) {
-		Balance balance = balances.stream()
-				.filter(analysedBalance -> analysedBalance.getCurrency()
-						.equals(currency))
-				.findFirst()
-				.orElse(null);
-		return balance;
 	}
 }

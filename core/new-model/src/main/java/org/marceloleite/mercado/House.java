@@ -5,8 +5,9 @@ import java.util.TreeMap;
 
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
-import org.marceloleite.mercado.model.Balance;
+import org.marceloleite.mercado.model.Account;
 import org.marceloleite.mercado.model.TemporalTicker;
+import org.marceloleite.mercado.model.Wallet;
 
 public interface House {
 
@@ -22,7 +23,5 @@ public interface House {
 
 	public double getComissionPercentage();
 
-	Balance getComissionBalanceFor(String owner, Currency currency);
-
-	void setComissionBalanceFor(String owner, CurrencyAmount balanceCurrencyAmount);
+	Wallet getCommissionWalletFor(Account account);
 }

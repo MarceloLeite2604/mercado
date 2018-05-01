@@ -16,8 +16,8 @@ import org.marceloleite.mercado.OrderExecutor;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.model.Account;
-import org.marceloleite.mercado.model.Balance;
 import org.marceloleite.mercado.model.TemporalTicker;
+import org.marceloleite.mercado.model.Wallet;
 import org.marceloleite.mercado.strategy.StrategyExecutor;
 
 public class SimulationHouse implements House {
@@ -29,7 +29,7 @@ public class SimulationHouse implements House {
 
 	private List<Account> accounts;
 
-	private Map<String, Balance> comissionBalance;
+	private Map<String, Wallet> comissionWallets;
 
 	private double comissionPercentage;
 
@@ -39,21 +39,15 @@ public class SimulationHouse implements House {
 
 	private SimulationHouse(Builder builder) {
 		this.accounts = builder.accounts;
-		this.comissionBalance = Optional.ofNullable(builder.comissionBalance)
-				.orElse(new HashMap<>());
+		this.comissionWallets = new HashMap<>();
 		this.comissionPercentage = Optional.ofNullable(builder.comissionPercentage)
 				.orElse(DEFAULT_COMISSION_PERCENTAGE);
-		this.temporalTickers = builder.temporalTickers;
 		this.orderExecutor = Optional.ofNullable(builder.orderExecutor)
 				.orElse(new SimulationOrderExecutor());
 	}
 
 	public List<Account> getAccounts() {
 		return new ArrayList<>(accounts);
-	}
-
-	public Map<String, Balance> getComissionBalance() {
-		return comissionBalance;
 	}
 
 	public Map<Currency, TemporalTicker> getTemporalTickers() {
@@ -105,9 +99,7 @@ public class SimulationHouse implements House {
 
 	public static class Builder {
 		private List<Account> accounts;
-		private Map<String, Balance> comissionBalance;
 		private double comissionPercentage;
-		private Map<Currency, TemporalTicker> temporalTickers;
 		private OrderExecutor orderExecutor;
 
 		private Builder() {
@@ -127,7 +119,7 @@ public class SimulationHouse implements House {
 			this.orderExecutor = orderExecutor;
 			return this;
 		}
-		
+
 		public SimulationHouse build() {
 			return new SimulationHouse(this);
 		}
@@ -135,5 +127,10 @@ public class SimulationHouse implements House {
 
 	@Override
 	public void beforeStart() {
+	}
+
+	@Override
+	public Wallet getCommissionWalletFor(Account account) {
+		return comissionWallets.getOrDefault(account.getOwner(), new Wallet());
 	}
 }

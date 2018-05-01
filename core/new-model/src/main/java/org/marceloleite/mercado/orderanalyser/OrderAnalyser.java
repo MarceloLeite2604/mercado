@@ -94,7 +94,8 @@ public class OrderAnalyser {
 			CurrencyAmount minimal = new CurrencyAmount(currencyAmount.getCurrency(), minimalAmount);
 			LOGGER.debug(currencyAmount + " is lower than minimal of " + minimal + ".");
 
-			if (account.hasBalanceFor(currencyAmount)) {
+			if (account.getWallet()
+					.hasBalanceFor(currencyAmount)) {
 				LOGGER.debug("Increasing value to " + minimal + ".");
 				return minimal;
 			} else {
@@ -107,9 +108,11 @@ public class OrderAnalyser {
 	}
 
 	private CurrencyAmount checkBalance(CurrencyAmount currencyAmount) throws NoBalanceOrderAnalyserException {
-		if (!account.hasBalanceFor(currencyAmount)) {
-			CurrencyAmount currencyAmountBalance = new CurrencyAmount(currencyAmount.getCurrency(),
-					account.getBalanceFor(currencyAmount.getCurrency()));
+		if (!account.getWallet()
+				.hasBalanceFor(currencyAmount)) {
+			CurrencyAmount currencyAmountBalance = account.getWallet()
+					.getBalanceFor(currencyAmount.getCurrency())
+					.asCurrencyAmount();
 			LOGGER.debug(currencyAmount + " is higher than " + currencyAmountBalance + " in balance.");
 			CurrencyAmount secondCalculated = calculateSecondFor(currencyAmountBalance);
 			if (!MinimalAmounts.isAmountLowerThanMinimal(secondCalculated)) {

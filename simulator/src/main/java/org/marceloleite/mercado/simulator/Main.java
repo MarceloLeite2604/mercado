@@ -5,7 +5,6 @@ import java.time.ZonedDateTime;
 
 import org.marceloleite.mercado.commons.TimeDivisionController;
 import org.marceloleite.mercado.commons.utils.ZonedDateTimeUtils;
-import org.marceloleite.mercado.databaseretriever.persistence.EntityManagerController;
 
 public class Main {
 
@@ -25,11 +24,6 @@ public class Main {
 
 	@SuppressWarnings("unused")
 	private static void simulator() {
-
-		try {
-			new Simulator().runSimulation();
-		} finally {
-			EntityManagerController.getInstance().close();
-		}
+		new Simulator().runSimulation();
 	}	
 }

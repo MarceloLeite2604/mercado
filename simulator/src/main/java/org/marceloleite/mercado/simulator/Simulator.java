@@ -1,10 +1,8 @@
 package org.marceloleite.mercado.simulator;
 
-import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.Map;
-import java.util.Optional;
 import java.util.TreeMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -20,6 +18,7 @@ import org.marceloleite.mercado.commons.TimeDivisionController;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.converter.ZonedDateTimeToStringConverter;
 import org.marceloleite.mercado.model.Account;
+import org.marceloleite.mercado.model.Balance;
 import org.marceloleite.mercado.model.TemporalTicker;
 import org.marceloleite.mercado.simulator.property.SimulatorPropertiesRetriever;
 
@@ -116,7 +115,7 @@ public class Simulator {
 	private void logAccountsBalance(boolean printTotalWorth) {
 		for (Account account : house.getAccounts()) {
 			LOGGER.info("Account \"" + account.getOwner() + "\":");
-			account.getBalances()
+			account.getWallet()
 					.forEach(balance -> LOGGER.info("\t" + balance));
 
 			if (printTotalWorth) {
@@ -128,17 +127,18 @@ public class Simulator {
 	private void logTotalWorth(Account account) {
 		CurrencyAmount totalRealAmount = new CurrencyAmount(Currency.REAL, new MercadoBigDecimal("0.0"));
 		for (Currency currency : Currency.values()) {
-			BigDecimal balance = Optional.ofNullable(account.getBalanceFor(currency))
-					.orElse(new BigDecimal("0"));
+			Balance balance = account.getWallet()
+					.getBalanceFor(currency);
 			if (currency.isDigital()) {
 				TemporalTicker temporalTicker = house.getTemporalTickerFor(currency);
 				if (temporalTicker != null) {
 					totalRealAmount.setAmount(totalRealAmount.getAmount()
-							.add(balance.multiply(temporalTicker.getCurrentOrPreviousLast())));
+							.add(balance.getAmount()
+									.multiply(temporalTicker.getCurrentOrPreviousLast())));
 				}
 			} else {
 				totalRealAmount.setAmount(totalRealAmount.getAmount()
-						.add(balance));
+						.add(balance.getAmount()));
 			}
 		}
 		LOGGER.info("\tTotal in " + Currency.REAL + ": " + totalRealAmount);

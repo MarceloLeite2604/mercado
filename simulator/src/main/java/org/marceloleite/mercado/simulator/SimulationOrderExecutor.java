@@ -4,15 +4,12 @@ import java.math.BigDecimal;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.marceloleite.mercado.BalanceUtil;
 import org.marceloleite.mercado.CurrencyAmount;
 import org.marceloleite.mercado.House;
 import org.marceloleite.mercado.OrderExecutor;
 import org.marceloleite.mercado.commons.Currency;
-import org.marceloleite.mercado.commons.MercadoBigDecimal;
 import org.marceloleite.mercado.commons.OrderStatus;
 import org.marceloleite.mercado.model.Account;
-import org.marceloleite.mercado.model.Balance;
 import org.marceloleite.mercado.model.Order;
 
 public class SimulationOrderExecutor implements OrderExecutor {
@@ -41,11 +38,11 @@ public class SimulationOrderExecutor implements OrderExecutor {
 			CurrencyAmount currencyAmountToDeposit = calculateBuyOrderDeposit(order, currencyAmountCommission);
 			LOGGER.debug("Amount to withdraw is " + currencyAmountToPay + ".");
 			depositComission(currencyAmountCommission, house, account);
-			BalanceUtil.getInstance()
-					.withdraw(account, currencyAmountToPay);
+			account.getWallet()
+					.withdraw(currencyAmountToPay);
 			LOGGER.debug("Amount to deposit is " + currencyAmountToDeposit + ".");
-			BalanceUtil.getInstance()
-					.deposit(account, currencyAmountToDeposit);
+			account.getWallet()
+					.deposit(currencyAmountToDeposit);
 			order.setStatus(OrderStatus.FILLED);
 		} else {
 			LOGGER.info("Account \"" + account.getOwner() + "\" does not have enough "
@@ -77,11 +74,11 @@ public class SimulationOrderExecutor implements OrderExecutor {
 			LOGGER.debug("Commission amount is " + currencyAmountCommission + ".");
 			depositComission(currencyAmountCommission, house, account);
 			LOGGER.debug("Amount to withdraw is " + currencyAmountToSell + ".");
-			BalanceUtil.getInstance()
-					.withdraw(account, currencyAmountToSell);
+			account.getWallet()
+					.withdraw(currencyAmountToSell);
 			LOGGER.debug("Amount to deposit is " + currencyAmountToDeposit + ".");
-			BalanceUtil.getInstance()
-					.deposit(account, currencyAmountToDeposit);
+			account.getWallet()
+					.deposit(currencyAmountToDeposit);
 			order.setStatus(OrderStatus.FILLED);
 		} else {
 			LOGGER.info("Account \"" + account.getOwner() + "\" does not have enough "
@@ -92,8 +89,8 @@ public class SimulationOrderExecutor implements OrderExecutor {
 	}
 
 	private boolean hasBalance(Account account, CurrencyAmount amountToHave) {
-		BigDecimal balance = account.getBalanceFor(amountToHave.getCurrency());
-		return (balance.compareTo(amountToHave.getAmount()) >= 0);
+		return account.getWallet()
+				.hasBalanceFor(amountToHave);
 	}
 
 	private CurrencyAmount calculateBuyOrderComission(Order order, House house) {
@@ -124,24 +121,20 @@ public class SimulationOrderExecutor implements OrderExecutor {
 	}
 
 	private void depositComission(CurrencyAmount currencyAmountComission, House house, Account account) {
-		BalanceUtil.getInstance().deposit(house, currencyAmountComission);
-		Balance balance = house.getComissionBalance()
-				.getOrDefault(account.getOwner(), new Balance());
-		BalanceUtil.getInstance().deposit(balance, currencyAmountComission);
-		house.getComissionBalance()
-				.put(account.getOwner(), balance);
+		house.getCommissionWalletFor(account)
+				.deposit(currencyAmountComission);
 	}
 
 	private CurrencyAmount calculateBuyOrderDeposit(Order order, CurrencyAmount currencyAmountComission) {
 		CurrencyAmount currencyAmountToBuy = elaborateCurrencyAmountToBuy(order);
-		MercadoBigDecimal amountToDeposit = currencyAmountToBuy.getAmount()
+		BigDecimal amountToDeposit = currencyAmountToBuy.getAmount()
 				.subtract(currencyAmountComission.getAmount());
 		return new CurrencyAmount(currencyAmountToBuy.getCurrency(), amountToDeposit);
 	}
 
 	private CurrencyAmount calculateSellOrderDeposit(Order order, House house, CurrencyAmount currencyAmountComission) {
 		CurrencyAmount currencyAmountToReceive = elaborateCurrencyAmountToReceive(order);
-		MercadoBigDecimal amountToDeposit = currencyAmountToReceive.getAmount()
+		BigDecimal amountToDeposit = currencyAmountToReceive.getAmount()
 				.subtract(currencyAmountComission.getAmount());
 		return new CurrencyAmount(currencyAmountToReceive.getCurrency(), amountToDeposit);
 	}
