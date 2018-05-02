@@ -1,4 +1,6 @@
-package org.marceloleite.mercado.orderanalyser;
+package org.marceloleite.mercado.orderanalyser.exception;
+
+import org.marceloleite.mercado.orderanalyser.OrderAnalyserException;
 
 public class NoBalanceOrderAnalyserException extends OrderAnalyserException {
 

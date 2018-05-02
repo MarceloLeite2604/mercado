@@ -11,10 +11,6 @@ public class TapiParameters extends HashMap<String, Object> {
 
 	private static final long serialVersionUID = 1L;
 
-	public String toJson() {
-		return new ObjectToJsonConverter().convertTo(this);
-	}
-
 	public String toUrlParametersString() throws UnsupportedEncodingException {
 		String result = "";
 		for (String propertyKey : keySet()) {

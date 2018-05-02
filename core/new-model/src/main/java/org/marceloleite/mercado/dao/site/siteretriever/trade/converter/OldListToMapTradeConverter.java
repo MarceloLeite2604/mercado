@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.marceloleite.mercado.commons.converter.Converter;
+import org.marceloleite.mercado.commons.interfaces.Converter;
 import org.marceloleite.mercado.model.Trade;
 
 public class OldListToMapTradeConverter implements Converter<List<Trade>, Map<Long, Trade>> {

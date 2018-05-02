@@ -13,15 +13,15 @@ import org.marceloleite.mercado.TemporalTickerVariation;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.OrderType;
 import org.marceloleite.mercado.commons.TimeInterval;
-import org.marceloleite.mercado.commons.formatter.PercentageFormatter;
 import org.marceloleite.mercado.commons.utils.MathUtils;
+import org.marceloleite.mercado.commons.utils.formatter.PercentageFormatter;
 import org.marceloleite.mercado.model.Account;
 import org.marceloleite.mercado.model.Order;
 import org.marceloleite.mercado.model.Strategy;
 import org.marceloleite.mercado.model.TemporalTicker;
-import org.marceloleite.mercado.orderanalyser.NoBalanceForMinimalValueOrderAnalyserException;
-import org.marceloleite.mercado.orderanalyser.NoBalanceOrderAnalyserException;
 import org.marceloleite.mercado.orderanalyser.OrderAnalyser;
+import org.marceloleite.mercado.orderanalyser.exception.NoBalanceForMinimalValueOrderAnalyserException;
+import org.marceloleite.mercado.orderanalyser.exception.NoBalanceOrderAnalyserException;
 import org.marceloleite.mercado.strategy.AbstractStrategyExecutor;
 import org.marceloleite.mercado.strategy.ObjectDefinition;
 
@@ -239,8 +239,7 @@ public class FirstStrategy extends AbstractStrategyExecutor {
 		} else {
 			result = (double) MathUtils.factorial(Math.abs(checkStep)) / (double) MathUtils.factorial(sellSteps);
 		}
-		LOGGER.debug("Operation percentage is " + PercentageFormatter.getInstance()
-				.format(result) + ".");
+		LOGGER.debug("Operation percentage is " + PercentageFormatter.format(result) + ".");
 		return result;
 	}
 

@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
@@ -10,29 +11,58 @@
 	<name>simulator</name>
 	<url>http://maven.apache.org</url>
 
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.0.1.RELEASE</version>
+	</parent>
+
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 	</properties>
 
+	<profiles>
+		<profile>
+			<id>development</id>
+			<properties>
+				<simulator.persistenceFile>persistence-oracle.properties</simulator.persistenceFile>
+				<simulator.tradesSiteRetriever.threadPoolSize>4</simulator.tradesSiteRetriever.threadPoolSize>
+				<simulator.tradesSiteRetriever.durationStep>240</simulator.tradesSiteRetriever.durationStep>
+			</properties>
+		</profile>
+		<profile>
+			<id>production</id>
+			<properties>
+				<simulator.persistenceFile>persistence-mariadb.properties</simulator.persistenceFile>
+				<simulator.tradesSiteRetriever.threadPoolSize>1</simulator.tradesSiteRetriever.threadPoolSize>
+				<simulator.tradesSiteRetriever.durationStep>30</simulator.tradesSiteRetriever.durationStep>
+			</properties>
+		</profile>
+	</profiles>
+
 	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.hibernate.validator</groupId>
+			<artifactId>hibernate-validator</artifactId>
+		</dependency>
+
 		<dependency>
 			<groupId>org.marceloleite.mercado</groupId>
 			<artifactId>new-model</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
-		<dependency>
-			<groupId>org.javassist</groupId>
-			<artifactId>javassist</artifactId>
-			<version>3.22.0-GA</version>
-		</dependency>
-		
+
 		<!-- TEST -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>3.8.1</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
@@ -42,7 +72,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
-				<version>3.1.0</version>
 				<configuration>
 					<descriptorRefs>
 						<descriptorRef>jar-with-dependencies</descriptorRef>
@@ -66,5 +95,11 @@
 				</executions>
 			</plugin>
 		</plugins>
+		<resources>
+        <resource>
+            <directory>src/main/resources</directory>
+            <filtering>true</filtering>
+        </resource>
+    </resources>
 	</build>
 </project>

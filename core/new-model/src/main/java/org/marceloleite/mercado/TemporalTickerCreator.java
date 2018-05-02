@@ -11,7 +11,6 @@ import javax.inject.Named;
 
 import org.marceloleite.mercado.checker.ValidTimeIntervalForTemporalTickerChecker;
 import org.marceloleite.mercado.commons.Currency;
-import org.marceloleite.mercado.commons.MercadoBigDecimal;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.TradeType;
 import org.marceloleite.mercado.comparator.TradeComparatorById;
@@ -20,19 +19,18 @@ import org.marceloleite.mercado.converter.ListToMapTradeConverter;
 import org.marceloleite.mercado.dao.interfaces.TradeDAO;
 import org.marceloleite.mercado.model.TemporalTicker;
 import org.marceloleite.mercado.model.Trade;
-import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-@Component
 public class TemporalTickerCreator {
 
 	@Inject
 	@Named("TradeDatabaseSiteDAO")
-	private TradeDAO tradeDAO;
+	private static TradeDAO tradeDAO/* = javax.enterprise.inject.spi.CDI.current()
+			.select(TradeDAO.class, new NamedAnnotation("TradeDatabaseSiteDAO"))
+			.get()*/;
 
 	public TemporalTicker create(Currency currency, TimeInterval timeInterval, List<Trade> trades) {
-		return create(currency, timeInterval, ListToMapTradeConverter.getInstance()
-				.convertTo(trades));
+		return create(currency, timeInterval, ListToMapTradeConverter.fromListToMap(trades));
 	}
 
 	public TemporalTicker create(Currency currency, TimeInterval timeInterval, Map<Long, Trade> trades) {
@@ -164,7 +162,7 @@ public class TemporalTickerCreator {
 
 	private BigDecimal retrieveVolumeTraded(Map<Long, Trade> trades) {
 		BigDecimal vol;
-		vol = new MercadoBigDecimal(trades.values()
+		vol = new BigDecimal(trades.values()
 				.stream()
 				.mapToDouble(trade -> trade.getAmount()
 						.doubleValue())
@@ -172,9 +170,9 @@ public class TemporalTickerCreator {
 		return vol;
 	}
 
-	private MercadoBigDecimal retrieveLow(Map<Long, Trade> trades) {
-		MercadoBigDecimal low;
-		low = new MercadoBigDecimal(trades.values()
+	private BigDecimal retrieveLow(Map<Long, Trade> trades) {
+		BigDecimal low;
+		low = new BigDecimal(trades.values()
 				.stream()
 				.mapToDouble(trade -> trade.getPrice()
 						.doubleValue())
@@ -185,7 +183,7 @@ public class TemporalTickerCreator {
 
 	private BigDecimal retrieveAverage(Map<Long, Trade> trades) {
 		BigDecimal average;
-		average = new MercadoBigDecimal(trades.values()
+		average = new BigDecimal(trades.values()
 				.stream()
 				.mapToDouble(trade -> trade.getPrice()
 						.doubleValue())
@@ -196,7 +194,7 @@ public class TemporalTickerCreator {
 
 	private BigDecimal retrieveHigh(Map<Long, Trade> trades) {
 		BigDecimal high;
-		high = new MercadoBigDecimal(trades.values()
+		high = new BigDecimal(trades.values()
 				.stream()
 				.mapToDouble(trade -> trade.getPrice()
 						.doubleValue())

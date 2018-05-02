@@ -7,10 +7,11 @@ import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.CurrencyAmount;
 import org.marceloleite.mercado.MinimalAmounts;
 import org.marceloleite.mercado.commons.Currency;
-import org.marceloleite.mercado.commons.MercadoBigDecimal;
 import org.marceloleite.mercado.commons.OrderType;
 import org.marceloleite.mercado.commons.utils.formatter.NonDigitalCurrencyFormatter;
 import org.marceloleite.mercado.model.Account;
+import org.marceloleite.mercado.orderanalyser.exception.NoBalanceForMinimalValueOrderAnalyserException;
+import org.marceloleite.mercado.orderanalyser.exception.NoBalanceOrderAnalyserException;
 
 public class OrderAnalyser {
 
@@ -34,8 +35,8 @@ public class OrderAnalyser {
 		this.cancelled = false;
 		this.orderType = orderType;
 		this.unitPrice = unitPrice;
-		this.first = new CurrencyAmount(firstCurrency, new MercadoBigDecimal("0"));
-		this.second = new CurrencyAmount(secondCurrency, new MercadoBigDecimal("0"));
+		this.first = new CurrencyAmount(firstCurrency, 0.0);
+		this.second = new CurrencyAmount(secondCurrency, 0.0);
 	}
 
 	public CurrencyAmount getFirst() {
@@ -100,8 +101,7 @@ public class OrderAnalyser {
 				return minimal;
 			} else {
 				throw new NoBalanceForMinimalValueOrderAnalyserException(
-						currencyAmount + " is lower than minimal " + NonDigitalCurrencyFormatter.getInstance()
-								.format(minimalAmount) + ".");
+						currencyAmount + " is lower than minimal " + NonDigitalCurrencyFormatter.format(minimalAmount) + ".");
 			}
 		}
 		return currencyAmount;

@@ -9,9 +9,9 @@ import org.marceloleite.mercado.House;
 import org.marceloleite.mercado.TemporalTickerVariation;
 import org.marceloleite.mercado.commons.CircularArray;
 import org.marceloleite.mercado.commons.TimeInterval;
-import org.marceloleite.mercado.commons.converter.ZonedDateTimeToStringConverter;
-import org.marceloleite.mercado.commons.formatter.DigitalCurrencyFormatter;
-import org.marceloleite.mercado.commons.formatter.PercentageFormatter;
+import org.marceloleite.mercado.commons.utils.ZonedDateTimeUtils;
+import org.marceloleite.mercado.commons.utils.formatter.DigitalCurrencyFormatter;
+import org.marceloleite.mercado.commons.utils.formatter.PercentageFormatter;
 import org.marceloleite.mercado.model.Account;
 import org.marceloleite.mercado.model.Strategy;
 import org.marceloleite.mercado.model.TemporalTicker;
@@ -91,16 +91,11 @@ public class SecondStrategy extends AbstractStrategyExecutor {
 			double buySellRatio = bosoCircularArray.get(counter);
 			double lastFirstRatio = lastFirstRatioCircularArray.get(counter);
 			StringBuffer stringBuffer = new StringBuffer();
-			stringBuffer.append(ZonedDateTimeToStringConverter.getInstance()
-					.convertTo(temporalTickerCircularArray.get(counter)
-							.getStart())
-					+ "  | ");
-			stringBuffer.append(String.format("%15s", PercentageFormatter.getInstance()
-					.format(orderVariation)) + "  | ");
-			stringBuffer.append(String.format("%15s", DigitalCurrencyFormatter.getInstance()
-					.format(buySellRatio - 1.0)) + "  | ");
-			stringBuffer.append(String.format("%7s", DigitalCurrencyFormatter.getInstance()
-					.format(lastFirstRatio - 1.0)) + "  ");
+			stringBuffer.append(ZonedDateTimeUtils.format(temporalTickerCircularArray.get(counter)
+					.getStart()) + "  | ");
+			stringBuffer.append(String.format("%15s", PercentageFormatter.format(orderVariation)) + "  | ");
+			stringBuffer.append(String.format("%15s", DigitalCurrencyFormatter.format(buySellRatio - 1.0)) + "  | ");
+			stringBuffer.append(String.format("%7s", DigitalCurrencyFormatter.format(lastFirstRatio - 1.0)) + "  ");
 			System.out.println(stringBuffer.toString());
 		}
 

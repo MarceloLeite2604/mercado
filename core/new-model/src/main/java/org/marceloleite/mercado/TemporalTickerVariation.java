@@ -159,7 +159,6 @@ public class TemporalTickerVariation {
 	}
 
 	private String printPercentage(double percentage) {
-		return PercentageFormatter.getInstance()
-				.format(percentage);
+		return PercentageFormatter.format(percentage);
 	}
 }

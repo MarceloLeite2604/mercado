@@ -65,7 +65,6 @@ public abstract class AbstractStrategyExecutor implements StrategyExecutor {
 	}
 
 	private void defineParameters(Strategy strategy) {
-		ObjectToJsonConverter objectToJsonConverter = new ObjectToJsonConverter();
 		Map<String, ObjectDefinition> parameterDefinitions = getParameterDefinitions();
 		Map<String, Parameter> parameterValues = getParameterValues(strategy);
 		for (Entry<String, ObjectDefinition> parameterDefinitionEntry : parameterDefinitions.entrySet()) {
@@ -73,7 +72,7 @@ public abstract class AbstractStrategyExecutor implements StrategyExecutor {
 			String json = parameterValues.get(parameterName)
 					.getValue();
 			ObjectDefinition parameterDefinition = parameterDefinitionEntry.getValue();
-			Object parameterObject = objectToJsonConverter.convertFromToObject(json, parameterDefinition);
+			Object parameterObject = ObjectToJsonConverter.convertToObject(json, parameterDefinition);
 			setParameter(parameterDefinition.getName(), parameterObject);
 		}
 	}
@@ -125,14 +124,13 @@ public abstract class AbstractStrategyExecutor implements StrategyExecutor {
 	}
 
 	private void defineVariables(Strategy strategy) {
-		ObjectToJsonConverter objectToJsonConverter = new ObjectToJsonConverter();
 		Map<String, ObjectDefinition> variableDefinitions = getVariableDefinitions();
 		Map<String, Variable> variableValues = getVariableValues(strategy);
 		for (Entry<String, ObjectDefinition> variableDefinition : variableDefinitions.entrySet()) {
 			String value = variableValues.get(variableDefinition.getKey())
 					.getValue();
 			ObjectDefinition objectDefinition = variableDefinition.getValue();
-			Object variableObject = objectToJsonConverter.convertFromToObject(value, objectDefinition.getClass());
+			Object variableObject = ObjectToJsonConverter.convertToObject(value, objectDefinition.getClass());
 			setVariable(objectDefinition.getName(), variableObject);
 		}
 	}

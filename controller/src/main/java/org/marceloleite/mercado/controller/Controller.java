@@ -156,7 +156,6 @@ public class Controller {
 			throw new RuntimeException(stringBuilder.toString());
 		}
 
-		return AccountInfoToBalanceWalletConverter.getInstance()
-				.convertTo(tapiResponse.getResponseData());
+		return AccountInfoToBalanceWalletConverter.fromAccountInfoToWallet(tapiResponse.getResponseData());
 	}
 }

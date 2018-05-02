@@ -15,8 +15,8 @@ import org.marceloleite.mercado.commons.CircularArray;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.OrderType;
 import org.marceloleite.mercado.commons.TimeInterval;
-import org.marceloleite.mercado.commons.converter.ZonedDateTimeToStringConverter;
-import org.marceloleite.mercado.commons.formatter.PercentageFormatter;
+import org.marceloleite.mercado.commons.utils.ZonedDateTimeUtils;
+import org.marceloleite.mercado.commons.utils.formatter.PercentageFormatter;
 import org.marceloleite.mercado.model.Account;
 import org.marceloleite.mercado.model.Order;
 import org.marceloleite.mercado.model.Strategy;
@@ -65,8 +65,7 @@ public class FourthStrategy extends AbstractStrategyExecutor {
 				switch (status) {
 				case UNDEFINED:
 					if (lastVariation > 0) {
-						LOGGER.debug(timeInterval + ": Last variation is " + PercentageFormatter.getInstance()
-								.format(lastVariation));
+						LOGGER.debug(timeInterval + ": Last variation is " + PercentageFormatter.format(lastVariation));
 						updateBase(house);
 						createBuyOrder(timeInterval, account, house);
 					}
@@ -126,8 +125,7 @@ public class FourthStrategy extends AbstractStrategyExecutor {
 					.selling(currencyAmountToSell)
 					.receivingUnitPriceOf(currencyAmountUnitPrice)
 					.build();
-			LOGGER.info(ZonedDateTimeToStringConverter.getInstance()
-					.convertTo(simulationTimeInterval.getStart()) + ": Created " + sellOrder + ".");
+			LOGGER.info(ZonedDateTimeUtils.format(simulationTimeInterval.getStart()) + ": Created " + sellOrder + ".");
 			executeOrder(sellOrder, account, house);
 		}
 	}
@@ -141,8 +139,7 @@ public class FourthStrategy extends AbstractStrategyExecutor {
 					.buying(currencyAmountToBuy)
 					.payingUnitPriceOf(currencyAmountUnitPrice)
 					.build();
-			LOGGER.info(ZonedDateTimeToStringConverter.getInstance()
-					.convertTo(simulationTimeInterval.getStart()) + ": Created " + buyOrder + ".");
+			LOGGER.info(ZonedDateTimeUtils.format(simulationTimeInterval.getStart()) + ": Created " + buyOrder + ".");
 			executeOrder(buyOrder, account, house);
 		}
 	}
@@ -154,7 +151,8 @@ public class FourthStrategy extends AbstractStrategyExecutor {
 				.asCurrencyAmount();
 		LOGGER.debug("Balance amount: " + balance + ".");
 
-		if (MinimalAmounts.getInstance().isAmountLowerThanMinimal(balance)) {
+		if (MinimalAmounts.getInstance()
+				.isAmountLowerThanMinimal(balance)) {
 			LOGGER.debug("Current balance is lower thant the minimal order value. Aborting order.");
 			return null;
 		}

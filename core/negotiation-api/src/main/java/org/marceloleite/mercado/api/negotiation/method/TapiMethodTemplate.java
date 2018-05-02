@@ -13,7 +13,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.api.negotiation.util.EncryptionUtil;
 import org.marceloleite.mercado.api.negotiation.util.NonceUtil;
-import org.marceloleite.mercado.commons.encryption.Encrypt;
+import org.marceloleite.mercado.commons.utils.EncryptUtils;
 import org.marceloleite.mercado.model.TapiInformation;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -34,7 +34,7 @@ public abstract class TapiMethodTemplate<T> {
 	private static final String TAPI_ID = "TAPI-ID";
 
 	private static final String TAPI_MAC = "TAPI-MAC";
-	
+
 	private static final String PARAMETER_TAPI_METHOD = "tapi_method";
 
 	private static final String PARAMETER_TAPI_NONCE = "tapi_nonce";
@@ -52,7 +52,7 @@ public abstract class TapiMethodTemplate<T> {
 		this.tapiMethod = tapiMethod;
 		this.parameterNames = parameterNames;
 	}
-	
+
 	public T executeMethod(Object... parameters) {
 		URI uri = generateUriWithParameters(parameters);
 
@@ -69,7 +69,7 @@ public abstract class TapiMethodTemplate<T> {
 					+ responseEntity.getStatusCode()
 							.name()
 					+ ").");
-			
+
 			if (responseEntity.getStatusCode() == HttpStatus.OK) {
 				response = responseEntity.getBody();
 			} else {
@@ -84,14 +84,14 @@ public abstract class TapiMethodTemplate<T> {
 
 		return response;
 	}
-	
+
 	private URI generateUriWithParameters(Object... parameters) {
-		URI uri = generateUri(generateNapiParameters(parameters));
+		URI uri = generateUri(generateTapiParameters(parameters));
 		LOGGER.debug("Url generated is: " + uri);
 		return uri;
 	}
-	
-	private TapiParameters generateNapiParameters(Object... objectParameters) {
+
+	private TapiParameters generateTapiParameters(Object... objectParameters) {
 		TapiParameters napiMethodParameters = new TapiParameters();
 		napiMethodParameters.put(PARAMETER_TAPI_METHOD, tapiMethod);
 		napiMethodParameters.put(PARAMETER_TAPI_NONCE, NonceUtil.getInstance()
@@ -128,7 +128,7 @@ public abstract class TapiMethodTemplate<T> {
 			throw new RuntimeException("Error while elaborating NAPI URI method.", exception);
 		}
 	}
-	
+
 	private HttpHeaders createHttpHeaders(URI uri) {
 		HttpHeaders httpHeaders = new HttpHeaders();
 		httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -138,8 +138,7 @@ public abstract class TapiMethodTemplate<T> {
 	}
 
 	private String generateTapiMac(URI uri) {
-		byte[] decryptedSecret = Encrypt.getInstance()
-				.decrypt(tapiInformation.getSecret())
+		byte[] decryptedSecret = EncryptUtils.decrypt(tapiInformation.getSecret())
 				.getBytes(StandardCharsets.UTF_8);
 		return EncryptionUtil.getInstance()
 				.generateTapiMac(uri, decryptedSecret);
@@ -148,5 +147,5 @@ public abstract class TapiMethodTemplate<T> {
 	@SuppressWarnings("unchecked")
 	private Class<T> retrieveResponseClass() {
 		return (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
-	}	
+	}
 }

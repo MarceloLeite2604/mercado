@@ -3,7 +3,7 @@ package org.marceloleite.mercado;
 import java.math.BigDecimal;
 
 import org.marceloleite.mercado.commons.Currency;
-import org.marceloleite.mercado.commons.MercadoBigDecimal;
+import org.marceloleite.mercado.commons.utils.BigDecimalUtils;
 import org.marceloleite.mercado.commons.utils.formatter.DigitalCurrencyFormatter;
 import org.marceloleite.mercado.commons.utils.formatter.NonDigitalCurrencyFormatter;
 
@@ -42,7 +42,7 @@ public class CurrencyAmount {
 	public void setAmount(BigDecimal amount) {
 		int scale = 0;
 		if ( currency == null ) {
-			scale = MercadoBigDecimal.DEFAULT_SCALE;
+			scale = BigDecimalUtils.DEFAULT_SCALE;
 		} else {
 			scale = currency.getScale();
 		}
@@ -53,9 +53,9 @@ public class CurrencyAmount {
 	public String toString() {
 		String stringAmount;
 		if (currency.isDigital()) {
-			stringAmount = DigitalCurrencyFormatter.getInstance().format(amount);
+			stringAmount = DigitalCurrencyFormatter.format(amount);
 		} else {
-			stringAmount = NonDigitalCurrencyFormatter.getInstance().format(amount);
+			stringAmount = NonDigitalCurrencyFormatter.format(amount);
 		}
 		return currency.getAcronym() + " " + stringAmount;
 	}

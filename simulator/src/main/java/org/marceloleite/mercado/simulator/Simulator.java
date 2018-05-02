@@ -13,10 +13,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.CurrencyAmount;
 import org.marceloleite.mercado.commons.Currency;
-import org.marceloleite.mercado.commons.MercadoBigDecimal;
 import org.marceloleite.mercado.commons.TimeDivisionController;
 import org.marceloleite.mercado.commons.TimeInterval;
-import org.marceloleite.mercado.commons.converter.ZonedDateTimeToStringConverter;
 import org.marceloleite.mercado.model.Account;
 import org.marceloleite.mercado.model.Balance;
 import org.marceloleite.mercado.model.TemporalTicker;
@@ -64,7 +62,7 @@ public class Simulator {
 
 			TreeMap<TimeInterval, Map<Currency, TemporalTicker>> temporalTickersByTimeInterval = null;
 			for (TimeInterval stepTimeInterval : timeDivisionController.geTimeIntervals()) {
-				logSimulationStep(stepTimeInterval);
+				LOGGER.info(stepTimeInterval);
 				TimeDivisionController timeDivisionController = new TimeDivisionController(stepTimeInterval,
 						stepDuration);
 				future = executor.submit(new TemporalTickerRetrieverCallable(timeDivisionController));
@@ -125,7 +123,7 @@ public class Simulator {
 	}
 
 	private void logTotalWorth(Account account) {
-		CurrencyAmount totalRealAmount = new CurrencyAmount(Currency.REAL, new MercadoBigDecimal("0.0"));
+		CurrencyAmount totalRealAmount = new CurrencyAmount(Currency.REAL, 0.0);
 		for (Currency currency : Currency.values()) {
 			Balance balance = account.getWallet()
 					.getBalanceFor(currency);
@@ -146,12 +144,5 @@ public class Simulator {
 
 	private void logSimulationStart() {
 		LOGGER.info("Starting simulation from " + timeDivisionController + ".");
-	}
-
-	private void logSimulationStep(TimeInterval timeInterval) {
-		LOGGER.info("From: " + ZonedDateTimeToStringConverter.getInstance()
-				.convertTo(timeInterval.getStart()) + " to: "
-				+ ZonedDateTimeToStringConverter.getInstance()
-						.convertTo(timeInterval.getEnd()));
 	}
 }

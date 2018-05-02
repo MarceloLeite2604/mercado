@@ -22,7 +22,6 @@ import org.marceloleite.mercado.commons.OrderType;
 import org.marceloleite.mercado.commons.Statistics;
 import org.marceloleite.mercado.commons.TimeDivisionController;
 import org.marceloleite.mercado.commons.TimeInterval;
-import org.marceloleite.mercado.commons.converter.ZonedDateTimeToStringConverter;
 import org.marceloleite.mercado.commons.utils.ZonedDateTimeUtils;
 import org.marceloleite.mercado.dao.interfaces.TradeDAO;
 import org.marceloleite.mercado.model.Account;
@@ -30,9 +29,9 @@ import org.marceloleite.mercado.model.Order;
 import org.marceloleite.mercado.model.Strategy;
 import org.marceloleite.mercado.model.TemporalTicker;
 import org.marceloleite.mercado.model.Trade;
-import org.marceloleite.mercado.orderanalyser.NoBalanceForMinimalValueOrderAnalyserException;
-import org.marceloleite.mercado.orderanalyser.NoBalanceOrderAnalyserException;
 import org.marceloleite.mercado.orderanalyser.OrderAnalyser;
+import org.marceloleite.mercado.orderanalyser.exception.NoBalanceForMinimalValueOrderAnalyserException;
+import org.marceloleite.mercado.orderanalyser.exception.NoBalanceOrderAnalyserException;
 import org.marceloleite.mercado.strategies.sixth.graphic.SixStrategyGraphic;
 import org.marceloleite.mercado.strategies.sixth.graphic.SixthStrategyGraphicData;
 import org.marceloleite.mercado.strategy.AbstractStrategyExecutor;
@@ -236,8 +235,7 @@ public class SixthStrategy extends AbstractStrategyExecutor {
 				.selling(orderAnalyser.getSecond())
 				.receivingUnitPriceOf(orderAnalyser.getUnitPrice())
 				.build();
-		LOGGER.info(ZonedDateTimeToStringConverter.getInstance()
-				.convertTo(simulationTimeInterval.getStart()) + ": Created " + order + ".");
+		LOGGER.info(ZonedDateTimeUtils.format(simulationTimeInterval.getStart()) + ": Created " + order + ".");
 		return order;
 	}
 
@@ -256,8 +254,7 @@ public class SixthStrategy extends AbstractStrategyExecutor {
 				.buying(orderAnalyser.getSecond())
 				.payingUnitPriceOf(orderAnalyser.getUnitPrice())
 				.build();
-		LOGGER.info(ZonedDateTimeToStringConverter.getInstance()
-				.convertTo(simulationTimeInterval.getStart()) + ": Created " + order + ".");
+		LOGGER.info(ZonedDateTimeUtils.format(simulationTimeInterval.getStart()) + ": Created " + order + ".");
 		return order;
 	}
 

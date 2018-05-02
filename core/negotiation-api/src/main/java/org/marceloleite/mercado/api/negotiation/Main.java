@@ -54,6 +54,6 @@ public class Main {
 	}
 	
 	private static void printResponse(TapiResponse<?> tapiResponse) {
-		System.out.println(new ObjectToJsonConverter().convertTo(tapiResponse));
+		System.out.println(ObjectToJsonConverter.writeAsJson(tapiResponse));
 	}	
 }

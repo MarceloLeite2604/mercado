@@ -7,11 +7,11 @@ import org.marceloleite.mercado.commons.utils.creator.ObjectMapperCreator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public final class OldObjectToJsonConverter {
+public final class ObjectToJsonConverter {
 
 	private static ObjectMapper objectMapper = ObjectMapperCreator.create();
 
-	private OldObjectToJsonConverter() {
+	private ObjectToJsonConverter() {
 	}
 
 	public static String writeAsJson(Object object) {

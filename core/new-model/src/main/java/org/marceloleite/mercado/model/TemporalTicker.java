@@ -18,7 +18,7 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.marceloleite.mercado.commons.Currency;
-import org.marceloleite.mercado.commons.converter.ObjectToJsonConverter;
+import org.marceloleite.mercado.commons.utils.ObjectUtils;
 import org.marceloleite.mercado.model.attributeconverter.ZonedDateTimeAttributeConverter;
 import org.marceloleite.mercado.model.xmladapter.CurrencyXmlAdapter;
 import org.marceloleite.mercado.model.xmladapter.DurationXmlAdapter;
@@ -435,7 +435,6 @@ public class TemporalTicker {
 	}
 
 	public TemporalTicker makeDeepCopy() {
-		ObjectToJsonConverter objectToJsonConverter = new ObjectToJsonConverter();
-		return objectToJsonConverter.convertFromToObject(objectToJsonConverter.convertTo(this), this.getClass());
+		return ObjectUtils.makeDeepCopy(this);
 	}
 }

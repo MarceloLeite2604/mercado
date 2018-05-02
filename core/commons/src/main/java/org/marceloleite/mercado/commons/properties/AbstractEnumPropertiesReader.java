@@ -4,8 +4,8 @@ import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.Properties;
 
-import org.marceloleite.mercado.commons.converter.ZonedDateTimeToStringConverter;
 import org.marceloleite.mercado.commons.utils.EncryptUtils;
+import org.marceloleite.mercado.commons.utils.ZonedDateTimeUtils;
 
 public abstract class AbstractEnumPropertiesReader<E extends Enum<? extends Property>>
 		implements EnumPropertiesReader<E> {
@@ -89,9 +89,8 @@ public abstract class AbstractEnumPropertiesReader<E extends Enum<? extends Prop
 	}
 
 	protected ZonedDateTime getZonedDateTimeProperty(E property) {
-		Property retrievedProperty = (Property)getProperty(property);
-		ZonedDateTimeToStringConverter zonedDateTimeToStringConverter = ZonedDateTimeToStringConverter.getInstance(); 
-		return zonedDateTimeToStringConverter.convertFrom(retrievedProperty.getValue());
+		Property retrievedProperty = (Property)getProperty(property); 
+		return ZonedDateTimeUtils.parse(retrievedProperty.getValue());
 	}
 
 }

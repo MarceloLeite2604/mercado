@@ -13,15 +13,15 @@ import org.marceloleite.mercado.TemporalTickerVariation;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.OrderType;
 import org.marceloleite.mercado.commons.TimeInterval;
-import org.marceloleite.mercado.commons.converter.ZonedDateTimeToStringConverter;
-import org.marceloleite.mercado.commons.formatter.PercentageFormatter;
+import org.marceloleite.mercado.commons.utils.ZonedDateTimeUtils;
+import org.marceloleite.mercado.commons.utils.formatter.PercentageFormatter;
 import org.marceloleite.mercado.model.Account;
 import org.marceloleite.mercado.model.Order;
 import org.marceloleite.mercado.model.Strategy;
 import org.marceloleite.mercado.model.TemporalTicker;
-import org.marceloleite.mercado.orderanalyser.NoBalanceForMinimalValueOrderAnalyserException;
-import org.marceloleite.mercado.orderanalyser.NoBalanceOrderAnalyserException;
 import org.marceloleite.mercado.orderanalyser.OrderAnalyser;
+import org.marceloleite.mercado.orderanalyser.exception.NoBalanceForMinimalValueOrderAnalyserException;
+import org.marceloleite.mercado.orderanalyser.exception.NoBalanceOrderAnalyserException;
 import org.marceloleite.mercado.strategy.AbstractStrategyExecutor;
 import org.marceloleite.mercado.strategy.ObjectDefinition;
 
@@ -53,8 +53,7 @@ public class ThirdStrategy extends AbstractStrategyExecutor {
 				switch (status) {
 				case UNDEFINED:
 					if (lastVariation > 0) {
-						LOGGER.debug(timeInterval + ": Last variation is " + PercentageFormatter.getInstance()
-								.format(lastVariation));
+						LOGGER.debug(timeInterval + ": Last variation is " + PercentageFormatter.format(lastVariation));
 						updateBase(house);
 						order = createBuyOrder(timeInterval, account, house);
 					}
@@ -111,8 +110,7 @@ public class ThirdStrategy extends AbstractStrategyExecutor {
 				.selling(orderAnalyser.getSecond())
 				.receivingUnitPriceOf(orderAnalyser.getUnitPrice())
 				.build();
-		LOGGER.info(ZonedDateTimeToStringConverter.getInstance()
-				.convertTo(simulationTimeInterval.getStart()) + ": Created " + order + ".");
+		LOGGER.info(ZonedDateTimeUtils.format(simulationTimeInterval.getStart()) + ": Created " + order + ".");
 		return order;
 	}
 
@@ -131,8 +129,7 @@ public class ThirdStrategy extends AbstractStrategyExecutor {
 				.buying(orderAnalyser.getSecond())
 				.payingUnitPriceOf(orderAnalyser.getUnitPrice())
 				.build();
-		LOGGER.info(ZonedDateTimeToStringConverter.getInstance()
-				.convertTo(simulationTimeInterval.getStart()) + ": Created " + order + ".");
+		LOGGER.info(ZonedDateTimeUtils.format(simulationTimeInterval.getStart()) + ": Created " + order + ".");
 		return order;
 	}
 

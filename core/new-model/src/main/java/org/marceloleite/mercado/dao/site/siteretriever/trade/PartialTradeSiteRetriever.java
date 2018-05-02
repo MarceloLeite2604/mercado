@@ -9,7 +9,7 @@ import javax.ws.rs.NotFoundException;
 
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
-import org.marceloleite.mercado.commons.converter.EpochSecondsToZonedDateTimeConveter;
+import org.marceloleite.mercado.commons.utils.ZonedDateTimeUtils;
 import org.marceloleite.mercado.dao.site.siteretriever.AbstractSiteRetriever;
 import org.marceloleite.mercado.model.Trade;
 import org.springframework.web.client.RestTemplate;
@@ -17,14 +17,14 @@ import org.springframework.web.client.RestTemplate;
 class PartialTradeSiteRetriever extends AbstractSiteRetriever {
 
 	private static final String METHOD = "trades";
-	
+
 	private static final long MAX_RETRIES = 5l;
 
 	private static final long WAIT_TIME = 500l;
-	
+
 	public PartialTradeSiteRetriever() {
 		super();
-	}	
+	}
 
 	public List<Trade> retrieve(Currency currency, TimeInterval timeInterval) {
 
@@ -37,7 +37,8 @@ class PartialTradeSiteRetriever extends AbstractSiteRetriever {
 			try {
 				RestTemplate restTemplate = new RestTemplate();
 				URI uri = elaborateURL(currency, timeInterval);
-				Trade[] tradesArray = restTemplate.getForEntity(uri, Trade[].class).getBody();
+				Trade[] tradesArray = restTemplate.getForEntity(uri, Trade[].class)
+						.getBody();
 				trades = Arrays.asList(tradesArray);
 				concluded = true;
 			} catch (NotFoundException notFoundException) {
@@ -51,12 +52,13 @@ class PartialTradeSiteRetriever extends AbstractSiteRetriever {
 				}
 			}
 		}
-		trades.stream().forEach(trade -> trade.setCurrency(currency));
+		trades.stream()
+				.forEach(trade -> trade.setCurrency(currency));
 		return trades;
 	}
 
 	private void checkArguments(Currency currency, TimeInterval timeInterval) {
-		if (currency == null ) {
+		if (currency == null) {
 			throw new IllegalArgumentException("Currency cannot be null.");
 		}
 		if (timeInterval == null) {
@@ -68,14 +70,13 @@ class PartialTradeSiteRetriever extends AbstractSiteRetriever {
 	protected String getMethod() {
 		return METHOD;
 	}
-	
+
 	protected URI elaborateURL(Currency currency, TimeInterval timeInterval) {
 		StringBuilder stringBuilder = new StringBuilder();
 		stringBuilder.append(TARGET_URL);
 		stringBuilder.append(String.format(BASE_PATH_TEMPLATE, currency, getMethod()));
-		stringBuilder.append(String.format("%d/%d/",
-				EpochSecondsToZonedDateTimeConveter.getInstance().convertToEpochSeconds(timeInterval.getStart()),
-				EpochSecondsToZonedDateTimeConveter.getInstance().convertToEpochSeconds(timeInterval.getEnd())));
+		stringBuilder.append(String.format("%d/%d/", ZonedDateTimeUtils.formatAsEpochTime(timeInterval.getStart()),
+				ZonedDateTimeUtils.formatAsEpochTime(timeInterval.getEnd())));
 		try {
 			return new URI(stringBuilder.toString());
 		} catch (URISyntaxException exception) {

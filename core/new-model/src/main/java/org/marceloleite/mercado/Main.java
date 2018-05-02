@@ -291,9 +291,8 @@ public class Main {
 
 	private void writeJson(Object object, String fileName) {
 		LOGGER.info("Persisting Json.");
-		ObjectToJsonConverter objectToJsonConverter = new ObjectToJsonConverter();
 		try (OutputStream outputStream = new FileOutputStream(createJsonFileOutput(fileName))) {
-			outputStream.write(objectToJsonConverter.convertTo(object)
+			outputStream.write(ObjectToJsonConverter.writeAsJson(object)
 					.getBytes());
 		} catch (IOException exception) {
 			throw new RuntimeException("Error while writing Json file.", exception);
@@ -357,15 +356,13 @@ public class Main {
 	@SuppressWarnings("unused")
 	private static void orderbookSiteRetriever() {
 		Orderbook orderbook = new OrderbookSiteRetriever().retrieve(Currency.BITCOIN);
-		ObjectToJsonConverter objectToJsonConverter = new ObjectToJsonConverter();
-		System.out.println(objectToJsonConverter.convertTo(orderbook));
+		System.out.println(ObjectToJsonConverter.writeAsJson(orderbook));
 	}
 
 	@SuppressWarnings("unused")
 	private static void tickerSiteRetriever() {
 		Ticker ticker = new TickerSiteRetriever().retrieve(Currency.BITCOIN);
-		ObjectToJsonConverter objectToJsonConverter = new ObjectToJsonConverter();
-		System.out.println(objectToJsonConverter.convertTo(ticker));
+		System.out.println(ObjectToJsonConverter.writeAsJson(ticker));
 	}
 
 	@SuppressWarnings("unused")
@@ -375,8 +372,7 @@ public class Main {
 				.minusDays(2);
 		TimeInterval timeInterval = new TimeInterval(from, to);
 		List<Trade> trades = new TradeSiteRetriever().retrieve(Currency.BITCOIN, timeInterval);
-		ObjectToJsonConverter objectToJsonConverter = new ObjectToJsonConverter();
 		System.out.println(trades.size());
-		// System.out.println(objectToJsonConverter.convertTo(trades));
+		// System.out.println(ObjectToJsonConverter.writeAsJson(trades));
 	}
 }

@@ -6,7 +6,6 @@ import java.time.ZonedDateTime;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.commons.Currency;
-import org.marceloleite.mercado.commons.MercadoBigDecimal;
 import org.marceloleite.mercado.commons.OrderType;
 import org.marceloleite.mercado.model.Order;
 
@@ -56,12 +55,12 @@ public class SellOrderBuilder {
 		Currency secondCurrency = this.secondCurrency;
 		this.secondCurrency = null;
 
-		MercadoBigDecimal quantity = new MercadoBigDecimal(this.quantity.toString());
+		BigDecimal quantity = new BigDecimal(this.quantity.toString());
 		this.quantity = null;
 
 		Currency firstCurrency = this.firstCurrency;
 
-		MercadoBigDecimal limitPrice = new MercadoBigDecimal(this.limitPrice.toString());
+		BigDecimal limitPrice = new BigDecimal(this.limitPrice.toString());
 		this.limitPrice = null;
 
 		return Order.builder()

@@ -18,16 +18,16 @@ import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.OrderType;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.VariationCalculator;
-import org.marceloleite.mercado.commons.converter.ZonedDateTimeToStringConverter;
-import org.marceloleite.mercado.commons.formatter.NonDigitalCurrencyFormatter;
-import org.marceloleite.mercado.commons.formatter.PercentageFormatter;
+import org.marceloleite.mercado.commons.utils.ZonedDateTimeUtils;
+import org.marceloleite.mercado.commons.utils.formatter.NonDigitalCurrencyFormatter;
+import org.marceloleite.mercado.commons.utils.formatter.PercentageFormatter;
 import org.marceloleite.mercado.model.Account;
 import org.marceloleite.mercado.model.Order;
 import org.marceloleite.mercado.model.Strategy;
 import org.marceloleite.mercado.model.TemporalTicker;
-import org.marceloleite.mercado.orderanalyser.NoBalanceForMinimalValueOrderAnalyserException;
-import org.marceloleite.mercado.orderanalyser.NoBalanceOrderAnalyserException;
 import org.marceloleite.mercado.orderanalyser.OrderAnalyser;
+import org.marceloleite.mercado.orderanalyser.exception.NoBalanceForMinimalValueOrderAnalyserException;
+import org.marceloleite.mercado.orderanalyser.exception.NoBalanceOrderAnalyserException;
 import org.marceloleite.mercado.strategy.AbstractStrategyExecutor;
 import org.marceloleite.mercado.strategy.ObjectDefinition;
 
@@ -65,16 +65,12 @@ public class FifthStrategy extends AbstractStrategyExecutor {
 			double lastVariation = VariationCalculator.getInstance()
 					.calculate(nextPrice, baseTemporalTicker.getCurrentOrPreviousLast());
 			StringBuilder stringBuilderDebug = new StringBuilder();
-			stringBuilderDebug.append("Variation: " + PercentageFormatter.getInstance()
-					.format(lastVariation));
+			stringBuilderDebug.append("Variation: " + PercentageFormatter.format(lastVariation));
 			BigDecimal baseLastPrice = baseTemporalTicker.getCurrentOrPreviousLast();
-			stringBuilderDebug.append(", base: " + NonDigitalCurrencyFormatter.getInstance()
-					.format(baseLastPrice));
+			stringBuilderDebug.append(", base: " + NonDigitalCurrencyFormatter.format(baseLastPrice));
 			BigDecimal lastPrice = temporalTicker.getCurrentOrPreviousLast();
-			stringBuilderDebug.append(", last: " + NonDigitalCurrencyFormatter.getInstance()
-					.format(lastPrice));
-			stringBuilderDebug.append(", next: " + NonDigitalCurrencyFormatter.getInstance()
-					.format(nextPrice));
+			stringBuilderDebug.append(", last: " + NonDigitalCurrencyFormatter.format(lastPrice));
+			stringBuilderDebug.append(", next: " + NonDigitalCurrencyFormatter.format(nextPrice));
 			// MercadoBigDecimal lastVariation = retrieveLastVariation();
 			/*
 			 * LOGGER.debug( simulationTimeInterval + ": Last variation is " + new
@@ -185,8 +181,7 @@ public class FifthStrategy extends AbstractStrategyExecutor {
 				.selling(orderAnalyser.getSecond())
 				.receivingUnitPriceOf(orderAnalyser.getUnitPrice())
 				.build();
-		LOGGER.info(ZonedDateTimeToStringConverter.getInstance()
-				.convertTo(simulationTimeInterval.getStart()) + ": Created " + order + ".");
+		LOGGER.info(ZonedDateTimeUtils.format(simulationTimeInterval.getStart()) + ": Created " + order + ".");
 		return order;
 	}
 
@@ -205,8 +200,7 @@ public class FifthStrategy extends AbstractStrategyExecutor {
 				.buying(orderAnalyser.getSecond())
 				.payingUnitPriceOf(orderAnalyser.getUnitPrice())
 				.build();
-		LOGGER.info(ZonedDateTimeToStringConverter.getInstance()
-				.convertTo(simulationTimeInterval.getStart()) + ": Created " + order + ".");
+		LOGGER.info(ZonedDateTimeUtils.format(simulationTimeInterval.getStart()) + ": Created " + order + ".");
 		return order;
 	}
 

@@ -6,10 +6,10 @@ import java.time.ZonedDateTime;
 import org.marceloleite.mercado.api.negotiation.model.deserializer.WithdrawalStatusDeserializer;
 import org.marceloleite.mercado.api.negotiation.model.serializer.WithdrawalStatusSerializer;
 import org.marceloleite.mercado.commons.Currency;
-import org.marceloleite.mercado.commons.formatter.ZonedDateTimeSerializer;
 import org.marceloleite.mercado.commons.json.deserializer.CurrencyDeserializer;
 import org.marceloleite.mercado.commons.json.deserializer.ZonedDateTimeDeserializer;
 import org.marceloleite.mercado.commons.json.serializer.CurrencySerializer;
+import org.marceloleite.mercado.commons.json.serializer.ZonedDateTimeSerializer;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
