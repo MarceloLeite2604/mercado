@@ -55,13 +55,13 @@ public class SimulationOrderExecutor implements OrderExecutor {
 	private CurrencyAmount calculateCurrencyAmountToPay(Order order) {
 		BigDecimal amountToPay = order.getLimitPrice()
 				.multiply(order.getQuantity());
-		Currency currencyToPay = order.getFirstCurrency();
+		Currency currencyToPay = order.getCurrencyPair().getFirstCurrency();
 		return new CurrencyAmount(currencyToPay, amountToPay);
 	}
 
 	private CurrencyAmount calculateCurrencyAmountToSell(Order order) {
 		BigDecimal quantity = order.getQuantity();
-		Currency currencyToSell = order.getSecondCurrency();
+		Currency currencyToSell = order.getCurrencyPair().getSecondCurrency();
 		return new CurrencyAmount(currencyToSell, quantity);
 	}
 
@@ -102,7 +102,7 @@ public class SimulationOrderExecutor implements OrderExecutor {
 
 	private CurrencyAmount elaborateCurrencyAmountToBuy(Order order) {
 		BigDecimal quantity = order.getQuantity();
-		Currency currencyToBuy = order.getSecondCurrency();
+		Currency currencyToBuy = order.getCurrencyPair().getSecondCurrency();
 		return new CurrencyAmount(currencyToBuy, quantity);
 	}
 
@@ -116,7 +116,7 @@ public class SimulationOrderExecutor implements OrderExecutor {
 	private CurrencyAmount elaborateCurrencyAmountToReceive(Order order) {
 		BigDecimal amount = order.getQuantity()
 				.multiply(order.getLimitPrice());
-		Currency currency = order.getFirstCurrency();
+		Currency currency = order.getCurrencyPair().getFirstCurrency();
 		return new CurrencyAmount(currency, amount);
 	}
 

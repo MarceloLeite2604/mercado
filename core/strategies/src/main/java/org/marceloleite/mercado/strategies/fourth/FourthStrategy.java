@@ -154,7 +154,7 @@ public class FourthStrategy extends AbstractStrategyExecutor {
 				.asCurrencyAmount();
 		LOGGER.debug("Balance amount: " + balance + ".");
 
-		if (MinimalAmounts.isAmountLowerThanMinimal(balance)) {
+		if (MinimalAmounts.getInstance().isAmountLowerThanMinimal(balance)) {
 			LOGGER.debug("Current balance is lower thant the minimal order value. Aborting order.");
 			return null;
 		}

@@ -1,71 +1,92 @@
 package org.marceloleite.mercado.controller;
 
 import java.util.EnumMap;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
-import org.marceloleite.mercado.base.model.Balance;
-import org.marceloleite.mercado.base.model.House;
-import org.marceloleite.mercado.base.model.OrderExecutor;
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import org.marceloleite.mercado.House;
+import org.marceloleite.mercado.OrderExecutor;
 import org.marceloleite.mercado.commons.Currency;
-import org.marceloleite.mercado.commons.MercadoBigDecimal;
 import org.marceloleite.mercado.commons.TimeInterval;
-import org.marceloleite.mercado.data.TemporalTicker;
-import org.marceloleite.mercado.retriever.TemporalTickerRetriever;
+import org.marceloleite.mercado.dao.interfaces.TemporalTickerDAO;
+import org.marceloleite.mercado.model.Account;
+import org.marceloleite.mercado.model.TemporalTicker;
+import org.marceloleite.mercado.model.Wallet;
 
 public class ControllerHouse implements House {
 
-	private static final MercadoBigDecimal DEFAULT_COMISSION_PERCENTAGE = new MercadoBigDecimal("0.007");
+	private static final double DEFAULT_COMISSION_PERCENTAGE = 0.007;
 
-	private TemporalTickerRetriever temporalTickerRetriever;
+	@Inject
+	@Named("TradeDatabaseSiteDAO")
+	private TemporalTickerDAO temporalTickerDAO;
 
 	private Map<Currency, TemporalTicker> temporalTickersByCurrency;
 
-	private Map<String, Balance> comissionBalance;
+	private Map<String, Wallet> comissionWallets;
 
 	private OrderExecutor orderExecutor;
 	
 	public ControllerHouse() {
 		super();
-		this.orderExecutor = new MailOrderExecutor();
-		this.temporalTickerRetriever = new TemporalTickerRetriever();
+		this.orderExecutor = MailOrderExecutor.getInstance();
 	}
 	
-	public void setTemporalTickerRetriever(TemporalTickerRetriever temporalTickerRetriever) {
-		this.temporalTickerRetriever = temporalTickerRetriever;
-	}
-
-	@Override
-	public Map<Currency, TemporalTicker> getTemporalTickers() {
-		return new EnumMap<>(temporalTickersByCurrency);
-	}
-
 	@Override
 	public OrderExecutor getOrderExecutor() {
 		return orderExecutor;
 	}
 
 	@Override
-	public MercadoBigDecimal getComissionPercentage() {
+	public double getComissionPercentage() {
 		return DEFAULT_COMISSION_PERCENTAGE;
 	}
 
 	@Override
-	public Map<String, Balance> getComissionBalance() {
-		return new HashMap<>(comissionBalance);
+	public void beforeStart() {
 	}
 
 	@Override
-	public void updateTemporalTickers(TimeInterval timeInterval) {
+	public void process(TreeMap<TimeInterval, Map<Currency, TemporalTicker>> temporalTickers) {
 		temporalTickersByCurrency = new EnumMap<>(Currency.class);
-
-		for (Currency currency : Currency.values()) {
-			/* TODO: Watch out with BGOLD. */
-			if (currency.isDigital() && currency != Currency.BGOLD) {
-				TemporalTicker temporalTicker = temporalTickerRetriever.retrieve(currency, timeInterval);
-				temporalTickersByCurrency.put(currency, temporalTicker);
-			}
-		}
+		
+//				for (Currency currency : Currency.values()) {
+//					/* TODO: Watch out with BGOLD. */
+//					if (currency.isDigital() && currency != Currency.BGOLD) {
+//						TemporalTicker temporalTicker = temporalTickerRetriever.retrieve(currency, timeInterval);
+//						temporalTickersByCurrency.put(currency, temporalTicker);
+//					}
+//				}
 	}
+
+	@Override
+	public void afterFinish() {
+	}
+
+	@Override
+	public TemporalTicker getTemporalTickerFor(Currency currency) {
+		return temporalTickersByCurrency.get(currency);
+	}
+
+	@Override
+	public Wallet getCommissionWalletFor(Account account) {
+		return comissionWallets.get(account.getOwner());
+	}
+
+//	@Override
+//	public void updateTemporalTickers(TimeInterval timeInterval) {
+//		temporalTickersByCurrency = new EnumMap<>(Currency.class);
+//
+//		for (Currency currency : Currency.values()) {
+//			/* TODO: Watch out with BGOLD. */
+//			if (currency.isDigital() && currency != Currency.BGOLD) {
+//				TemporalTicker temporalTicker = temporalTickerRetriever.retrieve(currency, timeInterval);
+//				temporalTickersByCurrency.put(currency, temporalTicker);
+//			}
+//		}
+//	}
 
 }

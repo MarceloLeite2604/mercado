@@ -5,62 +5,61 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
+
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.marceloleite.mercado.api.negotiation.methods.getaccountinfo.GetAccountInfoMethod;
-import org.marceloleite.mercado.api.negotiation.methods.getaccountinfo.GetAccountInfoMethodResponse;
-import org.marceloleite.mercado.base.model.Account;
-import org.marceloleite.mercado.base.model.Balance;
-import org.marceloleite.mercado.base.model.House;
-import org.marceloleite.mercado.base.model.Strategy;
-import org.marceloleite.mercado.base.model.TapiInformation;
+import org.marceloleite.mercado.House;
+import org.marceloleite.mercado.api.negotiation.method.GetAccountInfo;
+import org.marceloleite.mercado.api.negotiation.method.TapiResponse;
+import org.marceloleite.mercado.api.negotiation.model.AccountInfo;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.utils.ZonedDateTimeUtils;
+import org.marceloleite.mercado.controller.converter.AccountInfoToBalanceWalletConverter;
 import org.marceloleite.mercado.controller.properties.ControllerPropertiesRetriever;
-import org.marceloleite.mercado.converter.entity.AccountPOToAccountDataConverter;
-import org.marceloleite.mercado.converter.json.api.negotiation.BalanceApiToListBalanceDataConverter;
-import org.marceloleite.mercado.data.AccountData;
-import org.marceloleite.mercado.data.BalanceData;
-import org.marceloleite.mercado.databaseretriever.persistence.EntityManagerController;
-import org.marceloleite.mercado.databaseretriever.persistence.daos.AccountDAO;
-import org.marceloleite.mercado.databaseretriever.persistence.objects.AccountPO;
-import org.marceloleite.mercado.negotiationapi.model.getaccountinfo.AccountInfo;
-import org.marceloleite.mercado.retriever.email.EmailMessage;
-import org.marceloleite.mercado.siteretriever.trades.TradesSiteRetriever;
-import org.marceloleite.mercado.xml.readers.AccountsXmlReader;
+import org.marceloleite.mercado.controller.utils.TimeIntervalUtils;
+import org.marceloleite.mercado.dao.interfaces.AccountDAO;
+import org.marceloleite.mercado.dao.site.siteretriever.trade.TradeSiteRetriever;
+import org.marceloleite.mercado.email.EmailMessage;
+import org.marceloleite.mercado.model.Account;
+import org.marceloleite.mercado.model.TemporalTicker;
+import org.marceloleite.mercado.model.Wallet;
+import org.springframework.util.CollectionUtils;
 
 public class Controller {
 
 	private static final Logger LOGGER = LogManager.getLogger(Controller.class);
 
+	@Inject
+	@Named("AccountXMLDatabaseDAO")
 	private AccountDAO accountDAO;
 
+	@Inject
+	@Named("ControllerHouse")
 	private House house;
 
 	private ControllerPropertiesRetriever controllerPropertiesRetriever;
 
 	public Controller() {
 		this.controllerPropertiesRetriever = new ControllerPropertiesRetriever();
-		configureEntityManagerController();
 		configureTradesSiteRetriever();
-		this.accountDAO = new AccountDAO();
-		this.house = new ControllerHouse();
-
 	}
 
 	private void configureTradesSiteRetriever() {
 		Duration tradesSiteRetrieverDurationStep = controllerPropertiesRetriever
 				.retrieveTradesSiteRetrieverDurationStep();
 		if (tradesSiteRetrieverDurationStep != null) {
-			TradesSiteRetriever.setConfiguredStepDuration(tradesSiteRetrieverDurationStep);
+			TradeSiteRetriever.setConfiguredStepDuration(tradesSiteRetrieverDurationStep);
 		}
 
 		Integer tradesSiteRetrieverThreadPoolSize = controllerPropertiesRetriever
 				.retrieveTradesSiteRetrieverThreadPoolSize();
 		if (tradesSiteRetrieverThreadPoolSize != null) {
-			TradesSiteRetriever.setConfiguredThreadPoolSize(tradesSiteRetrieverThreadPoolSize);
+			TradeSiteRetriever.setConfiguredThreadPoolSize(tradesSiteRetrieverThreadPoolSize);
 		}
 	}
 
@@ -75,79 +74,47 @@ public class Controller {
 	}
 
 	private void sendStartEmails(List<Account> accounts) {
-		EmailMessage emailMessage = new EmailMessage();
-		for (Account account : accounts) {
-			String email = account.getEmail();
-			if (email != null) {
-				emailMessage.getToAddresses().add(email);
-				emailMessage.setSubject("Started");
-				emailMessage.setContent("Mercado Controller has started.");
-				emailMessage.send();
-			}
-		}
+		accounts.forEach(this::sendEmailFor);
 	}
 
-	private void configureEntityManagerController() {
-		String persistenceFileName = controllerPropertiesRetriever.retrievePersistenceFileName();
-		if (persistenceFileName != null) {
-			EntityManagerController.setPersistenceFileName(persistenceFileName);
+	private void sendEmailFor(Account account) {
+		EmailMessage emailMessage = new EmailMessage();
+		String email = account.getEmail();
+		if (email != null) {
+			emailMessage.getToAddresses()
+					.add(email);
+			emailMessage.setSubject("Started");
+			emailMessage.setContent("Mercado Controller has started.");
+			emailMessage.send();
 		}
 	}
 
 	private void check(List<Account> accounts) {
-		if (accounts != null && !accounts.isEmpty()) {
-			TimeInterval timeInterval = retrievePreviousMinuteInterval();
-			house.updateTemporalTickers(timeInterval);
-			LOGGER.debug(house.getTemporalTickers().get(Currency.BITCOIN));
-			checkAccounts(accounts, timeInterval);
-		}
-	}
-
-	private void checkAccounts(List<Account> accounts, TimeInterval timeInterval) {
-		for (Account account : accounts) {
-			Map<Currency, List<Strategy>> currenciesStrategies = account.getCurrenciesStrategies();
-			checkCurrenciesStrategies(timeInterval, account, currenciesStrategies);
-		}
+		house.process(retrieveTemporalTickers());
+		retrieveBalances(accounts);
 		save(accounts);
 	}
 
-	private void checkCurrenciesStrategies(TimeInterval timeInterval, Account account,
-			Map<Currency, List<Strategy>> currenciesStrategies) {
-		if (currenciesStrategies != null && !currenciesStrategies.isEmpty()) {
-			for (Currency currency : currenciesStrategies.keySet()) {
-				List<Strategy> strategies = currenciesStrategies.get(currency);
-				checkStrategies(timeInterval, account, strategies);
-				List<BalanceData> balanceDatas = retrieveAccountBalance(account.retrieveData());
-				account.setBalance(new Balance(balanceDatas));
-			}
-		}
+	private TreeMap<TimeInterval, Map<Currency, TemporalTicker>> retrieveTemporalTickers() {
+		TimeInterval timeInterval = TimeIntervalUtils.getInstance()
+				.retrievePreviousMinuteInterval();
+		Map<Currency, TemporalTicker> temporalickers = TemporalTickerRetriever.getInstance()
+				.retrieveFor(timeInterval);
+		TreeMap<TimeInterval, Map<Currency, TemporalTicker>> temporalTickersByTimeInterval = new TreeMap<>();
+		temporalTickersByTimeInterval.put(timeInterval, temporalickers);
+		return temporalTickersByTimeInterval;
 	}
 
 	private void save(List<Account> accounts) {
-		AccountPOToAccountDataConverter accountPOToAccountDataConverter = new AccountPOToAccountDataConverter();
-		if (accounts != null && !accounts.isEmpty()) {
-			for (Account account : accounts) {
-				AccountData accountData = account.retrieveData();
-				AccountPO accountPO = accountPOToAccountDataConverter.convertFrom(accountData);
-				accountDAO.merge(accountPO);
-			}
-		}
-	}
-
-	private void checkStrategies(TimeInterval timeInterval, Account account, List<Strategy> strategies) {
-		if (strategies != null && !strategies.isEmpty()) {
-			for (Strategy strategy : strategies) {
-				strategy.check(timeInterval, account, house);
-			}
-		}
+		accountDAO.saveAll(accounts);
 	}
 
 	private void waitNextMinute() {
 		ZonedDateTime now = ZonedDateTimeUtils.now();
-		ZonedDateTime nextMinute = now.plusMinutes(1).minusSeconds(now.getSecond());
+		ZonedDateTime nextMinute = now.plusMinutes(1)
+				.minusSeconds(now.getSecond());
 		Duration timeToWait = Duration.between(now, nextMinute);
 		threadSleep(timeToWait);
-
 	}
 
 	private void threadSleep(Duration timeToWait) {
@@ -162,54 +129,34 @@ public class Controller {
 		return false;
 	}
 
-	private TimeInterval retrievePreviousMinuteInterval() {
-		ZonedDateTime now = ZonedDateTimeUtils.now();
-		ZonedDateTime endTime = now.minusSeconds(now.getSecond()).minusMinutes(1);
-		ZonedDateTime startTime = endTime.minusMinutes(1);
-		return new TimeInterval(startTime, endTime);
-	}
-
 	private List<Account> retrieveAccounts() {
-		String xmlDirectoryPath = controllerPropertiesRetriever.retrieveXmlDirectoryPath();
-		List<AccountData> accountDatas = new AccountsXmlReader(xmlDirectoryPath).readAccounts();
 		List<Account> accounts = new ArrayList<>();
-		if (accountDatas != null && !accountDatas.isEmpty()) {
-			for (AccountData accountDataFromXml : accountDatas) {
-				AccountPO accountPO = searchAccountOnDatabase(accountDataFromXml.getOwner());
-				AccountData accountData;
-				if (accountPO != null) {
-					accountData = new AccountPOToAccountDataConverter().convertTo(accountPO);
-				} else {
-					accountData = accountDataFromXml;
-					List<BalanceData> balanceDatas = retrieveAccountBalance(accountData);
-					accountData.setBalanceDatas(balanceDatas);
-					saveAccountOnDatabase(accountData);
-				}
-				Account account = new Account(accountData);
-				accounts.add(account);
-			}
+		accountDAO.findAll()
+				.forEach(accounts::add);
+		if (CollectionUtils.isEmpty(accounts)) {
+			throw new RuntimeException("Could not find accounts to work with.");
+		}
+		return accounts;
+	}
+	
+	private List<Account> retrieveBalances(List<Account> accounts) {
+		for (Account account : accounts) {
+			account.setWallet(retrieveBalanceFor(account));
 		}
 		return accounts;
 	}
 
-	private List<BalanceData> retrieveAccountBalance(AccountData accountData) {
-		TapiInformation tapiInformation = new TapiInformation(accountData.getTapiInformationData());
-		GetAccountInfoMethodResponse getAccountInfoMethodResponse = new GetAccountInfoMethod(tapiInformation).execute();
-		AccountInfo accountInfo = getAccountInfoMethodResponse.getResponse();
-		BalanceApiToListBalanceDataConverter balanceApiToListBalanceDataConverter = new BalanceApiToListBalanceDataConverter();
-		List<BalanceData> balanceDatas = balanceApiToListBalanceDataConverter.convertTo(accountInfo.getBalanceApi());
-		accountData.setBalanceDatas(balanceDatas);
-		return balanceDatas;
-	}
+	private Wallet retrieveBalanceFor(Account account) {
+		TapiResponse<AccountInfo> tapiResponse = new GetAccountInfo(account.getTapiInformation()).execute();
+		if (tapiResponse.getStatusCode() != 100) {
+			StringBuilder stringBuilder = new StringBuilder();
+			stringBuilder.append(
+					"Balance retrieval for account \"" + account.getOwner() + "\" returned the error message: ");
+			stringBuilder.append(tapiResponse.getStatusCode() + " - " + tapiResponse.getErrorMessage());
+			throw new RuntimeException(stringBuilder.toString());
+		}
 
-	private AccountPO searchAccountOnDatabase(String owner) {
-		AccountPO accountPO = new AccountPO();
-		accountPO.setOwner(owner);
-		return accountDAO.findById(accountPO);
-	}
-
-	private void saveAccountOnDatabase(AccountData accountDataFromXml) {
-		AccountPO accountPO = new AccountPOToAccountDataConverter().convertFrom(accountDataFromXml);
-		accountDAO.persist(accountPO);
+		return AccountInfoToBalanceWalletConverter.getInstance()
+				.convertTo(tapiResponse.getResponseData());
 	}
 }

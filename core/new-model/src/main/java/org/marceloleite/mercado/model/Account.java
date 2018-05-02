@@ -113,6 +113,7 @@ public class Account {
 	}
 
 	public void setWallet(Wallet wallet) {
+		wallet.forEach(balance -> balance.setAccount(this));
 		this.wallet = wallet;
 	}
 
