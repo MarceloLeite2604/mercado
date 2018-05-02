@@ -89,9 +89,9 @@ public class OrderAnalyser {
 
 	private CurrencyAmount checkMinimal(CurrencyAmount currencyAmount)
 			throws NoBalanceForMinimalValueOrderAnalyserException {
-		if (MinimalAmounts.isAmountLowerThanMinimal(currencyAmount)) {
-			MercadoBigDecimal minimalAmount = MinimalAmounts.retrieveMinimalAmountFor(currencyAmount.getCurrency());
-			CurrencyAmount minimal = new CurrencyAmount(currencyAmount.getCurrency(), minimalAmount);
+		if (MinimalAmounts.getInstance().isAmountLowerThanMinimal(currencyAmount)) {
+			double minimalAmount = MinimalAmounts.getInstance().retrieveMinimalAmountFor(currencyAmount.getCurrency());
+			CurrencyAmount minimal = new CurrencyAmount(currencyAmount.getCurrency(), new BigDecimal(minimalAmount));
 			LOGGER.debug(currencyAmount + " is lower than minimal of " + minimal + ".");
 
 			if (account.getWallet()
@@ -115,7 +115,7 @@ public class OrderAnalyser {
 					.asCurrencyAmount();
 			LOGGER.debug(currencyAmount + " is higher than " + currencyAmountBalance + " in balance.");
 			CurrencyAmount secondCalculated = calculateSecondFor(currencyAmountBalance);
-			if (!MinimalAmounts.isAmountLowerThanMinimal(secondCalculated)) {
+			if (!MinimalAmounts.getInstance().isAmountLowerThanMinimal(secondCalculated)) {
 				second = secondCalculated;
 				LOGGER.debug("Lowering value to " + currencyAmountBalance + ".");
 				return currencyAmountBalance;

@@ -31,7 +31,7 @@ public abstract class AbstractPropertiesReader<E extends Property> implements Pr
 			value = (String) properties.get(propertyObject.getName());
 			
 			if ( propertyObject.isEncrypted()) {
-				String decryptedValue = new Encrypt().decrypt(value);
+				String decryptedValue = Encrypt.getInstance().decrypt(value);
 				propertyObject.setValue(decryptedValue);
 			} else {
 				propertyObject.setValue(value);

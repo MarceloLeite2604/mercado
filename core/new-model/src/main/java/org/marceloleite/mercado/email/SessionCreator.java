@@ -63,7 +63,7 @@ public class SessionCreator {
 
 	private String retrievePassword() {
 		Property property = retrieveProperty(SystemProperty.EMAIL_PASSWORD.getName());
-		return new Encrypt().decrypt(property.getValue());
+		return Encrypt.getInstance().decrypt(property.getValue());
 	}
 	
 	public static SessionCreator getInstante() {

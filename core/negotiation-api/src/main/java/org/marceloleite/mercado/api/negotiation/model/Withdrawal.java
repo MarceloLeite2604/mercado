@@ -3,8 +3,8 @@ package org.marceloleite.mercado.api.negotiation.model;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 
-import org.marceloleite.mercado.api.negotiation.serializer.WithdrawalStatusDeserializer;
-import org.marceloleite.mercado.api.negotiation.serializer.WithdrawalStatusSerializer;
+import org.marceloleite.mercado.api.negotiation.model.deserializer.WithdrawalStatusDeserializer;
+import org.marceloleite.mercado.api.negotiation.model.serializer.WithdrawalStatusSerializer;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.formatter.ZonedDateTimeSerializer;
 import org.marceloleite.mercado.commons.json.deserializer.CurrencyDeserializer;

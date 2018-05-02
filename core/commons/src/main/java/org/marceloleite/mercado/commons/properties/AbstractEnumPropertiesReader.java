@@ -37,7 +37,7 @@ public abstract class AbstractEnumPropertiesReader<E extends Enum<? extends Prop
 			value = (String) properties.get(propertyObject.getName());
 
 			if (propertyObject.isEncrypted()) {
-				String decryptedValue = new Encrypt().decrypt(value);
+				String decryptedValue = Encrypt.getInstance().decrypt(value);
 				propertyObject.setValue(decryptedValue);
 			} else {
 				propertyObject.setValue(value);

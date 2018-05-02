@@ -65,8 +65,7 @@ public class SellOrderBuilder {
 		this.limitPrice = null;
 
 		return Order.builder()
-				.setFirstCurrency(firstCurrency)
-				.setSecondCurrency(secondCurrency)
+				.setCurrencyPair(CurrencyPair.retrieveByPair(firstCurrency, secondCurrency))
 				.setType(OrderType.SELL)
 				.setQuantity(quantity)
 				.setLimitPrice(limitPrice)
@@ -77,9 +76,9 @@ public class SellOrderBuilder {
 	private void checkRules() {
 		if (quantity != null) {
 			CurrencyAmount currencyAmountToSell = new CurrencyAmount(secondCurrency, quantity);
-			if (MinimalAmounts.isAmountLowerThanMinimal(currencyAmountToSell)) {
+			if (MinimalAmounts.getInstance().isAmountLowerThanMinimal(currencyAmountToSell)) {
 				CurrencyAmount minimalAmount = new CurrencyAmount(secondCurrency,
-						MinimalAmounts.retrieveMinimalAmountFor(secondCurrency));
+						MinimalAmounts.getInstance().retrieveMinimalAmountFor(secondCurrency));
 				throw new RuntimeException("The amount of " + currencyAmountToSell
 						+ " to sell is inferior to the limit amount of " + minimalAmount + ".");
 			}
@@ -87,9 +86,9 @@ public class SellOrderBuilder {
 
 		if (limitPrice != null) {
 			CurrencyAmount currencyAmountToReceive = new CurrencyAmount(firstCurrency, limitPrice);
-			if (MinimalAmounts.isAmountLowerThanMinimal(currencyAmountToReceive)) {
+			if (MinimalAmounts.getInstance().isAmountLowerThanMinimal(currencyAmountToReceive)) {
 				CurrencyAmount minimalAmount = new CurrencyAmount(firstCurrency,
-						MinimalAmounts.retrieveMinimalAmountFor(firstCurrency));
+						MinimalAmounts.getInstance().retrieveMinimalAmountFor(firstCurrency));
 				throw new RuntimeException("The amount of " + currencyAmountToReceive
 						+ " to receive is inferior to the limit amount of " + minimalAmount + ".");
 			}

@@ -12,11 +12,15 @@ public class CurrencyAmount {
 	private Currency currency;
 
 	private BigDecimal amount;
+	
+	public CurrencyAmount(Currency currency, double amount) {
+		this(currency, new BigDecimal(amount));
+	}
 
 	public CurrencyAmount(Currency currency, BigDecimal amount) {
 		super();
 		this.currency = currency;
-		setAmount(new MercadoBigDecimal(amount.toString()));
+		setAmount(new BigDecimal(amount.toString()));
 	}
 
 	public CurrencyAmount(CurrencyAmount currencyAmount) {

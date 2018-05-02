@@ -16,7 +16,7 @@ public class UsernameRetriever {
 	public String retrieveUsername() {
 		if (username == null) {
 			Property property = retrieveProperty(SystemProperty.EMAIL_USERNAME.getName());
-			username = new Encrypt().decrypt(property.getValue());
+			username = Encrypt.getInstance().decrypt(property.getValue());
 		}
 		return username;
 	}

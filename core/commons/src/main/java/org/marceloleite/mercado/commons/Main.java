@@ -45,16 +45,15 @@ public class Main {
 	@SuppressWarnings("unused")
 	private static void encrypt() {
 		String string = "This message will be encrypted.";
-		Encrypt encrypt = new Encrypt();
-		String encryptedString = encrypt.encrypt(string);
+		String encryptedString = Encrypt.getInstance().encrypt(string);
 		System.out.println(encryptedString);
-		string = encrypt.decrypt("HQbtfCrbBsz1YcnbP/8dkUXogkD+qRqj");
+		string = Encrypt.getInstance().decrypt("HQbtfCrbBsz1YcnbP/8dkUXogkD+qRqj");
 		System.out.println(string);
 	}
 
 	@SuppressWarnings("unused")
 	private static void createEncryptKey() {
-		System.out.println(new Encrypt().generateKey());
+		System.out.println(Encrypt.getInstance().generateKey());
 	}
 
 	@SuppressWarnings("unused")
