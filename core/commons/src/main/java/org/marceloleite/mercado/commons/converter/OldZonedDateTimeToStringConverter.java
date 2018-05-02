@@ -3,20 +3,12 @@ package org.marceloleite.mercado.commons.converter;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
+import org.marceloleite.mercado.commons.interfaces.Converter;
 import org.marceloleite.mercado.commons.utils.ZonedDateTimeUtils;
 
-public class ZonedDateTimeToStringConverter implements Converter<ZonedDateTime, String> {
+public class OldZonedDateTimeToStringConverter implements Converter<ZonedDateTime, String> {
 
-	private static ZonedDateTimeToStringConverter instance;
-
-	private ZonedDateTimeToStringConverter() {
-	}
-
-	public static ZonedDateTimeToStringConverter getInstance() {
-		if (instance == null) {
-			instance = new ZonedDateTimeToStringConverter();
-		}
-		return instance;
+	private OldZonedDateTimeToStringConverter() {
 	}
 
 	@Override

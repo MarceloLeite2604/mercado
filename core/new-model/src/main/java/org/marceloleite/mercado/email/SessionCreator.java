@@ -6,8 +6,8 @@ import javax.mail.Authenticator;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 
-import org.marceloleite.mercado.commons.encryption.Encrypt;
 import org.marceloleite.mercado.commons.properties.SystemProperty;
+import org.marceloleite.mercado.commons.utils.EncryptUtils;
 import org.marceloleite.mercado.dao.interfaces.PropertyDAO;
 import org.marceloleite.mercado.model.Property;
 
@@ -63,7 +63,7 @@ public class SessionCreator {
 
 	private String retrievePassword() {
 		Property property = retrieveProperty(SystemProperty.EMAIL_PASSWORD.getName());
-		return Encrypt.getInstance().decrypt(property.getValue());
+		return EncryptUtils.getInstance().decrypt(property.getValue());
 	}
 	
 	public static SessionCreator getInstante() {

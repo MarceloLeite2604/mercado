@@ -3,7 +3,7 @@ package org.marceloleite.mercado.commons;
 import java.time.Duration;
 import java.time.ZonedDateTime;
 
-import org.marceloleite.mercado.commons.converter.ZonedDateTimeToStringConverter;
+import org.marceloleite.mercado.commons.utils.ZonedDateTimeUtils;
 
 public class TimeInterval implements Comparable<TimeInterval> {
 
@@ -60,8 +60,7 @@ public class TimeInterval implements Comparable<TimeInterval> {
 
 	@Override
 	public String toString() {
-		return ZonedDateTimeToStringConverter.getInstance().convertTo(start) + " to "
-				+ ZonedDateTimeToStringConverter.getInstance().convertTo(end);
+		return ZonedDateTimeUtils.format(start) + " to " + ZonedDateTimeUtils.format(end);
 	}
 
 	@Override

@@ -10,11 +10,11 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
 public class OrderStatusDeserializer extends StdDeserializer<OrderStatus> {
 
+	private static final long serialVersionUID = 1L;
+	
 	public OrderStatusDeserializer() {
 		super(OrderStatus.class);
 	}
-
-	private static final long serialVersionUID = 1L;
 
 	@Override
 	public OrderStatus deserialize(JsonParser parser, DeserializationContext context) throws IOException {

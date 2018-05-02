@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.math.RoundingMode;
 
-public class MercadoBigDecimal extends BigDecimal {
+public class OldMercadoBigDecimal extends BigDecimal {
 
 	private static final long serialVersionUID = 1L;
 
@@ -17,33 +17,33 @@ public class MercadoBigDecimal extends BigDecimal {
 	private static final short NEGATIVE_INFINITY_TYPE = -1;
 	private static final short NOT_A_NUMBER_TYPE = -2;
 
-	public static final MercadoBigDecimal POSITIVE_INFINITY = new MercadoBigDecimal(BigDecimal.ZERO,
+	public static final OldMercadoBigDecimal POSITIVE_INFINITY = new OldMercadoBigDecimal(BigDecimal.ZERO,
 			POSITIVE_INFINITY_TYPE);
-	public static final MercadoBigDecimal NEGATIVE_INFINITY = new MercadoBigDecimal(BigDecimal.ZERO,
+	public static final OldMercadoBigDecimal NEGATIVE_INFINITY = new OldMercadoBigDecimal(BigDecimal.ZERO,
 			NEGATIVE_INFINITY_TYPE);
-	public static final MercadoBigDecimal NOT_A_NUMBER = new MercadoBigDecimal(BigDecimal.ZERO, NOT_A_NUMBER_TYPE);
+	public static final OldMercadoBigDecimal NOT_A_NUMBER = new OldMercadoBigDecimal(BigDecimal.ZERO, NOT_A_NUMBER_TYPE);
 	
-	public static final MercadoBigDecimal ZERO = new MercadoBigDecimal(BigDecimal.ZERO);
+	public static final OldMercadoBigDecimal ZERO = new OldMercadoBigDecimal(BigDecimal.ZERO);
 	
-	public static final MercadoBigDecimal ONE = new MercadoBigDecimal(BigDecimal.ONE);
+	public static final OldMercadoBigDecimal ONE = new OldMercadoBigDecimal(BigDecimal.ONE);
 
 	public short numberType;
 
-	public MercadoBigDecimal() {
+	public OldMercadoBigDecimal() {
 		super("0");
 		this.numberType = FINITE_TYPE;
 	}
 
-	public MercadoBigDecimal(String string, short numberType) {
+	public OldMercadoBigDecimal(String string, short numberType) {
 		super(string);
 		this.numberType = FINITE_TYPE;
 	}
 
-	public MercadoBigDecimal(String string) {
+	public OldMercadoBigDecimal(String string) {
 		this(string, FINITE_TYPE);
 	}
 
-	public MercadoBigDecimal(Double value) {
+	public OldMercadoBigDecimal(Double value) {
 		this(value.toString());
 
 		if (value == Double.NEGATIVE_INFINITY) {
@@ -57,44 +57,44 @@ public class MercadoBigDecimal extends BigDecimal {
 		}
 	}
 
-	public MercadoBigDecimal(BigInteger bigInteger) {
+	public OldMercadoBigDecimal(BigInteger bigInteger) {
 		this(bigInteger.toString());
 	}
 
-	private MercadoBigDecimal(BigDecimal bigDecimal, short numberType) {
+	private OldMercadoBigDecimal(BigDecimal bigDecimal, short numberType) {
 		this(bigDecimal.toString(), numberType);
 	}
 
-	public MercadoBigDecimal(BigDecimal bigDecimal) {
+	public OldMercadoBigDecimal(BigDecimal bigDecimal) {
 		super(bigDecimal.toString());
 	}
 
-	public MercadoBigDecimal(Long value) {
+	public OldMercadoBigDecimal(Long value) {
 		super(value.toString());
 	}
 
-	public MercadoBigDecimal(int value) {
+	public OldMercadoBigDecimal(int value) {
 		super(Integer.toString(value));
 	}
 
-	public MercadoBigDecimal divide(MercadoBigDecimal divisor) {
-		return new MercadoBigDecimal(super.divide(divisor, 2*DEFAULT_SCALE, DEFAULT_ROUNDING_MODE), this.numberType);
+	public OldMercadoBigDecimal divide(OldMercadoBigDecimal divisor) {
+		return new OldMercadoBigDecimal(super.divide(divisor, 2*DEFAULT_SCALE, DEFAULT_ROUNDING_MODE), this.numberType);
 	}
 
-	public MercadoBigDecimal multiply(MercadoBigDecimal multiplicand) {
-		return new MercadoBigDecimal(super.multiply(multiplicand), this.numberType).setDefaultScale();
+	public OldMercadoBigDecimal multiply(OldMercadoBigDecimal multiplicand) {
+		return new OldMercadoBigDecimal(super.multiply(multiplicand), this.numberType).setDefaultScale();
 	}
 
-	public MercadoBigDecimal add(MercadoBigDecimal augend) {
-		return new MercadoBigDecimal(super.add(augend), this.numberType).setDefaultScale();
+	public OldMercadoBigDecimal add(OldMercadoBigDecimal augend) {
+		return new OldMercadoBigDecimal(super.add(augend), this.numberType).setDefaultScale();
 	}
 
-	public MercadoBigDecimal subtract(MercadoBigDecimal subtrahend) {
-		return new MercadoBigDecimal(super.subtract(subtrahend), this.numberType).setDefaultScale();
+	public OldMercadoBigDecimal subtract(OldMercadoBigDecimal subtrahend) {
+		return new OldMercadoBigDecimal(super.subtract(subtrahend), this.numberType).setDefaultScale();
 	}
 
-	private MercadoBigDecimal setDefaultScale() {
-		return new MercadoBigDecimal(super.setScale(DEFAULT_SCALE, RoundingMode.HALF_UP), this.numberType);
+	private OldMercadoBigDecimal setDefaultScale() {
+		return new OldMercadoBigDecimal(super.setScale(DEFAULT_SCALE, RoundingMode.HALF_UP), this.numberType);
 	}
 
 	@Override
@@ -111,7 +111,7 @@ public class MercadoBigDecimal extends BigDecimal {
 			return true;
 		if (getClass() != obj.getClass())
 			return false;
-		MercadoBigDecimal other = (MercadoBigDecimal) obj;
+		OldMercadoBigDecimal other = (OldMercadoBigDecimal) obj;
 		if (numberType != other.numberType)
 			return false;
 		if (!super.equals(obj))
@@ -133,7 +133,7 @@ public class MercadoBigDecimal extends BigDecimal {
 		}
 	}
 
-	public int compareTo(MercadoBigDecimal val) {
+	public int compareTo(OldMercadoBigDecimal val) {
 		switch (numberType) {
 		case POSITIVE_INFINITY_TYPE:
 			return (val.numberType == POSITIVE_INFINITY_TYPE ? 0 : 1);
@@ -156,7 +156,7 @@ public class MercadoBigDecimal extends BigDecimal {
 	}
 	
 	@Override
-	public MercadoBigDecimal setScale(int newScale) {
-		return new MercadoBigDecimal(super.setScale(newScale, MercadoBigDecimal.DEFAULT_ROUNDING_MODE));
+	public OldMercadoBigDecimal setScale(int newScale) {
+		return new OldMercadoBigDecimal(super.setScale(newScale, OldMercadoBigDecimal.DEFAULT_ROUNDING_MODE));
 	}
 }

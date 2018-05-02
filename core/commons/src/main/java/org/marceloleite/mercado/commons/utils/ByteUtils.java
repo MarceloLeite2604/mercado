@@ -2,7 +2,10 @@ package org.marceloleite.mercado.commons.utils;
 
 import javax.xml.bind.DatatypeConverter;
 
-public class ByteUtils {
+public final class ByteUtils {
+
+	private ByteUtils() {
+	}
 
 	public static String toString(byte[] bytes) {
 		StringBuilder stringBuilder = new StringBuilder();
@@ -31,6 +34,5 @@ public class ByteUtils {
 		}
 
 		return DatatypeConverter.parseHexBinary(string);
-
 	}
 }

@@ -1,4 +1,4 @@
-package org.marceloleite.mercado.commons.converter;
+package org.marceloleite.mercado.commons.interfaces;
 
 public interface Converter<F, T> {
 

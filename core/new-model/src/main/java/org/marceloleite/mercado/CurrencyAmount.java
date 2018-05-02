@@ -4,8 +4,8 @@ import java.math.BigDecimal;
 
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.MercadoBigDecimal;
-import org.marceloleite.mercado.commons.formatter.DigitalCurrencyFormatter;
-import org.marceloleite.mercado.commons.formatter.NonDigitalCurrencyFormatter;
+import org.marceloleite.mercado.commons.utils.formatter.DigitalCurrencyFormatter;
+import org.marceloleite.mercado.commons.utils.formatter.NonDigitalCurrencyFormatter;
 
 public class CurrencyAmount {
 

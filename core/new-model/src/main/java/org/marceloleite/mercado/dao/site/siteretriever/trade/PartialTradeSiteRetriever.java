@@ -74,8 +74,8 @@ class PartialTradeSiteRetriever extends AbstractSiteRetriever {
 		stringBuilder.append(TARGET_URL);
 		stringBuilder.append(String.format(BASE_PATH_TEMPLATE, currency, getMethod()));
 		stringBuilder.append(String.format("%d/%d/",
-				EpochSecondsToZonedDateTimeConveter.getInstance().convertTo(timeInterval.getStart()),
-				EpochSecondsToZonedDateTimeConveter.getInstance().convertTo(timeInterval.getEnd())));
+				EpochSecondsToZonedDateTimeConveter.getInstance().convertToEpochSeconds(timeInterval.getStart()),
+				EpochSecondsToZonedDateTimeConveter.getInstance().convertToEpochSeconds(timeInterval.getEnd())));
 		try {
 			return new URI(stringBuilder.toString());
 		} catch (URISyntaxException exception) {

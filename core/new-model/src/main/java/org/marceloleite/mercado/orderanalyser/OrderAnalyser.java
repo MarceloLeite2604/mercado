@@ -9,7 +9,7 @@ import org.marceloleite.mercado.MinimalAmounts;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.MercadoBigDecimal;
 import org.marceloleite.mercado.commons.OrderType;
-import org.marceloleite.mercado.commons.formatter.NonDigitalCurrencyFormatter;
+import org.marceloleite.mercado.commons.utils.formatter.NonDigitalCurrencyFormatter;
 import org.marceloleite.mercado.model.Account;
 
 public class OrderAnalyser {

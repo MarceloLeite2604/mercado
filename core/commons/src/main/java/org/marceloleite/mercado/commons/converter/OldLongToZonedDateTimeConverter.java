@@ -4,18 +4,11 @@ import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 
-public class LongToZonedDateTimeConverter implements Converter<Long, ZonedDateTime> {
+import org.marceloleite.mercado.commons.interfaces.Converter;
 
-	private static LongToZonedDateTimeConverter instance;
+public class OldLongToZonedDateTimeConverter implements Converter<Long, ZonedDateTime> {
 
-	private LongToZonedDateTimeConverter() {
-	}
-
-	public static LongToZonedDateTimeConverter getInstance() {
-		if (instance == null) {
-			instance = new LongToZonedDateTimeConverter();
-		}
-		return instance;
+	private OldLongToZonedDateTimeConverter() {
 	}
 
 	@Override

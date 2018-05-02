@@ -1,7 +1,7 @@
 package org.marceloleite.mercado.email;
 
-import org.marceloleite.mercado.commons.encryption.Encrypt;
 import org.marceloleite.mercado.commons.properties.SystemProperty;
+import org.marceloleite.mercado.commons.utils.EncryptUtils;
 import org.marceloleite.mercado.dao.interfaces.PropertyDAO;
 import org.marceloleite.mercado.model.Property;
 
@@ -16,7 +16,7 @@ public class UsernameRetriever {
 	public String retrieveUsername() {
 		if (username == null) {
 			Property property = retrieveProperty(SystemProperty.EMAIL_USERNAME.getName());
-			username = Encrypt.getInstance().decrypt(property.getValue());
+			username = EncryptUtils.getInstance().decrypt(property.getValue());
 		}
 		return username;
 	}

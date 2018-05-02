@@ -10,11 +10,11 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 
 public class TradeTypeDeserializer extends StdDeserializer<TradeType> {
 	
+	private static final long serialVersionUID = 1L;
+
 	public TradeTypeDeserializer() {
 		super(TradeType.class);
 	}
-
-	private static final long serialVersionUID = 1L;
 
 	@Override
 	public TradeType deserialize(JsonParser parser, DeserializationContext context)

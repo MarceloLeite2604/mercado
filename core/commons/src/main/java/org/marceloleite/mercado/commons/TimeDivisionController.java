@@ -5,7 +5,7 @@ import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.marceloleite.mercado.commons.converter.DurationToStringConverter;
+import org.marceloleite.mercado.commons.utils.DurationUtils;
 
 public class TimeDivisionController {
 
@@ -118,6 +118,6 @@ public class TimeDivisionController {
 	@Override
 	public String toString() {
 		TimeInterval timeInterval = new TimeInterval(start, end);
-		return timeInterval + " with steps of " + DurationToStringConverter.getInstance().convertTo(divisionDuration);
+		return timeInterval + " with steps of " + DurationUtils.formatAsSpelledNumber(divisionDuration);
 	}
 }

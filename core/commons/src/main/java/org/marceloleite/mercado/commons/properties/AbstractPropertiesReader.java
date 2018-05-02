@@ -2,7 +2,7 @@ package org.marceloleite.mercado.commons.properties;
 
 import java.util.Properties;
 
-import org.marceloleite.mercado.commons.encryption.Encrypt;
+import org.marceloleite.mercado.commons.utils.EncryptUtils;
 
 public abstract class AbstractPropertiesReader<E extends Property> implements PropertiesReader<E> {
 
@@ -31,7 +31,7 @@ public abstract class AbstractPropertiesReader<E extends Property> implements Pr
 			value = (String) properties.get(propertyObject.getName());
 			
 			if ( propertyObject.isEncrypted()) {
-				String decryptedValue = Encrypt.getInstance().decrypt(value);
+				String decryptedValue = EncryptUtils.decrypt(value);
 				propertyObject.setValue(decryptedValue);
 			} else {
 				propertyObject.setValue(value);

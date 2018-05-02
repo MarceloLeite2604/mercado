@@ -5,7 +5,7 @@ import java.time.ZonedDateTime;
 import java.util.Properties;
 
 import org.marceloleite.mercado.commons.converter.ZonedDateTimeToStringConverter;
-import org.marceloleite.mercado.commons.encryption.Encrypt;
+import org.marceloleite.mercado.commons.utils.EncryptUtils;
 
 public abstract class AbstractEnumPropertiesReader<E extends Enum<? extends Property>>
 		implements EnumPropertiesReader<E> {
@@ -37,7 +37,7 @@ public abstract class AbstractEnumPropertiesReader<E extends Enum<? extends Prop
 			value = (String) properties.get(propertyObject.getName());
 
 			if (propertyObject.isEncrypted()) {
-				String decryptedValue = Encrypt.getInstance().decrypt(value);
+				String decryptedValue = EncryptUtils.decrypt(value);
 				propertyObject.setValue(decryptedValue);
 			} else {
 				propertyObject.setValue(value);

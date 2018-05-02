@@ -16,7 +16,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.json.deserializer.ZonedDateTimeFromEpochDeserializer;
-import org.marceloleite.mercado.commons.json.serializer.ZonedDateTimeFromEpochSerializer;
+import org.marceloleite.mercado.commons.json.serializer.ZonedDateTimeToEpochSerializer;
 import org.marceloleite.mercado.model.xmladapter.CurrencyXmlAdapter;
 import org.marceloleite.mercado.model.xmladapter.ZonedDateTimeXmlAdapter;
 
@@ -44,7 +44,7 @@ public class Ticker {
 
 	@Column(name = "TICKER_TIME", nullable = false)
 	@JsonProperty("date")
-	@JsonSerialize(using = ZonedDateTimeFromEpochSerializer.class)
+	@JsonSerialize(using = ZonedDateTimeToEpochSerializer.class)
 	@JsonDeserialize(using = ZonedDateTimeFromEpochDeserializer.class)
 	private ZonedDateTime tickerTime;
 

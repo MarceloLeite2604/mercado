@@ -2,8 +2,8 @@ package org.marceloleite.mercado.commons;
 
 import java.util.List;
 
-import org.marceloleite.mercado.commons.formatter.NonDigitalCurrencyFormatter;
-import org.marceloleite.mercado.commons.formatter.PercentageFormatter;
+import org.marceloleite.mercado.commons.utils.formatter.NonDigitalCurrencyFormatter;
+import org.marceloleite.mercado.commons.utils.formatter.PercentageFormatter;
 
 public class Statistics {
 
@@ -121,7 +121,7 @@ public class Statistics {
 			} else {
 				previousLast = list.get(counter - 1);
 			}
-			
+
 			double currentLast = list.get(counter);
 			double subtract = currentLast - previousLast;
 
@@ -168,16 +168,11 @@ public class Statistics {
 	@Override
 	public String toString() {
 		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append("[ratio: " + PercentageFormatter.getInstance()
-				.format(ratio));
-		stringBuilder.append(", base: " + NonDigitalCurrencyFormatter.getInstance()
-				.format(base));
-		stringBuilder.append(", average: " + NonDigitalCurrencyFormatter.getInstance()
-				.format(average));
-		stringBuilder.append(", variation: " + NonDigitalCurrencyFormatter.getInstance()
-				.format(variation));
-		stringBuilder.append(", next: " + NonDigitalCurrencyFormatter.getInstance()
-				.format(next) + "]");
+		stringBuilder.append("[ratio: " + PercentageFormatter.format(ratio));
+		stringBuilder.append(", base: " + NonDigitalCurrencyFormatter.format(base));
+		stringBuilder.append(", average: " + NonDigitalCurrencyFormatter.format(average));
+		stringBuilder.append(", variation: " + NonDigitalCurrencyFormatter.format(variation));
+		stringBuilder.append(", next: " + NonDigitalCurrencyFormatter.format(next) + "]");
 		return stringBuilder.toString();
 	}
 

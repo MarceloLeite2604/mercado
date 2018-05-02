@@ -3,20 +3,13 @@ package org.marceloleite.mercado.commons.converter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class LocalDateTimeToStringConverter implements Converter<LocalDateTime, String> {
+import org.marceloleite.mercado.commons.interfaces.Converter;
+
+public class OldLocalDateTimeToStringConverter implements Converter<LocalDateTime, String> {
 
 	public static final String DATE_FORMAT = "dd/MM/yyyy HH:mm:ss";
 
-	private static LocalDateTimeToStringConverter instance;
-
-	private LocalDateTimeToStringConverter() {
-	}
-
-	public static LocalDateTimeToStringConverter getInstance() {
-		if (instance == null) {
-			instance = new LocalDateTimeToStringConverter();
-		}
-		return instance;
+	private OldLocalDateTimeToStringConverter() {
 	}
 
 	@Override

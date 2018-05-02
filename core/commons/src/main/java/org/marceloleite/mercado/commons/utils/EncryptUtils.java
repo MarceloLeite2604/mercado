@@ -1,4 +1,4 @@
-package org.marceloleite.mercado.commons.encryption;
+package org.marceloleite.mercado.commons.utils;
 
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -14,10 +14,8 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 
-public class Encrypt {
+public final class EncryptUtils {
 	
-	private static Encrypt instance;
-
 	public static final String KEY_ENVIRONMENT_VARIABLE_NAME = "MERCADO_ENCRYPT_KEY";
 
 	private static final String CRYPTOGRAPHIC_ALGORITHM = "DESede";
@@ -28,14 +26,14 @@ public class Encrypt {
 
 	private static final String TRANSFORMATION = CRYPTOGRAPHIC_ALGORITHM + "/" + FEEDBACK_MODE + "/" + PADDING_SCHEME;
 	
-	private Encrypt() {
+	private EncryptUtils() {
 	}
 
-	public String encrypt(String content) {
+	public static String encrypt(String content) {
 		return encrypt(content, retrieveKey());
 	}
 
-	public String encrypt(String content, String key) {
+	public static String encrypt(String content, String key) {
 		try {
 			byte[] keyBytes = DatatypeConverter.parseBase64Binary(key);
 			byte[] cryptedBytes = encryptDecrypt(content.getBytes(), keyBytes, Cipher.ENCRYPT_MODE);
@@ -46,11 +44,11 @@ public class Encrypt {
 		}
 	}
 
-	public String decrypt(String content) {
+	public static String decrypt(String content) {
 		return decrypt(content, retrieveKey());
 	}
 
-	public String decrypt(String content, String key) {
+	public static String decrypt(String content, String key) {
 		try {
 			byte[] encryptedBytes = DatatypeConverter.parseBase64Binary(content);
 			byte[] keyBytes = DatatypeConverter.parseBase64Binary(key);
@@ -62,7 +60,7 @@ public class Encrypt {
 		}
 	}
 
-	private byte[] encryptDecrypt(byte[] content, byte[] key, int opMode)
+	private static byte[] encryptDecrypt(byte[] content, byte[] key, int opMode)
 			throws InvalidKeyException, NoSuchAlgorithmException, NoSuchPaddingException, IllegalBlockSizeException,
 			BadPaddingException, InvalidAlgorithmParameterException {
 		SecretKey secretKey = new SecretKeySpec(key, CRYPTOGRAPHIC_ALGORITHM);
@@ -70,14 +68,14 @@ public class Encrypt {
 		return cipher.doFinal(content);
 	}
 
-	private Cipher createCipher(final SecretKey secretKey, int opMode) throws NoSuchAlgorithmException,
+	private static Cipher createCipher(final SecretKey secretKey, int opMode) throws NoSuchAlgorithmException,
 			NoSuchPaddingException, InvalidKeyException, InvalidAlgorithmParameterException {
 		Cipher cipher = Cipher.getInstance(TRANSFORMATION);
 		cipher.init(opMode, secretKey, new IvParameterSpec(new byte[8]));
 		return cipher;
 	}
 
-	private String retrieveKey() {
+	private static String retrieveKey() {
 		String key = System.getenv(KEY_ENVIRONMENT_VARIABLE_NAME);
 		if (key == null) {
 			throw new IllegalStateException(
@@ -91,19 +89,12 @@ public class Encrypt {
 		return key;
 	}
 
-	public String generateKey() {
+	public static String generateKey() {
 		try {
 			KeyGenerator keygen = KeyGenerator.getInstance(CRYPTOGRAPHIC_ALGORITHM);
 			return DatatypeConverter.printBase64Binary(keygen.generateKey().getEncoded());
 		} catch (NoSuchAlgorithmException exception) {
 			throw new RuntimeException("Error while retrieving encryption algorythm.", exception);
 		}
-	}
-	
-	public static Encrypt getInstance() {
-		if (instance == null) {
-			instance = new Encrypt();
-		}
-		return instance;
 	}
 }

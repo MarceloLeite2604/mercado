@@ -3,7 +3,7 @@ package org.marceloleite.mercado.commons.json.serializer;
 import java.io.IOException;
 import java.time.Duration;
 
-import org.marceloleite.mercado.commons.converter.DurationToStringFormatConverter;
+import org.marceloleite.mercado.commons.utils.DurationUtils;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
@@ -20,7 +20,7 @@ public class DurationSerializer extends StdSerializer<Duration> {
 	@Override
 	public void serialize(Duration duration, JsonGenerator jsonGenerator, SerializerProvider serializer)
 			throws IOException {
-		jsonGenerator.writeNumber(Long.parseLong(DurationToStringFormatConverter.getInstance().convertTo(duration)));
+		jsonGenerator.writeNumber(DurationUtils.formatAsSeconds(duration));
 	}
 
 }
