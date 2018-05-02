@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<buyOrder>
+    <amountToBuy>0.0123</amountToBuy>
+    <currencyToBuy>BTC</currencyToBuy>
+    <currencyToPay>BRL</currencyToPay>
+    <time>01/03/2018 16:23:48</time>
+</buyOrder>
