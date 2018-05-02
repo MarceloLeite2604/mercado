@@ -1,6 +1,8 @@
 package org.marceloleite.mercado.api.negotiation.serializer;
 
-import org.marceloleite.mercado.api.negotiation.methods.getwithdrawal.response.WithdrawalStatus;
+import java.io.IOException;
+
+import org.marceloleite.mercado.api.negotiation.model.WithdrawalStatus;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
@@ -19,7 +21,7 @@ public class WithdrawalStatusDeserializer extends StdDeserializer<WithdrawalStat
 	}
 
 	@Override
-	public WithdrawalStatus deserialize(JsonParser jsonParser, DeserializationContext context)
+	public WithdrawalStatus deserialize(JsonParser jsonParser, DeserializationContext context) throws IOException {
 		return WithdrawalStatus.getByValue(jsonParser.readValueAs(Long.class));
 	}
 

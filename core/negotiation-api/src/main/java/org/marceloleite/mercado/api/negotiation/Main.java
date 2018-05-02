@@ -2,16 +2,16 @@ package org.marceloleite.mercado.api.negotiation;
 
 import java.util.List;
 
-import org.marceloleite.mercado.api.negotiation.methods.getaccountinfo.GetAccountInfoMethod;
-import org.marceloleite.mercado.api.negotiation.methods.getaccountinfo.GetAccountInfoMethodResponse;
-import org.marceloleite.mercado.api.negotiation.methods.getorder.GetOrderMethod;
-import org.marceloleite.mercado.api.negotiation.methods.getorder.GetOrderMethodResponse;
-import org.marceloleite.mercado.api.negotiation.methods.listorderbook.ListOrderbookMethod;
-import org.marceloleite.mercado.api.negotiation.methods.listorderbook.ListOrderbookMethodResponse;
-import org.marceloleite.mercado.api.negotiation.methods.listorders.ListOrdersMethod;
-import org.marceloleite.mercado.api.negotiation.methods.listorders.ListOrdersMethodResponse;
-import org.marceloleite.mercado.api.negotiation.methods.listsystemmessages.ListSystemMessagesMethod;
-import org.marceloleite.mercado.api.negotiation.methods.listsystemmessages.ListSystemMessagesMethodResponse;
+import org.marceloleite.mercado.api.negotiation.methods.GetAccountInfo;
+import org.marceloleite.mercado.api.negotiation.methods.GetAccountInfo;
+import org.marceloleite.mercado.api.negotiation.methods.GetOrder;
+import org.marceloleite.mercado.api.negotiation.methods.GetOrder;
+import org.marceloleite.mercado.api.negotiation.methods.ListOrderbook;
+import org.marceloleite.mercado.api.negotiation.methods.ListOrderbook;
+import org.marceloleite.mercado.api.negotiation.methods.ListOrders;
+import org.marceloleite.mercado.api.negotiation.methods.ListOrders;
+import org.marceloleite.mercado.api.negotiation.methods.ListSystemMessages;
+import org.marceloleite.mercado.api.negotiation.methods.ListSystemMessages;
 import org.marceloleite.mercado.base.model.TapiInformation;
 import org.marceloleite.mercado.commons.converter.ObjectToJsonConverter;
 import org.marceloleite.mercado.commons.converter.ZonedDateTimeToStringConverter;
@@ -32,7 +32,7 @@ public class Main {
 	@SuppressWarnings("unused")
 	private static void listOrderbookMethod() {
 		try {
-			ListOrderbookMethodResponse listOrderbookMethodResponse = new ListOrderbookMethod(createTapiInformation())
+			ListOrderbookMethodResponse listOrderbookMethodResponse = new ListOrderbook(createTapiInformation())
 					.execute(CurrencyPair.BRLBCH);
 			System.out.println(new ObjectToJsonConverter().convertTo(listOrderbookMethodResponse.getResponse()));
 		} finally {
@@ -43,7 +43,7 @@ public class Main {
 	@SuppressWarnings("unused")
 	private static void listSystemMessagesMethod() {
 		try {
-			ListSystemMessagesMethodResponse listSystemMessagesMethodResponse = new ListSystemMessagesMethod(createTapiInformation())
+			ListSystemMessagesMethodResponse listSystemMessagesMethodResponse = new ListSystemMessages(createTapiInformation())
 					.execute();
 			System.out.println("Status code: " + listSystemMessagesMethodResponse.getStatusCode());
 			System.out.println("Error message: " + listSystemMessagesMethodResponse.getErrorMessage());
@@ -65,7 +65,7 @@ public class Main {
 	@SuppressWarnings("unused")
 	private static void listOrdersMethod() {
 		try {
-			ListOrdersMethodResponse listOrdersMethodResponse = new ListOrdersMethod(createTapiInformation()).execute(CurrencyPair.BRLBCH);
+			ListOrdersMethodResponse listOrdersMethodResponse = new ListOrders(createTapiInformation()).execute(CurrencyPair.BRLBCH);
 			System.out.println(new ObjectToJsonConverter().convertTo(listOrdersMethodResponse));
 		} finally {
 			EntityManagerController.getInstance().close();
@@ -75,7 +75,7 @@ public class Main {
 	@SuppressWarnings("unused")
 	private static void getAccountInfoMethod() {
 		try {
-			GetAccountInfoMethodResponse getAccountInfoMethodResponse = new GetAccountInfoMethod(createTapiInformation()).execute();
+			GetAccountInfoMethodResponse getAccountInfoMethodResponse = new GetAccountInfo(createTapiInformation()).execute();
 			System.out.println(new ObjectToJsonConverter().convertTo(getAccountInfoMethodResponse.getResponse()));
 		} finally {
 			EntityManagerController.getInstance().close();
@@ -85,7 +85,7 @@ public class Main {
 	@SuppressWarnings("unused")
 	private static void getOrderMethod() {
 		try {
-			GetOrderMethodResponse getOrderMethodResponse = new GetOrderMethod(createTapiInformation()).execute(CurrencyPair.BRLBCH, 1024453l);
+			GetOrderMethodResponse getOrderMethodResponse = new GetOrder(createTapiInformation()).execute(CurrencyPair.BRLBCH, 1024453l);
 			System.out.println(new ObjectToJsonConverter().convertTo(getOrderMethodResponse.getResponse()));
 		} finally {
 			EntityManagerController.getInstance().close();

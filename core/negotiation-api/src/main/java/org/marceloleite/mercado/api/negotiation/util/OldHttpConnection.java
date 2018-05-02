@@ -56,7 +56,7 @@ public class OldHttpConnection {
 				.decrypt(tapiInformation.getSecret())
 				.getBytes(StandardCharsets.UTF_8);
 		try {
-			return Encryption.getInstance().generateTapiMac(url.toURI(), decryptedSecret);
+			return EncryptionUtil.getInstance().generateTapiMac(url.toURI(), decryptedSecret);
 		} catch (URISyntaxException e) {
 			throw new RuntimeException(e);
 		}

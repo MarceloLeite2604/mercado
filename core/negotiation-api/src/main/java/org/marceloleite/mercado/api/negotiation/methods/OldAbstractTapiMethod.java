@@ -55,8 +55,8 @@ public abstract class OldAbstractTapiMethod<T extends TapiResponseTemplate<?, ?>
 		this.parameterNames = parameterNames;
 	}
 
-	private NapiParameters generateNapiParameters(Object... objectParameters) {
-		NapiParameters napiMethodParameters = new NapiParameters();
+	private TapiParameters generateNapiParameters(Object... objectParameters) {
+		TapiParameters napiMethodParameters = new TapiParameters();
 		napiMethodParameters.put(PARAMETER_TAPI_METHOD, tapiMethod);
 		napiMethodParameters.put(PARAMETER_TAPI_NONCE, NonceUtil.getInstance()
 				.next());
@@ -76,7 +76,7 @@ public abstract class OldAbstractTapiMethod<T extends TapiResponseTemplate<?, ?>
 	}
 
 	private void sendHttpUrlConnectionProperties(HttpsURLConnection httpsUrlConnection,
-			NapiParameters tapiMethodParameters) throws IOException {
+			TapiParameters tapiMethodParameters) throws IOException {
 		OutputStreamWriter outputStreamWriter = new OutputStreamWriter(httpsUrlConnection.getOutputStream());
 		outputStreamWriter.write(tapiMethodParameters.toUrlParametersString());
 		outputStreamWriter.flush();
@@ -98,7 +98,7 @@ public abstract class OldAbstractTapiMethod<T extends TapiResponseTemplate<?, ?>
 	}
 	
 	protected T executeMethod(Object... parameters) {
-		NapiParameters napiParameters = generateNapiParameters(parameters);
+		TapiParameters napiParameters = generateNapiParameters(parameters);
 		URI uri = generateURI(napiParameters);
 		LOGGER.debug("Url generated is: " + uri);
 		HttpsURLConnection httpsUrlConnection = new OldHttpConnection(tapiInformation).createHttpsUrlConnection(url);
@@ -161,7 +161,7 @@ public abstract class OldAbstractTapiMethod<T extends TapiResponseTemplate<?, ?>
 //		return generateMethodResponse(jsonTapiResponse);
 //	}
 	
-	private URI generateURI(NapiParameters napiParameters) {
+	private URI generateURI(TapiParameters napiParameters) {
 		try {
 			URIBuilder uriBuilder = new URIBuilder().setScheme("https")
 					.setHost("www.mercadobitcoin.net")

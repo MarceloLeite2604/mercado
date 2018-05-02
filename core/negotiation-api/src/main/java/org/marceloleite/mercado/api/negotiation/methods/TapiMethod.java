@@ -13,14 +13,18 @@ public enum TapiMethod {
 	GET_WITHDRAWAL("get_withdrawal"),
 	WITHDRAW_COIN("withdraw_coin");
 	
-	private String methodName;
+	private String name;
 
-	private TapiMethod(String methodName) {
-		this.methodName = methodName;
+	private TapiMethod(String name) {
+		this.name = name;
+	}
+	
+	public String getName() {
+		return name;
 	}
 	
 	@Override
 	public String toString() {
-		return methodName;
+		return name;
 	}
 }
