@@ -2,6 +2,8 @@ package org.marceloleite.mercado.api.negotiation.util;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
@@ -11,12 +13,12 @@ import javax.net.ssl.HttpsURLConnection;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.marceloleite.mercado.base.model.TapiInformation;
 import org.marceloleite.mercado.commons.encryption.Encrypt;
+import org.marceloleite.mercado.model.TapiInformation;
 
-public class HttpConnection {
-	
-	private static final Logger LOGGER = LogManager.getLogger(HttpConnection.class);
+public class OldHttpConnection {
+
+	private static final Logger LOGGER = LogManager.getLogger(OldHttpConnection.class);
 
 	private static final String TAPI_ID = "TAPI-ID";
 
@@ -25,10 +27,10 @@ public class HttpConnection {
 	private static final String CONTENT_TYPE = "Content-Type";
 
 	private static final String CONTENT_TYPE_VALUE = "application/x-www-form-urlencoded";
-	
+
 	private TapiInformation tapiInformation;
 
-	public HttpConnection(TapiInformation tapiInformation) {
+	public OldHttpConnection(TapiInformation tapiInformation) {
 		super();
 		this.tapiInformation = tapiInformation;
 	}
@@ -37,7 +39,8 @@ public class HttpConnection {
 		try {
 			Map<String, Object> httpRequestProperties = new HashMap<>();
 			httpRequestProperties.put(CONTENT_TYPE, CONTENT_TYPE_VALUE);
-			String decryptedId = new Encrypt().decrypt(tapiInformation.getId());
+			String decryptedId = Encrypt.getInstance()
+					.decrypt(tapiInformation.getIdentification());
 			httpRequestProperties.put(TAPI_ID, decryptedId);
 			String tapiMac = generateTapiMac(url);
 			LOGGER.debug("TAPI MAC is: " + tapiMac);
@@ -49,11 +52,17 @@ public class HttpConnection {
 	}
 
 	private String generateTapiMac(URL url) throws UnsupportedEncodingException {
-		byte[] decryptedSecret = new Encrypt().decrypt(tapiInformation.getSecret()).getBytes(StandardCharsets.UTF_8);
-		return new Encryption().generateTapiMac(url, decryptedSecret);
+		byte[] decryptedSecret = Encrypt.getInstance()
+				.decrypt(tapiInformation.getSecret())
+				.getBytes(StandardCharsets.UTF_8);
+		try {
+			return Encryption.getInstance().generateTapiMac(url.toURI(), decryptedSecret);
+		} catch (URISyntaxException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
-	private static HttpsURLConnection createHttpsRequestConnection(URL url, HttpMethod httpMethod,
+	private HttpsURLConnection createHttpsRequestConnection(URL url, HttpMethod httpMethod,
 			Map<String, Object> properties) throws IOException {
 		HttpsURLConnection httpsUrlConnection = (HttpsURLConnection) url.openConnection();
 
@@ -74,7 +83,7 @@ public class HttpConnection {
 			httpsUrlConnection.setDoOutput(true);
 			break;
 		}
-		
+
 		return httpsUrlConnection;
 	}
 

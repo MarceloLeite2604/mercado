@@ -2,12 +2,12 @@ package org.marceloleite.mercado.api.negotiation.methods;
 
 import java.time.ZonedDateTime;
 
+import org.marceloleite.mercado.api.negotiation.methods.response.NapiResponse;
 import org.marceloleite.mercado.commons.converter.Converter;
 import org.marceloleite.mercado.commons.converter.LongToZonedDateTimeConverter;
-import org.marceloleite.mercado.converter.json.JsonToClassObjectConverter;
-import org.marceloleite.mercado.jsonmodel.api.negotiation.JsonTapiResponse;
+import org.marceloleite.mercado.commons.converter.ObjectToJsonConverter;
 
-public abstract class AbstractTapiResponse<T, T2> {
+public abstract class TapiResponseTemplate<T, T2> {
 
 	private long statusCode;
 
@@ -17,24 +17,20 @@ public abstract class AbstractTapiResponse<T, T2> {
 
 	private String responseData;
 
-	private Class<?> jsonResponseDataClass;
-
 	private T2 response;
 
-	public AbstractTapiResponse(JsonTapiResponse jsonTapiResponse, Class<?> jsonResponseDataClass,
-			Converter<T, T2> jsonTapiResponseConverter) {
+	public TapiResponseTemplate(NapiResponse napiResponse, Converter<T, T2> converter) {
 		super();
-		this.statusCode = jsonTapiResponse.getStatusCode();
-		this.errorMessage = jsonTapiResponse.getErrorMessage();
+		this.statusCode = napiResponse.getStatusCode();
+		this.errorMessage = napiResponse.getErrorMessage();
 		if (errorMessage != null) {
 			throw new RuntimeException("Error while retrieving TAPI response: " + statusCode + " - " + errorMessage);
 		}
-		long longTimestamp = Long.parseLong(jsonTapiResponse.getServerUnixTimestamp());
+		long longTimestamp = Long.parseLong(napiResponse.getServerUnixTimestamp());
 		this.timestamp = LongToZonedDateTimeConverter.getInstance().convertTo(longTimestamp);
-		this.responseData = jsonTapiResponse.getResponseData();
-		this.jsonResponseDataClass = jsonResponseDataClass;
+		this.responseData = napiResponse.getResponseData();
 		T jsonResponseData = getJsonResponseData();
-		this.response = jsonTapiResponseConverter.convertTo(jsonResponseData);
+		this.response = converter.convertTo(jsonResponseData);
 	}
 
 	public long getStatusCode() {
@@ -60,7 +56,7 @@ public abstract class AbstractTapiResponse<T, T2> {
 	protected T getJsonResponseData() {
 		T result = null;
 		if (responseData != null || !responseData.isEmpty()) {
-			result = new JsonToClassObjectConverter<T>(jsonResponseDataClass).convertTo(responseData);
+			result = new ObjectToJsonConverter().convertFromToObject(responseData, result);
 		}
 		return result;
 	}

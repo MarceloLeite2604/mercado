@@ -1,16 +1,18 @@
 package org.marceloleite.mercado.api.negotiation.methods.getaccountinfo;
 
+import org.marceloleite.mercado.api.negotiation.TapiResponse;
 import org.marceloleite.mercado.api.negotiation.methods.AbstractTapiMethod;
 import org.marceloleite.mercado.api.negotiation.methods.TapiMethod;
-import org.marceloleite.mercado.base.model.TapiInformation;
+import org.marceloleite.mercado.api.negotiation.methods.getaccountinfo.response.AccountInfo;
+import org.marceloleite.mercado.model.TapiInformation;
 
-public class GetAccountInfoMethod extends AbstractTapiMethod<GetAccountInfoMethodResponse> {
+public class GetAccountInfoMethod extends AbstractTapiMethod<TapiResponse<AccountInfo>> {
 
 	public GetAccountInfoMethod(TapiInformation tapiInformation) {
-		super(tapiInformation, TapiMethod.GET_ACCOUNT_INFO, GetAccountInfoMethodResponse.class, null);
+		super(tapiInformation, TapiMethod.GET_ACCOUNT_INFO, null);
 	}
 
-	public GetAccountInfoMethodResponse execute() {
+	public TapiResponse<AccountInfo> execute() {
 		return executeMethod();
 	}
 }

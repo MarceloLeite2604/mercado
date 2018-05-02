@@ -6,11 +6,16 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
-import org.marceloleite.mercado.api.negotiation.methods.TapiMethodParameters;
+import org.marceloleite.mercado.api.negotiation.methods.NapiParameters;
 
 public class UrlGenerator {
 
-	public URL generate(String generateAddress, TapiMethodParameters tapiMethodParameters) {
+	private static UrlGenerator instance;
+
+	private UrlGenerator() {
+	}
+
+	public URL generate(String generateAddress, NapiParameters tapiMethodParameters) {
 		try {
 			String queryString = "?";
 			if (tapiMethodParameters != null && !tapiMethodParameters.isEmpty()) {
@@ -27,6 +32,13 @@ public class UrlGenerator {
 		} catch (UnsupportedEncodingException | MalformedURLException exception) {
 			throw new RuntimeException(exception);
 		}
+	}
+
+	public static UrlGenerator getInstance() {
+		if (instance == null) {
+			instance = new UrlGenerator();
+		}
+		return instance;
 	}
 
 }

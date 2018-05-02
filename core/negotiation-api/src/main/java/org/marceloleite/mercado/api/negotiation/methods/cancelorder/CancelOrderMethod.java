@@ -1,19 +1,21 @@
 package org.marceloleite.mercado.api.negotiation.methods.cancelorder;
 
+import org.marceloleite.mercado.api.negotiation.CurrencyPair;
+import org.marceloleite.mercado.api.negotiation.TapiResponse;
 import org.marceloleite.mercado.api.negotiation.methods.AbstractTapiMethod;
 import org.marceloleite.mercado.api.negotiation.methods.TapiMethod;
-import org.marceloleite.mercado.base.model.TapiInformation;
-import org.marceloleite.mercado.negotiationapi.model.CurrencyPair;
+import org.marceloleite.mercado.model.Order;
+import org.marceloleite.mercado.model.TapiInformation;
 
-public class CancelOrderMethod extends AbstractTapiMethod<CancelOrderMethodResponse> {
-	
-	private static final String[] PARAMETER_NAMES = {"coin_pair", "order_id"};
+public class CancelOrderMethod extends AbstractTapiMethod<TapiResponse<Order>> {
+
+	private static final String[] PARAMETER_NAMES = { "coin_pair", "order_id" };
 
 	public CancelOrderMethod(TapiInformation tapiInformation) {
-		super(tapiInformation, TapiMethod.CANCEL_ORDER, CancelOrderMethodResponse.class, PARAMETER_NAMES);
+		super(tapiInformation, TapiMethod.CANCEL_ORDER, PARAMETER_NAMES);
 	}
-	
-	public CancelOrderMethodResponse execute(CurrencyPair currencyPair, Long orderId) {
+
+	public TapiResponse<Order> execute(CurrencyPair currencyPair, Long orderId) {
 		return executeMethod(currencyPair, orderId);
 	}
 }

@@ -15,6 +15,8 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 
 public class Encrypt {
+	
+	private static Encrypt instance;
 
 	public static final String KEY_ENVIRONMENT_VARIABLE_NAME = "MERCADO_ENCRYPT_KEY";
 
@@ -25,6 +27,9 @@ public class Encrypt {
 	private static final String PADDING_SCHEME = "PKCS5Padding";
 
 	private static final String TRANSFORMATION = CRYPTOGRAPHIC_ALGORITHM + "/" + FEEDBACK_MODE + "/" + PADDING_SCHEME;
+	
+	private Encrypt() {
+	}
 
 	public String encrypt(String content) {
 		return encrypt(content, retrieveKey());
@@ -83,7 +88,6 @@ public class Encrypt {
 			throw new IllegalStateException("The encrypt key is empty.");
 		}
 
-		// return DatatypeConverter.parseBase64Binary(key);
 		return key;
 	}
 
@@ -94,5 +98,12 @@ public class Encrypt {
 		} catch (NoSuchAlgorithmException exception) {
 			throw new RuntimeException("Error while retrieving encryption algorythm.", exception);
 		}
+	}
+	
+	public static Encrypt getInstance() {
+		if (instance == null) {
+			instance = new Encrypt();
+		}
+		return instance;
 	}
 }

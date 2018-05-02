@@ -7,7 +7,7 @@ import java.util.HashMap;
 
 import org.marceloleite.mercado.commons.converter.ObjectToJsonConverter;
 
-public class TapiMethodParameters extends HashMap<String, Object> {
+public class NapiParameters extends HashMap<String, Object> {
 
 	private static final long serialVersionUID = 1L;
 

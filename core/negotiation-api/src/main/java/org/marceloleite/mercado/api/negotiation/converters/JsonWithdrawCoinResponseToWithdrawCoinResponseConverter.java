@@ -6,10 +6,10 @@ import org.marceloleite.mercado.converter.json.api.negotiation.getwithdrawal.Jso
 import org.marceloleite.mercado.jsonmodel.api.negotiation.JsonWithdrawCoinResponse;
 
 public class JsonWithdrawCoinResponseToWithdrawCoinResponseConverter
-		implements Converter<JsonWithdrawCoinResponse, WithdrawCoinResponse> {
+		implements Converter<WithdrawCoinResponse, WithdrawCoinResponse> {
 
 	@Override
-	public WithdrawCoinResponse convertTo(JsonWithdrawCoinResponse jsonWithdrawCoinResponse) {
+	public WithdrawCoinResponse convertTo(WithdrawCoinResponse jsonWithdrawCoinResponse) {
 		WithdrawCoinResponse withdrawCoinResponse = new WithdrawCoinResponse();
 		withdrawCoinResponse.setWithdrawal(
 				new JsonWithdrawalToWithdrawalConverter().convertTo(jsonWithdrawCoinResponse.getJsonWithdrawal()));
@@ -17,7 +17,7 @@ public class JsonWithdrawCoinResponseToWithdrawCoinResponseConverter
 	}
 
 	@Override
-	public JsonWithdrawCoinResponse convertFrom(WithdrawCoinResponse withdrawCoinResult) {
+	public WithdrawCoinResponse convertFrom(WithdrawCoinResponse withdrawCoinResult) {
 		throw new UnsupportedOperationException();
 	}
 

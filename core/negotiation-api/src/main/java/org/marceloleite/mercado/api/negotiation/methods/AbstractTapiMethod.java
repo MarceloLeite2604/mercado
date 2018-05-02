@@ -1,33 +1,40 @@
 package org.marceloleite.mercado.api.negotiation.methods;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
-import java.net.UnknownHostException;
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.ParameterizedType;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.Map.Entry;
 
-import javax.net.ssl.HttpsURLConnection;
-
+import org.apache.http.client.utils.URIBuilder;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.marceloleite.mercado.api.negotiation.util.HttpConnection;
-import org.marceloleite.mercado.api.negotiation.util.NonceGenerator;
-import org.marceloleite.mercado.api.negotiation.util.UrlGenerator;
-import org.marceloleite.mercado.base.model.TapiInformation;
-import org.marceloleite.mercado.commons.converter.ObjectToJsonConverter;
-import org.marceloleite.mercado.jsonmodel.api.negotiation.JsonTapiResponse;
+import org.marceloleite.mercado.api.negotiation.util.Encryption;
+import org.marceloleite.mercado.api.negotiation.util.NonceUtil;
+import org.marceloleite.mercado.commons.encryption.Encrypt;
+import org.marceloleite.mercado.model.TapiInformation;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
 
-public abstract class AbstractTapiMethod<T extends AbstractTapiResponse<?, ?>> {
+public abstract class AbstractTapiMethod<T> {
 
 	private static final Logger LOGGER = LogManager.getLogger(AbstractTapiMethod.class);
 
-	private static final String DOMAIN_ADDRESS = "https://www.mercadobitcoin.net";
+	private static final String TAPI_HOST = "www.mercadobitcoin.net";
 
 	private static final String TAPI_PATH = "/tapi/v3/";
 
+	private static final String TAPI_ID = "TAPI-ID";
+
+	private static final String TAPI_MAC = "TAPI-MAC";
+	
 	private static final String PARAMETER_TAPI_METHOD = "tapi_method";
 
 	private static final String PARAMETER_TAPI_NONCE = "tapi_nonce";
@@ -36,24 +43,59 @@ public abstract class AbstractTapiMethod<T extends AbstractTapiResponse<?, ?>> {
 
 	private TapiMethod tapiMethod;
 
-	private Class<?> responseClass;
-
 	private String[] parameterNames;
 
 	private TapiInformation tapiInformation;
 
-	public AbstractTapiMethod(TapiInformation tapiInformation, TapiMethod tapiMethod, Class<?> responseClass,
-			String[] parameterNames) {
+	public AbstractTapiMethod(TapiInformation tapiInformation, TapiMethod tapiMethod, String[] parameterNames) {
 		this.tapiInformation = tapiInformation;
 		this.tapiMethod = tapiMethod;
-		this.responseClass = responseClass;
 		this.parameterNames = parameterNames;
 	}
+	
+	public T executeMethod(Object... parameters) {
+		URI uri = generateUriWithParameters(parameters);
 
-	private TapiMethodParameters generateTapiMethodParameters(Object... objectParameters) {
-		TapiMethodParameters tapiMethodParameters = new TapiMethodParameters();
-		tapiMethodParameters.put(PARAMETER_TAPI_METHOD, tapiMethod);
-		tapiMethodParameters.put(PARAMETER_TAPI_NONCE, NonceGenerator.getInstance().nextNonce());
+		HttpHeaders httpHeaders = createHttpHeaders(uri);
+		HttpEntity<Object> httpEntity = new HttpEntity<>(null, httpHeaders);
+		Class<T> responseClass = retrieveResponseClass();
+
+		RestTemplate restTemplate = new RestTemplate();
+		int retries = 0;
+		T response = null;
+		while (response == null && retries < MAXIMUM_RETRIES) {
+			ResponseEntity<T> responseEntity = restTemplate.exchange(uri, HttpMethod.POST, httpEntity, responseClass);
+			LOGGER.debug("HTTP method returned with status code " + responseEntity.getStatusCode() + " ("
+					+ responseEntity.getStatusCode()
+							.name()
+					+ ").");
+			
+			if (responseEntity.getStatusCode() == HttpStatus.OK) {
+				response = responseEntity.getBody();
+			} else {
+				retries++;
+			}
+		}
+
+		if (retries >= MAXIMUM_RETRIES) {
+			LOGGER.error("Maximum retries reached. Aborting execution.");
+			throw new RuntimeException("Could not connect to host \"" + uri + "\".");
+		}
+
+		return response;
+	}
+	
+	private URI generateUriWithParameters(Object... parameters) {
+		URI uri = generateUri(generateNapiParameters(parameters));
+		LOGGER.debug("Url generated is: " + uri);
+		return uri;
+	}
+	
+	private NapiParameters generateNapiParameters(Object... objectParameters) {
+		NapiParameters napiMethodParameters = new NapiParameters();
+		napiMethodParameters.put(PARAMETER_TAPI_METHOD, tapiMethod);
+		napiMethodParameters.put(PARAMETER_TAPI_NONCE, NonceUtil.getInstance()
+				.next());
 
 		if (parameterNames != null && parameterNames.length > 0) {
 			if (objectParameters.length != parameterNames.length) {
@@ -63,79 +105,48 @@ public abstract class AbstractTapiMethod<T extends AbstractTapiResponse<?, ?>> {
 
 			int counter = 0;
 			for (String parameterName : parameterNames) {
-				tapiMethodParameters.put(parameterName, objectParameters[counter++]);
+				napiMethodParameters.put(parameterName, objectParameters[counter++]);
 			}
 		}
-		return tapiMethodParameters;
+		return napiMethodParameters;
 	}
 
-	private String generateAddress() {
-		return DOMAIN_ADDRESS + TAPI_PATH;
-	}
-
-	private void sendHttpUrlConnectionProperties(HttpsURLConnection httpsUrlConnection,
-			TapiMethodParameters tapiMethodParameters) throws IOException {
-		OutputStreamWriter outputStreamWriter = new OutputStreamWriter(httpsUrlConnection.getOutputStream());
-		outputStreamWriter.write(tapiMethodParameters.toUrlParametersString());
-		outputStreamWriter.flush();
-		outputStreamWriter.close();
-	}
-
-	private String readHttpUrlConnectionResponse(HttpsURLConnection httpsUrlConnection) throws IOException {
-		BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(httpsUrlConnection.getInputStream()));
-		StringBuffer stringBuffer = new StringBuffer();
-		String buffer;
-		while ((buffer = bufferedReader.readLine()) != null) {
-			stringBuffer.append(buffer + "\n");
-		}
-		return stringBuffer.toString();
-	}
-
-	private JsonTapiResponse generateJsonTapiResponse(String response) {
-		return new ObjectToJsonConverter(JsonTapiResponse.class).convertFromToObject(response, JsonTapiResponse.class);
-	}
-
-	protected T executeMethod(Object... objectParameters) {
-		TapiMethodParameters tapiMethodParameters = generateTapiMethodParameters(objectParameters);
-		URL url = new UrlGenerator().generate(generateAddress(), tapiMethodParameters);
-		LOGGER.debug("Url generated is: " + url);
-		HttpsURLConnection httpsUrlConnection = new HttpConnection(tapiInformation).createHttpsUrlConnection(url);
-		String response = null;
-		JsonTapiResponse jsonTapiResponse = null;
-		int retries = 0;
-		boolean methodExecuted = false;
-		while (!methodExecuted && retries < MAXIMUM_RETRIES) {
-			try {
-				httpsUrlConnection.connect();
-				sendHttpUrlConnectionProperties(httpsUrlConnection, tapiMethodParameters);
-				response = readHttpUrlConnectionResponse(httpsUrlConnection);
-				LOGGER.debug("Response received: " + response);
-				methodExecuted = true;
-			} catch (UnknownHostException exception) {
-				LOGGER.debug("Unknown host exception: " + exception.getMessage());
-				retries++;
-			} catch (IOException exception) {
-				throw new RuntimeException("Error while connecting to URL \"" + url + "\".", exception);
+	private URI generateUri(NapiParameters napiParameters) {
+		try {
+			URIBuilder uriBuilder = new URIBuilder().setScheme("https")
+					.setHost(TAPI_HOST)
+					.setPath(TAPI_PATH);
+			for (Entry<String, Object> napiParameter : napiParameters.entrySet()) {
+				String name = napiParameter.getKey();
+				Object value = napiParameter.getValue();
+				if (value != null) {
+					uriBuilder.addParameter(name, URLEncoder.encode(value.toString(), StandardCharsets.UTF_8.name()));
+				}
 			}
+			return uriBuilder.build();
+		} catch (UnsupportedEncodingException | URISyntaxException exception) {
+			throw new RuntimeException("Error while elaborating NAPI URI method.", exception);
 		}
-		
-		if ( retries >= MAXIMUM_RETRIES) {
-			throw new RuntimeException("Could not connect to host \"" + url.getHost() + "\".");
-		}
-		
-		jsonTapiResponse = generateJsonTapiResponse(response);
-		return generateMethodResponse(jsonTapiResponse);
+	}
+	
+	private HttpHeaders createHttpHeaders(URI uri) {
+		HttpHeaders httpHeaders = new HttpHeaders();
+		httpHeaders.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+		httpHeaders.add(TAPI_ID, tapiInformation.getIdentification());
+		httpHeaders.add(TAPI_MAC, generateTapiMac(uri));
+		return httpHeaders;
+	}
+
+	private String generateTapiMac(URI uri) {
+		byte[] decryptedSecret = Encrypt.getInstance()
+				.decrypt(tapiInformation.getSecret())
+				.getBytes(StandardCharsets.UTF_8);
+		return Encryption.getInstance()
+				.generateTapiMac(uri, decryptedSecret);
 	}
 
 	@SuppressWarnings("unchecked")
-	private T generateMethodResponse(JsonTapiResponse jsonTapiResponse) {
-		try {
-			Constructor<?> constructor = responseClass.getConstructor(JsonTapiResponse.class);
-			Object object = constructor.newInstance(jsonTapiResponse);
-			return (T) object;
-		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
-				| NoSuchMethodException | SecurityException exception) {
-			throw new RuntimeException("Error while creating \"" + tapiMethod + "\" method response.\n", exception);
-		}
-	}
+	private Class<T> retrieveResponseClass() {
+		return (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+	}	
 }

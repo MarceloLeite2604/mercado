@@ -25,13 +25,13 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
-import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.CurrencyPair;
 import org.marceloleite.mercado.commons.OrderStatus;
 import org.marceloleite.mercado.commons.OrderType;
 import org.marceloleite.mercado.commons.json.deserializer.OrderStatusDeserializer;
 import org.marceloleite.mercado.commons.json.serializer.OrderStatusSerializer;
 import org.marceloleite.mercado.model.attributeconverter.ZonedDateTimeAttributeConverter;
-import org.marceloleite.mercado.model.xmladapter.CurrencyXmlAdapter;
+import org.marceloleite.mercado.model.xmladapter.CurrencyPairXmlAdapter;
 import org.marceloleite.mercado.model.xmladapter.OrderStatusXmlAdapter;
 import org.marceloleite.mercado.model.xmladapter.OrderTypeXmlAdapter;
 import org.marceloleite.mercado.model.xmladapter.ZonedDateTimeXmlAdapter;
@@ -60,11 +60,8 @@ public class Order {
 	@JoinColumn(name = "ACCO_ID", nullable = false, foreignKey = @ForeignKey(name = "ORDE_ACCO_FK"))
 	private Account account;
 
-	@Column(name = "FIRST_CURRENCY", nullable = false, length = 4)
-	private Currency firstCurrency;
-
-	@Column(name = "SECOND_CURRENCY", nullable = false, length = 4)
-	private Currency secondCurrency;
+	@Column(name = "CURRENCY_PAIR", nullable = false, length = 4)
+	private CurrencyPair currencyPair;
 
 	@Column(name = "TYPE", nullable = false, length = 4)
 	private OrderType type;
@@ -109,8 +106,7 @@ public class Order {
 	private List<Operation> operations;
 
 	private Order(Builder builder) {
-		this.firstCurrency = builder.firstCurrency;
-		this.secondCurrency = builder.secondCurrency;
+		this.currencyPair = builder.currencyPair;
 		this.type = builder.type;
 		this.status = builder.status;
 		this.hasFills = builder.hasFills;
@@ -143,23 +139,13 @@ public class Order {
 	}
 
 	@XmlElement
-	@XmlJavaTypeAdapter(CurrencyXmlAdapter.class)
-	public Currency getFirstCurrency() {
-		return firstCurrency;
+	@XmlJavaTypeAdapter(CurrencyPairXmlAdapter.class)
+	public CurrencyPair getCurrencyPair() {
+		return currencyPair;
 	}
 
-	public void setFirstCurrency(Currency firstCurrency) {
-		this.firstCurrency = firstCurrency;
-	}
-
-	@XmlElement
-	@XmlJavaTypeAdapter(CurrencyXmlAdapter.class)
-	public Currency getSecondCurrency() {
-		return secondCurrency;
-	}
-
-	public void setSecondCurrency(Currency secondCurrency) {
-		this.secondCurrency = secondCurrency;
+	public void setCurrencyPair(CurrencyPair currencyPair) {
+		this.currencyPair = currencyPair;
 	}
 
 	@XmlElement
@@ -294,8 +280,7 @@ public class Order {
 	}
 	
 	public static class Builder {
-		private Currency firstCurrency;
-		private Currency secondCurrency;
+		private CurrencyPair currencyPair;
 		private OrderType type;
 		private OrderStatus status;
 		private Boolean hasFills;
@@ -311,54 +296,61 @@ public class Order {
 		private Builder() {
 		}
 		
-		public Builder setFirstCurrency(Currency firstCurrency) {
-			this.firstCurrency = firstCurrency;
+		public Builder setCurrencyPair(CurrencyPair currencyPair) {
+			this.currencyPair = currencyPair;
 			return this;
 		}
-		public Builder setSecondCurrency(Currency secondCurrency) {
-			this.secondCurrency = secondCurrency;
-			return this;
-		}
+		
 		public Builder setType(OrderType type) {
 			this.type = type;
 			return this;
 		}
+		
 		public Builder setStatus(OrderStatus status) {
 			this.status = status;
 			return this;
 		}
+		
 		public Builder setHasFills(Boolean hasFills) {
 			this.hasFills = hasFills;
 			return this;
 		}
+		
 		public Builder setQuantity(BigDecimal quantity) {
 			this.quantity = quantity;
 			return this;
 		}
+		
 		public Builder setLimitPrice(BigDecimal limitPrice) {
 			this.limitPrice = limitPrice;
 			return this;
 		}
+		
 		public Builder setExecutedQuantity(BigDecimal executedQuantity) {
 			this.executedQuantity = executedQuantity;
 			return this;
 		}
+		
 		public Builder setExecutedPriceAverage(BigDecimal executedPriceAverage) {
 			this.executedPriceAverage = executedPriceAverage;
 			return this;
 		}
+		
 		public Builder setFee(BigDecimal fee) {
 			this.fee = fee;
 			return this;
 		}
+		
 		public Builder setCreated(ZonedDateTime created) {
 			this.created = created;
 			return this;
 		}
+		
 		public Builder setUpdated(ZonedDateTime updated) {
 			this.updated = updated;
 			return this;
 		}
+		
 		public Builder setIntended(ZonedDateTime intended) {
 			this.intended = intended;
 			return this;

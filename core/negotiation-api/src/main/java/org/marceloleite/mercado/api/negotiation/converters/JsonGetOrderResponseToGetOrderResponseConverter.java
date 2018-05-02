@@ -7,10 +7,10 @@ import org.marceloleite.mercado.data.OrderData;
 import org.marceloleite.mercado.jsonmodel.api.negotiation.JsonGetOrderResponse;
 
 public class JsonGetOrderResponseToGetOrderResponseConverter
-		implements Converter<JsonGetOrderResponse, GetOrderResponse> {
+		implements Converter<GetOrderResponse, GetOrderResponse> {
 
 	@Override
-	public GetOrderResponse convertTo(JsonGetOrderResponse jsonGetOrderResponse) {
+	public GetOrderResponse convertTo(GetOrderResponse jsonGetOrderResponse) {
 		GetOrderResponse getOrderResponse = new GetOrderResponse();
 		JsonOrderToOrderDataConverter jsonOrderToOrderConverter = new JsonOrderToOrderDataConverter();
 		OrderData orderData = jsonOrderToOrderConverter.convertTo(jsonGetOrderResponse.getOrder());
@@ -19,7 +19,7 @@ public class JsonGetOrderResponseToGetOrderResponseConverter
 	}
 
 	@Override
-	public JsonGetOrderResponse convertFrom(GetOrderResponse getOrderResponse) {
+	public GetOrderResponse convertFrom(GetOrderResponse getOrderResponse) {
 		throw new UnsupportedOperationException();
 	}
 
