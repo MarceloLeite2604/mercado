@@ -1,6 +1,5 @@
 package org.marceloleite.mercado.simulator;
 
-import javax.inject.Inject;
 import javax.validation.constraints.NotBlank;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -28,7 +27,7 @@ public class SimulatorProperties {
 	private Double tradePercentage;
 
 	@NotBlank
-	private String persistenceFile;
+	private String persistenceFileName;
 
 	private TradesSiteRetriever tradesSiteRetriever = new TradesSiteRetriever();
 
@@ -72,12 +71,12 @@ public class SimulatorProperties {
 		this.tradePercentage = tradePercentage;
 	}
 
-	public String getPersistenceFile() {
-		return persistenceFile;
+	public String getPersistenceFileName() {
+		return persistenceFileName;
 	}
 
-	public void setPersistenceFile(String persistenceFile) {
-		this.persistenceFile = persistenceFile;
+	public void setPersistenceFileName(String persistenceFileName) {
+		this.persistenceFileName = persistenceFileName;
 	}
 
 	public TradesSiteRetriever getTradesSiteRetriever() {

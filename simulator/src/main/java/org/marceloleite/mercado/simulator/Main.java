@@ -34,6 +34,7 @@ public class Main {
 	public CommandLineRunner commandLineRunner() {
 		return (args) -> {
 			System.out.println(simulatorProperties.getStartTime());
+			System.out.println(simulatorProperties.getPersistenceFile());
 			// simulator();
 			// circularArrayList();
 		};

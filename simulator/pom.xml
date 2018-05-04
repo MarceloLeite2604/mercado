@@ -30,6 +30,7 @@
 				<simulator.persistenceFile>persistence-oracle.properties</simulator.persistenceFile>
 				<simulator.tradesSiteRetriever.threadPoolSize>4</simulator.tradesSiteRetriever.threadPoolSize>
 				<simulator.tradesSiteRetriever.durationStep>240</simulator.tradesSiteRetriever.durationStep>
+				<simulator.persistenceFileName>persistence-oracle.properties</simulator.persistenceFileName>
 			</properties>
 		</profile>
 		<profile>
@@ -38,6 +39,7 @@
 				<simulator.persistenceFile>persistence-mariadb.properties</simulator.persistenceFile>
 				<simulator.tradesSiteRetriever.threadPoolSize>1</simulator.tradesSiteRetriever.threadPoolSize>
 				<simulator.tradesSiteRetriever.durationStep>30</simulator.tradesSiteRetriever.durationStep>
+				<simulator.persistenceFileName>persistence-mariadb.properties</simulator.persistenceFileName>
 			</properties>
 		</profile>
 	</profiles>
@@ -52,6 +54,13 @@
 			<groupId>org.hibernate.validator</groupId>
 			<artifactId>hibernate-validator</artifactId>
 		</dependency>
+
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+			<!-- <version>5.3.0.CR2</version> -->
+		</dependency>
+
 
 		<dependency>
 			<groupId>org.marceloleite.mercado</groupId>
@@ -96,10 +105,10 @@
 			</plugin>
 		</plugins>
 		<resources>
-        <resource>
-            <directory>src/main/resources</directory>
-            <filtering>true</filtering>
-        </resource>
-    </resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
 	</build>
 </project>
