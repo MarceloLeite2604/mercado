@@ -1,8 +1,8 @@
 package org.marceloleite.mercado.simulator.property;
 
-import org.marceloleite.mercado.commons.properties.Property;
+import org.marceloleite.mercado.commons.properties.PropertyDefinition;
 
-public enum PersistenceProperty implements Property {
+public enum PersistenceProperty implements PropertyDefinition {
 	DRIVER("javax.persistence.jdbc.driver", false),
 	URL("javax.persistence.jdbc.url", false),
 	USER("javax.persistence.jdbc.user", true),

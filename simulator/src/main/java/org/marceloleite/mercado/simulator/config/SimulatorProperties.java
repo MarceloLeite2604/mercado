@@ -1,16 +1,14 @@
-package org.marceloleite.mercado.simulator;
+package org.marceloleite.mercado.simulator.config;
 
 import javax.validation.constraints.NotBlank;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 
 @Configuration
-@ConfigurationProperties(prefix = "simulator")
-@PropertySource("classpath:simulator.properties")
+@ConfigurationProperties("simulator")
 public class SimulatorProperties {
-
+	
 	@NotBlank
 	private String startTime;
 
@@ -22,14 +20,17 @@ public class SimulatorProperties {
 
 	@NotBlank
 	private Long retrievingDuration;
-
-	@NotBlank
+	
 	private Double tradePercentage;
-
+	
 	@NotBlank
-	private String persistenceFileName;
-
-	private TradesSiteRetriever tradesSiteRetriever = new TradesSiteRetriever();
+	private Long threadPoolSize;
+	
+	@NotBlank
+	private Long DurationStep;
+	
+	@NotBlank
+	private String persistencePropertiesFile;
 
 	public String getStartTime() {
 		return startTime;
@@ -71,45 +72,28 @@ public class SimulatorProperties {
 		this.tradePercentage = tradePercentage;
 	}
 
-	public String getPersistenceFileName() {
-		return persistenceFileName;
+	public Long getThreadPoolSize() {
+		return threadPoolSize;
 	}
 
-	public void setPersistenceFileName(String persistenceFileName) {
-		this.persistenceFileName = persistenceFileName;
+	public void setThreadPoolSize(Long threadPoolSize) {
+		this.threadPoolSize = threadPoolSize;
 	}
 
-	public TradesSiteRetriever getTradesSiteRetriever() {
-		return tradesSiteRetriever;
+	public Long getDurationStep() {
+		return DurationStep;
 	}
 
-	public void setTradesSiteRetriever(TradesSiteRetriever tradesSiteRetriever) {
-		this.tradesSiteRetriever = tradesSiteRetriever;
+	public void setDurationStep(Long durationStep) {
+		DurationStep = durationStep;
 	}
 
-	private static class TradesSiteRetriever {
+	public String getPersistencePropertiesFile() {
+		return persistencePropertiesFile;
+	}
 
-		@NotBlank
-		private Long threadPoolSize;
-
-		@NotBlank
-		private Long stepDuration;
-
-		public Long getThreadPoolSize() {
-			return threadPoolSize;
-		}
-
-		public void setThreadPoolSize(Long threadPoolSize) {
-			this.threadPoolSize = threadPoolSize;
-		}
-
-		public Long getStepDuration() {
-			return stepDuration;
-		}
-
-		public void setStepDuration(Long stepDuration) {
-			this.stepDuration = stepDuration;
-		}
+	public void setPersistencePropertiesFile(String persistencePropertiesFile) {
+		this.persistencePropertiesFile = persistencePropertiesFile;
 	}
 
 }

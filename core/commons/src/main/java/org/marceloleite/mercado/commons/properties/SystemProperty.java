@@ -1,6 +1,6 @@
 package org.marceloleite.mercado.commons.properties;
 
-public enum SystemProperty implements Property {
+public enum SystemProperty implements PropertyDefinition {
 
 	EMAIL_USERNAME("system.email.username", true),
 	EMAIL_PASSWORD("system.email.password", true),

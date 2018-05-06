@@ -19,7 +19,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @JsonPropertyOrder({ "name", "value"})
 @XmlRootElement(name = "property")
 @XmlType(propOrder = { "name", "value" })
-public class Property implements org.marceloleite.mercado.commons.properties.Property {
+public class Property implements org.marceloleite.mercado.commons.properties.PropertyDefinition {
 	
 	@Id
 	@GeneratedValue

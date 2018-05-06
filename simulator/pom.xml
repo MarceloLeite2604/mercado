@@ -19,6 +19,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<resource.delimiter>@</resource.delimiter>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 	</properties>
@@ -27,52 +28,58 @@
 		<profile>
 			<id>development</id>
 			<properties>
-				<simulator.persistenceFile>persistence-oracle.properties</simulator.persistenceFile>
-				<simulator.tradesSiteRetriever.threadPoolSize>4</simulator.tradesSiteRetriever.threadPoolSize>
-				<simulator.tradesSiteRetriever.durationStep>240</simulator.tradesSiteRetriever.durationStep>
-				<simulator.persistenceFileName>persistence-oracle.properties</simulator.persistenceFileName>
+				<active.profile>development</active.profile>
 			</properties>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
 		</profile>
 		<profile>
 			<id>production</id>
 			<properties>
-				<simulator.persistenceFile>persistence-mariadb.properties</simulator.persistenceFile>
-				<simulator.tradesSiteRetriever.threadPoolSize>1</simulator.tradesSiteRetriever.threadPoolSize>
-				<simulator.tradesSiteRetriever.durationStep>30</simulator.tradesSiteRetriever.durationStep>
-				<simulator.persistenceFileName>persistence-mariadb.properties</simulator.persistenceFileName>
+				<active.profile>production</active.profile>
 			</properties>
 		</profile>
 	</profiles>
 
 	<dependencies>
+		<!-- Spring dependencies. -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+		</dependency>
 
+		<!-- Hibernate dependencies. -->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-core</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.hibernate.validator</groupId>
 			<artifactId>hibernate-validator</artifactId>
 		</dependency>
 
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-core</artifactId>
-			<!-- <version>5.3.0.CR2</version> -->
-		</dependency>
-
-
+		<!-- Project dependencies. -->
 		<dependency>
 			<groupId>org.marceloleite.mercado</groupId>
 			<artifactId>new-model</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 
-		<!-- TEST -->
+		<!-- Testing dependencies. -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+			<optional>true</optional>
 		</dependency>
 	</dependencies>
 
@@ -102,6 +109,10 @@
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
 		<resources>

@@ -1,6 +1,6 @@
 package org.marceloleite.mercado.commons.properties;
 
-public interface PropertiesReader<E extends Property> {
+public interface PropertiesReader<E extends PropertyDefinition> {
 
 	void readConfiguration(String configurationFilePath);
 	

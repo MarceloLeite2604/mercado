@@ -8,6 +8,7 @@ import javax.transaction.Transactional;
 
 import org.marceloleite.mercado.commons.TimeDivisionController;
 import org.marceloleite.mercado.commons.utils.ZonedDateTimeUtils;
+import org.marceloleite.mercado.simulator.config.SimulatorProperties;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -15,6 +16,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
@@ -33,8 +35,8 @@ public class Main {
 	@Transactional
 	public CommandLineRunner commandLineRunner() {
 		return (args) -> {
-			System.out.println(simulatorProperties.getStartTime());
-			System.out.println(simulatorProperties.getPersistenceFile());
+			System.out.println(simulatorProperties.getPersistencePropertiesFile());
+			System.out.println(simulatorProperties.getStepDuration());
 			// simulator();
 			// circularArrayList();
 		};

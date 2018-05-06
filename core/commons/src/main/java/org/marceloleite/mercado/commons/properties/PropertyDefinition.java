@@ -1,6 +1,6 @@
 package org.marceloleite.mercado.commons.properties;
 
-public interface Property {
+public interface PropertyDefinition {
 
 	String getName();
 

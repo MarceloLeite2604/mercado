@@ -1,7 +1,6 @@
 package org.marceloleite.mercado.simulator;
 
 import java.time.Duration;
-import java.time.ZonedDateTime;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.ExecutionException;
@@ -18,7 +17,6 @@ import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.model.Account;
 import org.marceloleite.mercado.model.Balance;
 import org.marceloleite.mercado.model.TemporalTicker;
-import org.marceloleite.mercado.simulator.property.SimulatorPropertiesRetriever;
 
 public class Simulator {
 
@@ -30,7 +28,7 @@ public class Simulator {
 
 	private Duration stepDuration;
 
-	private SimulatorPropertiesRetriever simulatorPropertiesRetriever;
+	// private SimulatorPropertiesRetriever simulatorPropertiesRetriever;
 
 	public Simulator() {
 		this.house = SimulationHouse.builder()
@@ -38,12 +36,12 @@ public class Simulator {
 	}
 
 	private void configure() {
-		simulatorPropertiesRetriever = new SimulatorPropertiesRetriever();
-		ZonedDateTime startTime = simulatorPropertiesRetriever.retrieveStartTime();
-		ZonedDateTime endTime = simulatorPropertiesRetriever.retrieveEndTime();
-		this.stepDuration = simulatorPropertiesRetriever.retrieveStepDurationTime();
-		Duration retrievingDuration = simulatorPropertiesRetriever.retrieveRetrievingDurationTime();
-		timeDivisionController = new TimeDivisionController(startTime, endTime, retrievingDuration);
+//		simulatorPropertiesRetriever = new SimulatorPropertiesRetriever();
+//		ZonedDateTime startTime = simulatorPropertiesRetriever.retrieveStartTime();
+//		ZonedDateTime endTime = simulatorPropertiesRetriever.retrieveEndTime();
+//		this.stepDuration = simulatorPropertiesRetriever.retrieveStepDurationTime();
+//		Duration retrievingDuration = simulatorPropertiesRetriever.retrieveRetrievingDurationTime();
+//		timeDivisionController = new TimeDivisionController(startTime, endTime, retrievingDuration);
 	}
 
 	public void runSimulation() {

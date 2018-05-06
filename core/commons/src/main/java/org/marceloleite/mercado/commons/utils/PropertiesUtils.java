@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
+import org.marceloleite.mercado.commons.properties.PropertyDefinition;
+
 public class PropertiesUtils {
 
 	private PropertiesUtils() {
@@ -41,5 +44,17 @@ public class PropertiesUtils {
 				.filter(entry -> ((String) entry.getKey()).startsWith("hibernate"))
 				.forEach(entry -> matchingProperties.setProperty((String) entry.getKey(), (String) entry.getValue()));
 		return matchingProperties;
+	}
+	
+	public static String retrieveProperty(Properties properties, PropertyDefinition propertyDefinition) {
+		String value = properties.getProperty(propertyDefinition.getName(), propertyDefinition.getDefaultValue());
+		if (StringUtils.isEmpty(value) && propertyDefinition.isRequired()) {
+			throw new RuntimeException(
+					"Could not find persistence property \"" + propertyDefinition.getName() + "\".");
+		}
+		if (propertyDefinition.isEncrypted()) {
+			value = EncryptUtils.decrypt(value);
+		}
+		return value;
 	}
 }
