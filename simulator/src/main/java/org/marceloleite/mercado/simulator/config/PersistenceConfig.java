@@ -19,7 +19,7 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-//@Configuration
+@Configuration
 @EnableTransactionManagement
 public class PersistenceConfig {
 
@@ -41,7 +41,7 @@ public class PersistenceConfig {
 		return entityManagerFactoryBean;
 	}
 
-	@Bean(destroyMethod = "close")
+	@Bean
 	public DataSource createDataSource() {
 		Properties properties = getProperties();
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
@@ -51,14 +51,6 @@ public class PersistenceConfig {
 		dataSource.setDriverClassName(PropertiesUtils.retrieveProperty(properties, PersistenceProperty.DRIVER));
 		return dataSource;
 	}
-
-	// @Bean
-	// public PlatformTransactionManager transactionManager(EntityManagerFactory
-	// entityManagerFactory) {
-	// JpaTransactionManager transactionManager = new JpaTransactionManager();
-	// transactionManager.setEntityManagerFactory(entityManagerFactory);
-	// return transactionManager;
-	// }
 
 	@Bean
 	public PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
