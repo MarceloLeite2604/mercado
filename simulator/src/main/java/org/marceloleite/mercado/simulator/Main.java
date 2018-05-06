@@ -6,6 +6,7 @@ import java.time.ZonedDateTime;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 
+import org.marceloleite.mercado.NewModelMain;
 import org.marceloleite.mercado.PersistenceContextConfiguration;
 import org.marceloleite.mercado.commons.TimeDivisionController;
 import org.marceloleite.mercado.commons.utils.ZonedDateTimeUtils;
@@ -22,7 +23,9 @@ import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.FilterType;
 
 @SpringBootApplication
-@ComponentScan(basePackages = "org.marceloleite.mercado", excludeFilters = @Filter(type = FilterType.ASSIGNABLE_TYPE, value = PersistenceContextConfiguration.class))
+@ComponentScan(basePackages = "org.marceloleite.mercado", excludeFilters = {
+		@Filter(type = FilterType.ASSIGNABLE_TYPE, value = PersistenceContextConfiguration.class),
+		@Filter(type = FilterType.ASSIGNABLE_TYPE, value = NewModelMain.class) })
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
 		DataSourceTransactionManagerAutoConfiguration.class, HibernateJpaAutoConfiguration.class })
 public class Main {

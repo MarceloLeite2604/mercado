@@ -55,9 +55,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
-public class Main {
+public class NewModelMain {
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(NewModelMain.class);
 
 	private static final String OUTPUT_FOLDER = "output/";
 
@@ -111,7 +111,7 @@ public class Main {
 	private TickerRepository tickerRepository;
 
 	public static void main(String[] args) {
-		SpringApplication.run(Main.class);
+		SpringApplication.run(NewModelMain.class);
 	}
 
 	@Bean

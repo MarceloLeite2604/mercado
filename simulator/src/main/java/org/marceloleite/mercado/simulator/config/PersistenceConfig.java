@@ -12,6 +12,7 @@ import org.marceloleite.mercado.commons.utils.PropertiesUtils;
 import org.marceloleite.mercado.simulator.Simulator;
 import org.marceloleite.mercado.simulator.property.PersistenceProperty;
 import org.marceloleite.mercado.simulator.property.SimulatorProperties;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
@@ -26,9 +27,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @EnableTransactionManagement
-@EnableJpaRepositories(basePackages = { "org.marceloleite.mercado" })
+@EnableJpaRepositories(basePackages = "org.marceloleite.mercado", entityManagerFactoryRef = "createEntityManagerFactory")
+@EntityScan("org.marceloleite.mercado.model")
 public class PersistenceConfig {
-	
+
 	private static final Logger LOGGER = LogManager.getLogger(Simulator.class);
 
 	@Inject
@@ -82,7 +84,7 @@ public class PersistenceConfig {
 	}
 
 	private Properties getProperties() {
-		LOGGER.debug("Persistence properties file: \""+simulatorProperties.getPersistencePropertiesFile()+"\".");
+		LOGGER.debug("Persistence properties file: \"" + simulatorProperties.getPersistencePropertiesFile() + "\".");
 		if (properties == null) {
 			properties = PropertiesUtils.retrieveProperties(simulatorProperties.getPersistencePropertiesFile());
 		}
