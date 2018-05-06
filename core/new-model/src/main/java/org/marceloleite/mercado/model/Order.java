@@ -44,10 +44,10 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 @Entity
 @Table(name = "ORDERS")
 @JsonIgnoreProperties({ "id", "account" })
-@JsonPropertyOrder({ "firstCurrency", "secondCurrency", "type", "status", "hasFills", "quantity", "limitPrice",
+@JsonPropertyOrder({ "currencyPair", "type", "status", "hasFills", "quantity", "limitPrice",
 		"executedQuantity", "executedPriceAverage", "fee", "created", "updated", "intended", "operations" })
 @XmlRootElement(name = "order")
-@XmlType(propOrder = { "firstCurrency", "secondCurrency", "type", "status", "hasFills", "quantity", "limitPrice",
+@XmlType(propOrder = { "currencyPair", "type", "status", "hasFills", "quantity", "limitPrice",
 		"executedQuantity", "executedPriceAverage", "fee", "created", "updated", "intended", "operations" })
 public class Order {
 
@@ -104,6 +104,9 @@ public class Order {
 	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@Fetch(FetchMode.SUBSELECT)
 	private List<Operation> operations;
+
+	public Order() {
+	};
 
 	private Order(Builder builder) {
 		this.currencyPair = builder.currencyPair;
@@ -274,11 +277,11 @@ public class Order {
 			}
 		}
 	}
-	
+
 	public static Builder builder() {
 		return new Builder();
 	}
-	
+
 	public static class Builder {
 		private CurrencyPair currencyPair;
 		private OrderType type;
@@ -292,70 +295,70 @@ public class Order {
 		private ZonedDateTime created;
 		private ZonedDateTime updated;
 		private ZonedDateTime intended;
-		
+
 		private Builder() {
 		}
-		
+
 		public Builder setCurrencyPair(CurrencyPair currencyPair) {
 			this.currencyPair = currencyPair;
 			return this;
 		}
-		
+
 		public Builder setType(OrderType type) {
 			this.type = type;
 			return this;
 		}
-		
+
 		public Builder setStatus(OrderStatus status) {
 			this.status = status;
 			return this;
 		}
-		
+
 		public Builder setHasFills(Boolean hasFills) {
 			this.hasFills = hasFills;
 			return this;
 		}
-		
+
 		public Builder setQuantity(BigDecimal quantity) {
 			this.quantity = quantity;
 			return this;
 		}
-		
+
 		public Builder setLimitPrice(BigDecimal limitPrice) {
 			this.limitPrice = limitPrice;
 			return this;
 		}
-		
+
 		public Builder setExecutedQuantity(BigDecimal executedQuantity) {
 			this.executedQuantity = executedQuantity;
 			return this;
 		}
-		
+
 		public Builder setExecutedPriceAverage(BigDecimal executedPriceAverage) {
 			this.executedPriceAverage = executedPriceAverage;
 			return this;
 		}
-		
+
 		public Builder setFee(BigDecimal fee) {
 			this.fee = fee;
 			return this;
 		}
-		
+
 		public Builder setCreated(ZonedDateTime created) {
 			this.created = created;
 			return this;
 		}
-		
+
 		public Builder setUpdated(ZonedDateTime updated) {
 			this.updated = updated;
 			return this;
 		}
-		
+
 		public Builder setIntended(ZonedDateTime intended) {
 			this.intended = intended;
 			return this;
 		}
-		
+
 		public Order build() {
 			return new Order(this);
 		}

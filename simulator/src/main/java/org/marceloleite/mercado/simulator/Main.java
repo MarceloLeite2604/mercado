@@ -6,9 +6,9 @@ import java.time.ZonedDateTime;
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 
+import org.marceloleite.mercado.PersistenceContextConfiguration;
 import org.marceloleite.mercado.commons.TimeDivisionController;
 import org.marceloleite.mercado.commons.utils.ZonedDateTimeUtils;
-import org.marceloleite.mercado.simulator.config.SimulatorProperties;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -17,14 +17,18 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.ComponentScan.Filter;
+import org.springframework.context.annotation.FilterType;
 
 @SpringBootApplication
+@ComponentScan(basePackages = "org.marceloleite.mercado", excludeFilters = @Filter(type = FilterType.ASSIGNABLE_TYPE, value = PersistenceContextConfiguration.class))
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
 		DataSourceTransactionManagerAutoConfiguration.class, HibernateJpaAutoConfiguration.class })
 public class Main {
 
 	@Inject
-	private SimulatorProperties simulatorProperties;
+	private Simulator simulator;
 
 	public static void main(String[] args) {
 		SpringApplication.run(Main.class);
@@ -34,9 +38,7 @@ public class Main {
 	@Transactional
 	public CommandLineRunner commandLineRunner() {
 		return (args) -> {
-			System.out.println(simulatorProperties.getPersistencePropertiesFile());
-			System.out.println(simulatorProperties.getStepDuration());
-			// simulator();
+			simulator();
 			// circularArrayList();
 		};
 	}
@@ -53,7 +55,7 @@ public class Main {
 	}
 
 	@SuppressWarnings("unused")
-	private static void simulator() {
-		new Simulator().runSimulation();
+	private void simulator() {
+		simulator.runSimulation();
 	}
 }

@@ -1,4 +1,4 @@
-package org.marceloleite.mercado.simulator.config;
+package org.marceloleite.mercado.simulator.property;
 
 import javax.validation.constraints.NotBlank;
 
@@ -31,7 +31,7 @@ public class SimulatorProperties {
 	
 	@NotBlank
 	private String persistencePropertiesFile;
-
+	
 	public String getStartTime() {
 		return startTime;
 	}
@@ -95,5 +95,4 @@ public class SimulatorProperties {
 	public void setPersistencePropertiesFile(String persistencePropertiesFile) {
 		this.persistencePropertiesFile = persistencePropertiesFile;
 	}
-
 }

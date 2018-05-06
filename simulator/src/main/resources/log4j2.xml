@@ -1,58 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="info">
+	<Properties>
+		<Property name="defaultPatternLayout">[%-5p] %d{HH:mm:ss,SSS} %c{1.} [%-8t] %m%n</Property>
+	</Properties>
 	<Appenders>
 		<File name="LogFile" fileName="output/logs/mercado-simulator.log"
 			append="false">
-			<PatternLayout>
-				<Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
-			</PatternLayout>
+			<PatternLayout pattern="${defaultPatternLayout}" />
 		</File>
 		<File name="OriginalStrategyLogFile" fileName="output/logs/mercado-simulator-original-strategy.log"
 			append="false">
-			<PatternLayout>
-				<Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
-			</PatternLayout>
+			<PatternLayout pattern="${defaultPatternLayout}" />
 		</File>
 		<File name="FirstStrategyLogFile" fileName="output/logs/mercado-simulator-first-strategy.log"
 			append="false">
-			<PatternLayout>
-				<Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
-			</PatternLayout>
+			<PatternLayout pattern="${defaultPatternLayout}" />
 		</File>
 		<File name="SecondStrategyLogFile" fileName="output/logs/mercado-simulator-second-strategy.log"
 			append="false">
-			<PatternLayout>
-				<Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
-			</PatternLayout>
+			<PatternLayout pattern="${defaultPatternLayout}" />
 		</File>
 		<File name="ThirdStrategyLogFile" fileName="output/logs/mercado-simulator-third-strategy.log"
 			append="false">
-			<PatternLayout>
-				<Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
-			</PatternLayout>
+			<PatternLayout pattern="${defaultPatternLayout}" />
 		</File>
 		<File name="FourthStrategyLogFile" fileName="output/logs/mercado-simulator-fourth-strategy.log"
 			append="false">
-			<PatternLayout>
-				<Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
-			</PatternLayout>
+			<PatternLayout pattern="${defaultPatternLayout}" />
 		</File>
 		<File name="FifthStrategyLogFile" fileName="output/logs/mercado-simulator-fifth-strategy.log"
 			append="false">
-			<PatternLayout>
-				<Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
-			</PatternLayout>
+			<PatternLayout pattern="${defaultPatternLayout}" />
 		</File>
 		<File name="SixthStrategyLogFile" fileName="output/logs/mercado-simulator-sixth-strategy.log"
 			append="false">
-			<PatternLayout>
-				<Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
-			</PatternLayout>
+			<PatternLayout pattern="${defaultPatternLayout}" />
 		</File>
 		<File name="HibernateLogFile" fileName="output/logs/mercado-simulator-hibernate.log">
-			<PatternLayout>
-				<Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
-			</PatternLayout>
+			<PatternLayout pattern="${defaultPatternLayout}" />
 		</File>
 	</Appenders>
 	<Loggers>

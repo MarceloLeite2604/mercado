@@ -1,12 +1,11 @@
 package org.marceloleite.mercado.simulator;
 
 import java.time.Duration;
+import java.time.ZonedDateTime;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+
+import javax.inject.Inject;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,31 +16,33 @@ import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.model.Account;
 import org.marceloleite.mercado.model.Balance;
 import org.marceloleite.mercado.model.TemporalTicker;
+import org.marceloleite.mercado.simulator.property.SimulatorPropertiesRetriever;
+import org.springframework.stereotype.Component;
 
+@Component
 public class Simulator {
 
 	private static final Logger LOGGER = LogManager.getLogger(Simulator.class);
 
+	@Inject
+	private SimulatorPropertiesRetriever simulatorPropertiesRetriever;
+
+	@Inject
+	private AccountsRetriever accountsRetriever;
+
+	@Inject
 	private SimulationHouse house;
 
 	private TimeDivisionController timeDivisionController;
 
 	private Duration stepDuration;
 
-	// private SimulatorPropertiesRetriever simulatorPropertiesRetriever;
-
-	public Simulator() {
-		this.house = SimulationHouse.builder()
-				.build();
-	}
-
 	private void configure() {
-//		simulatorPropertiesRetriever = new SimulatorPropertiesRetriever();
-//		ZonedDateTime startTime = simulatorPropertiesRetriever.retrieveStartTime();
-//		ZonedDateTime endTime = simulatorPropertiesRetriever.retrieveEndTime();
-//		this.stepDuration = simulatorPropertiesRetriever.retrieveStepDurationTime();
-//		Duration retrievingDuration = simulatorPropertiesRetriever.retrieveRetrievingDurationTime();
-//		timeDivisionController = new TimeDivisionController(startTime, endTime, retrievingDuration);
+		ZonedDateTime startTime = simulatorPropertiesRetriever.retrieveStartTime();
+		ZonedDateTime endTime = simulatorPropertiesRetriever.retrieveEndTime();
+		this.stepDuration = simulatorPropertiesRetriever.retrieveStepDuration();
+		Duration retrievingDuration = simulatorPropertiesRetriever.retrieveRetrievingDuration();
+		timeDivisionController = new TimeDivisionController(startTime, endTime, retrievingDuration);
 	}
 
 	public void runSimulation() {
@@ -50,33 +51,38 @@ public class Simulator {
 		configure();
 		logSimulationStart();
 
-		logAccountsBalance(false);
+		// logAccountsBalance(false);
 
-		ExecutorService executor = Executors.newFixedThreadPool(2);
-		try {
-			Future<TreeMap<TimeInterval, Map<Currency, TemporalTicker>>> future;
-			HouseSimulationThread houseSimulationThread = new HouseSimulationThread(house);
-			executor.execute(houseSimulationThread);
-
-			TreeMap<TimeInterval, Map<Currency, TemporalTicker>> temporalTickersByTimeInterval = null;
-			for (TimeInterval stepTimeInterval : timeDivisionController.geTimeIntervals()) {
-				LOGGER.info(stepTimeInterval);
-				TimeDivisionController timeDivisionController = new TimeDivisionController(stepTimeInterval,
-						stepDuration);
-				future = executor.submit(new TemporalTickerRetrieverCallable(timeDivisionController));
-
-				temporalTickersByTimeInterval = future.get();
-				updateHouseThread(houseSimulationThread, temporalTickersByTimeInterval);
-
-			}
-			finishExecution(houseSimulationThread);
-			logAccountsBalance(true);
-			LOGGER.info("Simulation finished.");
-		} catch (InterruptedException | ExecutionException exception) {
-			throw new RuntimeException(exception);
-		} finally {
-			executor.shutdown();
-		}
+		// ExecutorService executor = Executors.newFixedThreadPool(2);
+		// try {
+		// Future<TreeMap<TimeInterval, Map<Currency, TemporalTicker>>> future;
+		// HouseSimulationThread houseSimulationThread = new
+		// HouseSimulationThread(house);
+		// executor.execute(houseSimulationThread);
+		//
+		// TreeMap<TimeInterval, Map<Currency, TemporalTicker>>
+		// temporalTickersByTimeInterval = null;
+		// for (TimeInterval stepTimeInterval :
+		// timeDivisionController.geTimeIntervals()) {
+		// LOGGER.info(stepTimeInterval);
+		// TimeDivisionController timeDivisionController = new
+		// TimeDivisionController(stepTimeInterval,
+		// stepDuration);
+		// future = executor.submit(new
+		// TemporalTickerRetrieverCallable(timeDivisionController));
+		//
+		// temporalTickersByTimeInterval = future.get();
+		// updateHouseThread(houseSimulationThread, temporalTickersByTimeInterval);
+		//
+		// }
+		// finishExecution(houseSimulationThread);
+		// logAccountsBalance(true);
+		// LOGGER.info("Simulation finished.");
+		// } catch (InterruptedException | ExecutionException exception) {
+		// throw new RuntimeException(exception);
+		// } finally {
+		// executor.shutdown();
+		// }
 	}
 
 	private void finishExecution(HouseSimulationThread houseSimulationThread) {

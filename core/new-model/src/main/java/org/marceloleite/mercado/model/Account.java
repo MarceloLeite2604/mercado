@@ -26,14 +26,15 @@ import org.hibernate.annotations.NotFoundAction;
 import org.marceloleite.mercado.strategy.StrategyExecutor;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @Entity
 @Table(name = "ACCOUNTS")
 @JsonIgnoreProperties({ "id" })
-@JsonPropertyOrder({ "owner", "email", "tapiInformation", "balances", "withdrawals", "strategies", "orders" })
+@JsonPropertyOrder({ "owner", "email", "tapiInformation", "wallet", "withdrawals", "strategies", "orders" })
 @XmlRootElement(name = "account")
-@XmlType(propOrder = { "owner", "email", "tapiInformation", "balances", "withdrawals", "strategies", "orders" })
+@XmlType(propOrder = { "owner", "email", "tapiInformation", "wallet", "withdrawals", "strategies", "orders" })
 public class Account {
 
 	@Id
@@ -52,6 +53,7 @@ public class Account {
 
 	@OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@Fetch(FetchMode.SUBSELECT)
+	@JsonProperty("wallet")
 	private Wallet wallet;
 
 	@OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -107,7 +109,7 @@ public class Account {
 	}
 
 	@XmlElementWrapper(name = "wallet")
-	@XmlElement
+	@XmlElement(name = "balance")
 	public Wallet getWallet() {
 		return wallet;
 	}

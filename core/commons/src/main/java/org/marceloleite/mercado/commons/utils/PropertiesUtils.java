@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.marceloleite.mercado.commons.properties.PropertyDefinition;
+import org.marceloleite.mercado.commons.utils.creator.ObjectMapperCreator;
 
 public class PropertiesUtils {
 
@@ -45,16 +46,29 @@ public class PropertiesUtils {
 				.forEach(entry -> matchingProperties.setProperty((String) entry.getKey(), (String) entry.getValue()));
 		return matchingProperties;
 	}
-	
+
 	public static String retrieveProperty(Properties properties, PropertyDefinition propertyDefinition) {
 		String value = properties.getProperty(propertyDefinition.getName(), propertyDefinition.getDefaultValue());
 		if (StringUtils.isEmpty(value) && propertyDefinition.isRequired()) {
-			throw new RuntimeException(
-					"Could not find persistence property \"" + propertyDefinition.getName() + "\".");
+			throw new RuntimeException("Could not find persistence property \"" + propertyDefinition.getName() + "\".");
 		}
 		if (propertyDefinition.isEncrypted()) {
 			value = EncryptUtils.decrypt(value);
 		}
 		return value;
+	}
+
+	public static <T> T retrievePropertyAs(Properties properties, PropertyDefinition propertyDefinition,
+			Class<T> propertyClass) {
+		String value = retrieveProperty(properties, propertyDefinition);
+		T result = null;
+		try {
+			result = ObjectMapperCreator.create()
+					.readValue(value, propertyClass);
+		} catch (IOException exception) {
+			throw new RuntimeException("Error while convereting \"" + propertyDefinition.getName() + "\" property to \""
+					+ propertyClass.getName() + "\" class.", exception);
+		}
+		return result;
 	}
 }

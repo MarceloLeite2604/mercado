@@ -6,11 +6,16 @@ import javax.inject.Inject;
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.commons.utils.PropertiesUtils;
+import org.marceloleite.mercado.simulator.Simulator;
 import org.marceloleite.mercado.simulator.property.PersistenceProperty;
+import org.marceloleite.mercado.simulator.property.SimulatorProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
@@ -21,7 +26,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @Configuration
 @EnableTransactionManagement
+@EnableJpaRepositories(basePackages = { "org.marceloleite.mercado" })
 public class PersistenceConfig {
+	
+	private static final Logger LOGGER = LogManager.getLogger(Simulator.class);
 
 	@Inject
 	private SimulatorProperties simulatorProperties;
@@ -30,6 +38,7 @@ public class PersistenceConfig {
 
 	@Bean
 	public LocalContainerEntityManagerFactoryBean createEntityManagerFactory() {
+		LOGGER.debug("Creating EntityManagerFactory.");
 		LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
 		entityManagerFactoryBean.setDataSource(createDataSource());
 		entityManagerFactoryBean.setPackagesToScan(new String[] { "org.baeldung.persistence.model" });
@@ -43,6 +52,7 @@ public class PersistenceConfig {
 
 	@Bean
 	public DataSource createDataSource() {
+		LOGGER.debug("Creating DataSource.");
 		Properties properties = getProperties();
 		DriverManagerDataSource dataSource = new DriverManagerDataSource();
 		dataSource.setUsername(PropertiesUtils.retrieveProperty(properties, PersistenceProperty.USER));
@@ -54,22 +64,25 @@ public class PersistenceConfig {
 
 	@Bean
 	public PlatformTransactionManager transactionManager(EntityManagerFactory entityManagerFactory) {
+		LOGGER.debug("Creating TransactionManager.");
 		JpaTransactionManager transactionManager = new JpaTransactionManager();
 		transactionManager.setEntityManagerFactory(entityManagerFactory);
 		return transactionManager;
 	}
 
 	@Bean
-	public PersistenceExceptionTranslationPostProcessor exceptionTranslation() {
+	public PersistenceExceptionTranslationPostProcessor createPersistenceExceptionTranslationPostProcessor() {
+		LOGGER.debug("Creating PersistenceExceptionTranslationPostProcessor.");
 		return new PersistenceExceptionTranslationPostProcessor();
 	}
 
 	private Properties getHibernateProperties() {
+		LOGGER.debug("Retrieving hibernate properties.");
 		return PropertiesUtils.getPropertiesStartingWith(getProperties(), "hibernate");
 	}
 
 	private Properties getProperties() {
-		System.out.println("Persistence properties file: \""+simulatorProperties.getPersistencePropertiesFile()+"\".");
+		LOGGER.debug("Persistence properties file: \""+simulatorProperties.getPersistencePropertiesFile()+"\".");
 		if (properties == null) {
 			properties = PropertiesUtils.retrieveProperties(simulatorProperties.getPersistencePropertiesFile());
 		}
