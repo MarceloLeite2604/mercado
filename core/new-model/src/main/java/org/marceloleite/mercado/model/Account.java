@@ -1,6 +1,7 @@
 package org.marceloleite.mercado.model;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -51,7 +52,7 @@ public class Account {
 	@OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@Fetch(FetchMode.SUBSELECT)
 	@JsonProperty("wallet")
-	private List<Balance> wallet;
+	private Set<Balance> wallet;
 
 	@OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@Fetch(FetchMode.SUBSELECT)
@@ -106,6 +107,9 @@ public class Account {
 	@XmlElementWrapper(name = "wallet")
 	@XmlElement(name = "balance")
 	public Wallet getWallet() {
+		if ( wallet == null ) {
+			wallet = new Wallet(this);
+		}
 		return (Wallet)wallet;
 	}
 

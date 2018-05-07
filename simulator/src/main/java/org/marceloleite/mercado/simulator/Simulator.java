@@ -29,9 +29,6 @@ public class Simulator {
 	private SimulatorPropertiesRetriever simulatorPropertiesRetriever;
 
 	@Inject
-	private AccountsRetriever accountsRetriever;
-
-	@Inject
 	private SimulationHouse house;
 
 	private TimeDivisionController timeDivisionController;
@@ -52,7 +49,7 @@ public class Simulator {
 		configure();
 		logSimulationStart();
 
-		// logAccountsBalance(false);
+		logAccountsBalance(false);
 
 		// ExecutorService executor = Executors.newFixedThreadPool(2);
 		// try {

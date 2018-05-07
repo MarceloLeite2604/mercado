@@ -19,8 +19,10 @@ import org.marceloleite.mercado.converter.ListToMapTradeConverter;
 import org.marceloleite.mercado.dao.interfaces.TradeDAO;
 import org.marceloleite.mercado.model.TemporalTicker;
 import org.marceloleite.mercado.model.Trade;
+import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+@Component
 public class TemporalTickerCreator {
 
 	@Inject

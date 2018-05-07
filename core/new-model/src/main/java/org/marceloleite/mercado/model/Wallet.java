@@ -1,14 +1,14 @@
 package org.marceloleite.mercado.model;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
+import java.util.HashSet;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.CurrencyAmount;
 import org.marceloleite.mercado.commons.Currency;
 
-public class Wallet extends ArrayList<Balance> {
+public class Wallet extends HashSet<Balance> {
 
 	private static final Logger LOGGER = LogManager.getLogger(Wallet.class);
 
@@ -18,6 +18,18 @@ public class Wallet extends ArrayList<Balance> {
 
 	public Wallet() {
 		super();
+	}
+
+	public Wallet(Account account) {
+		super();
+		this.account = account;
+		for (Currency currency : Currency.values()) {
+			Balance balance = new Balance();
+			balance.setAccount(account);
+			balance.setCurrency(currency);
+			balance.setAmount(BigDecimal.ZERO);
+			add(balance);
+		}
 	}
 
 	public void updateBalance(CurrencyAmount currecyAmount) {

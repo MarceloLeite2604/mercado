@@ -12,7 +12,6 @@ import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.TradeType;
 import org.marceloleite.mercado.dao.database.TradeDatabaseDAO;
 import org.marceloleite.mercado.dao.interfaces.TradeDAO;
-import org.marceloleite.mercado.dao.site.TradeSiteDAO;
 import org.marceloleite.mercado.model.Trade;
 import org.springframework.stereotype.Repository;
 
@@ -25,10 +24,12 @@ public class TradeDatabaseSiteDAO implements TradeDAO {
 	private static boolean ignoreValuesOnDatabase = DEFAULT_IGNORE_VALUES_ON_DATABASE;
 
 	@Inject
-	private TradeDatabaseDAO tradeDatabaseDAO;
+	@Named("TradeDatabaseDAO")
+	private TradeDAO tradeDatabaseDAO;
 
 	@Inject
-	private TradeSiteDAO tradeSiteDAO;
+	@Named("TradeSiteDAO")
+	private TradeDAO tradeSiteDAO;
 
 	@Override
 	public <S extends Trade> S save(S trade) {
@@ -62,7 +63,7 @@ public class TradeDatabaseSiteDAO implements TradeDAO {
 	}
 
 	private void retrieveUnavailableTradesOnDatabase(Currency currency, ZonedDateTime start, ZonedDateTime end) {
-		TimeInterval timeIntervalAvailable = tradeDatabaseDAO.retrieveTimeIntervalAvailable();
+		TimeInterval timeIntervalAvailable = ((TradeDatabaseDAO)tradeDatabaseDAO).retrieveTimeIntervalAvailable();
 		if (timeIntervalAvailable != null) {
 			if (start.isBefore(timeIntervalAvailable.getStart())) {
 				ZonedDateTime endRetrieveTime = ZonedDateTime.from(timeIntervalAvailable.getStart())
