@@ -63,15 +63,25 @@ public class TradeDatabaseSiteDAO implements TradeDAO {
 	}
 
 	private void retrieveUnavailableTradesOnDatabase(Currency currency, ZonedDateTime start, ZonedDateTime end) {
-		TimeInterval timeIntervalAvailable = ((TradeDatabaseDAO)tradeDatabaseDAO).retrieveTimeIntervalAvailable();
+		TimeInterval timeIntervalAvailable = tradeDatabaseDAO.retrieveTimeIntervalAvailable();
 		if (timeIntervalAvailable != null) {
 			if (start.isBefore(timeIntervalAvailable.getStart())) {
-				ZonedDateTime endRetrieveTime = ZonedDateTime.from(timeIntervalAvailable.getStart())
+				ZonedDateTime endRetrieveTime = null;
+				if (end.isBefore(timeIntervalAvailable.getStart())) {
+					endRetrieveTime = end;
+				} else {
+					endRetrieveTime = ZonedDateTime.from(timeIntervalAvailable.getStart())
 						.minusSeconds(1);
+				}
 				retrieveFromSiteAndSaveOnDatabase(currency, start, endRetrieveTime);
 			}
 			if (end.isAfter(timeIntervalAvailable.getEnd())) {
-				ZonedDateTime startRetrieveTime = ZonedDateTime.from(timeIntervalAvailable.getEnd());
+				ZonedDateTime startRetrieveTime = null;
+				if (start.isAfter(timeIntervalAvailable.getEnd())) {
+					startRetrieveTime = start;
+				} else {
+					startRetrieveTime = ZonedDateTime.from(timeIntervalAvailable.getEnd());	
+				}
 				retrieveFromSiteAndSaveOnDatabase(currency, startRetrieveTime, end);
 			}
 		} else {
@@ -125,5 +135,10 @@ public class TradeDatabaseSiteDAO implements TradeDAO {
 	@Override
 	public <S extends Trade> Optional<S> findById(Long id) {
 		return tradeDatabaseDAO.findById(id);
+	}
+
+	@Override
+	public TimeInterval retrieveTimeIntervalAvailable() {
+		return tradeDatabaseDAO.retrieveTimeIntervalAvailable();
 	}
 }

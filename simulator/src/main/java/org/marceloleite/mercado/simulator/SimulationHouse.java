@@ -43,6 +43,7 @@ public class SimulationHouse implements House {
 				.orElse(DEFAULT_COMISSION_PERCENTAGE);
 		this.orderExecutor = Optional.ofNullable(builder.orderExecutor)
 				.orElse(new SimulationOrderExecutor());
+		this.temporalTickers = new EnumMap<>(Currency.class);
 	}
 
 	public List<Account> getAccounts() {
@@ -68,7 +69,8 @@ public class SimulationHouse implements House {
 
 	private void executeStrategiesFor(Account account, TimeInterval timeInterval) {
 		account.getStrategies()
-				.forEach(strategy -> strategy.getExecutor().execute(timeInterval, account, this));
+				.forEach(strategy -> strategy.getExecutor()
+						.execute(timeInterval, account, this));
 	}
 
 	@Override
@@ -84,12 +86,15 @@ public class SimulationHouse implements House {
 	@Override
 	public void afterFinish() {
 		getAccounts().forEach(account -> account.getStrategies()
-				.forEach(strategy -> strategy.getExecutor().afterFinish()));
+				.forEach(strategy -> strategy.getExecutor()
+						.afterFinish()));
 	}
 
 	@Override
 	public TemporalTicker getTemporalTickerFor(Currency currency) {
-		return temporalTickers.get(currency);
+		return Optional.ofNullable(temporalTickers.get(currency))
+				.orElseThrow(() -> new RuntimeException(
+						"Could not find temporal ticker for currency \"" + currency + "\"."));
 	}
 
 	public static Builder builder() {

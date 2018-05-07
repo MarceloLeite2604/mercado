@@ -109,4 +109,9 @@ public class TradeSiteDAO implements TradeDAO {
 		throw new UnsupportedOperationException();
 	}
 
+	@Override
+	public TimeInterval retrieveTimeIntervalAvailable() {
+		throw new UnsupportedOperationException();
+	}
+
 }

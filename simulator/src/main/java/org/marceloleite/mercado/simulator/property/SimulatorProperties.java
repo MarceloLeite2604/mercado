@@ -24,7 +24,7 @@ public class SimulatorProperties {
 	private Double tradePercentage;
 	
 	@NotBlank
-	private Long threadPoolSize;
+	private Integer threadPoolSize;
 	
 	@NotBlank
 	private Long DurationStep;
@@ -72,11 +72,11 @@ public class SimulatorProperties {
 		this.tradePercentage = tradePercentage;
 	}
 
-	public Long getThreadPoolSize() {
+	public Integer getThreadPoolSize() {
 		return threadPoolSize;
 	}
 
-	public void setThreadPoolSize(Long threadPoolSize) {
+	public void setThreadPoolSize(Integer threadPoolSize) {
 		this.threadPoolSize = threadPoolSize;
 	}
 

@@ -48,7 +48,6 @@ public class AccountXMLDatabaseDAO implements AccountDAO {
 		return accounts;
 	}
 	
-
 	@Override
 	public <S extends Account> S save(S account) {
 		return accountDatabaseDAO.save(account);

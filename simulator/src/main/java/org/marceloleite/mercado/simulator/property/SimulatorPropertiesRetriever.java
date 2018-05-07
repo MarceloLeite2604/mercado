@@ -30,4 +30,8 @@ public class SimulatorPropertiesRetriever {
 	public Duration retrieveRetrievingDuration() {
 		return DurationUtils.parseFromSeconds(simulatorProperties.getRetrievingDuration());
 	}
+	
+	public Integer retrieveThreadPoolSize() {
+		return simulatorProperties.getThreadPoolSize();
+	}
 }
