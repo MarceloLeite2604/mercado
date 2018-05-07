@@ -7,9 +7,7 @@ import java.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.marceloleite.mercado.dao.database.AccountDatabaseDAO;
 import org.marceloleite.mercado.dao.interfaces.AccountDAO;
-import org.marceloleite.mercado.dao.xml.AccountXMLDAO;
 import org.marceloleite.mercado.model.Account;
 import org.springframework.stereotype.Repository;
 
@@ -18,10 +16,12 @@ import org.springframework.stereotype.Repository;
 public class AccountXMLDatabaseDAO implements AccountDAO {
 	
 	@Inject
-	private AccountXMLDAO accountXMLDAO;
+	@Named("AccountXMLDAO")
+	private AccountDAO accountXMLDAO;
 	
 	@Inject
-	private AccountDatabaseDAO accountDatabaseDAO;
+	@Named("AccountDatabaseDAO")
+	private AccountDAO accountDatabaseDAO;
 
 	@Override
 	public <S extends Account> Iterable<S> saveAll(Iterable<S> accounts) {
@@ -43,7 +43,7 @@ public class AccountXMLDatabaseDAO implements AccountDAO {
 		List<Account> accounts = new ArrayList<>();
 		for (Account accountFromXML : accountsFromXML) {
 			Account accountFromDatabase = accountDatabaseDAO.findByOwner(accountFromXML.getOwner());
-			accounts.add(Optional.of(accountFromDatabase).orElse(accountFromXML));
+			accounts.add(Optional.ofNullable(accountFromDatabase).orElse(accountFromXML));
 		}
 		return accounts;
 	}

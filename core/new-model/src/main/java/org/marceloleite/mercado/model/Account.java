@@ -1,8 +1,6 @@
 package org.marceloleite.mercado.model;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -23,7 +21,6 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
-import org.marceloleite.mercado.strategy.StrategyExecutor;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -54,7 +51,7 @@ public class Account {
 	@OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@Fetch(FetchMode.SUBSELECT)
 	@JsonProperty("wallet")
-	private Wallet wallet;
+	private List<Balance> wallet;
 
 	@OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@Fetch(FetchMode.SUBSELECT)
@@ -69,8 +66,6 @@ public class Account {
 	@NotFound(action = NotFoundAction.IGNORE)
 	@Fetch(FetchMode.SUBSELECT)
 	private List<Order> orders;
-
-	private List<StrategyExecutor> strategyExecutors;
 
 	@XmlTransient
 	public Long getId() {
@@ -111,7 +106,7 @@ public class Account {
 	@XmlElementWrapper(name = "wallet")
 	@XmlElement(name = "balance")
 	public Wallet getWallet() {
-		return wallet;
+		return (Wallet)wallet;
 	}
 
 	public void setWallet(Wallet wallet) {
@@ -200,16 +195,5 @@ public class Account {
 				order.adjustReferences();
 			}
 		}
-	}
-
-	@XmlTransient
-	public List<StrategyExecutor> getStrategyExecutors() {
-		return Optional.ofNullable(strategyExecutors)
-				.orElse(new ArrayList<>());
-	}
-
-	public boolean addStrategyExecutor(StrategyExecutor strategyExecutor) {
-		List<StrategyExecutor> strategyExecutors = getStrategyExecutors();
-		return strategyExecutors.add(strategyExecutor);
 	}
 }

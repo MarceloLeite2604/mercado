@@ -25,6 +25,7 @@ import org.marceloleite.mercado.commons.OrderType;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.TradeType;
 import org.marceloleite.mercado.commons.converter.ObjectToJsonConverter;
+import org.marceloleite.mercado.commons.utils.EncryptUtils;
 import org.marceloleite.mercado.commons.utils.ZonedDateTimeUtils;
 import org.marceloleite.mercado.dao.database.repository.TickerRepository;
 import org.marceloleite.mercado.dao.interfaces.AccountDAO;
@@ -51,10 +52,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration;
+import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
+@EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
+		DataSourceTransactionManagerAutoConfiguration.class, HibernateJpaAutoConfiguration.class })
 public class NewModelMain {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(NewModelMain.class);
@@ -118,40 +125,46 @@ public class NewModelMain {
 	@Transactional
 	public CommandLineRunner commandLineRunner() {
 		return (args) -> {
+			encrypt();
 
-//			AccountXMLDAO.setXMLDirectory("output/");
-//
-//			Account account = createAccount();
-//			persistAccount(account);
-//			writeJson(account, "account");
-//
-//			Property property = createProperty();
-//			persistProperty(property);
-//			writeXML(property, "property");
-//			writeJson(property, "property");
-//
-//			TemporalTicker temporalTicker = createTemporalTicker();
-//			persistTemporalTicker(temporalTicker);
-//			writeXML(temporalTicker, "temporalTicker");
-//			writeJson(temporalTicker, "temporalTicker");
-//
-//			Ticker ticker = createTicker();
-//			persistTicker(ticker);
-//			writeXML(ticker, "ticker");
-//			writeJson(ticker, "ticker");
+			// AccountXMLDAO.setXMLDirectory("output/");
+			//
+			// Account account = createAccount();
+			// persistAccount(account);
+			// writeJson(account, "account");
+			//
+			// Property property = createProperty();
+			// persistProperty(property);
+			// writeXML(property, "property");
+			// writeJson(property, "property");
+			//
+			// TemporalTicker temporalTicker = createTemporalTicker();
+			// persistTemporalTicker(temporalTicker);
+			// writeXML(temporalTicker, "temporalTicker");
+			// writeJson(temporalTicker, "temporalTicker");
+			//
+			// Ticker ticker = createTicker();
+			// persistTicker(ticker);
+			// writeXML(ticker, "ticker");
+			// writeJson(ticker, "ticker");
 
-//			List<Trade> trades = tradeDAO.findByCurrencyAndTimeBetween(CURRENCY, TRADE_FIND_START_TIME,
-//			TRADE_FIND_END_TIME);
-//	        LOGGER.info("Total trades found: " + trades.size());
-			
-			double nan = Double.NaN;
-			double posInfinity = Double.POSITIVE_INFINITY;
-			double negInfinity = Double.NEGATIVE_INFINITY;
-			
-			System.out.println("NaN: " + Double.isFinite(nan));
-			System.out.println("PosInfinity: " + Double.isFinite(posInfinity));
-			System.out.println("NegInfinity: " + Double.isFinite(negInfinity));
+			// List<Trade> trades = tradeDAO.findByCurrencyAndTimeBetween(CURRENCY,
+			// TRADE_FIND_START_TIME,
+			// TRADE_FIND_END_TIME);
+			// LOGGER.info("Total trades found: " + trades.size());
+
+			// double nan = Double.NaN;
+			// double posInfinity = Double.POSITIVE_INFINITY;
+			// double negInfinity = Double.NEGATIVE_INFINITY;
+
+			// System.out.println("NaN: " + Double.isFinite(nan));
+			// System.out.println("PosInfinity: " + Double.isFinite(posInfinity));
+			// System.out.println("NegInfinity: " + Double.isFinite(negInfinity));
 		};
+	}
+
+	private void encrypt() {
+		System.out.println(EncryptUtils.encrypt("novoMercado"));
 	}
 
 	private Account createAccount() {

@@ -12,7 +12,6 @@ import org.marceloleite.mercado.commons.utils.PropertiesUtils;
 import org.marceloleite.mercado.simulator.Simulator;
 import org.marceloleite.mercado.simulator.property.PersistenceProperty;
 import org.marceloleite.mercado.simulator.property.SimulatorProperties;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
@@ -28,10 +27,11 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages = "org.marceloleite.mercado", entityManagerFactoryRef = "createEntityManagerFactory")
-@EntityScan("org.marceloleite.mercado.model")
 public class PersistenceConfig {
 
 	private static final Logger LOGGER = LogManager.getLogger(Simulator.class);
+	
+	private static final String[] PACKAGES_TO_SCAN = { "org.marceloleite.mercado.model" };
 
 	@Inject
 	private SimulatorProperties simulatorProperties;
@@ -43,7 +43,7 @@ public class PersistenceConfig {
 		LOGGER.debug("Creating EntityManagerFactory.");
 		LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
 		entityManagerFactoryBean.setDataSource(createDataSource());
-		entityManagerFactoryBean.setPackagesToScan(new String[] { "org.baeldung.persistence.model" });
+		entityManagerFactoryBean.setPackagesToScan(PACKAGES_TO_SCAN);
 
 		JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
 		entityManagerFactoryBean.setJpaVendorAdapter(vendorAdapter);

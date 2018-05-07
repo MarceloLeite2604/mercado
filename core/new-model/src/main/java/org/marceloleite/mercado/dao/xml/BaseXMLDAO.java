@@ -17,7 +17,7 @@ public abstract class BaseXMLDAO<T> {
 
 	private static final String XML_FILE_EXTENSION = "xml";
 
-	private static final String DEFAULT_XML_DIRECTORY = "src/main/resources";
+	private static final String DEFAULT_XML_DIRECTORY = "src/main/resources/xml";
 
 	private static String XMLDirectory = DEFAULT_XML_DIRECTORY;
 

@@ -18,7 +18,6 @@ import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.model.Account;
 import org.marceloleite.mercado.model.TemporalTicker;
 import org.marceloleite.mercado.model.Wallet;
-import org.marceloleite.mercado.strategy.StrategyExecutor;
 
 public class SimulationHouse implements House {
 
@@ -68,8 +67,8 @@ public class SimulationHouse implements House {
 	}
 
 	private void executeStrategiesFor(Account account, TimeInterval timeInterval) {
-		account.getStrategyExecutors()
-				.forEach(strategyExecutor -> strategyExecutor.execute(timeInterval, account, this));
+		account.getStrategies()
+				.forEach(strategy -> strategy.getExecutor().execute(timeInterval, account, this));
 	}
 
 	@Override
@@ -84,8 +83,8 @@ public class SimulationHouse implements House {
 
 	@Override
 	public void afterFinish() {
-		getAccounts().forEach(account -> account.getStrategyExecutors()
-				.forEach(StrategyExecutor::afterFinish));
+		getAccounts().forEach(account -> account.getStrategies()
+				.forEach(strategy -> strategy.getExecutor().afterFinish()));
 	}
 
 	@Override

@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -24,6 +25,7 @@ import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.strategy.StrategyExecutor;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -60,6 +62,9 @@ public class Strategy {
 	@NotFound(action = NotFoundAction.IGNORE)
 	@Fetch(FetchMode.SUBSELECT)
 	private List<Variable> variables;
+	
+	@Transient
+	private StrategyExecutor executor;
 
 	@XmlTransient
 	public Long getId() {
@@ -118,6 +123,15 @@ public class Strategy {
 
 	public void setVariables(List<Variable> variables) {
 		this.variables = variables;
+	}
+
+	@XmlTransient
+	public StrategyExecutor getExecutor() {
+		return executor;
+	}
+
+	public void setExecutor(StrategyExecutor executor) {
+		this.executor = executor;
 	}
 
 	public void adjustReferences() {

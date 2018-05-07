@@ -11,6 +11,7 @@ import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.OrderStatus;
 import org.marceloleite.mercado.model.Account;
 import org.marceloleite.mercado.model.Order;
+import org.marceloleite.mercado.model.Wallet;
 
 public class SimulationOrderExecutor implements OrderExecutor {
 
@@ -38,10 +39,10 @@ public class SimulationOrderExecutor implements OrderExecutor {
 			CurrencyAmount currencyAmountToDeposit = calculateBuyOrderDeposit(order, currencyAmountCommission);
 			LOGGER.debug("Amount to withdraw is " + currencyAmountToPay + ".");
 			depositComission(currencyAmountCommission, house, account);
-			account.getWallet()
+			((Wallet)account.getWallet())
 					.withdraw(currencyAmountToPay);
 			LOGGER.debug("Amount to deposit is " + currencyAmountToDeposit + ".");
-			account.getWallet()
+			((Wallet)account.getWallet())
 					.deposit(currencyAmountToDeposit);
 			order.setStatus(OrderStatus.FILLED);
 		} else {
@@ -74,10 +75,10 @@ public class SimulationOrderExecutor implements OrderExecutor {
 			LOGGER.debug("Commission amount is " + currencyAmountCommission + ".");
 			depositComission(currencyAmountCommission, house, account);
 			LOGGER.debug("Amount to withdraw is " + currencyAmountToSell + ".");
-			account.getWallet()
+			((Wallet)account.getWallet())
 					.withdraw(currencyAmountToSell);
 			LOGGER.debug("Amount to deposit is " + currencyAmountToDeposit + ".");
-			account.getWallet()
+			((Wallet)account.getWallet())
 					.deposit(currencyAmountToDeposit);
 			order.setStatus(OrderStatus.FILLED);
 		} else {
@@ -89,7 +90,7 @@ public class SimulationOrderExecutor implements OrderExecutor {
 	}
 
 	private boolean hasBalance(Account account, CurrencyAmount amountToHave) {
-		return account.getWallet()
+		return ((Wallet)account.getWallet())
 				.hasBalanceFor(amountToHave);
 	}
 

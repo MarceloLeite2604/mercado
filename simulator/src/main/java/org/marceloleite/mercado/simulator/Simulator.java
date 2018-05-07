@@ -16,6 +16,7 @@ import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.model.Account;
 import org.marceloleite.mercado.model.Balance;
 import org.marceloleite.mercado.model.TemporalTicker;
+import org.marceloleite.mercado.model.Wallet;
 import org.marceloleite.mercado.simulator.property.SimulatorPropertiesRetriever;
 import org.springframework.stereotype.Component;
 
@@ -129,7 +130,7 @@ public class Simulator {
 	private void logTotalWorth(Account account) {
 		CurrencyAmount totalRealAmount = new CurrencyAmount(Currency.REAL, 0.0);
 		for (Currency currency : Currency.values()) {
-			Balance balance = account.getWallet()
+			Balance balance = ((Wallet)account.getWallet())
 					.getBalanceFor(currency);
 			if (currency.isDigital()) {
 				TemporalTicker temporalTicker = house.getTemporalTickerFor(currency);

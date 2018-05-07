@@ -18,7 +18,7 @@
 
 	<appender name="spring"
 		class="ch.qos.logback.core.FileAppender">
-		<file>${outputFolder}/spring.log"</file>
+		<file>${outputFolder}/spring.log</file>
 		<encoder class="${encoder}">
 			<Pattern>${defaultPatternLayout}</Pattern>
 		</encoder>
@@ -26,7 +26,7 @@
 
 	<appender name="simulator"
 		class="ch.qos.logback.core.FileAppender">
-		<file>${outputFolder}/simulator.log"</file>
+		<file>${outputFolder}/simulator.log</file>
 		<append>false</append>
 		<encoder class="${encoder}">
 			<Pattern>"${defaultPatternLayout}"</Pattern>
@@ -34,7 +34,7 @@
 	</appender>
 	<appender name="originalStrategy"
 		class="ch.qos.logback.core.FileAppender">
-		<file>${outputFolder}/original-strategy.log"</file>
+		<file>${outputFolder}/original-strategy.log</file>
 		<append>false</append>
 		<encoder class="${encoder}">
 			<Pattern>"${defaultPatternLayout}"</Pattern>
@@ -42,7 +42,7 @@
 	</appender>
 	<appender name="firstStrategy"
 		class="ch.qos.logback.core.FileAppender">
-		<file>${outputFolder}/first-strategy.log"</file>
+		<file>${outputFolder}/first-strategy.log</file>
 		<append>false</append>
 		<encoder class="${encoder}">
 			<Pattern>"${defaultPatternLayout}"</Pattern>
@@ -50,7 +50,7 @@
 	</appender>
 	<appender name="secondStrategy"
 		class="ch.qos.logback.core.FileAppender">
-		<file>${outputFolder}/second-strategy.log"</file>
+		<file>${outputFolder}/second-strategy.log</file>
 		<append>false</append>
 		<encoder class="${encoder}">
 			<Pattern>"${defaultPatternLayout}"</Pattern>
@@ -58,7 +58,7 @@
 	</appender>
 	<appender name="thirdStrategy"
 		class="ch.qos.logback.core.FileAppender">
-		<file>${outputFolder}/third-strategy.log"</file>
+		<file>${outputFolder}/third-strategy.log</file>
 		<append>false</append>
 		<encoder class="${encoder}">
 			<Pattern>"${defaultPatternLayout}"</Pattern>
@@ -66,7 +66,7 @@
 	</appender>
 	<appender name="fourthStrategy"
 		class="ch.qos.logback.core.FileAppender">
-		<file>${outputFolder}/fourth-strategy.log"</file>
+		<file>${outputFolder}/fourth-strategy.log</file>
 		<append>false</append>
 		<encoder class="${encoder}">
 			<Pattern>"${defaultPatternLayout}"</Pattern>
@@ -74,7 +74,7 @@
 	</appender>
 	<appender name="fifthStrategy"
 		class="ch.qos.logback.core.FileAppender">
-		<file>${outputFolder}/fifth-strategy.log"</file>
+		<file>${outputFolder}/fifth-strategy.log</file>
 		<append>false</append>
 		<encoder class="${encoder}">
 			<Pattern>"${defaultPatternLayout}"</Pattern>
@@ -82,7 +82,7 @@
 	</appender>
 	<appender name="sixthStrategy"
 		class="ch.qos.logback.core.FileAppender">
-		<file>${outputFolder}/sixth-strategy.log"</file>
+		<file>${outputFolder}/sixth-strategy.log</file>
 		<append>false</append>
 		<encoder class="${encoder}">
 			<Pattern>"${defaultPatternLayout}"</Pattern>
@@ -90,7 +90,7 @@
 	</appender>
 	<appender name="hibernate"
 		class="ch.qos.logback.core.FileAppender">
-		<file>${outputFolder}/hibernate.log"</file>
+		<file>${outputFolder}/hibernate.log</file>
 		<append>false</append>
 		<encoder class="${encoder}">
 			<Pattern>"${defaultPatternLayout}"</Pattern>
