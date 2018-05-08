@@ -90,12 +90,12 @@ public class TradeSiteDAO implements TradeDAO {
 	}
 
 	@Override
-	public Trade findTopByOrderByTimeAsc() {
+	public Trade findTopByCurrencyOrderByTimeAsc(Currency currency) {
 		throw new UnsupportedOperationException();
 	}
 
 	@Override
-	public Trade findTopByOrderByTimeDesc() {
+	public Trade findTopByCurrencyOrderByTimeDesc(Currency currency) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -110,7 +110,7 @@ public class TradeSiteDAO implements TradeDAO {
 	}
 
 	@Override
-	public TimeInterval retrieveTimeIntervalAvailable() {
+	public TimeInterval retrieveTimeIntervalAvailable(Currency currency) {
 		throw new UnsupportedOperationException();
 	}
 

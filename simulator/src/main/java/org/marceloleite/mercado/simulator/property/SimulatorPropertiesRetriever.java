@@ -34,4 +34,8 @@ public class SimulatorPropertiesRetriever {
 	public Integer retrieveThreadPoolSize() {
 		return simulatorProperties.getThreadPoolSize();
 	}
+	
+	public Duration retrieveTradeSiteDurationStep() {
+		return DurationUtils.parseFromSeconds(simulatorProperties.getTradeSiteDurationStep());
+	}
 }

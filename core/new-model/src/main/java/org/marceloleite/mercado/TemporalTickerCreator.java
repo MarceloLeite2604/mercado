@@ -27,9 +27,7 @@ public class TemporalTickerCreator {
 
 	@Inject
 	@Named("TradeDatabaseSiteDAO")
-	private static TradeDAO tradeDAO/* = javax.enterprise.inject.spi.CDI.current()
-			.select(TradeDAO.class, new NamedAnnotation("TradeDatabaseSiteDAO"))
-			.get()*/;
+	private TradeDAO tradeDAO;
 
 	public TemporalTicker create(Currency currency, TimeInterval timeInterval, List<Trade> trades) {
 		return create(currency, timeInterval, ListToMapTradeConverter.fromListToMap(trades));

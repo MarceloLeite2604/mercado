@@ -7,10 +7,11 @@ import java.util.Optional;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.TradeType;
-import org.marceloleite.mercado.dao.database.TradeDatabaseDAO;
 import org.marceloleite.mercado.dao.interfaces.TradeDAO;
 import org.marceloleite.mercado.model.Trade;
 import org.springframework.stereotype.Repository;
@@ -18,6 +19,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 @Named("TradeDatabaseSiteDAO")
 public class TradeDatabaseSiteDAO implements TradeDAO {
+	
+	private static final Logger LOGGER = LogManager.getLogger(TradeDatabaseSiteDAO.class);
 
 	private static final boolean DEFAULT_IGNORE_VALUES_ON_DATABASE = false;
 
@@ -43,10 +46,11 @@ public class TradeDatabaseSiteDAO implements TradeDAO {
 
 	@Override
 	public List<Trade> findByCurrencyAndTimeBetween(Currency currency, ZonedDateTime start, ZonedDateTime end) {
+		LOGGER.debug("Retrieving trades for {} currency and time interval {}", currency, new TimeInterval(start, end));
 		List<Trade> trades = null;
 		if (!ignoreValuesOnDatabase) {
 			trades = retrieveTradesUpdatingDatabase(currency, start, end);
-		} else {
+		} else { // TODO Retrieve trades from site?
 			trades = retrieveTradesFromDatabase(currency, start, end);
 		}
 		return trades;
@@ -63,46 +67,48 @@ public class TradeDatabaseSiteDAO implements TradeDAO {
 	}
 
 	private void retrieveUnavailableTradesOnDatabase(Currency currency, ZonedDateTime start, ZonedDateTime end) {
-		TimeInterval timeIntervalAvailable = tradeDatabaseDAO.retrieveTimeIntervalAvailable();
-		if (timeIntervalAvailable != null) {
-			if (start.isBefore(timeIntervalAvailable.getStart())) {
-				ZonedDateTime endRetrieveTime = null;
-				if (end.isBefore(timeIntervalAvailable.getStart())) {
-					endRetrieveTime = end;
-				} else {
-					endRetrieveTime = ZonedDateTime.from(timeIntervalAvailable.getStart())
-						.minusSeconds(1);
-				}
-				retrieveFromSiteAndSaveOnDatabase(currency, start, endRetrieveTime);
-			}
-			if (end.isAfter(timeIntervalAvailable.getEnd())) {
-				ZonedDateTime startRetrieveTime = null;
-				if (start.isAfter(timeIntervalAvailable.getEnd())) {
-					startRetrieveTime = start;
-				} else {
-					startRetrieveTime = ZonedDateTime.from(timeIntervalAvailable.getEnd());	
-				}
-				retrieveFromSiteAndSaveOnDatabase(currency, startRetrieveTime, end);
-			}
-		} else {
-			retrieveFromSiteAndSaveOnDatabase(currency, start, end);
-		}
+		TimeInterval timeIntervalAvailable = tradeDatabaseDAO.retrieveTimeIntervalAvailable(currency);
+		TimeInterval retrievalTime = defineRetrievalTime(start, end, timeIntervalAvailable);
+		retrieveFromSiteAndSaveOnDatabase(currency, retrievalTime);
 	}
 
-	private void retrieveFromSiteAndSaveOnDatabase(Currency currency, ZonedDateTime start,
-			ZonedDateTime endRetrieveTime) {
-		List<Trade> trades = tradeSiteDAO.findByCurrencyAndTimeBetween(currency, start, endRetrieveTime);
+	private TimeInterval defineRetrievalTime(ZonedDateTime start, ZonedDateTime end,
+			TimeInterval timeIntervalAvailable) {
+		TimeInterval result = null;
+		if (timeIntervalAvailable == null) {
+			result = new TimeInterval(start, end);
+		} else {
+			if (start.isBefore(timeIntervalAvailable.getStart())) {
+				if (end.isBefore(timeIntervalAvailable.getStart())) {
+					result = new TimeInterval(start, end);
+				} else {
+					result = new TimeInterval(start, ZonedDateTime.from(timeIntervalAvailable.getStart()));
+				}
+			}
+			if (end.isAfter(timeIntervalAvailable.getEnd())) {
+				if (start.isAfter(timeIntervalAvailable.getEnd())) {
+					result = new TimeInterval(start, end);
+				} else {
+					result = new TimeInterval(ZonedDateTime.from(timeIntervalAvailable.getEnd()), end);
+				}
+			}
+		} 
+		return result;
+	}
+
+	private void retrieveFromSiteAndSaveOnDatabase(Currency currency, TimeInterval timeInterval) {
+		List<Trade> trades = tradeSiteDAO.findByCurrencyAndTimeBetween(currency, timeInterval.getStart(), timeInterval.getEnd());
 		tradeDatabaseDAO.saveAll(trades);
 	}
 
 	@Override
-	public Trade findTopByOrderByTimeAsc() {
-		return tradeDatabaseDAO.findTopByOrderByTimeAsc();
+	public Trade findTopByCurrencyOrderByTimeAsc(Currency currency) {
+		return tradeDatabaseDAO.findTopByCurrencyOrderByTimeAsc(currency);
 	}
 
 	@Override
-	public Trade findTopByOrderByTimeDesc() {
-		return tradeDatabaseDAO.findTopByOrderByTimeDesc();
+	public Trade findTopByCurrencyOrderByTimeDesc(Currency currency) {
+		return tradeDatabaseDAO.findTopByCurrencyOrderByTimeDesc(currency);
 	}
 
 	@Override
@@ -138,7 +144,7 @@ public class TradeDatabaseSiteDAO implements TradeDAO {
 	}
 
 	@Override
-	public TimeInterval retrieveTimeIntervalAvailable() {
-		return tradeDatabaseDAO.retrieveTimeIntervalAvailable();
+	public TimeInterval retrieveTimeIntervalAvailable(Currency currency) {
+		return tradeDatabaseDAO.retrieveTimeIntervalAvailable(currency);
 	}
 }

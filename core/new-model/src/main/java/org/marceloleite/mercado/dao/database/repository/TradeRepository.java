@@ -14,9 +14,9 @@ public interface TradeRepository extends CrudRepository<Trade, Long> {
 
 	public List<Trade> findByCurrencyAndTimeBetween(Currency currency, ZonedDateTime start, ZonedDateTime end);
 
-	public Trade findTopByOrderByTimeAsc();
+	public Trade findTopByCurrencyOrderByTimeAsc(Currency currency);
 
-	public Trade findTopByOrderByTimeDesc();
+	public Trade findTopByCurrencyOrderByTimeDesc(Currency currency);
 
 	public Trade findTopByCurrencyAndTimeLessThanOrderByTimeDesc(Currency currency, ZonedDateTime time);
 

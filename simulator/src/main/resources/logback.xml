@@ -106,6 +106,9 @@
 	<logger name="org.marceloleite.mercado.simulator" level="${simulatorLevel}">
 		<appender-ref ref="simulator" />
 	</logger>
+	<logger name="org.marceloleite.mercado" level="${simulatorLevel}">
+		<appender-ref ref="simulator" />
+	</logger>
 	<!-- <Logger name="org.marceloleite.mercado.simulator.TemporalTickerVariation" 
 		level="info" /> <Logger name="org.marceloleite.mercado.simulator.House" /> 
 		<Logger name="org.marceloleite.mercado.simulator.Simulator" level="debug" 

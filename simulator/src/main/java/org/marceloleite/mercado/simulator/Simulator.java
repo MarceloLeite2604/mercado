@@ -20,6 +20,7 @@ import org.marceloleite.mercado.CurrencyAmount;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeDivisionController;
 import org.marceloleite.mercado.commons.TimeInterval;
+import org.marceloleite.mercado.dao.site.siteretriever.trade.TradeSiteRetriever;
 import org.marceloleite.mercado.model.Account;
 import org.marceloleite.mercado.model.Balance;
 import org.marceloleite.mercado.model.TemporalTicker;
@@ -39,18 +40,16 @@ public class Simulator {
 
 	@Inject
 	private SimulationHouse house;
-	
+
 	@Inject
 	private TemporalTickerRetriever temporalTickerRetriever;
-	
+
 	@Autowired
 	private List<TemporalTickerRetrieverCallable> temporalTickerRetrieverCallable;
 
 	private TimeDivisionController timeDivisionController;
 
 	private Duration stepDuration;
-	
-	private int i = 0;
 
 	private void configure() {
 		ZonedDateTime startTime = simulatorPropertiesRetriever.retrieveStartTime();
@@ -58,6 +57,7 @@ public class Simulator {
 		this.stepDuration = simulatorPropertiesRetriever.retrieveStepDuration();
 		Duration retrievingDuration = simulatorPropertiesRetriever.retrieveRetrievingDuration();
 		timeDivisionController = new TimeDivisionController(startTime, endTime, retrievingDuration);
+		TradeSiteRetriever.setConfiguredStepDuration(simulatorPropertiesRetriever.retrieveTradeSiteDurationStep());
 	}
 
 	public void runSimulation() {
@@ -68,34 +68,44 @@ public class Simulator {
 
 		logAccountsBalance(false);
 
-		ExecutorService executorService = Executors.newFixedThreadPool(simulatorPropertiesRetriever.retrieveThreadPoolSize());
+		ExecutorService executorService = Executors
+				.newFixedThreadPool(simulatorPropertiesRetriever.retrieveThreadPoolSize());
 		try {
-		Future<TreeMap<TimeInterval, Map<Currency, TemporalTicker>>> future;
-		HouseSimulationThread houseSimulationThread = new HouseSimulationThread(house);
-		executorService.execute(houseSimulationThread);
+			Future<TreeMap<TimeInterval, Map<Currency, TemporalTicker>>> future;
+			HouseSimulationThread houseSimulationThread = new HouseSimulationThread(house);
+			executorService.execute(houseSimulationThread);
 
-		TreeMap<TimeInterval, Map<Currency, TemporalTicker>> temporalTickersByTimeInterval = null;
-		for (TimeInterval stepTimeInterval : timeDivisionController.geTimeIntervals()) {
-			LOGGER.info(stepTimeInterval);
-			CompletableFuture<TreeMap<TimeInterval, Map<Currency, TemporalTicker>>> completableFuture = retrieveTemporalTickers(timeDivisionController);
-			System.out.println("Waiting for result.");
-			CompletableFuture.allOf(completableFuture);
-			// TimeDivisionController timeDivisionController = new TimeDivisionController(stepTimeInterval, stepDuration);
-			// future = executor.submit(new TemporalTickerRetrieverCallable(timeDivisionController));
-			// future = executorService.submit(createTemporalTickerRetrieverCallable(timeDivisionController));
-			
-			// temporalTickersByTimeInterval = future.get();
-			temporalTickersByTimeInterval = completableFuture.get();
-			System.out.println("Waiting for result.");
-			// updateHouseThread(houseSimulationThread, temporalTickersByTimeInterval);
-		}
-		// finishExecution(houseSimulationThread);
-		// logAccountsBalance(true);
-		LOGGER.info("Simulation finished.");
+			TreeMap<TimeInterval, Map<Currency, TemporalTicker>> temporalTickersByTimeInterval = null;
+			for (TimeInterval stepTimeInterval : timeDivisionController.geTimeIntervals()) {
+				LOGGER.info(stepTimeInterval);
+				TimeDivisionController retrievalTimeDivisionController = new TimeDivisionController(stepTimeInterval,
+						stepDuration);
+				CompletableFuture<TreeMap<TimeInterval, Map<Currency, TemporalTicker>>> completableFuture = retrieveTemporalTickers(
+						retrievalTimeDivisionController);
+				LOGGER.debug("Waiting for result.");
+				CompletableFuture.allOf(completableFuture);
+				// TODO Create a point which stores the time since a currency has start trading.
+				// And use this point to check if retrieving time interval is before that time.
+				// Sugestion: A database table.
+				// TimeDivisionController timeDivisionController = new
+				// TimeDivisionController(stepTimeInterval, stepDuration);
+				// future = executor.submit(new
+				// TemporalTickerRetrieverCallable(timeDivisionController));
+				// future =
+				// executorService.submit(createTemporalTickerRetrieverCallable(timeDivisionController));
+
+				// temporalTickersByTimeInterval = future.get();
+				temporalTickersByTimeInterval = completableFuture.get();
+				LOGGER.debug("Result received.");
+				// updateHouseThread(houseSimulationThread, temporalTickersByTimeInterval);
+			}
+			// finishExecution(houseSimulationThread);
+			// logAccountsBalance(true);
+			LOGGER.info("Simulation finished.");
 		} catch (InterruptedException | ExecutionException exception) {
-		
-		abortExecution();
-		throw new RuntimeException(exception);
+
+			abortExecution();
+			throw new RuntimeException(exception);
 		}
 	}
 
@@ -166,16 +176,11 @@ public class Simulator {
 	private void logSimulationStart() {
 		LOGGER.info("Starting simulation from " + timeDivisionController + ".");
 	}
-	
-	private TemporalTickerRetrieverCallable createTemporalTickerRetrieverCallable(TimeDivisionController timeDivisionController) {
-		// TODO Create a instance creator (!) for TemporalTickerRetrieverCallable.
-		TemporalTickerRetrieverCallable temporalTickerRetrieverCallableInstance = temporalTickerRetrieverCallable.get(i++);
-		temporalTickerRetrieverCallableInstance.setTimeDivisionController(timeDivisionController);
-		return temporalTickerRetrieverCallableInstance;
-	}
-	
+
 	@Async
-	public CompletableFuture<TreeMap<TimeInterval, Map<Currency, TemporalTicker>>> retrieveTemporalTickers(TimeDivisionController timeDivisionController) {
-		return CompletableFuture.completedFuture(temporalTickerRetriever.retrieveTemporalTickers(timeDivisionController));
+	public CompletableFuture<TreeMap<TimeInterval, Map<Currency, TemporalTicker>>> retrieveTemporalTickers(
+			TimeDivisionController timeDivisionController) {
+		return CompletableFuture
+				.completedFuture(temporalTickerRetriever.retrieveTemporalTickers(timeDivisionController));
 	}
 }

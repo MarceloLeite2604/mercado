@@ -12,13 +12,13 @@ public interface TradeDAO extends BaseDAO<Trade> {
 	
 	public List<Trade> findByCurrencyAndTimeBetween(Currency currency, ZonedDateTime start, ZonedDateTime end);
 	
-	public Trade findTopByOrderByTimeAsc();
+	public Trade findTopByCurrencyOrderByTimeAsc(Currency currency);
 	
-	public Trade findTopByOrderByTimeDesc();
+	public Trade findTopByCurrencyOrderByTimeDesc(Currency currency);
 	
 	public Trade findFirstOfCurrencyAndTypeAndOlderThan(Currency currency, TradeType type, ZonedDateTime time);
 	
 	public Trade findTopByCurrencyAndTimeLessThanOrderByTimeDesc(Currency currency, ZonedDateTime time);
 	
-	public TimeInterval retrieveTimeIntervalAvailable();
+	public TimeInterval retrieveTimeIntervalAvailable(Currency currency);
 }

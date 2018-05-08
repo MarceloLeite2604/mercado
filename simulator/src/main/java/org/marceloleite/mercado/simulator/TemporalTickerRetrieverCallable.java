@@ -11,7 +11,6 @@ import javax.inject.Named;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.commons.Currency;
-import org.marceloleite.mercado.commons.TimeDivisionController;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.dao.interfaces.TemporalTickerDAO;
 import org.marceloleite.mercado.model.TemporalTicker;
@@ -23,8 +22,6 @@ import org.springframework.stereotype.Component;
 public class TemporalTickerRetrieverCallable implements Callable<TreeMap<TimeInterval, Map<Currency, TemporalTicker>>> {
 
 	private static final Logger LOGGER = LogManager.getLogger(Simulator.class);
-
-	private TimeDivisionController timeDivisionController;
 
 	@Inject
 	@Named("TemporalTickerDatabaseDAO")
@@ -58,9 +55,4 @@ public class TemporalTickerRetrieverCallable implements Callable<TreeMap<TimeInt
 		}
 		return temporalTickers;
 	}
-
-	public void setTimeDivisionController(TimeDivisionController timeDivisionController) {
-		this.timeDivisionController = timeDivisionController;
-	}
-	
 }

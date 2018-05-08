@@ -27,7 +27,7 @@ public class SimulatorProperties {
 	private Integer threadPoolSize;
 	
 	@NotBlank
-	private Long DurationStep;
+	private Long tradeSiteDurationStep;
 	
 	@NotBlank
 	private String persistencePropertiesFile;
@@ -80,12 +80,12 @@ public class SimulatorProperties {
 		this.threadPoolSize = threadPoolSize;
 	}
 
-	public Long getDurationStep() {
-		return DurationStep;
+	public Long getTradeSiteDurationStep() {
+		return tradeSiteDurationStep;
 	}
 
-	public void setDurationStep(Long durationStep) {
-		DurationStep = durationStep;
+	public void setTradeSiteDurationStep(Long tradeSiteDurationStep) {
+		this.tradeSiteDurationStep = tradeSiteDurationStep;
 	}
 
 	public String getPersistencePropertiesFile() {

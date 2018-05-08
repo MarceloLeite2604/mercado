@@ -1,7 +1,9 @@
 package org.marceloleite.mercado.dao.database;
 
 import java.time.ZonedDateTime;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.inject.Inject;
@@ -19,7 +21,7 @@ import org.springframework.stereotype.Repository;
 @Named("TradeDatabaseDAO")
 public class TradeDatabaseDAO implements TradeDAO {
 
-	private static TimeInterval cachedTimeIntervalAvailable;
+	private static Map<Currency, TimeInterval> CACHED_TIME_INTERVAL_AVAILABLE_BY_CURRENCY = null;
 
 	@Inject
 	private TradeRepository tradeRepository;
@@ -44,41 +46,46 @@ public class TradeDatabaseDAO implements TradeDAO {
 		return tradeRepository.findAll();
 	}
 
-	public TimeInterval retrieveTimeIntervalAvailable(boolean retrieveFromCache) {
+	public TimeInterval retrieveTimeIntervalAvailable(Currency currency, boolean retrieveFromCache) {
 		if (retrieveFromCache) {
-			if (cachedTimeIntervalAvailable == null) {
-				cachedTimeIntervalAvailable = retrieveTimeIntervalAvailableFromDatabase();
+			if (CACHED_TIME_INTERVAL_AVAILABLE_BY_CURRENCY == null) {
+				CACHED_TIME_INTERVAL_AVAILABLE_BY_CURRENCY = retrieveTimeIntervalAvailableFromDatabase();
 			}
-			return cachedTimeIntervalAvailable;
+			return CACHED_TIME_INTERVAL_AVAILABLE_BY_CURRENCY.get(currency);
 		} else {
-			return retrieveTimeIntervalAvailableFromDatabase();
+			Map<Currency, TimeInterval> timeIntervalAvailableFromDatabase = retrieveTimeIntervalAvailableFromDatabase();
+			return timeIntervalAvailableFromDatabase.get(currency);
 		}
 	}
 
-	public TimeInterval retrieveTimeIntervalAvailable() {
-		return retrieveTimeIntervalAvailable(true);
+	public TimeInterval retrieveTimeIntervalAvailable(Currency currency) {
+		return retrieveTimeIntervalAvailable(currency, true);
 	}
 
-	private TimeInterval retrieveTimeIntervalAvailableFromDatabase() {
-		Trade oldestTrade = findTopByOrderByTimeAsc();
-		Trade newestTrade = findTopByOrderByTimeDesc();
+	private Map<Currency, TimeInterval> retrieveTimeIntervalAvailableFromDatabase() {
+		Map<Currency,TimeInterval> timeIntervalAvailableByCurrency = new EnumMap<>(Currency.class);
+		for(Currency currency : Currency.values()) {
+			Trade oldestTrade = findTopByCurrencyOrderByTimeAsc(currency);
+			Trade newestTrade = findTopByCurrencyOrderByTimeDesc(currency);
 
-		if (oldestTrade != null && newestTrade != null) {
-			TimeInterval timeInterval = new TimeInterval(oldestTrade.getTime(), newestTrade.getTime());
-			return timeInterval;
-		} else {
-			return null;
+			if (oldestTrade != null && newestTrade != null) {
+				TimeInterval timeInterval = new TimeInterval(oldestTrade.getTime(), newestTrade.getTime());
+				timeIntervalAvailableByCurrency.put(currency, timeInterval);
+			} else {
+				timeIntervalAvailableByCurrency.put(currency, null);
+			}
 		}
+		return timeIntervalAvailableByCurrency;
 	}
 
 	@Override
-	public Trade findTopByOrderByTimeAsc() {
-		return tradeRepository.findTopByOrderByTimeAsc();
+	public Trade findTopByCurrencyOrderByTimeAsc(Currency currency) {
+		return tradeRepository.findTopByCurrencyOrderByTimeAsc(currency);
 	}
 
 	@Override
-	public Trade findTopByOrderByTimeDesc() {
-		return tradeRepository.findTopByOrderByTimeDesc();
+	public Trade findTopByCurrencyOrderByTimeDesc(Currency currency) {
+		return tradeRepository.findTopByCurrencyOrderByTimeDesc(currency);
 	}
 
 	@Override
