@@ -20,6 +20,7 @@ import org.marceloleite.mercado.CurrencyAmount;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeDivisionController;
 import org.marceloleite.mercado.commons.TimeInterval;
+import org.marceloleite.mercado.commons.converter.ObjectToJsonConverter;
 import org.marceloleite.mercado.dao.site.siteretriever.trade.TradeSiteRetriever;
 import org.marceloleite.mercado.model.Account;
 import org.marceloleite.mercado.model.Balance;
@@ -84,9 +85,12 @@ public class Simulator {
 						retrievalTimeDivisionController);
 				LOGGER.debug("Waiting for result.");
 				CompletableFuture.allOf(completableFuture);
+				TreeMap<TimeInterval, Map<Currency, TemporalTicker>> treeMap = completableFuture.get();
+				System.out.println(ObjectToJsonConverter.writeAsJson(treeMap));
 				// TODO Create a point which stores the time since a currency has start trading.
 				// And use this point to check if retrieving time interval is before that time.
 				// Sugestion: A database table.
+				
 				// TimeDivisionController timeDivisionController = new
 				// TimeDivisionController(stepTimeInterval, stepDuration);
 				// future = executor.submit(new

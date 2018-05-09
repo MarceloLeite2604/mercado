@@ -20,14 +20,14 @@ import org.springframework.stereotype.Repository;
 @Repository
 @Named("TemporalTickerDatabaseDAO")
 public class TemporalTickerDatabaseDAO implements TemporalTickerDAO {
-	
+
 	@Inject
 	private TemporalTickerRepository temporalTickerRepository;
-	
+
 	@Inject
 	@Named("TradeDatabaseSiteDAO")
 	private TradeDAO tradesDAO;
-	
+
 	@Inject
 	private TemporalTickerCreator temporalTickerCreator;
 
@@ -49,7 +49,8 @@ public class TemporalTickerDatabaseDAO implements TemporalTickerDAO {
 	@Override
 	public TemporalTicker findByCurrencyAndStartAndEnd(Currency currency, ZonedDateTime startTime,
 			ZonedDateTime endTime) {
-		TemporalTicker temporalTicker = temporalTickerRepository.findByCurrencyAndStartAndEnd(currency, startTime, endTime);
+		TemporalTicker temporalTicker = temporalTickerRepository.findByCurrencyAndStartAndEnd(currency, startTime,
+				endTime);
 		if (temporalTicker == null) {
 			temporalTicker = createTemporalTicker(currency, startTime, endTime);
 		}
@@ -57,8 +58,12 @@ public class TemporalTickerDatabaseDAO implements TemporalTickerDAO {
 	}
 
 	private TemporalTicker createTemporalTicker(Currency currency, ZonedDateTime start, ZonedDateTime end) {
+		TemporalTicker result = null;
 		List<Trade> trades = tradesDAO.findByCurrencyAndTimeBetween(currency, start, end);
-		return temporalTickerCreator.create(currency, new TimeInterval(start, end), trades);
+		if (trades != null) {
+			result = temporalTickerCreator.create(currency, new TimeInterval(start, end), trades);
+		}
+		return result;
 	}
 
 	@Override
