@@ -2,15 +2,13 @@ package org.marceloleite.mercado.simulator;
 
 import java.time.Duration;
 import java.time.ZonedDateTime;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -20,14 +18,13 @@ import org.marceloleite.mercado.CurrencyAmount;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeDivisionController;
 import org.marceloleite.mercado.commons.TimeInterval;
-import org.marceloleite.mercado.commons.converter.ObjectToJsonConverter;
 import org.marceloleite.mercado.dao.site.siteretriever.trade.TradeSiteRetriever;
 import org.marceloleite.mercado.model.Account;
 import org.marceloleite.mercado.model.Balance;
 import org.marceloleite.mercado.model.TemporalTicker;
 import org.marceloleite.mercado.model.Wallet;
 import org.marceloleite.mercado.simulator.property.SimulatorPropertiesRetriever;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
@@ -35,6 +32,8 @@ import org.springframework.stereotype.Component;
 public class Simulator {
 
 	private static final Logger LOGGER = LogManager.getLogger(Simulator.class);
+	
+	private static final int THREAD_FINISH_WAIT_TIME_SECONDS = 10;
 
 	@Inject
 	private SimulatorPropertiesRetriever simulatorPropertiesRetriever;
@@ -45,8 +44,11 @@ public class Simulator {
 	@Inject
 	private TemporalTickerRetriever temporalTickerRetriever;
 
-	@Autowired
-	private List<TemporalTickerRetrieverCallable> temporalTickerRetrieverCallable;
+	@Inject
+	private Semaphores semaphores;
+
+	@Inject
+	private HouseSimulationThread houseSimulationThread;
 
 	private TimeDivisionController timeDivisionController;
 
@@ -62,18 +64,10 @@ public class Simulator {
 	}
 
 	public void runSimulation() {
-		LOGGER.traceEntry();
-
 		configure();
 		logSimulationStart();
-
-		logAccountsBalance(false);
-
-		ExecutorService executorService = Executors
-				.newFixedThreadPool(simulatorPropertiesRetriever.retrieveThreadPoolSize());
+		ExecutorService executorService = createExecutorService();
 		try {
-			Future<TreeMap<TimeInterval, Map<Currency, TemporalTicker>>> future;
-			HouseSimulationThread houseSimulationThread = new HouseSimulationThread(house);
 			executorService.execute(houseSimulationThread);
 
 			TreeMap<TimeInterval, Map<Currency, TemporalTicker>> temporalTickersByTimeInterval = null;
@@ -83,49 +77,41 @@ public class Simulator {
 						stepDuration);
 				CompletableFuture<TreeMap<TimeInterval, Map<Currency, TemporalTicker>>> completableFuture = retrieveTemporalTickers(
 						retrievalTimeDivisionController);
-				LOGGER.debug("Waiting for result.");
 				CompletableFuture.allOf(completableFuture);
-				TreeMap<TimeInterval, Map<Currency, TemporalTicker>> treeMap = completableFuture.get();
-				System.out.println(ObjectToJsonConverter.writeAsJson(treeMap));
-				// TODO Create a point which stores the time since a currency has start trading.
-				// And use this point to check if retrieving time interval is before that time.
-				// Sugestion: A database table.
-				
-				// TimeDivisionController timeDivisionController = new
-				// TimeDivisionController(stepTimeInterval, stepDuration);
-				// future = executor.submit(new
-				// TemporalTickerRetrieverCallable(timeDivisionController));
-				// future =
-				// executorService.submit(createTemporalTickerRetrieverCallable(timeDivisionController));
-
-				// temporalTickersByTimeInterval = future.get();
 				temporalTickersByTimeInterval = completableFuture.get();
-				LOGGER.debug("Result received.");
-				// updateHouseThread(houseSimulationThread, temporalTickersByTimeInterval);
+				updateHouseThread(houseSimulationThread, temporalTickersByTimeInterval);
 			}
-			// finishExecution(houseSimulationThread);
-			// logAccountsBalance(true);
+			finishExecution();
+			logAccountsBalance(true);
 			LOGGER.info("Simulation finished.");
 		} catch (InterruptedException | ExecutionException exception) {
-
 			abortExecution();
 			throw new RuntimeException(exception);
+		} finally {
+			executorService.shutdown();
 		}
 	}
 
-	private void abortExecution() {
-		// TODO Interrupt thread executions.
+	private ExecutorService createExecutorService() {
+		ExecutorService executorService = Executors
+				.newFixedThreadPool(simulatorPropertiesRetriever.retrieveThreadPoolSize());
+		return executorService;
 	}
 
-	private void finishExecution(HouseSimulationThread houseSimulationThread) {
+	private void abortExecution() {
+		houseSimulationThread.setFinished(true);
+		semaphores.getRunSimulationSemaphore()
+				.release();
+	}
+
+	private void finishExecution() {
 		try {
-			Semaphores.getInstance()
-					.getUpdateSemaphore()
+			semaphores.getUpdateSemaphore()
 					.acquire();
 			houseSimulationThread.setFinished(true);
-			Semaphores.getInstance()
-					.getRunSimulationSemaphore()
+			semaphores.getRunSimulationSemaphore()
 					.release();
+			semaphores.getFinishSemaphore().tryAcquire(THREAD_FINISH_WAIT_TIME_SECONDS, TimeUnit.SECONDS);
 		} catch (InterruptedException exception) {
 			throw new RuntimeException(exception);
 		}
@@ -134,12 +120,10 @@ public class Simulator {
 	private void updateHouseThread(HouseSimulationThread houseSimulationThread,
 			TreeMap<TimeInterval, Map<Currency, TemporalTicker>> temporalTickersDataModelsByTimeInterval) {
 		try {
-			Semaphores.getInstance()
-					.getUpdateSemaphore()
+			semaphores.getUpdateSemaphore()
 					.acquire();
 			houseSimulationThread.setTemporalTickers(temporalTickersDataModelsByTimeInterval);
-			Semaphores.getInstance()
-					.getRunSimulationSemaphore()
+			semaphores.getRunSimulationSemaphore()
 					.release();
 		} catch (InterruptedException exception) {
 			throw new RuntimeException(exception);
@@ -179,6 +163,7 @@ public class Simulator {
 
 	private void logSimulationStart() {
 		LOGGER.info("Starting simulation from " + timeDivisionController + ".");
+		logAccountsBalance(false);
 	}
 
 	@Async
@@ -186,5 +171,10 @@ public class Simulator {
 			TimeDivisionController timeDivisionController) {
 		return CompletableFuture
 				.completedFuture(temporalTickerRetriever.retrieveTemporalTickers(timeDivisionController));
+	}
+
+	@Bean
+	public HouseSimulationThread createHouseSimulationThread() {
+		return new HouseSimulationThread(house);
 	}
 }

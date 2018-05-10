@@ -92,9 +92,7 @@ public class SimulationHouse implements House {
 
 	@Override
 	public TemporalTicker getTemporalTickerFor(Currency currency) {
-		return Optional.ofNullable(temporalTickers.get(currency))
-				.orElseThrow(() -> new RuntimeException(
-						"Could not find temporal ticker for currency \"" + currency + "\"."));
+		return temporalTickers.get(currency);
 	}
 
 	public static Builder builder() {

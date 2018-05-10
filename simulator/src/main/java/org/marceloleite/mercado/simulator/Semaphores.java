@@ -2,17 +2,21 @@ package org.marceloleite.mercado.simulator;
 
 import java.util.concurrent.Semaphore;
 
-public class Semaphores {
+import org.springframework.stereotype.Component;
 
-	private static Semaphores instance;
+@Component
+public class Semaphores {
 
 	private Semaphore updateSemaphore;
 
 	private Semaphore runSimulationSemaphore;
+	
+	private Semaphore finishSemaphore;
 
-	private Semaphores() {
+	public Semaphores() {
 		this.updateSemaphore = new Semaphore(1);
 		this.runSimulationSemaphore = new Semaphore(0);
+		this.finishSemaphore = new Semaphore(0);
 	}
 
 	public synchronized Semaphore getUpdateSemaphore() {
@@ -23,10 +27,7 @@ public class Semaphores {
 		return runSimulationSemaphore;
 	}
 
-	public static synchronized Semaphores getInstance() {
-		if (instance == null) {
-			instance = new Semaphores();
-		}
-		return instance;
+	public Semaphore getFinishSemaphore() {
+		return finishSemaphore;
 	}
 }
