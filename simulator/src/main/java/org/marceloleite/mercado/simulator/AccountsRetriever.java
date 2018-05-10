@@ -29,6 +29,7 @@ public class AccountsRetriever {
 		List<Account> accounts = new ArrayList<>();
 		Iterable<Account> retrievedAccounts = accountDAO.findAll();
 		retrievedAccounts.forEach(accounts::add);
+		accounts.forEach(Account::adjustReferences);
 		createStrategiesExecutors(accounts);
 		LOGGER.debug("{} account(s) found.", accounts.size());
 		return accounts;

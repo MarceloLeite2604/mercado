@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <account>
 	<owner>OriginalStrategy</owner>
-	<email/>
+	<email />
 	<tapiInformations>
-		<id/>
-		<secret/>
+		<id />
+		<secret />
 	</tapiInformations>
 	<balances>
 		<balance>
@@ -16,12 +16,7 @@
 	<strategies>
 		<strategy>
 			<currency>BTC</currency>
-			<classes>
-				<class>
-					<name>org.marceloleite.mercado.strategies.OriginalStrategy
-					</name>
-				</class>
-			</classes>
+			<className>org.marceloleite.mercado.strategies.OriginalStrategy</className>
 		</strategy>
 	</strategies>
 </account>

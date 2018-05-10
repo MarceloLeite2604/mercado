@@ -2,6 +2,7 @@ package org.marceloleite.mercado.dao.xml;
 
 import java.io.File;
 
+import javax.inject.Inject;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -12,24 +13,26 @@ import org.marceloleite.mercado.model.Property;
 import org.marceloleite.mercado.model.TemporalTicker;
 import org.marceloleite.mercado.model.Ticker;
 import org.marceloleite.mercado.model.Trade;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
 
+@Component
 public class XMLReaderWriter {
 
 	private static final Class<?>[] XML_CLASSES = { Account.class, Property.class, TemporalTicker.class, Ticker.class,
 			Trade.class };
 
+	@Inject
 	private JAXBContext jaxbContext;
 
-	public XMLReaderWriter() {
+	@Bean
+	private JAXBContext createJaxbContext() {
+		JAXBContext jaxbContext = null;
 		try {
-			this.jaxbContext = createJaxbContext();
+			jaxbContext = JAXBContext.newInstance(XML_CLASSES);
 		} catch (JAXBException exception) {
 			throw new RuntimeException(exception);
 		}
-	}
-
-	private JAXBContext createJaxbContext() throws JAXBException {
-		JAXBContext jaxbContext = JAXBContext.newInstance(XML_CLASSES);
 		return jaxbContext;
 	}
 

@@ -351,7 +351,7 @@ public class SixthStrategy extends AbstractStrategyExecutor {
 			shrinkPercentageThreshold = (Double) object;
 			break;
 		case WORKING_AMOUNT_CURRENCY:
-			workingAmountCurrency = (BigDecimal) object;
+			workingAmountCurrency = new BigDecimal((Double) object);
 			break;
 		case CIRCULAR_ARRAY_SIZE:
 			circularArraySize = (Integer) object;

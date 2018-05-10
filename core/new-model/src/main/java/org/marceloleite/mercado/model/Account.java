@@ -1,6 +1,7 @@
 package org.marceloleite.mercado.model;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -107,10 +108,10 @@ public class Account {
 	@XmlElementWrapper(name = "wallet")
 	@XmlElement(name = "balance")
 	public Wallet getWallet() {
-		if ( wallet == null ) {
+		if (wallet == null) {
 			wallet = new Wallet(this);
 		}
-		return (Wallet)wallet;
+		return (Wallet) wallet;
 	}
 
 	public void setWallet(Wallet wallet) {
@@ -119,7 +120,7 @@ public class Account {
 	}
 
 	@XmlElementWrapper(name = "withdrawals")
-	@XmlElement(required = false)
+	@XmlElement(name="withdrawal", required = false)
 	public List<Withdrawal> getWithdrawals() {
 		return withdrawals;
 	}
@@ -129,7 +130,7 @@ public class Account {
 	}
 
 	@XmlElementWrapper(name = "strategies")
-	@XmlElement
+	@XmlElement(name = "strategy")
 	public List<Strategy> getStrategies() {
 		return strategies;
 	}
@@ -139,7 +140,7 @@ public class Account {
 	}
 
 	@XmlElementWrapper(name = "orders")
-	@XmlElement
+	@XmlElement(name = "order")
 	public List<Order> getOrders() {
 		return orders;
 	}
@@ -199,5 +200,10 @@ public class Account {
 				order.adjustReferences();
 			}
 		}
+	}
+	
+	@Override
+	public String toString() {
+		return Optional.ofNullable(owner).orElse("<Undefined owner>");
 	}
 }

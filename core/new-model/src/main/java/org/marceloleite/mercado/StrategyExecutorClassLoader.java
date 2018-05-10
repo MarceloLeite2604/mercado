@@ -13,12 +13,22 @@ public class StrategyExecutorClassLoader {
 	@SuppressWarnings("unchecked")
 	public StrategyExecutor load(Strategy strategy) {
 
+		if (strategy == null) {
+			throw new IllegalArgumentException("Strategy argument cannot be null.");
+		}
+
+		if (strategy.getClassName() == null) {
+			throw new IllegalArgumentException("Strategy executor class name cannot be null on \"" + strategy + "\".");
+		}
+
 		try {
-			Class<? extends StrategyExecutor> strategyClass = (Class<? extends StrategyExecutor>) strategy.getClass();
+			Class<? extends StrategyExecutor> strategyClass = (Class<? extends StrategyExecutor>) Class
+					.forName(strategy.getClassName()
+							.trim());
 			Constructor<? extends StrategyExecutor> constructor = strategyClass.getConstructor(Strategy.class);
 
 			return constructor.newInstance(strategy);
-		} catch ( InstantiationException | IllegalAccessException | NoSuchMethodException
+		} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | NoSuchMethodException
 				| SecurityException | IllegalArgumentException | InvocationTargetException exception) {
 			throw new RuntimeException("Error while loading strategy class.", exception);
 		}

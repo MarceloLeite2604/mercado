@@ -3,8 +3,8 @@
 	<owner>Sixth Strategy</owner>
 	<email>marceloleite2604@gmail.com</email>
 	<tapiInformations>
-		<id/>
-		<secret/>
+		<id />
+		<secret />
 	</tapiInformations>
 	<balances>
 		<balance>
@@ -16,41 +16,37 @@
 	<strategies>
 		<strategy>
 			<currency>BTC</currency>
-			<classes>
-				<class>
-					<name>org.marceloleite.mercado.strategies.sixth.SixthStrategy</name>
-					<parameters>
-						<parameter>
-							<name>growthPercentageThreshold</name>
-							<value>0.09</value>
-						</parameter>
-						<parameter>
-							<name>shrinkPercentageThreshold</name>
-							<value>-0.15</value>
-						</parameter>
-						<parameter>
-							<name>workingAmountCurrency</name>
-							<value>0</value>
-						</parameter>
-						<parameter>
-							<name>circularArraySize</name>
-							<value>720</value>
-						</parameter>
-						<parameter>
-							<name>nextValueSteps</name>
-							<value>360</value>
-						</parameter>
-						<parameter>
-							<name>initialStatus</name>
-							<value>undefined</value>
-						</parameter>
-						<parameter>
-							<name>generateDailyGraphic</name>
-							<value>true</value>
-						</parameter>
-					</parameters>
-				</class>
-			</classes>
+			<className>org.marceloleite.mercado.strategies.sixth.SixthStrategy</className>
+			<parameters>
+				<parameter>
+					<name>growthPercentageThreshold</name>
+					<value>0.09</value>
+				</parameter>
+				<parameter>
+					<name>shrinkPercentageThreshold</name>
+					<value>-0.15</value>
+				</parameter>
+				<parameter>
+					<name>workingAmountCurrency</name>
+					<value>0</value>
+				</parameter>
+				<parameter>
+					<name>circularArraySize</name>
+					<value>720</value>
+				</parameter>
+				<parameter>
+					<name>nextValueSteps</name>
+					<value>360</value>
+				</parameter>
+				<parameter>
+					<name>initialStatus</name>
+					<value>undefined</value>
+				</parameter>
+				<parameter>
+					<name>generateDailyGraphic</name>
+					<value>true</value>
+				</parameter>
+			</parameters>
 		</strategy>
 	</strategies>
 </account>

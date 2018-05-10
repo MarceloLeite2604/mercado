@@ -1,5 +1,6 @@
 package org.marceloleite.mercado.strategy;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -10,13 +11,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.converter.ObjectToJsonConverter;
+import org.marceloleite.mercado.commons.utils.creator.ObjectMapperCreator;
 import org.marceloleite.mercado.model.Parameter;
 import org.marceloleite.mercado.model.Strategy;
 import org.marceloleite.mercado.model.Variable;
 import org.springframework.util.CollectionUtils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
 public abstract class AbstractStrategyExecutor implements StrategyExecutor {
@@ -66,19 +67,22 @@ public abstract class AbstractStrategyExecutor implements StrategyExecutor {
 
 	private void defineParameters(Strategy strategy) {
 		Map<String, ObjectDefinition> parameterDefinitions = getParameterDefinitions();
-		Map<String, Parameter> parameterValues = getParameterValues(strategy);
-		for (Entry<String, ObjectDefinition> parameterDefinitionEntry : parameterDefinitions.entrySet()) {
-			String parameterName = parameterDefinitionEntry.getKey();
-			String json = parameterValues.get(parameterName)
-					.getValue();
-			ObjectDefinition parameterDefinition = parameterDefinitionEntry.getValue();
-			Object parameterObject = ObjectToJsonConverter.convertToObject(json, parameterDefinition);
-			setParameter(parameterDefinition.getName(), parameterObject);
+		if (parameterDefinitions != null) {
+			Map<String, Parameter> parameterValues = getParameterValues(strategy);
+			for (Entry<String, ObjectDefinition> parameterDefinitionEntry : parameterDefinitions.entrySet()) {
+				String parameterName = parameterDefinitionEntry.getKey();
+				String json = parameterValues.get(parameterName)
+						.getValue();
+				ObjectDefinition parameterDefinition = parameterDefinitionEntry.getValue();
+				Object parameterObject = ObjectToJsonConverter.convertToObject(json, parameterDefinition.getObjectClass());
+				setParameter(parameterDefinition.getName(), parameterObject);
+			}
 		}
 	}
 
 	private Map<String, Parameter> getParameterValues(Strategy strategy) {
-		Map<String, Parameter> parameterValues = strategy.getParameters()
+		Map<String, Parameter> parameterValues = Optional.ofNullable(strategy.getParameters())
+				.orElse(new ArrayList<>())
 				.stream()
 				.collect(Collectors.toMap(Parameter::getName, parameter -> parameter));
 		return parameterValues;
@@ -86,11 +90,16 @@ public abstract class AbstractStrategyExecutor implements StrategyExecutor {
 
 	private void listParametersOnLog(Strategy strategy) {
 		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append("Parameters: ");
-		for (Parameter parameter : strategy.getParameters()) {
-			stringBuilder.append("\t" + parameter.getName() + " = " + parameter.getValue());
+		List<Parameter> parameters = strategy.getParameters();
+		if (parameters != null) {
+			stringBuilder.append("Parameters: ");
+			for (Parameter parameter : parameters) {
+				stringBuilder.append("\t" + parameter.getName() + " = " + parameter.getValue());
+			}
+			getLogger().info(stringBuilder.toString());
+		} else {
+			getLogger().info("No variables defined for strategy \"" + strategy + "\".");
 		}
-		getLogger().info(stringBuilder.toString());
 	}
 
 	private List<String> retrieveVariableNames(Strategy strategy) {
@@ -125,30 +134,38 @@ public abstract class AbstractStrategyExecutor implements StrategyExecutor {
 
 	private void defineVariables(Strategy strategy) {
 		Map<String, ObjectDefinition> variableDefinitions = getVariableDefinitions();
-		Map<String, Variable> variableValues = getVariableValues(strategy);
-		for (Entry<String, ObjectDefinition> variableDefinition : variableDefinitions.entrySet()) {
-			String value = variableValues.get(variableDefinition.getKey())
-					.getValue();
-			ObjectDefinition objectDefinition = variableDefinition.getValue();
-			Object variableObject = ObjectToJsonConverter.convertToObject(value, objectDefinition.getClass());
-			setVariable(objectDefinition.getName(), variableObject);
+		if (variableDefinitions != null) {
+			Map<String, Variable> variableValues = getVariableValues(strategy);
+			for (Entry<String, ObjectDefinition> variableDefinition : variableDefinitions.entrySet()) {
+				String value = variableValues.get(variableDefinition.getKey())
+						.getValue();
+				ObjectDefinition objectDefinition = variableDefinition.getValue();
+				Object variableObject = ObjectToJsonConverter.convertToObject(value, objectDefinition.getClass());
+				setVariable(objectDefinition.getName(), variableObject);
+			}
 		}
 	}
 
 	private Map<String, Variable> getVariableValues(Strategy strategy) {
-		Map<String, Variable> parameterValues = strategy.getVariables()
+		Map<String, Variable> variableValues = Optional.ofNullable(strategy.getVariables())
+				.orElse(new ArrayList<>())
 				.stream()
 				.collect(Collectors.toMap(Variable::getName, variable -> variable));
-		return parameterValues;
+		return variableValues;
 	}
 
 	private void listVariablesOnLog(Strategy strategy) {
 		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append("Variables: ");
-		for (Variable variable : strategy.getVariables()) {
-			stringBuilder.append("\t" + variable.getName() + " = " + variable.getValue());
+		List<Variable> variables = strategy.getVariables();
+		if (variables != null) {
+			stringBuilder.append("Variables: ");
+			for (Variable variable : variables) {
+				stringBuilder.append("\t" + variable.getName() + " = " + variable.getValue());
+				getLogger().info(stringBuilder.toString());
+			}
+		} else {
+			getLogger().info("No variables defined for strategy \"" + strategy + "\".");
 		}
-		getLogger().info(stringBuilder.toString());
 	}
 
 	@Override
@@ -159,18 +176,22 @@ public abstract class AbstractStrategyExecutor implements StrategyExecutor {
 	}
 
 	private List<Variable> getVariables(Strategy strategy) {
-		ObjectWriter writerWithDefaultPrettyPrinter = new ObjectMapper().writerWithDefaultPrettyPrinter();
+
 		List<Variable> variables = strategy.getVariables();
-		for (Variable variable : variables) {
-			Object object = getVariable(variable.getName());
-			try {
-				String value = writerWithDefaultPrettyPrinter.writeValueAsString(object);
-				variable.setValue(value);
-			} catch (JsonProcessingException exception) {
-				throw new RuntimeException("Error while retrieving Json value from variable \"" + variable.getName()
-						+ "\" of class \"" + object.getClass()
-								.getName()
-						+ "\".", exception);
+		if (variables != null) {
+			ObjectWriter writerWithDefaultPrettyPrinter = ObjectMapperCreator.create()
+					.writerWithDefaultPrettyPrinter();
+			for (Variable variable : variables) {
+				Object object = getVariable(variable.getName());
+				try {
+					String value = writerWithDefaultPrettyPrinter.writeValueAsString(object);
+					variable.setValue(value);
+				} catch (JsonProcessingException exception) {
+					throw new RuntimeException("Error while retrieving Json value from variable \"" + variable.getName()
+							+ "\" of class \"" + object.getClass()
+									.getName()
+							+ "\".", exception);
+				}
 			}
 		}
 		return variables;

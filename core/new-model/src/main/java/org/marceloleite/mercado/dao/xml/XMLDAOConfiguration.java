@@ -3,20 +3,20 @@ package org.marceloleite.mercado.dao.xml;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration
+// @Configuration
 public class XMLDAOConfiguration {
 
-	@Bean
+//	@Bean
 	public AccountXMLDAO accountXMLDAO() {
 		return new AccountXMLDAO();
 	}
 
-	@Bean
+//	@Bean
 	public PropertyXMLDAO propertyXMLDAO() {
 		return new PropertyXMLDAO();
 	}
 
-	@Bean
+//	@Bean
 	public XMLReaderWriter createXMLReaderWriter() {
 		return new XMLReaderWriter();
 	}

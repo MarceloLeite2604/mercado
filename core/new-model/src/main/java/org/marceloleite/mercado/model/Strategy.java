@@ -1,6 +1,7 @@
 package org.marceloleite.mercado.model;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -19,12 +20,14 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.model.xmladapter.CurrencyXmlAdapter;
 import org.marceloleite.mercado.strategy.StrategyExecutor;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -32,7 +35,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @Entity
 @Table(name = "STRATEGIES")
-@JsonIgnoreProperties({"id", "account"})
+@JsonIgnoreProperties({ "id", "account" })
 @JsonPropertyOrder({ "currency", "className", "parameters", "variables" })
 @XmlRootElement(name = "strategy")
 @XmlType(propOrder = { "currency", "className", "parameters", "variables" })
@@ -42,7 +45,7 @@ public class Strategy {
 	@GeneratedValue
 	@Column(name = "ID")
 	private Long Id;
-	
+
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "ACCO_ID", nullable = false, foreignKey = @ForeignKey(name = "STRA_ACCO_FK"))
 	private Account account;
@@ -52,7 +55,7 @@ public class Strategy {
 
 	@Column(name = "CLASS_NAME", length = 128, nullable = false)
 	private String className;
-	
+
 	@OneToMany(mappedBy = "strategy", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@NotFound(action = NotFoundAction.IGNORE)
 	@Fetch(FetchMode.SUBSELECT)
@@ -62,7 +65,7 @@ public class Strategy {
 	@NotFound(action = NotFoundAction.IGNORE)
 	@Fetch(FetchMode.SUBSELECT)
 	private List<Variable> variables;
-	
+
 	@Transient
 	private StrategyExecutor executor;
 
@@ -85,6 +88,7 @@ public class Strategy {
 	}
 
 	@XmlElement
+	@XmlJavaTypeAdapter(CurrencyXmlAdapter.class)
 	public Currency getCurrency() {
 		return currency;
 	}
@@ -103,7 +107,7 @@ public class Strategy {
 	}
 
 	@XmlElementWrapper(name = "parameters")
-	@XmlElement(required = false)
+	@XmlElement(name="parameter", required = false)
 	public List<Parameter> getParameters() {
 		return parameters;
 	}
@@ -116,7 +120,7 @@ public class Strategy {
 	}
 
 	@XmlElementWrapper(name = "variables")
-	@XmlElement(required = false)
+	@XmlElement(name="variable", required = false)
 	public List<Variable> getVariables() {
 		return variables;
 	}
@@ -140,11 +144,20 @@ public class Strategy {
 				parameter.setStrategy(this);
 			}
 		}
-		
+
 		if (variables != null) {
 			for (Variable variable : variables) {
 				variable.setStrategy(this);
 			}
 		}
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder.append((account != null ? account : "<Undefined account>"));
+		stringBuilder.append(" ");
+		stringBuilder.append((currency != null ? currency : "<Undefined currency>"));
+		return stringBuilder.toString();
 	}
 }

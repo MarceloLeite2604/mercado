@@ -27,7 +27,8 @@ public abstract class BaseXMLDAO<T> {
 	protected File findXMLFileByName(String fileName) {
 		List<File> xmlFiles = getXMLFiles();
 		for (File xmlFile : xmlFiles) {
-			if (xmlFile.getName().equals(fileName)) {
+			if (xmlFile.getName()
+					.equals(fileName)) {
 				return xmlFile;
 			}
 		}
@@ -50,7 +51,8 @@ public abstract class BaseXMLDAO<T> {
 
 			@Override
 			public boolean accept(File dir, String name) {
-				return name.toUpperCase().endsWith(XML_FILE_EXTENSION.toUpperCase());
+				return name.toUpperCase()
+						.endsWith(XML_FILE_EXTENSION.toUpperCase());
 			}
 		};
 		File xmlDirectoryFile = getXMLDirectoryFile();

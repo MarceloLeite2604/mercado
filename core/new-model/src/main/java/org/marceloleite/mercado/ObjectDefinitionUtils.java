@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.marceloleite.mercado.commons.properties.PropertyDefinition;
 import org.marceloleite.mercado.strategy.ObjectDefinition;
 
 public class ObjectDefinitionUtils {
@@ -46,7 +45,7 @@ public class ObjectDefinitionUtils {
 		}
 		Enum<? extends ObjectDefinition>[] enumConstants = enumClass.getEnumConstants();
 		for (Enum<? extends ObjectDefinition> enumConstant : enumConstants) {
-			if (((PropertyDefinition) enumConstant).getName().equals(name)) {
+			if (((ObjectDefinition) enumConstant).getName().equals(name)) {
 				return enumConstant;
 			}
 		}
