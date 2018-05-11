@@ -204,13 +204,15 @@ public class TemporalTickerCreator {
 	}
 
 	private Trade retrieveFirst(Map<Long, Trade> trades) {
-		return retrieveFirstOrderingBy(trades, TradeComparatorById.getInstance(),
-				"Could not find first trade on list.");
+		return retrieveFirstOrderingBy(trades, TradeComparatorById.getInstance());
 	}
 
 	private Trade retrieveLast(Map<Long, Trade> trades) {
-		return retrieveFirstOrderingBy(trades, TradeComparatorByIdDesc.getInstance(),
-				"Could not find last trade on list.");
+		return retrieveFirstOrderingBy(trades, TradeComparatorByIdDesc.getInstance());
+	}
+
+	private Trade retrieveFirstOrderingBy(Map<Long, Trade> trades, Comparator<? super Trade> comparator) {
+		return retrieveFirstOrderingBy(trades, comparator, null);
 	}
 
 	private Trade retrieveFirstOrderingBy(Map<Long, Trade> trades, Comparator<? super Trade> comparator,
@@ -219,7 +221,12 @@ public class TemporalTickerCreator {
 				.stream()
 				.sorted(comparator)
 				.findFirst()
-				.orElseThrow(() -> new RuntimeException(message));
+				.orElse(null);
+
+		if (lastTrade == null && message != null) {
+			throw new RuntimeException(message);
+		}
+
 		return lastTrade;
 	}
 }

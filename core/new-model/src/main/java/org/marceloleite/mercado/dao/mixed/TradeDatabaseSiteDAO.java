@@ -83,12 +83,14 @@ public class TradeDatabaseSiteDAO implements TradeDAO {
 	private void retrieveUnavailableTradesOnDatabase(Currency currency, ZonedDateTime start, ZonedDateTime end) {
 		TimeInterval timeIntervalAvailable = tradeDatabaseDAO.retrieveTimeIntervalAvailable(currency);
 		TimeInterval retrievalTime = defineRetrievalTime(start, end, timeIntervalAvailable);
-		retrieveFromSiteAndSaveOnDatabase(currency, retrievalTime);
+		if (retrievalTime != null ) {
+			retrieveFromSiteAndSaveOnDatabase(currency, retrievalTime);
+		}
 	}
 
 	private TimeInterval defineRetrievalTime(ZonedDateTime start, ZonedDateTime end,
 			TimeInterval timeIntervalAvailable) {
-		TimeInterval result = null;
+		TimeInterval result;
 		if (timeIntervalAvailable == null) {
 			result = new TimeInterval(start, end);
 		} else {
@@ -98,12 +100,16 @@ public class TradeDatabaseSiteDAO implements TradeDAO {
 				} else {
 					result = new TimeInterval(start, ZonedDateTime.from(timeIntervalAvailable.getStart()));
 				}
-			}
-			if (end.isAfter(timeIntervalAvailable.getEnd())) {
-				if (start.isAfter(timeIntervalAvailable.getEnd())) {
-					result = new TimeInterval(start, end);
+			} else {
+				if (end.isAfter(timeIntervalAvailable.getEnd())) {
+					if (start.isAfter(timeIntervalAvailable.getEnd())) {
+						result = new TimeInterval(start, end);
+					} else {
+						result = new TimeInterval(ZonedDateTime.from(timeIntervalAvailable.getEnd()), end);
+					}
 				} else {
-					result = new TimeInterval(ZonedDateTime.from(timeIntervalAvailable.getEnd()), end);
+					// Database already has trades for required period.
+					result = null;
 				}
 			}
 		}

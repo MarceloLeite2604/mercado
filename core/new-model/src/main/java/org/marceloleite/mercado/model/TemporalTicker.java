@@ -18,7 +18,9 @@ import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.utils.ObjectUtils;
+import org.marceloleite.mercado.commons.utils.formatter.NonDigitalCurrencyFormatter;
 import org.marceloleite.mercado.model.attributeconverter.ZonedDateTimeAttributeConverter;
 import org.marceloleite.mercado.model.xmladapter.CurrencyXmlAdapter;
 import org.marceloleite.mercado.model.xmladapter.DurationXmlAdapter;
@@ -436,5 +438,14 @@ public class TemporalTicker {
 
 	public TemporalTicker makeDeepCopy() {
 		return ObjectUtils.makeDeepCopy(this);
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder.append("[" + currency + ", from ");
+		stringBuilder.append(new TimeInterval(start, end) +"]");
+		stringBuilder.append(" last: " + NonDigitalCurrencyFormatter.format(getCurrentOrPreviousLast()));
+		return stringBuilder.toString();
 	}
 }
