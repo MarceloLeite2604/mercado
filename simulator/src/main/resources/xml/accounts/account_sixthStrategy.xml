@@ -40,7 +40,7 @@
 				</parameter>
 				<parameter>
 					<name>initialStatus</name>
-					<value>undefined</value>
+					<value>"undefined"</value>
 				</parameter>
 				<parameter>
 					<name>generateDailyGraphic</name>

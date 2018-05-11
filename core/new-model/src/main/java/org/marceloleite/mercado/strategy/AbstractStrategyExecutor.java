@@ -74,7 +74,8 @@ public abstract class AbstractStrategyExecutor implements StrategyExecutor {
 				String json = parameterValues.get(parameterName)
 						.getValue();
 				ObjectDefinition parameterDefinition = parameterDefinitionEntry.getValue();
-				Object parameterObject = ObjectToJsonConverter.convertToObject(json, parameterDefinition.getObjectClass());
+				Object parameterObject = ObjectToJsonConverter.convertToObject(json,
+						parameterDefinition.getObjectClass());
 				setParameter(parameterDefinition.getName(), parameterObject);
 			}
 		}
@@ -103,18 +104,19 @@ public abstract class AbstractStrategyExecutor implements StrategyExecutor {
 	}
 
 	private List<String> retrieveVariableNames(Strategy strategy) {
-		return Optional.of(strategy.getVariables())
-				.orElseThrow(() -> new IllegalStateException(
-						"Strategy \"" + strategy + " does not have any variable defined."))
+		return Optional.ofNullable(strategy.getVariables())
+				.orElse(new ArrayList<>())
 				.stream()
 				.map(Variable::getName)
 				.collect(Collectors.toList());
 	}
 
 	private void setVariables(Strategy strategy) {
-		checkVariables(strategy);
-		defineVariables(strategy);
-		listVariablesOnLog(strategy);
+		if (isReloading(strategy)) {
+			checkVariables(strategy);
+			defineVariables(strategy);
+			listVariablesOnLog(strategy);
+		}
 	}
 
 	private void checkVariables(Strategy strategy) {
@@ -122,14 +124,18 @@ public abstract class AbstractStrategyExecutor implements StrategyExecutor {
 		if (!CollectionUtils.isEmpty(variableDefinitions)) {
 			List<String> variableNames = retrieveVariableNames(strategy);
 			for (String variableDefinitionName : variableDefinitions.keySet()) {
-				if (!variableNames.contains(variableDefinitionName)) {
+				if (!variableNames.contains(variableDefinitionName) && isReloading(strategy)) {
 					throw new IllegalStateException("Could not find variable \"" + variableDefinitionName
-							+ "\" on parameters list for strategy \"" + strategy + "\".");
+							+ "\" on variables list for strategy \"" + strategy + "\".");
 				}
 			}
 		} else {
 			getLogger().info("No variables defined for strategy \"" + strategy + "\".");
 		}
+	}
+
+	private boolean isReloading(Strategy strategy) {
+		return (strategy.getId() != null);
 	}
 
 	private void defineVariables(Strategy strategy) {

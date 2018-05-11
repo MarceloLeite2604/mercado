@@ -1,8 +1,16 @@
 package org.marceloleite.mercado.strategies.sixth;
 
-enum SixthStrategyStatus {
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public enum SixthStrategyStatus {
+	
+	@JsonProperty("undefined")
 	UNDEFINED("undefined"),
+	
+	@JsonProperty("applied")
 	APPLIED("applied"),
+	
+	@JsonProperty("saved")
 	SAVED("saved");
 
 	private String name;

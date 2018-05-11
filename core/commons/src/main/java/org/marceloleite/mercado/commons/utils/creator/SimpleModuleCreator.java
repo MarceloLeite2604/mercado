@@ -8,6 +8,7 @@ import org.marceloleite.mercado.commons.OrderStatus;
 import org.marceloleite.mercado.commons.OrderType;
 import org.marceloleite.mercado.commons.json.deserializer.CurrencyDeserializer;
 import org.marceloleite.mercado.commons.json.deserializer.DurationDeserializer;
+import org.marceloleite.mercado.commons.json.deserializer.OrderStatusDeserializer;
 import org.marceloleite.mercado.commons.json.deserializer.OrderTypeDeserializer;
 import org.marceloleite.mercado.commons.json.deserializer.ZonedDateTimeDeserializer;
 import org.marceloleite.mercado.commons.json.serializer.CurrencySerializer;
@@ -47,6 +48,7 @@ public final class SimpleModuleCreator {
 		simpleModule.addDeserializer(ZonedDateTime.class, new ZonedDateTimeDeserializer());
 		simpleModule.addDeserializer(Duration.class, new DurationDeserializer());
 		simpleModule.addDeserializer(OrderType.class, new OrderTypeDeserializer());
+		simpleModule.addDeserializer(OrderStatus.class, new OrderStatusDeserializer());
 		simpleModule.addDeserializer(Currency.class, new CurrencyDeserializer());
 		return simpleModule;
 	}

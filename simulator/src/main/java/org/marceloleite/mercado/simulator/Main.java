@@ -10,6 +10,7 @@ import javax.transaction.Transactional;
 
 import org.marceloleite.mercado.NewModelMain;
 import org.marceloleite.mercado.PersistenceContextConfiguration;
+import org.marceloleite.mercado.cdi.MercadoApplicationContextAware;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeDivisionController;
 import org.marceloleite.mercado.commons.utils.ZonedDateTimeUtils;
@@ -27,6 +28,7 @@ import org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfigurat
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScan.Filter;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.FilterType;
 
 @SpringBootApplication
@@ -37,8 +39,13 @@ import org.springframework.context.annotation.FilterType;
 
 @EnableAutoConfiguration(exclude = { DataSourceAutoConfiguration.class,
 		DataSourceTransactionManagerAutoConfiguration.class, HibernateJpaAutoConfiguration.class })
+@DependsOn("MercadoApplicationContextAware")
 public class Main {
 
+	@SuppressWarnings("unused")
+	@Inject
+	private MercadoApplicationContextAware mercadoApplicationContextAware;
+	
 	@Inject
 	private Simulator simulator;
 	

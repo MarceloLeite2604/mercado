@@ -16,6 +16,7 @@ import org.marceloleite.mercado.CurrencyAmount;
 import org.marceloleite.mercado.House;
 import org.marceloleite.mercado.SellOrderBuilder;
 import org.marceloleite.mercado.TemporalTickerCreator;
+import org.marceloleite.mercado.cdi.MercadoApplicationContextAware;
 import org.marceloleite.mercado.commons.CircularArray;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.OrderType;
@@ -73,13 +74,8 @@ public class SixthStrategy extends AbstractStrategyExecutor {
 		this.circularArraySize = null;
 		this.nextValueSteps = null;
 
-		this.tradeDAO = CDI.current()
-				.select(TradeDAO.class)
-				.get();
-
-		this.temporalTickerCreator = CDI.current()
-				.select(TemporalTickerCreator.class)
-				.get();
+		this.tradeDAO = MercadoApplicationContextAware.getBean(TradeDAO.class, "TradeDatabaseSiteDAO");
+		this.temporalTickerCreator = MercadoApplicationContextAware.getBean(TemporalTickerCreator.class);
 	}
 
 	public SixthStrategy() {
