@@ -46,15 +46,8 @@ import org.springframework.context.annotation.FilterType;
 @DependsOn("MercadoApplicationContextAware")
 public class Main {
 
-	@SuppressWarnings("unused")
-	@Inject
-	private MercadoApplicationContextAware mercadoApplicationContextAware;
-	
 	@Inject
 	private Simulator simulator;
-	
-	@Inject
-	private TradeRepository tradeRepository;
 	
 	@Inject
 	@Named("AccountXMLDAO")
