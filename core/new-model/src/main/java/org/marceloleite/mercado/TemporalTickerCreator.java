@@ -116,7 +116,6 @@ public class TemporalTickerCreator {
 			orders = 0;
 			buyOrders = 0;
 			sellOrders = 0;
-
 		}
 
 		return TemporalTicker.builder()

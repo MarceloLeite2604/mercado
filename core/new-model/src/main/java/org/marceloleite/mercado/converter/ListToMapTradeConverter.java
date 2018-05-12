@@ -12,9 +12,13 @@ public final class ListToMapTradeConverter {
 	}
 
 	public static Map<Long, Trade> fromListToMap(List<Trade> trades) {
-		return trades.stream()
+		Map<Long, Trade> result = null;
+		if (trades != null) {
+			result = trades.stream()
 			.map(jsonTrade -> jsonTrade)
 			.collect(Collectors.toConcurrentMap(Trade::getId, trade -> trade, (oldModel, newModel) -> newModel));
+		}
+		return result;
 	}
 
 	public static List<Trade> fromMapToList(Map<Long, Trade> tradeMap) {

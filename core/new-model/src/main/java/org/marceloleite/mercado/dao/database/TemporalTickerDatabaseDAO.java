@@ -53,6 +53,7 @@ public class TemporalTickerDatabaseDAO implements TemporalTickerDAO {
 				endTime);
 		if (temporalTicker == null) {
 			temporalTicker = createTemporalTicker(currency, startTime, endTime);
+			temporalTickerRepository.save(temporalTicker);
 		}
 		return temporalTicker;
 	}
@@ -60,9 +61,7 @@ public class TemporalTickerDatabaseDAO implements TemporalTickerDAO {
 	private TemporalTicker createTemporalTicker(Currency currency, ZonedDateTime start, ZonedDateTime end) {
 		TemporalTicker result = null;
 		List<Trade> trades = tradesDAO.findByCurrencyAndTimeBetween(currency, start, end);
-		if (trades != null) {
-			result = temporalTickerCreator.create(currency, new TimeInterval(start, end), trades);
-		}
+		result = temporalTickerCreator.create(currency, new TimeInterval(start, end), trades);
 		return result;
 	}
 

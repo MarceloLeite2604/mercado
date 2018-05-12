@@ -1,8 +1,10 @@
 package org.marceloleite.mercado.simulator;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -14,10 +16,12 @@ import org.marceloleite.mercado.cdi.MercadoApplicationContextAware;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeDivisionController;
 import org.marceloleite.mercado.commons.utils.ZonedDateTimeUtils;
+import org.marceloleite.mercado.dao.database.repository.TradeRepository;
 import org.marceloleite.mercado.dao.interfaces.AccountDAO;
 import org.marceloleite.mercado.dao.xml.XMLDAOConfiguration;
 import org.marceloleite.mercado.model.Account;
 import org.marceloleite.mercado.model.Strategy;
+import org.marceloleite.mercado.model.Trade;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -48,6 +52,9 @@ public class Main {
 	
 	@Inject
 	private Simulator simulator;
+	
+	@Inject
+	private TradeRepository tradeRepository;
 	
 	@Inject
 	@Named("AccountXMLDAO")
