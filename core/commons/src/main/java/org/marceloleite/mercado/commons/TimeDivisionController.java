@@ -114,6 +114,10 @@ public class TimeDivisionController {
 		Duration duration = Duration.between(start, end);
 		return duration.dividedBy(divisions);
 	}
+	
+	public TimeInterval getTotalTimeInterval() {
+		return new TimeInterval(start, end);
+	}
 
 	@Override
 	public String toString() {

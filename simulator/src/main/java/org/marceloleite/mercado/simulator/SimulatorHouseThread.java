@@ -10,15 +10,13 @@ import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.model.TemporalTicker;
-import org.springframework.stereotype.Component;
 
-@Component
-public class HouseSimulationThread extends Thread {
+public class SimulatorHouseThread extends Thread {
 	
 	@SuppressWarnings("unused")
-	private static final Logger LOGGER = LogManager.getLogger(HouseSimulationThread.class);
+	private static final Logger LOGGER = LogManager.getLogger(SimulatorHouseThread.class);
 
-	private static final String THREAD_NAME = "House Simulation";
+	private static final String THREAD_NAME = "Simulation House";
 
 	private SimulationHouse house;
 	
@@ -29,7 +27,7 @@ public class HouseSimulationThread extends Thread {
 	@Inject
 	private Semaphores semaphores; 
 	
-	public HouseSimulationThread(SimulationHouse house) {
+	public SimulatorHouseThread(SimulationHouse house) {
 		super();
 		this.house = house;
 		this.temporalTickersDataModelsByTimeInterval = null;

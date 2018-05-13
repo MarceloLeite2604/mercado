@@ -13,9 +13,9 @@ import org.marceloleite.mercado.model.Account;
 import org.marceloleite.mercado.model.Order;
 import org.marceloleite.mercado.model.Wallet;
 
-public class SimulationOrderExecutor implements OrderExecutor {
+public class SimulatorOrderExecutor implements OrderExecutor {
 
-	private static final Logger LOGGER = LogManager.getLogger(SimulationOrderExecutor.class);
+	private static final Logger LOGGER = LogManager.getLogger(SimulatorOrderExecutor.class);
 
 	@Override
 	public Order placeOrder(Order order, House house, Account account) {

@@ -42,7 +42,7 @@ public class SimulationHouse implements House {
 		this.comissionPercentage = Optional.ofNullable(builder.comissionPercentage)
 				.orElse(DEFAULT_COMISSION_PERCENTAGE);
 		this.orderExecutor = Optional.ofNullable(builder.orderExecutor)
-				.orElse(new SimulationOrderExecutor());
+				.orElse(new SimulatorOrderExecutor());
 		this.temporalTickers = new EnumMap<>(Currency.class);
 	}
 

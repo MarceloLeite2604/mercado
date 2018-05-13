@@ -7,9 +7,13 @@ import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.dao.site.siteretriever.trade.checker.MaxTradesReachedChecker;
 import org.marceloleite.mercado.model.Trade;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 class PartialTradeSiteRetrieverCallable implements Callable<List<Trade>> {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(TradeSiteRetriever.class);
+	
 	private Currency currency;
 
 	private TimeInterval timeInterval;
@@ -25,7 +29,7 @@ class PartialTradeSiteRetrieverCallable implements Callable<List<Trade>> {
 	public List<Trade> call() throws Exception {
 		List<Trade> trades = new PartialTradeSiteRetriever().retrieve(currency, timeInterval);
 		if (MaxTradesReachedChecker.getInstance().check(trades)) {
-			System.err.println("Warning: Maximum trades exceeded from " + timeInterval + ". Splitting execution.");
+			LOGGER.warn("Maximum trades exceeded from {}. Splitting execution.", timeInterval);
 			trades = splitExecution();
 		} 
 		return trades;

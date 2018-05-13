@@ -108,11 +108,19 @@ public class TemporalTickerCreator {
 			vol = new BigDecimal("0");
 			first = null;
 			last = null;
-			previousLast = retrievePrevious(currency, timeInterval.getStart());
 			buy = null;
-			previousBuy = retrievePrevious(currency, TradeType.SELL, timeInterval.getStart());
 			sell = null;
-			previousSell = retrievePrevious(currency, TradeType.BUY, timeInterval.getStart());
+			
+			if ( !timeInterval.getStart().isBefore(tradeDAO.retrieveTimeIntervalAvailable(currency).getStart())) {
+				previousLast = retrievePrevious(currency, timeInterval.getStart());
+				previousBuy = retrievePrevious(currency, TradeType.SELL, timeInterval.getStart());
+				previousSell = retrievePrevious(currency, TradeType.BUY, timeInterval.getStart());
+			} else {
+				previousLast = null;
+				previousBuy = null;
+				previousSell = null;
+			}
+			
 			orders = 0;
 			buyOrders = 0;
 			sellOrders = 0;
