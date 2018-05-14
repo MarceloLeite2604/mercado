@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import javax.enterprise.inject.spi.CDI;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.BuyOrderBuilder;
@@ -173,7 +171,7 @@ public class SixthStrategy extends AbstractStrategyExecutor {
 					timeIntervalToRetrieve.getEnd());
 			TimeDivisionController timeDivisionController = new TimeDivisionController(timeIntervalToRetrieve,
 					stepTime);
-			List<TimeInterval> retrievedTimeIntervals = timeDivisionController.geTimeIntervals();
+			List<TimeInterval> retrievedTimeIntervals = timeDivisionController.getTimeIntervals();
 			for (TimeInterval retrievedTimeInterval : retrievedTimeIntervals) {
 				List<Trade> tradesOnTimeInterval = trades.stream()
 						.filter(trade -> ZonedDateTimeUtils.isBetween(trade.getTime(), retrievedTimeInterval))
