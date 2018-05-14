@@ -28,7 +28,7 @@ public class Main {
 		ZonedDateTime end = ZonedDateTime.of(2017, 10, 15, 03, 0, 0, 0, ZoneOffset.UTC);
 		TimeDivisionController timeDivisionController = new TimeDivisionController(new TimeInterval(start, end),
 				Duration.ofHours(1l));
-		for (TimeInterval timeInterval : timeDivisionController.geTimeIntervals()) {
+		for (TimeInterval timeInterval : timeDivisionController.getTimeIntervals()) {
 			System.out.println(timeInterval);
 		}
 
@@ -79,7 +79,7 @@ public class Main {
 				ZonedDateTimeUtils.DEFAULT_ZONE_ID);
 		TimeDivisionController timeDivisionController = new TimeDivisionController(start, end, divisionDuration);
 		Alarm alarm = new Alarm(alarmTime, 30);
-		List<TimeInterval> timeIntervals = timeDivisionController.geTimeIntervals();
+		List<TimeInterval> timeIntervals = timeDivisionController.getTimeIntervals();
 
 		String status;
 		for (TimeInterval timeInterval : timeIntervals) {

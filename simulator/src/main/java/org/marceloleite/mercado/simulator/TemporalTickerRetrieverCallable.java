@@ -36,7 +36,7 @@ public class TemporalTickerRetrieverCallable implements Callable<TreeMap<TimeInt
 	public TreeMap<TimeInterval, Map<Currency, TemporalTicker>> call() throws Exception {
 		LOGGER.debug("Executing thread.");
 		TreeMap<TimeInterval, Map<Currency, TemporalTicker>> temporalTickersByTimeInterval = new TreeMap<>();
-		for (TimeInterval timeInterval : timeDivisionController.geTimeIntervals()) {
+		for (TimeInterval timeInterval : timeDivisionController.getTimeIntervals()) {
 			temporalTickersByTimeInterval.put(timeInterval, retrieveTemporalTickers(timeInterval));
 		}
 		return temporalTickersByTimeInterval;

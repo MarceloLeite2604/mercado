@@ -1,5 +1,6 @@
 package org.marceloleite.mercado.dao.database;
 
+import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +16,7 @@ import org.marceloleite.mercado.dao.interfaces.TemporalTickerDAO;
 import org.marceloleite.mercado.dao.interfaces.TradeDAO;
 import org.marceloleite.mercado.model.TemporalTicker;
 import org.marceloleite.mercado.model.Trade;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -71,4 +73,14 @@ public class TemporalTickerDatabaseDAO implements TemporalTickerDAO {
 		return (Optional<S>) temporalTickerRepository.findById(id);
 	}
 
+	@Override
+	public List<TemporalTicker> findByCurrencyAndDurationAndStartBetween(Currency currency, Duration duration, TimeInterval timeInterval) {
+		return temporalTickerRepository.findByCurrencyAndDurationAndStartGreaterThanEqualAndStartLessThan(currency, duration,
+				timeInterval.getStart(), timeInterval.getEnd());
+	}
+
+	@Bean
+	private TemporalTickerCreator createTemporalTickerCreator() {
+		return new TemporalTickerCreator(this);
+	}
 }

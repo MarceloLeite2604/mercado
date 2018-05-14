@@ -15,7 +15,7 @@ public class TimeDivisionController {
 
 	private Duration divisionDuration;
 
-	private long divisions;
+	private long totalDivisions;
 
 	private List<TimeInterval> timeIntervals;
 
@@ -27,7 +27,7 @@ public class TimeDivisionController {
 		this.start = start;
 		this.end = end;
 		this.divisionDuration = divisionDuration;
-		this.divisions = calculateDivisions();
+		this.totalDivisions = calculateTotalDivisions();
 		this.timeIntervals = createTimeIntervals();
 	}
 
@@ -54,20 +54,21 @@ public class TimeDivisionController {
 		return Duration.from(divisionDuration);
 	}
 
-	public List<TimeInterval> geTimeIntervals() {
+	public List<TimeInterval> getTimeIntervals() {
 		return new ArrayList<>(timeIntervals);
 	}
 
-	/*
-	 * public long getDivisions() { return divisions; }
-	 */
+	public long getTotalDivisions() {
+		return totalDivisions;
+	}
 
 	private List<TimeInterval> createTimeIntervals() {
 		List<TimeInterval> timeIntervals = new ArrayList<>();
 		TimeInterval nextTimeInterval = null;
 		nextTimeInterval = elaborateNextTimeInterval(nextTimeInterval);
 		timeIntervals.add(nextTimeInterval);
-		while (!nextTimeInterval.getEnd().isEqual(end)) {
+		while (!nextTimeInterval.getEnd()
+				.isEqual(end)) {
 			nextTimeInterval = elaborateNextTimeInterval(nextTimeInterval);
 			timeIntervals.add(nextTimeInterval);
 		}
@@ -105,16 +106,16 @@ public class TimeDivisionController {
 		return timeIntervalDuration;
 	}
 
-	private long calculateDivisions() {
+	private long calculateTotalDivisions() {
 		Duration duration = Duration.between(start, end);
 		return (long) Math.ceil((double) duration.getSeconds() / (double) divisionDuration.getSeconds());
 	}
 
 	private Duration calculateDivisionDuration() {
 		Duration duration = Duration.between(start, end);
-		return duration.dividedBy(divisions);
+		return duration.dividedBy(totalDivisions);
 	}
-	
+
 	public TimeInterval getTotalTimeInterval() {
 		return new TimeInterval(start, end);
 	}

@@ -58,7 +58,7 @@ public class Simulator {
 	private void execute() throws InterruptedException, ExecutionException {
 		startExecution();
 		for (TimeInterval stepTimeInterval : simulatorConfigurator.getTimeDivisionController()
-				.geTimeIntervals()) {
+				.getTimeIntervals()) {
 			LOGGER.info(stepTimeInterval);
 			TreeMap<TimeInterval, Map<Currency, TemporalTicker>> temporalTickersByTimeInterval = retrieveTemporalTickers(
 					stepTimeInterval);

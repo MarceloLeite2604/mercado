@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configuration status="info">
+<configuration status="debug">
 
 	<property name="defaultPatternLayout"
 		value="[%-5p] %d{HH:mm:ss.SSS} [%-8t] %c{5}: %m%n" />
@@ -99,15 +99,15 @@
 
 	<root level="info">
 		<appender-ref ref="stdout" />
-	</root>
-	<logger name="org.hibernate" level="info" additivity="false">
+	</root> -->
+	<!-- <logger name="org.hibernate" level="info" additivity="false">
 		<appender-ref ref="hibernate" />
-	</logger>
-	<logger name="org.marceloleite.mercado.simulator" level="${simulatorLevel}">
+	</logger> -->
+	<!-- <logger name="org.marceloleite.mercado.simulator" level="${simulatorLogLevel}">
 		<appender-ref ref="simulator" />
-	</logger>
-	<logger name="org.marceloleite.mercado" level="${simulatorLevel}">
-		<appender-ref ref="simulator" />
+	</logger> -->
+	<logger name="org.marceloleite" level="${simulatorLogLevel}">
+		<!-- <appender-ref ref="stdout" /> -->
 	</logger>
 	<!-- <Logger name="org.marceloleite.mercado.simulator.TemporalTickerVariation" 
 		level="info" /> <Logger name="org.marceloleite.mercado.simulator.House" /> 

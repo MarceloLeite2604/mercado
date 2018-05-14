@@ -16,18 +16,23 @@ import org.marceloleite.mercado.commons.TradeType;
 import org.marceloleite.mercado.comparator.TradeComparatorById;
 import org.marceloleite.mercado.comparator.TradeComparatorByIdDesc;
 import org.marceloleite.mercado.converter.ListToMapTradeConverter;
+import org.marceloleite.mercado.dao.interfaces.TemporalTickerDAO;
 import org.marceloleite.mercado.dao.interfaces.TradeDAO;
 import org.marceloleite.mercado.model.TemporalTicker;
 import org.marceloleite.mercado.model.Trade;
-import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-@Component
 public class TemporalTickerCreator {
 
 	@Inject
 	@Named("TradeDatabaseSiteDAO")
 	private TradeDAO tradeDAO;
+
+	private TemporalTickerDAO temporalTickerDAO;
+	
+	public TemporalTickerCreator(TemporalTickerDAO temporalTickerDAO) {
+		this.temporalTickerDAO = temporalTickerDAO;
+	}
 
 	public TemporalTicker create(Currency currency, TimeInterval timeInterval, List<Trade> trades) {
 		return create(currency, timeInterval, ListToMapTradeConverter.fromListToMap(trades));
@@ -77,7 +82,7 @@ public class TemporalTickerCreator {
 				previousLast = null;
 			} else {
 				last = null;
-				previousLast = retrievePrevious(currency, timeInterval.getStart());
+				previousLast = retrievePreviousPriceFromTrade(currency, timeInterval.getStart());
 			}
 
 			if (lastSellingTrade != null) {
@@ -85,7 +90,7 @@ public class TemporalTickerCreator {
 				previousBuy = null;
 			} else {
 				buy = null;
-				previousBuy = retrievePrevious(currency, TradeType.SELL, timeInterval.getStart());
+				previousBuy = retrievePreviousPriceFromTrade(currency, TradeType.SELL, timeInterval.getStart());
 			}
 
 			if (lastBuyingTrade != null) {
@@ -93,7 +98,7 @@ public class TemporalTickerCreator {
 				previousSell = null;
 			} else {
 				sell = null;
-				previousSell = retrievePrevious(currency, TradeType.BUY, timeInterval.getStart());
+				previousSell = retrievePreviousPriceFromTrade(currency, TradeType.BUY, timeInterval.getStart());
 			}
 
 			orders = trades.size();
@@ -110,17 +115,24 @@ public class TemporalTickerCreator {
 			last = null;
 			buy = null;
 			sell = null;
-			
-			if ( !timeInterval.getStart().isBefore(tradeDAO.retrieveTimeIntervalAvailable(currency).getStart())) {
-				previousLast = retrievePrevious(currency, timeInterval.getStart());
-				previousBuy = retrievePrevious(currency, TradeType.SELL, timeInterval.getStart());
-				previousSell = retrievePrevious(currency, TradeType.BUY, timeInterval.getStart());
+
+			if (canRetrievePrevious(currency, timeInterval)) {
+				TemporalTicker previousTemporalTicker = retrievePreviousTemporalTicker(currency, timeInterval);
+				if (previousTemporalTicker != null) {
+					previousLast = previousTemporalTicker.getCurrentOrPreviousLast();
+					previousBuy = previousTemporalTicker.getCurrentOrPreviousBuy();
+					previousSell = previousTemporalTicker.getCurrentOrPreviousSell();
+				} else {
+					previousLast = retrievePreviousPriceFromTrade(currency, timeInterval.getStart());
+					previousBuy = retrievePreviousPriceFromTrade(currency, TradeType.SELL, timeInterval.getStart());
+					previousSell = retrievePreviousPriceFromTrade(currency, TradeType.BUY, timeInterval.getStart());
+				}
 			} else {
 				previousLast = null;
 				previousBuy = null;
 				previousSell = null;
 			}
-			
+
 			orders = 0;
 			buyOrders = 0;
 			sellOrders = 0;
@@ -148,12 +160,24 @@ public class TemporalTickerCreator {
 				.build();
 	}
 
-	private BigDecimal retrievePrevious(Currency currency, ZonedDateTime date) {
+	private TemporalTicker retrievePreviousTemporalTicker(Currency currency, TimeInterval timeInterval) {
+		ZonedDateTime previousEnd = timeInterval.getStart();
+		ZonedDateTime previousStart = previousEnd.minus(timeInterval.getDuration());
+		return temporalTickerDAO.findByCurrencyAndStartAndEnd(currency, previousStart, previousEnd);
+	}
+
+	private boolean canRetrievePrevious(Currency currency, TimeInterval timeInterval) {
+		TimeInterval timeIntervalAvailable = tradeDAO.retrieveTimeIntervalAvailable(currency);
+		return timeIntervalAvailable != null && !timeInterval.getStart()
+				.isBefore(timeIntervalAvailable.getStart());
+	}
+
+	private BigDecimal retrievePreviousPriceFromTrade(Currency currency, ZonedDateTime date) {
 		Trade previousTrade = tradeDAO.findTopByCurrencyAndTimeLessThanOrderByTimeDesc(currency, date);
 		return createBigDecimalFromPrice(previousTrade);
 	}
 
-	private BigDecimal retrievePrevious(Currency currency, TradeType type, ZonedDateTime date) {
+	private BigDecimal retrievePreviousPriceFromTrade(Currency currency, TradeType type, ZonedDateTime date) {
 		Trade previousTrade = tradeDAO.findFirstOfCurrencyAndTypeAndOlderThan(currency, type, date);
 		return createBigDecimalFromPrice(previousTrade);
 	}

@@ -12,6 +12,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import javax.annotation.PreDestroy;
 import javax.ws.rs.Produces;
 
 import org.marceloleite.mercado.commons.Currency;
@@ -37,7 +38,7 @@ public class TradeSiteRetriever extends AbstractSiteRetriever {
 
 	private static int configuredThreadPoolSize = DEFAULT_THREAD_POOL_SIZE;
 
-	private static ThreadPoolExecutor executorService;
+	private ThreadPoolExecutor executorService;
 
 	private Duration stepDuration;
 
@@ -59,7 +60,7 @@ public class TradeSiteRetriever extends AbstractSiteRetriever {
 		checkArguments(timeInterval);
 
 		TimeDivisionController timeDivisionController = new TimeDivisionController(timeInterval, stepDuration);
-		for (TimeInterval timeIntervalDivision : timeDivisionController.geTimeIntervals()) {
+		for (TimeInterval timeIntervalDivision : timeDivisionController.getTimeIntervals()) {
 			Callable<List<Trade>> partialTradesSiteRetrieverCallable = createPartialTradesSiteRetrieverCallable(
 					currency, timeIntervalDivision);
 			futureSet.add(executorService.submit(partialTradesSiteRetrieverCallable));
@@ -82,7 +83,7 @@ public class TradeSiteRetriever extends AbstractSiteRetriever {
 			throws InterruptedException, ExecutionException {
 		synchronized (TradeSiteRetriever.class) {
 			List<Trade> result = future.get();
-			shutDownExecutorService();
+			// shutDownExecutorService();
 			return result;
 		}
 
@@ -101,7 +102,6 @@ public class TradeSiteRetriever extends AbstractSiteRetriever {
 			createExecutorService();
 			return new PartialTradeSiteRetrieverCallable(currency, timeInterval);
 		}
-
 	}
 
 	@Override
@@ -117,17 +117,18 @@ public class TradeSiteRetriever extends AbstractSiteRetriever {
 		TradeSiteRetriever.configuredThreadPoolSize = configuredThreadPoolSize;
 	}
 
-	private static void createExecutorService() {
+	private void createExecutorService() {
 		if (executorService == null) {
 			executorService = new ThreadPoolExecutor(configuredThreadPoolSize, configuredThreadPoolSize, 0l,
 					TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
 		}
 	}
 
-	private static void shutDownExecutorService() {
-		if (executorService != null && executorService.getActiveCount() == 0) {
+	@PreDestroy
+	public void shutDownExecutorService() {
+//		if (executorService != null && executorService.getActiveCount() == 0) {
 			executorService.shutdownNow();
-			executorService = null;
-		}
+//			executorService = null;
+//		}
 	}
 }
