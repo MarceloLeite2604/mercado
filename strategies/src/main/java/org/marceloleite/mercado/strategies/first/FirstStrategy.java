@@ -13,6 +13,7 @@ import org.marceloleite.mercado.TemporalTickerVariation;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.OrderType;
 import org.marceloleite.mercado.commons.TimeInterval;
+import org.marceloleite.mercado.commons.utils.BigDecimalUtils;
 import org.marceloleite.mercado.commons.utils.MathUtils;
 import org.marceloleite.mercado.commons.utils.formatter.PercentageFormatter;
 import org.marceloleite.mercado.model.Account;
@@ -208,7 +209,7 @@ public class FirstStrategy extends AbstractStrategyExecutor {
 	private CurrencyAmount calculateCurrencyAmountToBuy(CurrencyAmount currencyAmountToPay,
 			CurrencyAmount currencyAmountUnitPrice) {
 		BigDecimal quantity = currencyAmountToPay.getAmount()
-				.divide(currencyAmountUnitPrice.getAmount());
+				.divide(currencyAmountUnitPrice.getAmount(), BigDecimalUtils.DEFAULT_ROUNDING);
 		CurrencyAmount currencyAmountToBuy = new CurrencyAmount(getCurrency(), quantity);
 		LOGGER.debug("Currency amount to buy is: " + currencyAmountToBuy);
 		return currencyAmountToBuy;
@@ -225,7 +226,7 @@ public class FirstStrategy extends AbstractStrategyExecutor {
 	private CurrencyAmount calculateCurrencyAmountToSell(CurrencyAmount currencyAmountToReceive,
 			CurrencyAmount currencyAmountUnitPrice) {
 		BigDecimal amountToSell = currencyAmountToReceive.getAmount()
-				.divide(currencyAmountUnitPrice.getAmount());
+				.divide(currencyAmountUnitPrice.getAmount(), BigDecimalUtils.DEFAULT_ROUNDING);
 		CurrencyAmount currencyAmountToSell = new CurrencyAmount(getCurrency(), amountToSell);
 		LOGGER.debug("Currency amount to sell is " + currencyAmountToSell + ".");
 		return currencyAmountToSell;

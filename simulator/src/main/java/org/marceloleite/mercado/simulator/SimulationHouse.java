@@ -133,6 +133,17 @@ public class SimulationHouse implements House {
 
 	@Override
 	public Wallet getCommissionWalletFor(Account account) {
-		return comissionWallets.getOrDefault(account.getOwner(), new Wallet());
+		if (!comissionWallets.containsKey(account.getOwner())) {
+			comissionWallets.put(account.getOwner(), createComissionWalletFor(account));
+		}
+		return comissionWallets.get(account.getOwner());
+	}
+
+	private Wallet createComissionWalletFor(Account account) {
+		Account comissionAccount = new Account();
+		comissionAccount.setOwner("Commission wallet for " + account.getOwner());
+		Wallet wallet = new Wallet();
+		wallet.adjustReferences(comissionAccount);
+		return wallet;
 	}
 }

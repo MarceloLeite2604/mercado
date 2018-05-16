@@ -29,7 +29,7 @@
 		<file>${outputFolder}/simulator.log</file>
 		<append>false</append>
 		<encoder class="${encoder}">
-			<Pattern>"${defaultPatternLayout}"</Pattern>
+			<Pattern>${defaultPatternLayout}</Pattern>
 		</encoder>
 	</appender>
 	<appender name="originalStrategy"
@@ -37,7 +37,7 @@
 		<file>${outputFolder}/original-strategy.log</file>
 		<append>false</append>
 		<encoder class="${encoder}">
-			<Pattern>"${defaultPatternLayout}"</Pattern>
+			<Pattern>${defaultPatternLayout}</Pattern>
 		</encoder>
 	</appender>
 	<appender name="firstStrategy"
@@ -45,7 +45,7 @@
 		<file>${outputFolder}/first-strategy.log</file>
 		<append>false</append>
 		<encoder class="${encoder}">
-			<Pattern>"${defaultPatternLayout}"</Pattern>
+			<Pattern>${defaultPatternLayout}</Pattern>
 		</encoder>
 	</appender>
 	<appender name="secondStrategy"
@@ -53,7 +53,7 @@
 		<file>${outputFolder}/second-strategy.log</file>
 		<append>false</append>
 		<encoder class="${encoder}">
-			<Pattern>"${defaultPatternLayout}"</Pattern>
+			<Pattern>${defaultPatternLayout}</Pattern>
 		</encoder>
 	</appender>
 	<appender name="thirdStrategy"
@@ -61,7 +61,7 @@
 		<file>${outputFolder}/third-strategy.log</file>
 		<append>false</append>
 		<encoder class="${encoder}">
-			<Pattern>"${defaultPatternLayout}"</Pattern>
+			<Pattern>${defaultPatternLayout}</Pattern>
 		</encoder>
 	</appender>
 	<appender name="fourthStrategy"
@@ -69,7 +69,7 @@
 		<file>${outputFolder}/fourth-strategy.log</file>
 		<append>false</append>
 		<encoder class="${encoder}">
-			<Pattern>"${defaultPatternLayout}"</Pattern>
+			<Pattern>${defaultPatternLayout}</Pattern>
 		</encoder>
 	</appender>
 	<appender name="fifthStrategy"
@@ -77,7 +77,7 @@
 		<file>${outputFolder}/fifth-strategy.log</file>
 		<append>false</append>
 		<encoder class="${encoder}">
-			<Pattern>"${defaultPatternLayout}"</Pattern>
+			<Pattern>${defaultPatternLayout}</Pattern>
 		</encoder>
 	</appender>
 	<appender name="sixthStrategy"
@@ -85,7 +85,7 @@
 		<file>${outputFolder}/sixth-strategy.log</file>
 		<append>false</append>
 		<encoder class="${encoder}">
-			<Pattern>"${defaultPatternLayout}"</Pattern>
+			<Pattern>${defaultPatternLayout}</Pattern>
 		</encoder>
 	</appender>
 	<appender name="hibernate"
@@ -93,36 +93,40 @@
 		<file>${outputFolder}/hibernate.log</file>
 		<append>false</append>
 		<encoder class="${encoder}">
-			<Pattern>"${defaultPatternLayout}"</Pattern>
+			<Pattern>${defaultPatternLayout}</Pattern>
 		</encoder>
 	</appender>
 
 	<root level="info">
 		<appender-ref ref="stdout" />
-	</root> -->
-	<!-- <logger name="org.hibernate" level="info" additivity="false">
-		<appender-ref ref="hibernate" />
-	</logger> -->
-	<!-- <logger name="org.marceloleite.mercado.simulator" level="${simulatorLogLevel}">
-		<appender-ref ref="simulator" />
-	</logger> -->
+	</root>
+	-->
+	<!-- <logger name="org.hibernate" level="info" additivity="false"> <appender-ref 
+		ref="hibernate" /> </logger> -->
+	<!-- <logger name="org.marceloleite.mercado.simulator" level="${simulatorLogLevel}"> 
+		<appender-ref ref="simulator" /> </logger> -->
 	<logger name="org.marceloleite" level="${simulatorLogLevel}">
 		<!-- <appender-ref ref="stdout" /> -->
+	</logger>
+	<logger
+		name="org.marceloleite.mercado.strategies.OriginalStrategy"
+		level="debug" additivity="false">
+		<appender-ref ref="originalStrategy" />
+	</logger>
+	<logger name="org.marceloleite.mercado.strategies.sixth"
+		level="debug" additivity="false">
+		<appender-ref ref="sixthStrategy" />
 	</logger>
 	<!-- <Logger name="org.marceloleite.mercado.simulator.TemporalTickerVariation" 
 		level="info" /> <Logger name="org.marceloleite.mercado.simulator.House" /> 
 		<Logger name="org.marceloleite.mercado.simulator.Simulator" level="debug" 
-		/> <Logger name="org.marceloleite.mercado.strategies.OriginalStrategy" level="debug" 
-		additivity="false"> <AppenderRef ref="OriginalStrategyLogFile" /> </Logger> 
-		<Logger name="org.marceloleite.mercado.strategies.first" level="debug" additivity="false"> 
-		<AppenderRef ref="FirstStrategyLogFile" /> </Logger> <Logger name="org.marceloleite.mercado.strategies.second" 
-		level="debug" additivity="false"> <AppenderRef ref="SecondStrategyLogFile" 
-		/> </Logger> <Logger name="org.marceloleite.mercado.strategies.third" level="debug" 
-		additivity="false"> <AppenderRef ref="ThirdStrategyLogFile" /> </Logger> 
-		<Logger name="org.marceloleite.mercado.strategies.fourth" level="debug" additivity="false"> 
-		<AppenderRef ref="FourthStrategyLogFile" /> </Logger> <Logger name="org.marceloleite.mercado.strategies.fifth" 
-		level="debug" additivity="false"> <AppenderRef ref="FifthStrategyLogFile" 
-		/> </Logger> <Logger name="org.marceloleite.mercado.strategies.sixth" level="debug" 
-		additivity="false"> <AppenderRef ref="SixthStrategyLogFile" /> </Logger> 
-		</Loggers> -->
+		/> <Logger name="org.marceloleite.mercado.strategies.first" level="debug" 
+		additivity="false"> <AppenderRef ref="FirstStrategyLogFile" /> </Logger> 
+		<Logger name="org.marceloleite.mercado.strategies.second" level="debug" additivity="false"> 
+		<AppenderRef ref="SecondStrategyLogFile" /> </Logger> <Logger name="org.marceloleite.mercado.strategies.third" 
+		level="debug" additivity="false"> <AppenderRef ref="ThirdStrategyLogFile" 
+		/> </Logger> <Logger name="org.marceloleite.mercado.strategies.fourth" level="debug" 
+		additivity="false"> <AppenderRef ref="FourthStrategyLogFile" /> </Logger> 
+		<Logger name="org.marceloleite.mercado.strategies.fifth" level="debug" additivity="false"> 
+		<AppenderRef ref="FifthStrategyLogFile" /> </Logger> -->
 </configuration>

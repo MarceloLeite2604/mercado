@@ -174,11 +174,9 @@ public class Account {
 		if (tapiInformation != null) {
 			tapiInformation.setAccount(this);
 		}
-
+		
 		if (wallet != null) {
-			for (Balance balance : wallet) {
-				balance.setAccount(this);
-			}
+			getWallet().adjustReferences(this);
 		}
 
 		if (withdrawals != null) {

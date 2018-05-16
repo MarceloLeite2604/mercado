@@ -7,6 +7,7 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.List;
 
+import org.marceloleite.mercado.commons.utils.BigDecimalUtils;
 import org.marceloleite.mercado.commons.utils.DurationUtils;
 import org.marceloleite.mercado.commons.utils.EncryptUtils;
 import org.marceloleite.mercado.commons.utils.ZonedDateTimeUtils;
@@ -61,7 +62,7 @@ public class Main {
 		BigDecimal unitPrice = new BigDecimal("3475.00000");
 		BigDecimal balance = new BigDecimal("1000.00000");
 
-		BigDecimal amount = balance.divide(unitPrice);
+		BigDecimal amount = balance.divide(unitPrice, BigDecimalUtils.DEFAULT_ROUNDING);
 		System.out.println("Amount: " + amount);
 		System.out.println("Balance: " + amount.multiply(unitPrice));
 

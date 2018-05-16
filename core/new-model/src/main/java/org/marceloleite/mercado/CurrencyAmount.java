@@ -46,7 +46,7 @@ public class CurrencyAmount {
 		} else {
 			scale = currency.getScale();
 		}
-		amount.setScale(scale);
+		amount.setScale(scale, BigDecimalUtils.DEFAULT_ROUNDING);
 		this.amount = amount;
 	}
 

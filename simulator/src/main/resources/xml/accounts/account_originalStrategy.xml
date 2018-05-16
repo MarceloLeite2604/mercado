@@ -6,12 +6,12 @@
 		<id />
 		<secret />
 	</tapiInformations>
-	<balances>
+	<wallet>
 		<balance>
 			<currency>BRL</currency>
 			<amount>1000</amount>
 		</balance>
-	</balances>
+	</wallet>
 	<deposits />
 	<strategies>
 		<strategy>

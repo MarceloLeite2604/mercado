@@ -8,6 +8,7 @@ import org.marceloleite.mercado.CurrencyAmount;
 import org.marceloleite.mercado.MinimalAmounts;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.OrderType;
+import org.marceloleite.mercado.commons.utils.BigDecimalUtils;
 import org.marceloleite.mercado.commons.utils.formatter.NonDigitalCurrencyFormatter;
 import org.marceloleite.mercado.model.Account;
 import org.marceloleite.mercado.orderanalyser.exception.NoBalanceForMinimalValueOrderAnalyserException;
@@ -128,7 +129,7 @@ public class OrderAnalyser {
 
 	private CurrencyAmount calculateSecondFor(CurrencyAmount currencyAmount) {
 		BigDecimal amount = currencyAmount.getAmount()
-				.divide(unitPrice.getAmount());
+				.divide(unitPrice.getAmount(), BigDecimalUtils.DEFAULT_ROUNDING);
 		return new CurrencyAmount(second.getCurrency(), amount);
 	}
 

@@ -107,4 +107,9 @@ public class Wallet extends HashSet<Balance> {
 		LOGGER.debug("New balance is " + balance + ".");
 		updateBalance(balance.asCurrencyAmount());
 	}
+
+	public void adjustReferences(Account account) {
+		this.account = account;
+		forEach(balance -> balance.setAccount(account));
+	}
 }

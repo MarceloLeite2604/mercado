@@ -24,8 +24,10 @@ public final class TemporalTickersByCurrencyMapToTemporalTickersByTimeIntervalMa
 			Currency currency = entry.getKey();
 			List<TemporalTicker> temporalTickers = entry.getValue();
 			for (TemporalTicker temporalTicker : temporalTickers) {
-				result.getOrDefault(createTimeIntervalForTemporalTicker(temporalTicker), new HashMap<>())
-						.putIfAbsent(currency, temporalTicker);
+				TimeInterval timeInterval = createTimeIntervalForTemporalTicker(temporalTicker);
+				Map<Currency, TemporalTicker> temporalTickersMap = result.getOrDefault(timeInterval, new HashMap<>());
+				temporalTickersMap.putIfAbsent(currency, temporalTicker);
+				result.putIfAbsent(timeInterval, temporalTickersMap);
 			}
 		}
 		return result;

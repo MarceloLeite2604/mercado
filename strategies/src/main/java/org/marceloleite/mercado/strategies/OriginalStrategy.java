@@ -10,6 +10,7 @@ import org.marceloleite.mercado.CurrencyAmount;
 import org.marceloleite.mercado.House;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
+import org.marceloleite.mercado.commons.utils.BigDecimalUtils;
 import org.marceloleite.mercado.model.Account;
 import org.marceloleite.mercado.model.Order;
 import org.marceloleite.mercado.model.Strategy;
@@ -67,7 +68,7 @@ public class OriginalStrategy extends AbstractStrategyExecutor {
 	private CurrencyAmount calculateCurrencyAmountToBuy(CurrencyAmount realBalance,
 			CurrencyAmount currencyAmountUnitPrice) {
 		BigDecimal quantity = realBalance.getAmount()
-				.divide(currencyAmountUnitPrice.getAmount());
+				.divide(currencyAmountUnitPrice.getAmount(), BigDecimalUtils.DEFAULT_ROUNDING);
 		CurrencyAmount currencyAmountToBuy = new CurrencyAmount(getCurrency(), quantity);
 		return currencyAmountToBuy;
 	}

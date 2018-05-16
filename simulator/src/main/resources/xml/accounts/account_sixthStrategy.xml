@@ -6,12 +6,12 @@
 		<id />
 		<secret />
 	</tapiInformations>
-	<balances>
+	<wallet>
 		<balance>
 			<currency>BRL</currency>
 			<amount>1000.0</amount>
 		</balance>
-	</balances>
+	</wallet>
 	<deposits />
 	<strategies>
 		<strategy>
@@ -28,7 +28,7 @@
 				</parameter>
 				<parameter>
 					<name>workingAmountCurrency</name>
-					<value>0</value>
+					<value>200</value>
 				</parameter>
 				<parameter>
 					<name>circularArraySize</name>
@@ -44,7 +44,7 @@
 				</parameter>
 				<parameter>
 					<name>generateDailyGraphic</name>
-					<value>true</value>
+					<value>false</value>
 				</parameter>
 			</parameters>
 		</strategy>

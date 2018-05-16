@@ -44,11 +44,11 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 @Entity
 @Table(name = "ORDERS")
 @JsonIgnoreProperties({ "id", "account" })
-@JsonPropertyOrder({ "currencyPair", "type", "status", "hasFills", "quantity", "limitPrice",
-		"executedQuantity", "executedPriceAverage", "fee", "created", "updated", "intended", "operations" })
+@JsonPropertyOrder({ "currencyPair", "type", "status", "hasFills", "quantity", "limitPrice", "executedQuantity",
+		"executedPriceAverage", "fee", "created", "updated", "intended", "operations" })
 @XmlRootElement(name = "order")
-@XmlType(propOrder = { "currencyPair", "type", "status", "hasFills", "quantity", "limitPrice",
-		"executedQuantity", "executedPriceAverage", "fee", "created", "updated", "intended", "operations" })
+@XmlType(propOrder = { "currencyPair", "type", "status", "hasFills", "quantity", "limitPrice", "executedQuantity",
+		"executedPriceAverage", "fee", "created", "updated", "intended", "operations" })
 public class Order {
 
 	@Id
@@ -276,6 +276,11 @@ public class Order {
 				operation.setOrder(this);
 			}
 		}
+	}
+
+	@Override
+	public String toString() {
+		return "Order [currencyPair=" + currencyPair + ", quantity=" + quantity + ", limitPrice=" + limitPrice + "]";
 	}
 
 	public static Builder builder() {

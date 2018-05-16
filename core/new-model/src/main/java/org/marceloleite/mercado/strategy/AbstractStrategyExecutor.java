@@ -95,7 +95,7 @@ public abstract class AbstractStrategyExecutor implements StrategyExecutor {
 		if (parameters != null) {
 			stringBuilder.append("Parameters: ");
 			for (Parameter parameter : parameters) {
-				stringBuilder.append("\t" + parameter.getName() + " = " + parameter.getValue());
+				stringBuilder.append("\t" + parameter.getName() + " = " + parameter.getValue() + "\n");
 			}
 			getLogger().info(stringBuilder.toString());
 		} else {
@@ -164,9 +164,9 @@ public abstract class AbstractStrategyExecutor implements StrategyExecutor {
 		StringBuilder stringBuilder = new StringBuilder();
 		List<Variable> variables = strategy.getVariables();
 		if (variables != null) {
-			stringBuilder.append("Variables: ");
+			stringBuilder.append("Variables: \n");
 			for (Variable variable : variables) {
-				stringBuilder.append("\t" + variable.getName() + " = " + variable.getValue());
+				stringBuilder.append("\t" + variable.getName() + " = " + variable.getValue() + "\n");
 				getLogger().info(stringBuilder.toString());
 			}
 		} else {

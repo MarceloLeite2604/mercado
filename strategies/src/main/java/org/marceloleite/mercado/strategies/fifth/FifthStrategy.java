@@ -18,6 +18,7 @@ import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.OrderType;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.VariationCalculator;
+import org.marceloleite.mercado.commons.utils.BigDecimalUtils;
 import org.marceloleite.mercado.commons.utils.ZonedDateTimeUtils;
 import org.marceloleite.mercado.commons.utils.formatter.NonDigitalCurrencyFormatter;
 import org.marceloleite.mercado.commons.utils.formatter.PercentageFormatter;
@@ -146,9 +147,9 @@ public class FifthStrategy extends AbstractStrategyExecutor {
 		BigDecimal derivativeLastSum = new BigDecimal(sum);
 
 		BigDecimal arraySize = new BigDecimal(temporalTickerCircularArray.getOccupiedPositions());
-		BigDecimal variation = derivativeLastSum.divide(arraySize);
+		BigDecimal variation = derivativeLastSum.divide(arraySize, BigDecimalUtils.DEFAULT_ROUNDING);
 
-		BigDecimal averageLast = sumLast.divide(arraySize);
+		BigDecimal averageLast = sumLast.divide(arraySize, BigDecimalUtils.DEFAULT_ROUNDING);
 
 		return averageLast.add(variation);
 	}

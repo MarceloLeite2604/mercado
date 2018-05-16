@@ -63,7 +63,7 @@ public class Simulator {
 			LOGGER.info(stepTimeInterval);
 			TreeMap<TimeInterval, Map<Currency, TemporalTicker>> temporalTickersByTimeInterval = retrieveTemporalTickers(
 					stepTimeInterval);
-			updateHouseThread(simulatorHouseThread, temporalTickersByTimeInterval);
+			updateHouseThread(temporalTickersByTimeInterval);
 		}
 		finishExecution();
 	}
@@ -113,12 +113,11 @@ public class Simulator {
 		}
 	}
 
-	private void updateHouseThread(SimulatorHouseThread houseSimulationThread,
-			TreeMap<TimeInterval, Map<Currency, TemporalTicker>> temporalTickersDataModelsByTimeInterval) {
+	private void updateHouseThread(TreeMap<TimeInterval, Map<Currency, TemporalTicker>> temporalTickersDataModelsByTimeInterval) {
 		try {
 			semaphores.getUpdateSemaphore()
 					.acquire();
-			houseSimulationThread.setTemporalTickers(temporalTickersDataModelsByTimeInterval);
+			simulatorHouseThread.setTemporalTickers(temporalTickersDataModelsByTimeInterval);
 			semaphores.getRunSimulationSemaphore()
 					.release();
 		} catch (InterruptedException exception) {
