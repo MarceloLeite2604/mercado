@@ -85,3 +85,5 @@ SUBPARTITION BY RANGE (time)
 CREATE INDEX trades_idx1 ON trades (currency, time);
 
 CREATE INDEX trades_idx2 ON trades (currency, type, time);
+
+ALTER TABLE trades ENABLE ROW MOVEMENT;

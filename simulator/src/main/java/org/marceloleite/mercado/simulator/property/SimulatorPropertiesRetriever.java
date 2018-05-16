@@ -38,4 +38,8 @@ public class SimulatorPropertiesRetriever {
 	public Duration retrieveTradeSiteDurationStep() {
 		return DurationUtils.parseFromSeconds(simulatorProperties.getTradeSiteDurationStep());
 	}
+	
+	public Boolean retrieveIgnoreTradesOnDatabase() {
+		return Boolean.parseBoolean(simulatorProperties.getIgnoreTradesOnDatabase());
+	}
 }

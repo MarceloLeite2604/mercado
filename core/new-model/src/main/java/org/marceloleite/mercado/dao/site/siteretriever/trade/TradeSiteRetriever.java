@@ -1,19 +1,11 @@
 package org.marceloleite.mercado.dao.site.siteretriever.trade;
 
 import java.time.Duration;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-
-import javax.annotation.PreDestroy;
-import javax.ws.rs.Produces;
 
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeDivisionController;
@@ -22,32 +14,24 @@ import org.marceloleite.mercado.dao.site.siteretriever.AbstractSiteRetriever;
 import org.marceloleite.mercado.model.Trade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Component;
 
 @Component
 public class TradeSiteRetriever extends AbstractSiteRetriever {
 
-	@SuppressWarnings("unused")
 	private static final Logger LOGGER = LoggerFactory.getLogger(TradeSiteRetriever.class);
 
-	private static final Duration DEFAULT_DURATION_STEP = Duration.ofMinutes(30);
-
-	private static final int DEFAULT_THREAD_POOL_SIZE = 4;
+	private static final Duration DEFAULT_DURATION_STEP = Duration.ofMinutes(720);
 
 	private static Duration configuredStepDuration = DEFAULT_DURATION_STEP;
 
-	private static int configuredThreadPoolSize = DEFAULT_THREAD_POOL_SIZE;
-
-	private ThreadPoolExecutor executorService;
-
 	private Duration stepDuration;
-
-	// private int threadPoolSize;
 
 	public TradeSiteRetriever(Duration stepDuration) {
 		super();
 		this.stepDuration = stepDuration;
-		// this.threadPoolSize = configuredThreadPoolSize;
 	}
 
 	public TradeSiteRetriever() {
@@ -55,52 +39,120 @@ public class TradeSiteRetriever extends AbstractSiteRetriever {
 	}
 
 	public List<Trade> retrieve(Currency currency, TimeInterval timeInterval) {
-		Set<Future<List<Trade>>> futureSet = new HashSet<>();
 
-		checkArguments(timeInterval);
+		checkArguments(currency, timeInterval);
 
-		TimeDivisionController timeDivisionController = new TimeDivisionController(timeInterval, stepDuration);
-		for (TimeInterval timeIntervalDivision : timeDivisionController.getTimeIntervals()) {
-			Callable<List<Trade>> partialTradesSiteRetrieverCallable = createPartialTradesSiteRetrieverCallable(
-					currency, timeIntervalDivision);
-			futureSet.add(executorService.submit(partialTradesSiteRetrieverCallable));
+		List<Future<TSRResult>> futures = create(currency, timeInterval);
 
-		}
+		// monitor
+		List<Trade> result = monitor(currency, timeInterval, futures);
 
-		List<Trade> trades = new LinkedList<>();
-		for (Future<List<Trade>> future : futureSet) {
-			try {
-				trades.addAll(getResult(future));
-			} catch (InterruptedException | ExecutionException exception) {
-				exception.printStackTrace();
+		return result;
+	}
+
+	private List<Trade> monitor(Currency currency, TimeInterval timeInterval, List<Future<TSRResult>> futures) {
+
+		List<Trade> result = new ArrayList<>();
+
+		int counter = 0;
+		boolean finished = false;
+
+		while (!finished) {
+			Future<TSRResult> future = futures.get(counter);
+
+			if (future.isDone()) {
+				// LOGGER.debug("Thread " + counter + " is done.");
+				TSRResult tsrResult = retrieveResult(currency, timeInterval, future);
+				futures.remove(counter);
+				switch (tsrResult.getTsrResultStatus()) {
+				case OK:
+					result.addAll(tsrResult.getTrades());
+					break;
+				case MAX_TRADES_REACHED:
+					split(futures, tsrResult);
+					break;
+				case FAILURE:
+					abort(futures);
+					throw createRuntimeException(currency, timeInterval, tsrResult.getException());
+				}
+			}
+
+			if (futures.size() == 0) {
+				finished = true;
+			} else {
+				counter = (++counter % futures.size());
 			}
 		}
+		
+		result = adjustCurrencies(currency, result);
 
+		return result;
+	}
+
+	private List<Trade> adjustCurrencies(Currency currency, List<Trade> trades) {
+		trades.stream().forEach(trade -> trade.setCurrency(currency));
 		return trades;
 	}
 
-	private List<Trade> getResult(Future<List<Trade>> future)
-			throws InterruptedException, ExecutionException {
-		synchronized (TradeSiteRetriever.class) {
-			List<Trade> result = future.get();
-			// shutDownExecutorService();
-			return result;
+	private TSRResult retrieveResult(Currency currency, TimeInterval timeInterval, Future<TSRResult> future) {
+		TSRResult tsrResult;
+		try {
+			tsrResult = future.get();
+		} catch (InterruptedException | ExecutionException exception) {
+			throw createRuntimeException(currency, timeInterval, exception);
 		}
-
+		return tsrResult;
 	}
 
-	private void checkArguments(TimeInterval timeInterval) {
+	private List<Future<TSRResult>> create(Currency currency, TimeInterval timeInterval) {
+		List<Future<TSRResult>> result = new LinkedList<>();
+		TimeDivisionController timeDivisionController = new TimeDivisionController(timeInterval, stepDuration);
+		for (TimeInterval divisionTimeInterval : timeDivisionController.getTimeIntervals()) {
+			// LOGGER.debug("Created thread to retrieve " + currency + " currency for" + divisionTimeInterval + ".");
+			result.add(createFuture(currency, divisionTimeInterval));
+		}
+
+		return result;
+	}
+
+	private RuntimeException createRuntimeException(Currency currency, TimeInterval timeInterval, Exception exception) {
+		return new RuntimeException(
+				"Error while retrieving trades for " + currency + " currency for period " + timeInterval + ".",
+				exception);
+	}
+
+	private void abort(List<Future<TSRResult>> futures) {
+		for (Future<TSRResult> future : futures) {
+			future.cancel(true);
+		}
+	}
+
+	private void split(List<Future<TSRResult>> futures, TSRResult tsrResult) {
+		// LOGGER.debug("Splitting execution.");
+		TimeInterval timeInterval = tsrResult.getTsrParameters()
+				.getTimeInterval();
+		Currency currency = tsrResult.getTsrParameters()
+				.getCurrency();
+		Duration dividedDuration = timeInterval.getDuration()
+				.dividedBy(2);
+		TimeInterval firstTimeInterval = new TimeInterval(timeInterval.getStart(), dividedDuration);
+		TimeInterval secondTimeInterval = new TimeInterval(timeInterval.getStart()
+				.plus(dividedDuration), timeInterval.getEnd());
+		futures.add(createFuture(currency, firstTimeInterval));
+		futures.add(createFuture(currency, secondTimeInterval));
+	}
+
+	@Async
+	private Future<TSRResult> createFuture(Currency currency, TimeInterval timeInterval) {
+		return new AsyncResult<>(new TSRPartial().retrieve(new TSRParameters(currency, timeInterval)));
+	}
+
+	private void checkArguments(Currency currency, TimeInterval timeInterval) {
+		if (currency == null) {
+			throw new IllegalArgumentException("Currency cannot be null.");
+		}
 		if (timeInterval == null) {
 			throw new IllegalArgumentException("Time interval cannot be null.");
-		}
-	}
-
-	@Produces
-	private PartialTradeSiteRetrieverCallable createPartialTradesSiteRetrieverCallable(Currency currency,
-			TimeInterval timeInterval) {
-		synchronized (TradeSiteRetriever.class) {
-			createExecutorService();
-			return new PartialTradeSiteRetrieverCallable(currency, timeInterval);
 		}
 	}
 
@@ -111,24 +163,5 @@ public class TradeSiteRetriever extends AbstractSiteRetriever {
 
 	public static void setConfiguredStepDuration(Duration configuredStepDuration) {
 		TradeSiteRetriever.configuredStepDuration = configuredStepDuration;
-	}
-
-	public static void setConfiguredThreadPoolSize(int configuredThreadPoolSize) {
-		TradeSiteRetriever.configuredThreadPoolSize = configuredThreadPoolSize;
-	}
-
-	private void createExecutorService() {
-		if (executorService == null) {
-			executorService = new ThreadPoolExecutor(configuredThreadPoolSize, configuredThreadPoolSize, 0l,
-					TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
-		}
-	}
-
-	@PreDestroy
-	public void shutDownExecutorService() {
-//		if (executorService != null && executorService.getActiveCount() == 0) {
-			executorService.shutdownNow();
-//			executorService = null;
-//		}
 	}
 }

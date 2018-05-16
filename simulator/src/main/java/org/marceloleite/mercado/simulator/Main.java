@@ -1,11 +1,20 @@
 package org.marceloleite.mercado.simulator;
 
+import java.time.Duration;
+import java.time.ZonedDateTime;
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.transaction.Transactional;
 
 import org.marceloleite.mercado.NewModelMain;
 import org.marceloleite.mercado.PersistenceContextConfiguration;
+import org.marceloleite.mercado.commons.Currency;
+import org.marceloleite.mercado.commons.TimeInterval;
+import org.marceloleite.mercado.commons.utils.ZonedDateTimeUtils;
+import org.marceloleite.mercado.dao.site.siteretriever.trade.TradeSiteRetriever;
 import org.marceloleite.mercado.dao.xml.XMLDAOConfiguration;
+import org.marceloleite.mercado.model.Trade;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -32,8 +41,11 @@ public class Main {
 	@Inject
 	private Simulator simulator;
 	
+	@Inject
+	private TradeSiteRetriever tradeSiteRetriever;
+	
 	public static void main(String[] args) {
-		SpringApplication.run(Main.class);
+		SpringApplication.run(Main.class, args);
 	}
 
 	@Bean
@@ -41,7 +53,17 @@ public class Main {
 	public CommandLineRunner commandLineRunner() {
 		return (args) -> {
 			simulator();
+			// testTradeSiteRetriever();
+			System.out.println("Done.");
 		};
+	}
+
+	private void testTradeSiteRetriever() {
+		TradeSiteRetriever.setConfiguredStepDuration(Duration.ofDays(1));
+		ZonedDateTime start = ZonedDateTime.of(2017, 1, 1, 0, 0, 0, 0, ZonedDateTimeUtils.DEFAULT_ZONE_ID);
+		ZonedDateTime end = ZonedDateTime.of(2017, 1, 10, 0, 0, 0, 0, ZonedDateTimeUtils.DEFAULT_ZONE_ID);
+		List<Trade> trades = tradeSiteRetriever.retrieve(Currency.BITCOIN, new TimeInterval(start, end));
+		System.out.println(trades.size() + " trade(s) retrieved.");
 	}
 
 	@SuppressWarnings("unused")

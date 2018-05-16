@@ -97,3 +97,5 @@ ALTER TABLE temporal_tickers ADD CONSTRAINT teti_pk PRIMARY KEY ("ID");
 ALTER TABLE temporal_tickers ADD CONSTRAINT teti_uk UNIQUE ("CURRENCY", "START", "END");
 
 CREATE INDEX teti_idx1 ON temporal_tickers("CURRENCY", "DURATION", "START");
+
+ALTER TABLE temporal_tickers ENABLE ROW MOVEMENT;

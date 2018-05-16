@@ -32,6 +32,8 @@ public class SimulatorProperties {
 	@NotBlank
 	private String persistencePropertiesFile;
 	
+	private String ignoreTradesOnDatabase;
+	
 	public String getStartTime() {
 		return startTime;
 	}
@@ -94,5 +96,13 @@ public class SimulatorProperties {
 
 	public void setPersistencePropertiesFile(String persistencePropertiesFile) {
 		this.persistencePropertiesFile = persistencePropertiesFile;
+	}
+
+	public String getIgnoreTradesOnDatabase() {
+		return ignoreTradesOnDatabase;
+	}
+
+	public void setIgnoreTradesOnDatabase(String ignoreTradesOnDatabase) {
+		this.ignoreTradesOnDatabase = ignoreTradesOnDatabase;
 	}
 }

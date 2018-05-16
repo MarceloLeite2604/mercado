@@ -7,7 +7,7 @@ import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 import org.marceloleite.mercado.commons.TimeDivisionController;
-import org.marceloleite.mercado.dao.site.siteretriever.trade.TradeSiteRetriever;
+import org.marceloleite.mercado.dao.mixed.TradeDatabaseSiteDAO;
 import org.marceloleite.mercado.simulator.property.SimulatorPropertiesRetriever;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +19,8 @@ public class SimulatorConfigurator {
 
 	@PostConstruct
 	public void postConstruct() {
-		TradeSiteRetriever.setConfiguredStepDuration(simulatorPropertiesRetriever.retrieveTradeSiteDurationStep());
+//		TradeSiteRetriever.setConfiguredStepDuration(simulatorPropertiesRetriever.retrieveTradeSiteDurationStep());
+		TradeDatabaseSiteDAO.setIgnoreValuesOnDatabase(simulatorPropertiesRetriever.retrieveIgnoreTradesOnDatabase());
 	}
 
 	public Duration getStepDuration() {

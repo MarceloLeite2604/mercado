@@ -10,12 +10,20 @@ public enum SimulatorProperty implements PropertyDefinition {
 	RETRIEVING_DURATION("simulator.retrievingDuration"),
 	TRADE_PERCENTAGE("simulator.tradePercentage"),
 	THREAD_POOL_SIZE("simulator.threadPoolSize"),
-	DURATION_STEP("simulator.durationStep");
+	DURATION_STEP("simulator.durationStep"),
+	IGNORE_TRADES_ON_DATABASE("simulator.ignoreTradesOnDatabase", "false");
 	
 	private String name;
 	
-	private SimulatorProperty(String name) {
+	private String defaultValue;
+	
+	private SimulatorProperty(String name, String defaultValue) {
 		this.name = name;
+		this.defaultValue = defaultValue;
+	}
+	
+	private SimulatorProperty(String name) {
+		this(name, null);
 	}
 	
 	@Override
@@ -35,7 +43,7 @@ public enum SimulatorProperty implements PropertyDefinition {
 
 	@Override
 	public String getDefaultValue() {
-		return null;
+		return defaultValue;
 	}
 
 	@Override

@@ -3,9 +3,9 @@ package org.marceloleite.mercado.strategies.sixth;
 import java.math.BigDecimal;
 import java.time.Duration;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,7 +13,6 @@ import org.marceloleite.mercado.BuyOrderBuilder;
 import org.marceloleite.mercado.CurrencyAmount;
 import org.marceloleite.mercado.House;
 import org.marceloleite.mercado.SellOrderBuilder;
-import org.marceloleite.mercado.TemporalTickerCreator;
 import org.marceloleite.mercado.cdi.MercadoApplicationContextAware;
 import org.marceloleite.mercado.commons.CircularArray;
 import org.marceloleite.mercado.commons.Currency;
@@ -22,12 +21,11 @@ import org.marceloleite.mercado.commons.Statistics;
 import org.marceloleite.mercado.commons.TimeDivisionController;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.utils.ZonedDateTimeUtils;
-import org.marceloleite.mercado.dao.interfaces.TradeDAO;
+import org.marceloleite.mercado.dao.interfaces.TemporalTickerDAO;
 import org.marceloleite.mercado.model.Account;
 import org.marceloleite.mercado.model.Order;
 import org.marceloleite.mercado.model.Strategy;
 import org.marceloleite.mercado.model.TemporalTicker;
-import org.marceloleite.mercado.model.Trade;
 import org.marceloleite.mercado.orderanalyser.OrderAnalyser;
 import org.marceloleite.mercado.orderanalyser.exception.NoBalanceForMinimalValueOrderAnalyserException;
 import org.marceloleite.mercado.orderanalyser.exception.NoBalanceOrderAnalyserException;
@@ -62,9 +60,11 @@ public class SixthStrategy extends AbstractStrategyExecutor {
 
 	private SixStrategyGraphic sixStrategyGraphic;
 
-	private TradeDAO tradeDAO;
+	// private TradeDAO tradeDAO;
 
-	private TemporalTickerCreator temporalTickerCreator;
+	// private TemporalTickerCreator temporalTickerCreator;
+
+	private TemporalTickerDAO temporalTickerDAO;
 
 	public SixthStrategy(Strategy strategy) {
 		super(strategy);
@@ -72,12 +72,11 @@ public class SixthStrategy extends AbstractStrategyExecutor {
 		this.circularArraySize = null;
 		this.nextValueSteps = null;
 
-		this.tradeDAO = MercadoApplicationContextAware.getBean(TradeDAO.class, "TradeDatabaseSiteDAO");
-		this.temporalTickerCreator = MercadoApplicationContextAware.getBean(TemporalTickerCreator.class);
-	}
-
-	public SixthStrategy() {
-		this(null);
+		// this.tradeDAO = MercadoApplicationContextAware.getBean(TradeDAO.class,
+		// "TradeDatabaseSiteDAO");
+		// this.temporalTickerCreator = new TemporalTickerCreator(temporalTickerDAO);
+		this.temporalTickerDAO = MercadoApplicationContextAware.getBean(TemporalTickerDAO.class,
+				"TemporalTickerDatabaseDAO");
 	}
 
 	@Override
@@ -162,28 +161,30 @@ public class SixthStrategy extends AbstractStrategyExecutor {
 		CircularArray<Double> circularArray = lastPriceStatistics.getCircularArray();
 		if (!circularArray.isFilled()) {
 			LOGGER.debug("Filling last price statistics circular array.");
+
 			Duration stepTime = timeInterval.getDuration();
 			ZonedDateTime endTime = timeInterval.getStart();
 			Duration duration = stepTime.multipliedBy(circularArray.getVacantPositions());
 			TimeInterval timeIntervalToRetrieve = new TimeInterval(duration, endTime);
 
-			List<Trade> trades = tradeDAO.findByCurrencyAndTimeBetween(getCurrency(), timeIntervalToRetrieve.getStart(),
-					timeIntervalToRetrieve.getEnd());
-			TimeDivisionController timeDivisionController = new TimeDivisionController(timeIntervalToRetrieve,
-					stepTime);
-			List<TimeInterval> retrievedTimeIntervals = timeDivisionController.getTimeIntervals();
-			for (TimeInterval retrievedTimeInterval : retrievedTimeIntervals) {
-				List<Trade> tradesOnTimeInterval = trades.stream()
-						.filter(trade -> ZonedDateTimeUtils.isBetween(trade.getTime(), retrievedTimeInterval))
-						.collect(Collectors.toList());
-
-				TemporalTicker temporalTickerForTimeInterval = temporalTickerCreator.create(getCurrency(),
-						retrievedTimeInterval, tradesOnTimeInterval);
-				lastPriceStatistics.add(temporalTickerForTimeInterval.getCurrentOrPreviousLast()
-						.doubleValue());
+			List<TemporalTicker> temporalTickersRetrieved = temporalTickerDAO
+					.findByCurrencyAndDurationAndStartBetween(getCurrency(), duration, timeIntervalToRetrieve);
+			if (temporalTickersRetrieved == null) {
+				TimeDivisionController timeDivisionController = new TimeDivisionController(timeIntervalToRetrieve,
+						stepTime);
+				temporalTickersRetrieved = new ArrayList<>();
+				for (TimeInterval retrievalTimeInterval : timeDivisionController.getTimeIntervals()) {
+					TemporalTicker temporalTickerRetrieved = temporalTickerDAO.findByCurrencyAndStartAndEnd(
+							getCurrency(), retrievalTimeInterval.getStart(), retrievalTimeInterval.getEnd());
+					temporalTickersRetrieved.add(temporalTickerRetrieved);
+				}
 			}
-			LOGGER.debug("Filling concluded.");
+			temporalTickersRetrieved.forEach(temporalTickerRetrieved -> lastPriceStatistics
+					.add(temporalTickerRetrieved.getCurrentOrPreviousLast()
+							.doubleValue()));
+
 		}
+		LOGGER.debug("Filling concluded.");
 	}
 
 	private void setBaseIfNull(TemporalTicker temporalTicker) {

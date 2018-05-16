@@ -61,8 +61,7 @@ public class TradeDatabaseSiteDAO implements TradeDAO {
 
 		if (isTimeAfterTradeStartTime(currency, start)) {
 			if (ignoreValuesOnDatabase) {
-				// TODO Retrieve trades from site?
-				trades = retrieveTradesFromDatabase(currency, start, end);
+				trades = retrieveAllTradesFromSite(currency, start, end);
 			} else {
 				trades = retrieveTradesUpdatingDatabase(currency, start, end);
 			}
@@ -78,6 +77,14 @@ public class TradeDatabaseSiteDAO implements TradeDAO {
 
 	private List<Trade> retrieveTradesFromDatabase(Currency currency, ZonedDateTime start, ZonedDateTime end) {
 		return tradeDatabaseDAO.findByCurrencyAndTimeBetween(currency, start, end);
+	}
+	
+	private List<Trade> retrieveAllTradesFromSite(Currency currency, ZonedDateTime start, ZonedDateTime end) {
+		List<Trade> trades = tradeSiteDAO.findByCurrencyAndTimeBetween(currency, start, end);
+		if ( trades != null ) {
+			tradeDatabaseDAO.saveAll(trades);
+		}
+		return trades;
 	}
 
 	private void retrieveUnavailableTradesOnDatabase(Currency currency, ZonedDateTime start, ZonedDateTime end) {

@@ -17,6 +17,7 @@ import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.model.TemporalTicker;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -49,9 +50,9 @@ public class Simulator {
 			execute();
 		} catch (Exception exception) {
 			abort();
-			throw new RuntimeException("Error while running simumlation.", exception);
+			throw new RuntimeException("Error while running simulation.", exception);
 		} finally {
-			// executorService.shutdown();
+			((ThreadPoolTaskExecutor)taskExecutor).shutdown();
 		}
 	}
 
