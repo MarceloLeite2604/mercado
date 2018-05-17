@@ -23,34 +23,29 @@ import org.marceloleite.mercado.commons.graphic.GraphicStrokeType;
 import org.marceloleite.mercado.commons.graphic.MercadoRangeAxis;
 import org.marceloleite.mercado.commons.utils.ZonedDateTimeUtils;
 import org.marceloleite.mercado.email.EmailMessage;
+import org.marceloleite.mercado.model.TemporalTicker;
 
-public class SixStrategyGraphic {
+public class SixthStrategyGraphic {
 
 	private Graphic graphic;
 
 	private static final String GRAPHIC_LOCATION = "output/graphic.png";
 
-	private Map<String, GraphicData> graphicDatas;
+	private Map<String, GraphicData> graphicDataMap;
 
 	private static final LocalTime DAILY_GRAPHIC_TIME = LocalTime.of(8, 0, 0);
 
 	private static final int DAILY_GRAPHIC_TIME_INTERVAL_MINUTES = 30;
+	
+	private SixthStrategyStatistics sixthStrategyStatistics;
 
 	private Alarm dailyGraphicAlarm;
 
-	public SixStrategyGraphic() {
+	public SixthStrategyGraphic() {
 		this.graphic = new Graphic();
 		this.graphic.setDimension(new Dimension(1024, 768));
 		this.graphic.setTitle("Mercado Controller");
-		this.graphicDatas = createGraphicDatas();
-	}
-
-	public Map<String, GraphicData> getGraphicDatas() {
-		return graphicDatas;
-	}
-
-	public void setGraphicDatas(Map<String, GraphicData> graphicDatas) {
-		this.graphicDatas = graphicDatas;
+		this.graphicDataMap = createGraphicDataMap();
 	}
 
 	public Graphic getGraphic() {
@@ -61,7 +56,7 @@ public class SixStrategyGraphic {
 		this.graphic = graphic;
 	}
 
-	private Map<String, GraphicData> createGraphicDatas() {
+	private Map<String, GraphicData> createGraphicDataMap() {
 		Map<String, GraphicData> graphicDatas = new HashMap<>();
 		for (SixthStrategyGraphicData sixthStrategyGraphicData : SixthStrategyGraphicData.values()) {
 			GraphicData graphicData = createGraphicData(sixthStrategyGraphicData.getTitle(),
@@ -83,7 +78,7 @@ public class SixStrategyGraphic {
 
 	public void createGraphicFile() {
 		for (SixthStrategyGraphicData sixthStrategyGraphicData : SixthStrategyGraphicData.values()) {
-			GraphicData graphicData = graphicDatas.get(sixthStrategyGraphicData.getTitle());
+			GraphicData graphicData = graphicDataMap.get(sixthStrategyGraphicData.getTitle());
 			if (sixthStrategyGraphicData.isPrintable()) {
 				graphic.put(graphicData);
 			}
@@ -92,8 +87,9 @@ public class SixStrategyGraphic {
 	}
 
 	private Alarm createDailyGraphicAlarm(ZonedDateTime time) {
-		ZonedDateTime alarmTime = ZonedDateTime.of(time.toLocalDate(), DAILY_GRAPHIC_TIME, ZonedDateTimeUtils.DEFAULT_ZONE_ID);
-		if ( time.isAfter(alarmTime)) {
+		ZonedDateTime alarmTime = ZonedDateTime.of(time.toLocalDate(), DAILY_GRAPHIC_TIME,
+				ZonedDateTimeUtils.DEFAULT_ZONE_ID);
+		if (time.isAfter(alarmTime)) {
 			alarmTime = alarmTime.plusDays(1);
 		}
 		return new Alarm(alarmTime, DAILY_GRAPHIC_TIME_INTERVAL_MINUTES);
@@ -101,7 +97,8 @@ public class SixStrategyGraphic {
 
 	private void sendGraphic(String emailAddressToSend) {
 		EmailMessage emailMessage = new EmailMessage();
-		emailMessage.getToAddresses().add(emailAddressToSend);
+		emailMessage.getToAddresses()
+				.add(emailAddressToSend);
 		emailMessage.setSubject("Daily Graphic");
 		emailMessage.setMimeMultipart(createGraphicMimeMultipart(GRAPHIC_LOCATION));
 		emailMessage.send();
@@ -131,7 +128,7 @@ public class SixStrategyGraphic {
 	}
 
 	public void clearData() {
-		this.graphicDatas = createGraphicDatas();
+		this.graphicDataMap = createGraphicDataMap();
 	}
 
 	public void sendDailyGraphic(ZonedDateTime time, String emailAddress) {
@@ -143,15 +140,55 @@ public class SixStrategyGraphic {
 	}
 
 	private void setAlarmForNextDay(ZonedDateTime time) {
-		LocalDate nextDay = time.toLocalDate().plusDays(1);
+		LocalDate nextDay = time.toLocalDate()
+				.plusDays(1);
 		ZonedDateTime nextAlarmTime = ZonedDateTime.of(nextDay, DAILY_GRAPHIC_TIME, ZonedDateTimeUtils.DEFAULT_ZONE_ID);
 		dailyGraphicAlarm.setStartTime(nextAlarmTime);
 	}
 
 	public boolean isTimeToSendGraphic(ZonedDateTime time) {
-		if (dailyGraphicAlarm == null ) {
+		if (dailyGraphicAlarm == null) {
 			dailyGraphicAlarm = createDailyGraphicAlarm(time);
 		}
 		return dailyGraphicAlarm.isRinging(time);
+	}
+
+	public void addInformation(TemporalTicker temporalTicker) {
+
+		addLastPriceToGraphicData(temporalTicker);
+		addAveragePriceToGraphicData(temporalTicker);
+		addBasePriceToGraphicData(temporalTicker);
+	}
+
+	private void addBasePriceToGraphicData(TemporalTicker temporalTicker) {
+		addPointOnGraphicdata(SixthStrategyGraphicData.BASE_PRICE, temporalTicker,
+				sixthStrategyStatistics.getLastPriceStatistics()
+						.getBase());
+	}
+
+	private void addAveragePriceToGraphicData(TemporalTicker temporalTicker) {
+		addPointOnGraphicdata(SixthStrategyGraphicData.AVERAGE_LAST_PRICE, temporalTicker,
+				sixthStrategyStatistics.getLastPriceStatistics()
+						.getAverage());
+	}
+
+	private void addLastPriceToGraphicData(TemporalTicker temporalTicker) {
+		addPointOnGraphicdata(SixthStrategyGraphicData.LAST_PRICE, temporalTicker,
+				temporalTicker.getCurrentOrPreviousLast()
+						.doubleValue());
+	}
+
+	private void addPointOnGraphicdata(SixthStrategyGraphicData sixthStrategyGraphicData, TemporalTicker temporalTicker,
+			double value) {
+		getGraphicDataFor(sixthStrategyGraphicData).addValue(temporalTicker.getStart(), value);
+	}
+
+	private GraphicData getGraphicDataFor(SixthStrategyGraphicData sixthStrategyGraphicData) {
+		return graphicDataMap.get(sixthStrategyGraphicData.getTitle());
+	}
+	
+	public void addPointOnGraphicData(SixthStrategyGraphicData sixthStrategyGraphicData, ZonedDateTime zonedDateTime, double value) {
+		graphicDataMap.get(sixthStrategyGraphicData.getTitle())
+		.addValue(zonedDateTime, value);
 	}
 }
