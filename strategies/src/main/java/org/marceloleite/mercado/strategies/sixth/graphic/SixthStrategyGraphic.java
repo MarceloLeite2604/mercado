@@ -15,6 +15,8 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMultipart;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
 import org.marceloleite.mercado.commons.Alarm;
 import org.marceloleite.mercado.commons.graphic.Graphic;
@@ -24,8 +26,12 @@ import org.marceloleite.mercado.commons.graphic.MercadoRangeAxis;
 import org.marceloleite.mercado.commons.utils.ZonedDateTimeUtils;
 import org.marceloleite.mercado.email.EmailMessage;
 import org.marceloleite.mercado.model.TemporalTicker;
+import org.marceloleite.mercado.strategies.sixth.SixthStrategyStatistics;
 
 public class SixthStrategyGraphic {
+	
+	@SuppressWarnings("unused")
+	private static final Logger LOGGER = LogManager.getLogger(SixthStrategyGraphic.class);
 
 	private Graphic graphic;
 
@@ -33,7 +39,7 @@ public class SixthStrategyGraphic {
 
 	private Map<String, GraphicData> graphicDataMap;
 
-	private static final LocalTime DAILY_GRAPHIC_TIME = LocalTime.of(8, 0, 0);
+	private static final LocalTime DAILY_GRAPHIC_TIME = LocalTime.of(23, 59, 0);
 
 	private static final int DAILY_GRAPHIC_TIME_INTERVAL_MINUTES = 30;
 	
@@ -41,11 +47,12 @@ public class SixthStrategyGraphic {
 
 	private Alarm dailyGraphicAlarm;
 
-	public SixthStrategyGraphic() {
+	public SixthStrategyGraphic(SixthStrategyStatistics sixthStrategyStatistics) {
 		this.graphic = new Graphic();
 		this.graphic.setDimension(new Dimension(1024, 768));
 		this.graphic.setTitle("Mercado Controller");
 		this.graphicDataMap = createGraphicDataMap();
+		this.sixthStrategyStatistics = sixthStrategyStatistics;
 	}
 
 	public Graphic getGraphic() {
@@ -136,6 +143,7 @@ public class SixthStrategyGraphic {
 			dailyGraphicAlarm.disarm();
 			setAlarmForNextDay(time);
 		}
+		createGraphicFile();
 		sendGraphic(emailAddress);
 	}
 
@@ -154,7 +162,6 @@ public class SixthStrategyGraphic {
 	}
 
 	public void addInformation(TemporalTicker temporalTicker) {
-
 		addLastPriceToGraphicData(temporalTicker);
 		addAveragePriceToGraphicData(temporalTicker);
 		addBasePriceToGraphicData(temporalTicker);

@@ -1,4 +1,4 @@
-package org.marceloleite.mercado.strategies.sixth.graphic;
+package org.marceloleite.mercado.strategies.sixth;
 
 import java.time.Duration;
 import java.time.ZonedDateTime;
@@ -15,6 +15,7 @@ import org.marceloleite.mercado.commons.TimeDivisionController;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.dao.interfaces.TemporalTickerDAO;
 import org.marceloleite.mercado.model.TemporalTicker;
+import org.springframework.util.CollectionUtils;
 
 public class SixthStrategyStatistics {
 
@@ -98,8 +99,8 @@ public class SixthStrategyStatistics {
 		TimeInterval timeIntervalToRetrieve = new TimeInterval(duration, endTime);
 
 		List<TemporalTicker> temporalTickersRetrieved = temporalTickerDAO
-				.findByCurrencyAndDurationAndStartBetween(currency, duration, timeIntervalToRetrieve);
-		if (temporalTickersRetrieved == null) {
+				.findByCurrencyAndDurationAndStartBetween(currency, timeInterval.getDuration(), timeIntervalToRetrieve);
+		if (CollectionUtils.isEmpty(temporalTickersRetrieved)) {
 			TimeDivisionController timeDivisionController = new TimeDivisionController(timeIntervalToRetrieve,
 					stepTime);
 			temporalTickersRetrieved = new ArrayList<>();

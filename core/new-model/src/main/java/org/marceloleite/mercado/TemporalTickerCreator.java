@@ -18,8 +18,10 @@ import org.marceloleite.mercado.comparator.TradeComparatorByIdDesc;
 import org.marceloleite.mercado.converter.ListToMapTradeConverter;
 import org.marceloleite.mercado.dao.interfaces.TemporalTickerDAO;
 import org.marceloleite.mercado.dao.interfaces.TradeDAO;
+import org.marceloleite.mercado.dao.interfaces.TradeStartTimeDAO;
 import org.marceloleite.mercado.model.TemporalTicker;
 import org.marceloleite.mercado.model.Trade;
+import org.marceloleite.mercado.model.TradeStartTime;
 import org.springframework.util.CollectionUtils;
 
 public class TemporalTickerCreator {
@@ -27,11 +29,18 @@ public class TemporalTickerCreator {
 	@Inject
 	@Named("TradeDatabaseSiteDAO")
 	private TradeDAO tradeDAO;
+	
+	@Inject
+	@Named("TradeStartTimeDatabaseDAO")
+	private TradeStartTimeDAO tradeStartTimeDAO;
 
 	private TemporalTickerDAO temporalTickerDAO;
 	
+	private boolean retrievingPrevious;
+	
 	public TemporalTickerCreator(TemporalTickerDAO temporalTickerDAO) {
 		this.temporalTickerDAO = temporalTickerDAO;
+		this.retrievingPrevious = false;
 	}
 
 	public TemporalTicker create(Currency currency, TimeInterval timeInterval, List<Trade> trades) {
@@ -44,7 +53,7 @@ public class TemporalTickerCreator {
 				.check(timeInterval)) {
 			throw new IllegalArgumentException("Time interval " + timeInterval + " is invalid for a Temporal Ticker.");
 		}
-
+		
 		BigDecimal high;
 		BigDecimal average;
 		BigDecimal low;
@@ -137,7 +146,7 @@ public class TemporalTickerCreator {
 			buyOrders = 0;
 			sellOrders = 0;
 		}
-
+		
 		return TemporalTicker.builder()
 				.currency(currency)
 				.start(timeInterval.getStart())
@@ -161,15 +170,23 @@ public class TemporalTickerCreator {
 	}
 
 	private TemporalTicker retrievePreviousTemporalTicker(Currency currency, TimeInterval timeInterval) {
-		ZonedDateTime previousEnd = timeInterval.getStart();
-		ZonedDateTime previousStart = previousEnd.minus(timeInterval.getDuration());
-		return temporalTickerDAO.findByCurrencyAndStartAndEnd(currency, previousStart, previousEnd);
+		TemporalTicker result = null;
+		
+		if ( !retrievingPrevious) {
+			retrievingPrevious = true;
+			ZonedDateTime previousEnd = timeInterval.getStart();
+			ZonedDateTime previousStart = previousEnd.minus(timeInterval.getDuration());
+			result = temporalTickerDAO.findByCurrencyAndStartAndEnd(currency, previousStart, previousEnd);
+			retrievingPrevious = false;
+		}
+		
+		return result;
 	}
 
 	private boolean canRetrievePrevious(Currency currency, TimeInterval timeInterval) {
-		TimeInterval timeIntervalAvailable = tradeDAO.retrieveTimeIntervalAvailable(currency);
-		return timeIntervalAvailable != null && !timeInterval.getStart()
-				.isBefore(timeIntervalAvailable.getStart());
+		TradeStartTime tradeStartTime = tradeStartTimeDAO.findByCurrency(currency);
+		return tradeStartTime != null && !timeInterval.getStart()
+				.isBefore(tradeStartTime.getStartTime() );
 	}
 
 	private BigDecimal retrievePreviousPriceFromTrade(Currency currency, ZonedDateTime date) {

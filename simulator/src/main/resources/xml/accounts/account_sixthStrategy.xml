@@ -20,11 +20,13 @@
 			<parameters>
 				<parameter>
 					<name>growthPercentageThreshold</name>
-					<value>0.09</value>
+					<!-- <value>0.09</value> -->
+					<value>0.01</value>
 				</parameter>
 				<parameter>
 					<name>shrinkPercentageThreshold</name>
-					<value>-0.15</value>
+					<!-- <value>-0.15</value> -->
+					<value>-0.01</value>
 				</parameter>
 				<parameter>
 					<name>workingAmountCurrency</name>
@@ -44,7 +46,7 @@
 				</parameter>
 				<parameter>
 					<name>generateDailyGraphic</name>
-					<value>false</value>
+					<value>true</value>
 				</parameter>
 			</parameters>
 		</strategy>
