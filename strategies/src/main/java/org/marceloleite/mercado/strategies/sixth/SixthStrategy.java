@@ -47,10 +47,13 @@ public class SixthStrategy extends AbstractStrategyExecutor {
 	private SixthStrategyParametersReader parametersReader;
 
 	private StatusAnalysers statusAnalysers;
+	
+	private boolean firstRun;
 
 	public SixthStrategy(Strategy strategy) {
 		super(strategy);
 		this.statusAnalysers = createStatusAnalysers();
+		this.firstRun = true;
 	}
 
 	private StatusAnalysers createStatusAnalysers() {
@@ -81,6 +84,7 @@ public class SixthStrategy extends AbstractStrategyExecutor {
 		addInformation(timeInterval, house);
 		analyseStrategyAccortingToStatus(timeInterval, account, house);
 		checkSendDailyGraphic(account, house);
+		firstRun = false;
 	}
 
 	private void addInformation(TimeInterval timeInterval, House house) {
@@ -88,6 +92,14 @@ public class SixthStrategy extends AbstractStrategyExecutor {
 		statistics.addInformation(temporalTicker, timeInterval, getCurrency());
 		if (graphic != null) {
 			graphic.addInformation(temporalTicker);
+			
+			addLimitPointsOnFirstRun(temporalTicker);
+		}
+	}
+
+	private void addLimitPointsOnFirstRun(TemporalTicker temporalTicker) {
+		if (firstRun) {
+			graphic.addLimitPointsOnGraphicData(temporalTicker.getStart());
 		}
 	}
 

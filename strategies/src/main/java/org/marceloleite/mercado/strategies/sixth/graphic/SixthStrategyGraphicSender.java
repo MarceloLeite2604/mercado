@@ -20,6 +20,7 @@ public class SixthStrategyGraphicSender implements Runnable {
 
 	@Override
 	public void run() {
+		sixthStrategyGraphic.addLimitPointsOnLastTimeAvailable();
 		File graphicFile = sixthStrategyGraphic.createFile();
 		EmailMessage emailMessage = new EmailMessage();
 		emailMessage.getToAddresses()
@@ -27,6 +28,7 @@ public class SixthStrategyGraphicSender implements Runnable {
 		emailMessage.setSubject(EMAIL_TITLE);
 		emailMessage.setMimeMultipart(EmailUtils.createGraphicMimeMultipart(graphicFile));
 		emailMessage.send();
+		sixthStrategyGraphic.clearData();
 	}
 
 }

@@ -26,6 +26,7 @@ import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
 import org.jfree.data.time.Minute;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
+import org.marceloleite.mercado.commons.utils.ZonedDateTimeUtils;
 
 public class Graphic {
 
@@ -90,10 +91,8 @@ public class Graphic {
 
 			StandardXYItemRenderer standardXYItemRenderer = new StandardXYItemRenderer(graphicData.getGraphicType());
 			if (GraphicStrokeType.DASHED.equals(graphicData.getGraphicStrokeType())) {
-				Stroke dashedStroke = new BasicStroke(
-				        1.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND,
-				        1.0f, new float[] {10.0f, 10.0f}, 0.0f
-				    );
+				Stroke dashedStroke = new BasicStroke(1.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 1.0f,
+						new float[] { 10.0f, 10.0f }, 0.0f);
 				standardXYItemRenderer.setSeriesStroke(0, dashedStroke);
 			}
 
@@ -112,10 +111,13 @@ public class Graphic {
 
 	private TimeSeries createTimeSeries(GraphicData graphicData) {
 		TimeSeries timeSeries = new TimeSeries(graphicData.getTitle());
-		Set<Entry<ZonedDateTime, Double>> valuePairs = graphicData.getValues().entrySet();
+		Set<Entry<ZonedDateTime, Double>> valuePairs = graphicData.getValues()
+				.entrySet();
 		for (Entry<ZonedDateTime, Double> valuePair : valuePairs) {
 			ZonedDateTime zonedDateTime = valuePair.getKey();
-			Date date = Date.from(zonedDateTime.toInstant());
+
+			Date date = Date.from(ZonedDateTimeUtils.toSystemDefaultZoneId(zonedDateTime)
+					.toInstant());
 			Minute minute = new Minute(date);
 			timeSeries.addOrUpdate(minute, valuePair.getValue());
 		}

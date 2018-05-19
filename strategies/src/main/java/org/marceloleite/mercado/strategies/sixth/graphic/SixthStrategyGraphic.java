@@ -5,6 +5,8 @@ import java.io.File;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -13,9 +15,11 @@ import org.marceloleite.mercado.commons.graphic.Graphic;
 import org.marceloleite.mercado.commons.graphic.GraphicData;
 import org.marceloleite.mercado.commons.graphic.GraphicStrokeType;
 import org.marceloleite.mercado.commons.graphic.MercadoRangeAxis;
+import org.marceloleite.mercado.commons.utils.comparator.ZonedDateTimeDescComparator;
 import org.marceloleite.mercado.model.TemporalTicker;
 import org.marceloleite.mercado.strategies.sixth.SixthStrategyStatistics;
 import org.marceloleite.mercado.strategies.sixth.SixthStrategyThresholds;
+import org.springframework.util.CollectionUtils;
 
 public class SixthStrategyGraphic {
 
@@ -112,7 +116,7 @@ public class SixthStrategyGraphic {
 	private GraphicData getGraphicDataFor(SixthStrategyGraphicData sixthStrategyGraphicData) {
 		return graphicDataMap.get(sixthStrategyGraphicData.getTitle());
 	}
-	
+
 	public void addLimitPointsOnGraphicData(ZonedDateTime time) {
 		addUpperLimitPoinOnGraphic(time);
 		addLowerLimitPointOnGraphic(time);
@@ -137,6 +141,32 @@ public class SixthStrategyGraphic {
 	private Double calculateLimitValue(double percentageThreshold) {
 		return sixthStrategyStatistics.getLastPriceStatistics()
 				.getBase() * (1.0 + percentageThreshold);
+	}
+
+	public void addLimitPointsOnLastTimeAvailable() {
+		ZonedDateTime lastTimeAvailable = findLastTimeAvailableOnGraphicData();
+		if (lastTimeAvailable != null) {
+			addLimitPointsOnGraphicData(lastTimeAvailable);
+		}
+	}
+
+	private ZonedDateTime findLastTimeAvailableOnGraphicData() {
+		ZonedDateTime lastTime = null;
+		for (Entry<String, GraphicData> graphicDataEntry : graphicDataMap.entrySet()) {
+			Set<ZonedDateTime> keySet = graphicDataEntry.getValue()
+					.getValues()
+					.keySet();
+			if (!CollectionUtils.isEmpty(keySet)) {
+				ZonedDateTime lastTimeFromEntry = keySet.stream()
+						.sorted(new ZonedDateTimeDescComparator())
+						.findFirst()
+						.get();
+				if (lastTimeFromEntry != null && lastTime == null || lastTime.compareTo(lastTimeFromEntry) < 0) {
+					lastTime = lastTimeFromEntry;
+				}
+			}
+		}
+		return lastTime;
 	}
 
 }

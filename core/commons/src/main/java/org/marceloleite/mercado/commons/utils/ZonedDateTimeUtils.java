@@ -53,4 +53,9 @@ public final class ZonedDateTimeUtils {
 		return zonedDateTime.toInstant()
 				.getEpochSecond();
 	}
+
+	public static ZonedDateTime toSystemDefaultZoneId(ZonedDateTime zonedDateTime) {
+		return zonedDateTime.toLocalDateTime()
+				.atZone(ZoneId.systemDefault());
+	}
 }
