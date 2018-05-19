@@ -46,7 +46,8 @@ public abstract class AbstractStrategyExecutor implements StrategyExecutor {
 		if (!CollectionUtils.isEmpty(parameterDefinitions)) {
 			List<String> parameterNames = retrieveInformedParameterNames(strategy);
 			for (String parameterDefinitionName : parameterDefinitions.keySet()) {
-				if (!parameterNames.contains(parameterDefinitionName)) {
+				ObjectDefinition parameterDefinition = parameterDefinitions.get(parameterDefinitionName);
+				if (!parameterNames.contains(parameterDefinitionName) && parameterDefinition.isRequired()) {
 					throw new IllegalStateException("Could not find parameter \"" + parameterDefinitionName
 							+ "\" on parameters list for strategy \"" + strategy + "\".");
 				}
@@ -71,14 +72,31 @@ public abstract class AbstractStrategyExecutor implements StrategyExecutor {
 			Map<String, Parameter> parameterValues = getParameterValues(strategy);
 			for (Entry<String, ObjectDefinition> parameterDefinitionEntry : parameterDefinitions.entrySet()) {
 				String parameterName = parameterDefinitionEntry.getKey();
-				String json = parameterValues.get(parameterName)
-						.getValue();
 				ObjectDefinition parameterDefinition = parameterDefinitionEntry.getValue();
-				Object parameterObject = ObjectToJsonConverter.convertToObject(json,
+
+				String parameterValue = getParameterValue(parameterValues, parameterName, parameterDefinition);
+
+				Object parameterObject = ObjectToJsonConverter.convertToObject(parameterValue,
 						parameterDefinition.getObjectClass());
 				setParameter(parameterDefinition.getName(), parameterObject);
 			}
 		}
+	}
+
+	private String getParameterValue(Map<String, Parameter> parameterValues, String parameterName,
+			ObjectDefinition parameterDefinition) {
+		Parameter parameter = parameterValues.get(parameterName);
+		String json = null;
+		if (parameter != null) {
+			json = parameter.getValue();
+		} else {
+			if (!parameterDefinition.isRequired()) {
+				json = parameterDefinition.getDefaultValue();
+			} else {
+				throw new RuntimeException("Parameter \"" + parameterName + "\" is required.");
+			}
+		}
+		return json;
 	}
 
 	private Map<String, Parameter> getParameterValues(Strategy strategy) {

@@ -16,10 +16,6 @@ public class SixthStrategyParametersReader {
 
 	private SixthStrategyStatistics sixthStrategyStatistics;
 
-	private BigDecimal workingAmountCurrency;
-
-	private SixthStrategyStatus status;
-
 	private SixthStrategyGraphic sixthStrategyGraphic;
 
 	private Map<SixthStrategyParameter, Object> parameters = new EnumMap<>(SixthStrategyParameter.class);
@@ -28,28 +24,17 @@ public class SixthStrategyParametersReader {
 		return sixthStrategyThresholds;
 	}
 
-	public void setSixthStrategyThresholds(SixthStrategyThresholds sixthStrategyThresholds) {
-		this.sixthStrategyThresholds = sixthStrategyThresholds;
-	}
-
 	public SixthStrategyStatistics getSixthStrategyStatistics() {
 		return sixthStrategyStatistics;
 	}
 
-	public void setSixthStrategyStatistics(SixthStrategyStatistics sixthStrategyStatistics) {
-		this.sixthStrategyStatistics = sixthStrategyStatistics;
-	}
-
 	public BigDecimal getWorkingAmountCurrency() {
-		return workingAmountCurrency;
-	}
-
-	public void setWorkingAmountCurrency(BigDecimal workingAmountCurrency) {
-		this.workingAmountCurrency = workingAmountCurrency;
+		Double value = getParameterValue(SixthStrategyParameter.WORKING_AMOUNT_CURRENCY);
+		return new BigDecimal(value);
 	}
 
 	public SixthStrategyStatus getStatus() {
-		return status;
+		return getParameterValue(SixthStrategyParameter.INITIAL_STATUS);
 	}
 
 	public LocalTime getDailyGraphicTime() {
@@ -60,22 +45,12 @@ public class SixthStrategyParametersReader {
 		return getParameterValue(SixthStrategyParameter.CREATE_DAILY_GRAPHIC);
 	}
 
-	public void setStatus(SixthStrategyStatus status) {
-		this.status = status;
-	}
-
 	public SixthStrategyGraphic getSixthStrategyGraphic() {
 		return sixthStrategyGraphic;
 	}
 
-	public void setSixthStrategyGraphic(SixthStrategyGraphic sixthStrategyGraphic) {
-		this.sixthStrategyGraphic = sixthStrategyGraphic;
-	}
-
 	public void setParameter(String name, Object object) {
-
 		parameters.put(SixthStrategyParameter.findByName(name), object);
-
 		createObjects();
 	}
 
@@ -136,7 +111,6 @@ public class SixthStrategyParametersReader {
 	}
 
 	public boolean doneReading() {
-		return (sixthStrategyThresholds != null && sixthStrategyStatistics != null && workingAmountCurrency != null
-				&& status != null && sixthStrategyGraphic != null);
+		return (parameters.size() == SixthStrategyParameter.values().length);
 	}
 }

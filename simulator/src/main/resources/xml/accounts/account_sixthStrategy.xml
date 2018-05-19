@@ -16,7 +16,8 @@
 	<strategies>
 		<strategy>
 			<currency>BTC</currency>
-			<className>org.marceloleite.mercado.strategies.sixth.SixthStrategy</className>
+			<className>org.marceloleite.mercado.strategies.sixth.SixthStrategy
+			</className>
 			<parameters>
 				<parameter>
 					<name>growthPercentageThreshold</name>
@@ -45,7 +46,7 @@
 					<value>"undefined"</value>
 				</parameter>
 				<parameter>
-					<name>generateDailyGraphic</name>
+					<name>createDailyGraphic</name>
 					<value>true</value>
 				</parameter>
 			</parameters>

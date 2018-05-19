@@ -50,7 +50,6 @@ public class SixthStrategy extends AbstractStrategyExecutor {
 
 	public SixthStrategy(Strategy strategy) {
 		super(strategy);
-		this.parametersReader = new SixthStrategyParametersReader();
 		this.statusAnalysers = createStatusAnalysers();
 	}
 
@@ -166,8 +165,15 @@ public class SixthStrategy extends AbstractStrategyExecutor {
 
 	@Override
 	protected void setParameter(String name, Object object) {
+		createParameterReaderIfNull();
 		parametersReader.setParameter(name, object);
 		retrieveParameters();
+	}
+
+	private void createParameterReaderIfNull() {
+		if (parametersReader == null) {
+			parametersReader = new SixthStrategyParametersReader();
+		}
 	}
 
 	private void retrieveParameters() {

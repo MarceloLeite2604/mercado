@@ -13,10 +13,10 @@ public enum SixthStrategyParameter implements ObjectDefinition {
 	SHRINK_PERCENTAGE_THRESHOLD("shrinkPercentageThreshold", Double.class),
 	WORKING_AMOUNT_CURRENCY("workingAmountCurrency", Double.class),
 	CIRCULAR_ARRAY_SIZE("circularArraySize", Integer.class),
-	INITIAL_STATUS("initialStatus", SixthStrategyStatus.class, "undefined"),
+	INITIAL_STATUS("initialStatus", SixthStrategyStatus.class, "\"undefined\""),
 	NEXT_VALUE_STEPS("nextValueSteps", Integer.class, "1"),
 	CREATE_DAILY_GRAPHIC("createDailyGraphic", Boolean.class, "false"),
-	DAILY_GRAPHIC_TIME("dailyGraphicTime", LocalTime.class, "23:59");
+	DAILY_GRAPHIC_TIME("dailyGraphicTime", LocalTime.class, "\"23:59\"");
 
 	private String name;
 

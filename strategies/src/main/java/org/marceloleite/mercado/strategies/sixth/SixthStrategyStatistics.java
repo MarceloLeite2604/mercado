@@ -35,16 +35,16 @@ public class SixthStrategyStatistics {
 		return new Builder();
 	}
 
-	public SixthStrategyStatistics() {
-		this.temporalTickerDAO = MercadoApplicationContextAware.getBean(TemporalTickerDAO.class,
-				"TemporalTickerDatabaseDAO");
+	private SixthStrategyStatistics() {
 	}
 
-	public SixthStrategyStatistics(Builder builder) {
+	private SixthStrategyStatistics(Builder builder) {
 		this.circularArraySize = builder.circularArraySize;
 		this.nextValueSteps = builder.nextValueSteps;
 		lastPriceStatistics = new Statistics(circularArraySize, nextValueSteps);
 		averagePriceStatistics = new Statistics(circularArraySize, nextValueSteps);
+		this.temporalTickerDAO = MercadoApplicationContextAware.getBean(TemporalTickerDAO.class,
+				"TemporalTickerDatabaseDAO");
 	}
 
 	public Integer getCircularArraySize() {
