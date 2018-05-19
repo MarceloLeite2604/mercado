@@ -1,8 +1,10 @@
-package org.marceloleite.mercado.strategies.sixth;
+package org.marceloleite.mercado.strategies.sixth.parameter;
 
+import java.time.LocalTime;
 import java.util.Map;
 
 import org.marceloleite.mercado.ObjectDefinitionUtils;
+import org.marceloleite.mercado.strategies.sixth.SixthStrategyStatus;
 import org.marceloleite.mercado.strategy.ObjectDefinition;
 
 public enum SixthStrategyParameter implements ObjectDefinition {
@@ -11,9 +13,10 @@ public enum SixthStrategyParameter implements ObjectDefinition {
 	SHRINK_PERCENTAGE_THRESHOLD("shrinkPercentageThreshold", Double.class),
 	WORKING_AMOUNT_CURRENCY("workingAmountCurrency", Double.class),
 	CIRCULAR_ARRAY_SIZE("circularArraySize", Integer.class),
-	INITIAL_STATUS("initialStatus", SixthStrategyStatus.class, "saved"),
+	INITIAL_STATUS("initialStatus", SixthStrategyStatus.class, "undefined"),
 	NEXT_VALUE_STEPS("nextValueSteps", Integer.class, "1"),
-	GENERATE_DAILY_GRAPHIC("generateDailyGraphic", Boolean.class, "false");
+	CREATE_DAILY_GRAPHIC("createDailyGraphic", Boolean.class, "false"),
+	DAILY_GRAPHIC_TIME("dailyGraphicTime", LocalTime.class, "23:59");
 
 	private String name;
 

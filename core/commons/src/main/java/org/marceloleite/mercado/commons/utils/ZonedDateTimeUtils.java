@@ -17,6 +17,11 @@ public final class ZonedDateTimeUtils {
 
 	public static final ZoneId DEFAULT_ZONE_ID = ZoneId.of(DEFAULT_TIME_ZONE);
 
+	private static final DateTimeFormatter DATE_TIME_FORMATTER_WITH_TIMEZONE = DateTimeFormatter
+			.ofPattern(DATE_FORMAT_WITH_TIMEZONE);
+
+	private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern(DATE_FORMAT);
+
 	private ZonedDateTimeUtils() {
 	}
 
@@ -33,20 +38,19 @@ public final class ZonedDateTimeUtils {
 	}
 
 	public static ZonedDateTime convertFromEpochTime(Long epochTime) {
-		return ZonedDateTime.ofInstant(Instant.ofEpochSecond(epochTime), ZonedDateTimeUtils.DEFAULT_ZONE_ID);
+		return ZonedDateTime.ofInstant(Instant.ofEpochSecond(epochTime), DEFAULT_ZONE_ID);
 	}
 
 	public static String format(ZonedDateTime zonedDateTime) {
-		return DateTimeFormatter.ofPattern(ZonedDateTimeUtils.DATE_FORMAT)
-				.format(zonedDateTime);
+		return DATE_TIME_FORMATTER.format(zonedDateTime);
 	}
 
 	public static ZonedDateTime parse(String string) {
-		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(ZonedDateTimeUtils.DATE_FORMAT_WITH_TIMEZONE);
-		return ZonedDateTime.parse(string + " " + ZonedDateTimeUtils.DEFAULT_TIME_ZONE, dateTimeFormatter);
+		return ZonedDateTime.parse(string + " " + DEFAULT_TIME_ZONE, DATE_TIME_FORMATTER_WITH_TIMEZONE);
 	}
 
 	public static Long formatAsEpochTime(ZonedDateTime zonedDateTime) {
-		return zonedDateTime.toInstant().getEpochSecond();
+		return zonedDateTime.toInstant()
+				.getEpochSecond();
 	}
 }

@@ -31,7 +31,7 @@ public abstract class AbstractStrategyExecutor implements StrategyExecutor {
 		setVariables(strategy);
 	}
 
-	protected Currency getCurrency() {
+	public Currency getCurrency() {
 		return strategy.getCurrency();
 	}
 

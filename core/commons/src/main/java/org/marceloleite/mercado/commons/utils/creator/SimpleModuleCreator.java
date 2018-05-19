@@ -1,6 +1,7 @@
 package org.marceloleite.mercado.commons.utils.creator;
 
 import java.time.Duration;
+import java.time.LocalTime;
 import java.time.ZonedDateTime;
 
 import org.marceloleite.mercado.commons.Currency;
@@ -8,11 +9,13 @@ import org.marceloleite.mercado.commons.OrderStatus;
 import org.marceloleite.mercado.commons.OrderType;
 import org.marceloleite.mercado.commons.json.deserializer.CurrencyDeserializer;
 import org.marceloleite.mercado.commons.json.deserializer.DurationDeserializer;
+import org.marceloleite.mercado.commons.json.deserializer.LocalTimeDeserializer;
 import org.marceloleite.mercado.commons.json.deserializer.OrderStatusDeserializer;
 import org.marceloleite.mercado.commons.json.deserializer.OrderTypeDeserializer;
 import org.marceloleite.mercado.commons.json.deserializer.ZonedDateTimeDeserializer;
 import org.marceloleite.mercado.commons.json.serializer.CurrencySerializer;
 import org.marceloleite.mercado.commons.json.serializer.DurationSerializer;
+import org.marceloleite.mercado.commons.json.serializer.LocalTimeSerializer;
 import org.marceloleite.mercado.commons.json.serializer.OrderStatusSerializer;
 import org.marceloleite.mercado.commons.json.serializer.OrderTypeSerializer;
 import org.marceloleite.mercado.commons.json.serializer.ZonedDateTimeSerializer;
@@ -37,6 +40,7 @@ public final class SimpleModuleCreator {
 
 	private static SimpleModule addDefaultSerializers(SimpleModule simpleModule) {
 		simpleModule.addSerializer(ZonedDateTime.class, new ZonedDateTimeSerializer());
+		simpleModule.addSerializer(LocalTime.class, new LocalTimeSerializer());
 		simpleModule.addSerializer(Duration.class, new DurationSerializer());
 		simpleModule.addSerializer(OrderType.class, new OrderTypeSerializer());
 		simpleModule.addSerializer(OrderStatus.class, new OrderStatusSerializer());
@@ -46,6 +50,7 @@ public final class SimpleModuleCreator {
 
 	private static SimpleModule addDefaultDeserializers(SimpleModule simpleModule) {
 		simpleModule.addDeserializer(ZonedDateTime.class, new ZonedDateTimeDeserializer());
+		simpleModule.addDeserializer(LocalTime.class, new LocalTimeDeserializer());
 		simpleModule.addDeserializer(Duration.class, new DurationDeserializer());
 		simpleModule.addDeserializer(OrderType.class, new OrderTypeDeserializer());
 		simpleModule.addDeserializer(OrderStatus.class, new OrderStatusDeserializer());

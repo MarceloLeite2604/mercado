@@ -4,6 +4,7 @@ import java.awt.BasicStroke;
 import java.awt.Dimension;
 import java.awt.Stroke;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -62,15 +63,17 @@ public class Graphic {
 		this.title = title;
 	}
 
-	public void writeGraphicToFile(String filePath) {
+	public File writeGraphicToFile(String filePath) {
 		final JFreeChart jFreeChart = createOverlaidChart();
-		try (OutputStream outputStreamGraphic = new FileOutputStream(filePath)) {
+		final File outputFile = new File(filePath);
+		try (OutputStream outputStreamGraphic = new FileOutputStream(outputFile)) {
 			BufferedImage bufferedImage = jFreeChart.createBufferedImage((int) dimension.getWidth(),
 					(int) dimension.getHeight(), null);
 			ImageIO.write(bufferedImage, FORMAT_NAME, outputStreamGraphic);
 		} catch (IOException exception) {
 			throw new RuntimeException(exception);
 		}
+		return outputFile;
 	}
 
 	private JFreeChart createOverlaidChart() {

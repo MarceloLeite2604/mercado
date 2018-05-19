@@ -21,35 +21,38 @@ public class SixthStrategyStatistics {
 
 	private static final Logger LOGGER = LogManager.getLogger(SixthStrategyStatistics.class);
 
-	private Integer circularArraySize;
+	private int circularArraySize;
 
-	private Integer nextValueSteps;
+	private int nextValueSteps;
 
 	private Statistics lastPriceStatistics;
 
 	private Statistics averagePriceStatistics;
 
 	private TemporalTickerDAO temporalTickerDAO;
+	
+	public static Builder builder() {
+		return new Builder();
+	}
 
 	public SixthStrategyStatistics() {
 		this.temporalTickerDAO = MercadoApplicationContextAware.getBean(TemporalTickerDAO.class,
 				"TemporalTickerDatabaseDAO");
 	}
 
+	public SixthStrategyStatistics(Builder builder) {
+		this.circularArraySize = builder.circularArraySize;
+		this.nextValueSteps = builder.nextValueSteps;
+		lastPriceStatistics = new Statistics(circularArraySize, nextValueSteps);
+		averagePriceStatistics = new Statistics(circularArraySize, nextValueSteps);
+	}
+
 	public Integer getCircularArraySize() {
 		return circularArraySize;
 	}
 
-	public void setCircularArraySize(Integer circularArraySize) {
-		this.circularArraySize = circularArraySize;
-	}
-
 	public Integer getNextValueSteps() {
 		return nextValueSteps;
-	}
-
-	public void setNextValueSteps(Integer nextValueSteps) {
-		this.nextValueSteps = nextValueSteps;
 	}
 
 	public Statistics getLastPriceStatistics() {
@@ -58,13 +61,6 @@ public class SixthStrategyStatistics {
 
 	public Statistics getAveragePriceStatistics() {
 		return averagePriceStatistics;
-	}
-
-	public void checkFieldsAndCreateStatistics() {
-		if (circularArraySize != null && nextValueSteps != null) {
-			lastPriceStatistics = new Statistics(circularArraySize, nextValueSteps);
-			averagePriceStatistics = new Statistics(circularArraySize, nextValueSteps);
-		}
 	}
 
 	public void addInformation(TemporalTicker temporalTicker, TimeInterval timeInterval,
@@ -114,6 +110,29 @@ public class SixthStrategyStatistics {
 				temporalTickerRetrieved -> lastPriceStatistics.add(temporalTickerRetrieved.getCurrentOrPreviousLast()
 						.doubleValue()));
 		LOGGER.debug("Filling concluded.");
+	}
+	
+	public static class Builder {
+		
+		private int circularArraySize;
+
+		private int nextValueSteps;
+		
+		private Builder() {};
+
+		public Builder circularArraySize(int circularArraySize) {
+			this.circularArraySize = circularArraySize;
+			return this;
+		}
+		
+		public Builder nextValueSteps(int nextValueSteps) {
+			this.nextValueSteps = nextValueSteps;
+			return this;
+		}
+		
+		public SixthStrategyStatistics build() {
+			return new SixthStrategyStatistics(this);
+		}
 	}
 
 }

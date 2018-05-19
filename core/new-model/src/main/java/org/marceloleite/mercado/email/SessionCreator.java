@@ -6,6 +6,8 @@ import javax.mail.Authenticator;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 
+import org.marceloleite.mercado.utils.EmailUtils;
+
 public class SessionCreator {
 
 	public static Properties properties;

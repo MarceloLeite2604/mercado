@@ -1,35 +1,24 @@
 package org.marceloleite.mercado.strategies.sixth.graphic;
 
 import java.awt.Dimension;
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.io.File;
 import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.activation.DataHandler;
-import javax.activation.DataSource;
-import javax.activation.FileDataSource;
-import javax.mail.BodyPart;
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMultipart;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jfree.chart.renderer.xy.StandardXYItemRenderer;
-import org.marceloleite.mercado.commons.Alarm;
 import org.marceloleite.mercado.commons.graphic.Graphic;
 import org.marceloleite.mercado.commons.graphic.GraphicData;
 import org.marceloleite.mercado.commons.graphic.GraphicStrokeType;
 import org.marceloleite.mercado.commons.graphic.MercadoRangeAxis;
-import org.marceloleite.mercado.commons.utils.ZonedDateTimeUtils;
-import org.marceloleite.mercado.email.EmailMessage;
 import org.marceloleite.mercado.model.TemporalTicker;
 import org.marceloleite.mercado.strategies.sixth.SixthStrategyStatistics;
+import org.marceloleite.mercado.strategies.sixth.SixthStrategyThresholds;
 
 public class SixthStrategyGraphic {
-	
+
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = LogManager.getLogger(SixthStrategyGraphic.class);
 
@@ -39,28 +28,22 @@ public class SixthStrategyGraphic {
 
 	private Map<String, GraphicData> graphicDataMap;
 
-	private static final LocalTime DAILY_GRAPHIC_TIME = LocalTime.of(23, 59, 0);
-
-	private static final int DAILY_GRAPHIC_TIME_INTERVAL_MINUTES = 30;
-	
 	private SixthStrategyStatistics sixthStrategyStatistics;
 
-	private Alarm dailyGraphicAlarm;
+	private SixthStrategyThresholds sixthStrategyThresholds;
 
-	public SixthStrategyGraphic(SixthStrategyStatistics sixthStrategyStatistics) {
+	public SixthStrategyGraphic(SixthStrategyStatistics sixthStrategyStatistics,
+			SixthStrategyThresholds sixthStrategyThresholds) {
 		this.graphic = new Graphic();
 		this.graphic.setDimension(new Dimension(1024, 768));
 		this.graphic.setTitle("Mercado Controller");
 		this.graphicDataMap = createGraphicDataMap();
 		this.sixthStrategyStatistics = sixthStrategyStatistics;
+		this.sixthStrategyThresholds = sixthStrategyThresholds;
 	}
 
 	public Graphic getGraphic() {
 		return graphic;
-	}
-
-	public void setGraphic(Graphic graphic) {
-		this.graphic = graphic;
 	}
 
 	private Map<String, GraphicData> createGraphicDataMap() {
@@ -83,82 +66,18 @@ public class SixthStrategyGraphic {
 		return new GraphicData(title, graphicType, mercadoRangeAxis, graphicStrokeType);
 	}
 
-	public void createGraphicFile() {
+	public File createFile() {
 		for (SixthStrategyGraphicData sixthStrategyGraphicData : SixthStrategyGraphicData.values()) {
 			GraphicData graphicData = graphicDataMap.get(sixthStrategyGraphicData.getTitle());
 			if (sixthStrategyGraphicData.isPrintable()) {
 				graphic.put(graphicData);
 			}
 		}
-		graphic.writeGraphicToFile(GRAPHIC_LOCATION);
-	}
-
-	private Alarm createDailyGraphicAlarm(ZonedDateTime time) {
-		ZonedDateTime alarmTime = ZonedDateTime.of(time.toLocalDate(), DAILY_GRAPHIC_TIME,
-				ZonedDateTimeUtils.DEFAULT_ZONE_ID);
-		if (time.isAfter(alarmTime)) {
-			alarmTime = alarmTime.plusDays(1);
-		}
-		return new Alarm(alarmTime, DAILY_GRAPHIC_TIME_INTERVAL_MINUTES);
-	}
-
-	private void sendGraphic(String emailAddressToSend) {
-		EmailMessage emailMessage = new EmailMessage();
-		emailMessage.getToAddresses()
-				.add(emailAddressToSend);
-		emailMessage.setSubject("Daily Graphic");
-		emailMessage.setMimeMultipart(createGraphicMimeMultipart(GRAPHIC_LOCATION));
-		emailMessage.send();
-	}
-
-	private MimeMultipart createGraphicMimeMultipart(String graphicLocation) {
-
-		MimeMultipart multipart = new MimeMultipart("related");
-
-		BodyPart messageBodyPart = new MimeBodyPart();
-		String htmlText = "<img src=\"cid:image\">";
-		try {
-			messageBodyPart.setContent(htmlText, "text/html");
-			multipart.addBodyPart(messageBodyPart);
-			messageBodyPart = new MimeBodyPart();
-			DataSource dataSource = new FileDataSource(graphicLocation);
-
-			messageBodyPart.setDataHandler(new DataHandler(dataSource));
-			messageBodyPart.setHeader("Content-ID", "<image>");
-
-			multipart.addBodyPart(messageBodyPart);
-		} catch (MessagingException exception) {
-			throw new RuntimeException("Error while creating graphic mime multipart.", exception);
-		}
-
-		return multipart;
+		return graphic.writeGraphicToFile(GRAPHIC_LOCATION);
 	}
 
 	public void clearData() {
 		this.graphicDataMap = createGraphicDataMap();
-	}
-
-	public void sendDailyGraphic(ZonedDateTime time, String emailAddress) {
-		if (dailyGraphicAlarm.isRinging(time)) {
-			dailyGraphicAlarm.disarm();
-			setAlarmForNextDay(time);
-		}
-		createGraphicFile();
-		sendGraphic(emailAddress);
-	}
-
-	private void setAlarmForNextDay(ZonedDateTime time) {
-		LocalDate nextDay = time.toLocalDate()
-				.plusDays(1);
-		ZonedDateTime nextAlarmTime = ZonedDateTime.of(nextDay, DAILY_GRAPHIC_TIME, ZonedDateTimeUtils.DEFAULT_ZONE_ID);
-		dailyGraphicAlarm.setStartTime(nextAlarmTime);
-	}
-
-	public boolean isTimeToSendGraphic(ZonedDateTime time) {
-		if (dailyGraphicAlarm == null) {
-			dailyGraphicAlarm = createDailyGraphicAlarm(time);
-		}
-		return dailyGraphicAlarm.isRinging(time);
 	}
 
 	public void addInformation(TemporalTicker temporalTicker) {
@@ -194,8 +113,30 @@ public class SixthStrategyGraphic {
 		return graphicDataMap.get(sixthStrategyGraphicData.getTitle());
 	}
 	
-	public void addPointOnGraphicData(SixthStrategyGraphicData sixthStrategyGraphicData, ZonedDateTime zonedDateTime, double value) {
-		graphicDataMap.get(sixthStrategyGraphicData.getTitle())
-		.addValue(zonedDateTime, value);
+	public void addLimitPointsOnGraphicData(ZonedDateTime time) {
+		addUpperLimitPoinOnGraphic(time);
+		addLowerLimitPointOnGraphic(time);
 	}
+
+	private void addUpperLimitPoinOnGraphic(ZonedDateTime time) {
+		addPointOnGraphicData(SixthStrategyGraphicData.UPPER_LIMIT, time,
+				calculateLimitValue(sixthStrategyThresholds.getGrowthPercentage()));
+	}
+
+	private void addLowerLimitPointOnGraphic(ZonedDateTime time) {
+		addPointOnGraphicData(SixthStrategyGraphicData.LOWER_LIMIT, time,
+				calculateLimitValue(sixthStrategyThresholds.getShrinkPercentage()));
+	}
+
+	private void addPointOnGraphicData(SixthStrategyGraphicData sixthStrategyGraphicData, ZonedDateTime zonedDateTime,
+			double value) {
+		graphicDataMap.get(sixthStrategyGraphicData.getTitle())
+				.addValue(zonedDateTime, value);
+	}
+
+	private Double calculateLimitValue(double percentageThreshold) {
+		return sixthStrategyStatistics.getLastPriceStatistics()
+				.getBase() * (1.0 + percentageThreshold);
+	}
+
 }
