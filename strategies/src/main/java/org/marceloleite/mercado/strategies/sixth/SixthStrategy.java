@@ -24,35 +24,40 @@ import org.marceloleite.mercado.strategy.ObjectDefinition;
 
 public class SixthStrategy extends AbstractStrategyExecutor {
 
+	private static final String SIMULATION_GRAPHIC_EMAIL_SUBJECT = "Simulation graphic";
+
 	private static final Logger LOGGER = LogManager.getLogger(SixthStrategy.class);
-
-	private TemporalTicker baseTemporalTicker;
-
-	private TemporalTicker lastTemporalTicker;
+	
+	private SixthStrategyParametersReader parametersReader;
 
 	private SixthStrategyStatus status;
 
 	private BigDecimal workingAmountCurrency;
+	
+	private SixthStrategyThresholds thresholds;
 
 	private SixthStrategyStatistics statistics;
 
 	private SixthStrategyGraphic graphic;
-
-	private SixthStrategyThresholds thresholds;
+	
+	private SixthStrategyGraphicSender graphicSender;
 
 	private Schedule generateDailyGraphicSchedule;
 
-	private SixthStrategyGraphicSender graphicSender;
-
-	private SixthStrategyParametersReader parametersReader;
-
 	private StatusAnalysers statusAnalysers;
-	
+
 	private boolean firstRun;
 
 	public SixthStrategy(Strategy strategy) {
 		super(strategy);
+		this.thresholds = parametersReader.getSixthStrategyThresholds();
+		this.statistics = parametersReader.getSixthStrategyStatistics();
+		this.graphic = parametersReader.getSixthStrategyGraphic();
+		this.status = parametersReader.getStatus();
+		this.workingAmountCurrency = parametersReader.getWorkingAmountCurrency();
 		this.statusAnalysers = createStatusAnalysers();
+		this.graphicSender = createGraphicSender();
+		this.generateDailyGraphicSchedule = createGenerateDailyGraphicSchedule();
 		this.firstRun = true;
 	}
 
@@ -92,7 +97,6 @@ public class SixthStrategy extends AbstractStrategyExecutor {
 		statistics.addInformation(temporalTicker, timeInterval, getCurrency());
 		if (graphic != null) {
 			graphic.addInformation(temporalTicker);
-			
 			addLimitPointsOnFirstRun(temporalTicker);
 		}
 	}
@@ -118,20 +122,21 @@ public class SixthStrategy extends AbstractStrategyExecutor {
 	private void updateValues(House house) {
 		TemporalTicker temporalTicker = house.getTemporalTickerFor(getCurrency());
 		setBaseIfNull(temporalTicker);
-		lastTemporalTicker = temporalTicker;
 	}
 
 	private void checkSendDailyGraphic(Account account, House house) {
 		TemporalTicker temporalTicker = house.getTemporalTickerFor(getCurrency());
-		generateDailyGraphicSchedule.check(temporalTicker.getStart());
+		if (generateDailyGraphicSchedule != null) {
+			generateDailyGraphicSchedule.check(temporalTicker.getStart());
+		}
 	}
 
 	private void setBaseIfNull(TemporalTicker temporalTicker) {
-		if (baseTemporalTicker == null) {
+		if (firstRun) {
 			LOGGER.debug("Setting base temporal ticker as: " + temporalTicker + ".");
-			baseTemporalTicker = temporalTicker;
+			// baseTemporalTicker = temporalTicker;
 			statistics.getLastPriceStatistics()
-					.setBase(baseTemporalTicker.getCurrentOrPreviousLast()
+					.setBase(temporalTicker.getCurrentOrPreviousLast()
 							.doubleValue());
 		}
 	}
@@ -169,8 +174,9 @@ public class SixthStrategy extends AbstractStrategyExecutor {
 
 	@Override
 	public void afterFinish() {
-		if (graphic != null && lastTemporalTicker != null) {
-			graphic.addLimitPointsOnGraphicData(lastTemporalTicker.getEnd());
+		if (parametersReader.getCreateGraphicAtEndOfExecution() && graphic != null) {
+			graphic.addLimitPointsOnLastTimeAvailable();
+			graphicSender.setEmailSubject(SIMULATION_GRAPHIC_EMAIL_SUBJECT);
 			graphicSender.run();
 		}
 	}
@@ -179,23 +185,11 @@ public class SixthStrategy extends AbstractStrategyExecutor {
 	protected void setParameter(String name, Object object) {
 		createParameterReaderIfNull();
 		parametersReader.setParameter(name, object);
-		retrieveParameters();
 	}
 
 	private void createParameterReaderIfNull() {
 		if (parametersReader == null) {
 			parametersReader = new SixthStrategyParametersReader();
-		}
-	}
-
-	private void retrieveParameters() {
-		if (parametersReader.doneReading()) {
-			thresholds = parametersReader.getSixthStrategyThresholds();
-			statistics = parametersReader.getSixthStrategyStatistics();
-			graphic = parametersReader.getSixthStrategyGraphic();
-			status = parametersReader.getStatus();
-			workingAmountCurrency = parametersReader.getWorkingAmountCurrency();
-			generateDailyGraphicSchedule = createGenerateDailyGraphicSchedule();
 		}
 	}
 
@@ -205,22 +199,29 @@ public class SixthStrategy extends AbstractStrategyExecutor {
 			Alarm alarm = DailyAlarm.builder()
 					.ringsAt(parametersReader.getDailyGraphicTime())
 					.build();
-			this.graphicSender = new SixthStrategyGraphicSender(getStrategy().getAccount()
-					.getEmail(), graphic);
 
 			schedule = new Schedule(alarm, graphicSender);
 		}
 		return schedule;
 	}
 
+	private SixthStrategyGraphicSender createGraphicSender() {
+		SixthStrategyGraphicSender sixthStrategyGraphicSender = null;
+		if (graphic != null) {
+			sixthStrategyGraphicSender = new SixthStrategyGraphicSender(getStrategy().getAccount()
+					.getEmail(), graphic);
+		}
+		return sixthStrategyGraphicSender;
+	}
+
 	@Override
 	protected void setVariable(String name, Object object) {
 		switch (SixthStrategyVariable.findByName(name)) {
 		case BASE_TEMPORAL_TICKER:
-			baseTemporalTicker = new TemporalTicker();
-			baseTemporalTicker = (TemporalTicker) object;
+			// baseTemporalTicker = new TemporalTicker();
+			TemporalTicker temporalTicker = (TemporalTicker) object;
 			statistics.getLastPriceStatistics()
-					.setBase(baseTemporalTicker.getCurrentOrPreviousLast()
+					.setBase(temporalTicker.getCurrentOrPreviousLast()
 							.doubleValue());
 			break;
 		case STATUS:
@@ -241,7 +242,8 @@ public class SixthStrategy extends AbstractStrategyExecutor {
 		Object result = null;
 		switch (SixthStrategyVariable.findByName(name)) {
 		case BASE_TEMPORAL_TICKER:
-			result = baseTemporalTicker;
+			result = statistics.getLastPriceStatistics()
+					.getBase();
 			break;
 		case STATUS:
 			result = status;

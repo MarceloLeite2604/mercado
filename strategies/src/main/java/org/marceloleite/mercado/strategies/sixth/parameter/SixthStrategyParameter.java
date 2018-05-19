@@ -16,7 +16,8 @@ public enum SixthStrategyParameter implements ObjectDefinition {
 	INITIAL_STATUS("initialStatus", SixthStrategyStatus.class, "\"undefined\""),
 	NEXT_VALUE_STEPS("nextValueSteps", Integer.class, "1"),
 	CREATE_DAILY_GRAPHIC("createDailyGraphic", Boolean.class, "false"),
-	DAILY_GRAPHIC_TIME("dailyGraphicTime", LocalTime.class, "\"23:59\"");
+	DAILY_GRAPHIC_TIME("dailyGraphicTime", LocalTime.class, "\"23:59\""),
+	CREATE_GRAPHIC_AT_END_OF_EXECUTION("createGraphicAtEndOfExecution", Boolean.class, "false");
 
 	private String name;
 

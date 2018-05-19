@@ -12,7 +12,7 @@ public class CurrencyAmount {
 	private Currency currency;
 
 	private BigDecimal amount;
-	
+
 	public CurrencyAmount(Currency currency, double amount) {
 		this(currency, new BigDecimal(amount));
 	}
@@ -20,7 +20,7 @@ public class CurrencyAmount {
 	public CurrencyAmount(Currency currency, BigDecimal amount) {
 		super();
 		this.currency = currency;
-		setAmount(new BigDecimal(amount.toString()));
+		setAmount(new BigDecimal(amount.toString()).setScale(currency.getScale()+3, BigDecimalUtils.DEFAULT_ROUNDING));
 	}
 
 	public CurrencyAmount(CurrencyAmount currencyAmount) {
@@ -41,7 +41,7 @@ public class CurrencyAmount {
 
 	public void setAmount(BigDecimal amount) {
 		int scale = 0;
-		if ( currency == null ) {
+		if (currency == null) {
 			scale = BigDecimalUtils.DEFAULT_SCALE;
 		} else {
 			scale = currency.getScale();

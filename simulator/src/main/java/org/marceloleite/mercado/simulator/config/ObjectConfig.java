@@ -1,8 +1,5 @@
 package org.marceloleite.mercado.simulator.config;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import javax.inject.Inject;
 
 import org.apache.logging.log4j.LogManager;
@@ -38,6 +35,7 @@ public class ObjectConfig {
 		
 		return SimulationHouse.builder()
 				.accounts(accountsRetriever.retrieve())
+				.comissionPercentage(simulatorPropertiesRetriever.retrieveTradeComission())
 				.build();
 	}
 	

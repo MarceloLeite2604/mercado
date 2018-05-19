@@ -31,6 +31,14 @@ public class SimulatorPropertiesRetriever {
 		return DurationUtils.parseFromSeconds(simulatorProperties.getRetrievingDuration());
 	}
 	
+	public Double retrieveTradeComission() {
+		Double result = null;
+		if (simulatorProperties.getTradeComissionPercentage() != null) {
+			result = simulatorProperties.getTradeComissionPercentage()/100.0;
+		}
+		return result;
+	}
+	
 	public Integer retrieveThreadPoolSize() {
 		return simulatorProperties.getThreadPoolSize();
 	}

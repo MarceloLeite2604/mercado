@@ -91,8 +91,10 @@ public class OrderAnalyser {
 
 	private CurrencyAmount checkMinimal(CurrencyAmount currencyAmount)
 			throws NoBalanceForMinimalValueOrderAnalyserException {
-		if (MinimalAmounts.getInstance().isAmountLowerThanMinimal(currencyAmount)) {
-			double minimalAmount = MinimalAmounts.getInstance().retrieveMinimalAmountFor(currencyAmount.getCurrency());
+		if (MinimalAmounts.getInstance()
+				.isAmountLowerThanMinimal(currencyAmount)) {
+			double minimalAmount = MinimalAmounts.getInstance()
+					.retrieveMinimalAmountFor(currencyAmount.getCurrency());
 			CurrencyAmount minimal = new CurrencyAmount(currencyAmount.getCurrency(), new BigDecimal(minimalAmount));
 			LOGGER.debug(currencyAmount + " is lower than minimal of " + minimal + ".");
 
@@ -101,8 +103,8 @@ public class OrderAnalyser {
 				LOGGER.debug("Increasing value to " + minimal + ".");
 				return minimal;
 			} else {
-				throw new NoBalanceForMinimalValueOrderAnalyserException(
-						currencyAmount + " is lower than minimal " + NonDigitalCurrencyFormatter.format(minimalAmount) + ".");
+				throw new NoBalanceForMinimalValueOrderAnalyserException(currencyAmount + " is lower than minimal "
+						+ NonDigitalCurrencyFormatter.format(minimalAmount) + ".");
 			}
 		}
 		return currencyAmount;
@@ -116,7 +118,8 @@ public class OrderAnalyser {
 					.asCurrencyAmount();
 			LOGGER.debug(currencyAmount + " is higher than " + currencyAmountBalance + " in balance.");
 			CurrencyAmount secondCalculated = calculateSecondFor(currencyAmountBalance);
-			if (!MinimalAmounts.getInstance().isAmountLowerThanMinimal(secondCalculated)) {
+			if (!MinimalAmounts.getInstance()
+					.isAmountLowerThanMinimal(secondCalculated)) {
 				second = secondCalculated;
 				LOGGER.debug("Lowering value to " + currencyAmountBalance + ".");
 				return currencyAmountBalance;
@@ -128,13 +131,13 @@ public class OrderAnalyser {
 	}
 
 	private CurrencyAmount calculateSecondFor(CurrencyAmount currencyAmount) {
-		BigDecimal amount = currencyAmount.getAmount()
+		BigDecimal amount = BigDecimalUtils.setDefaultScale(currencyAmount.getAmount())
 				.divide(unitPrice.getAmount(), BigDecimalUtils.DEFAULT_ROUNDING);
 		return new CurrencyAmount(second.getCurrency(), amount);
 	}
 
 	private CurrencyAmount calculateFirstFor(CurrencyAmount currencyAmount) {
-		BigDecimal amount = currencyAmount.getAmount()
+		BigDecimal amount = BigDecimalUtils.setDefaultScale(currencyAmount.getAmount())
 				.multiply(unitPrice.getAmount());
 		return new CurrencyAmount(first.getCurrency(), amount);
 	}

@@ -30,6 +30,7 @@ import org.marceloleite.mercado.commons.OrderStatus;
 import org.marceloleite.mercado.commons.OrderType;
 import org.marceloleite.mercado.commons.json.deserializer.OrderStatusDeserializer;
 import org.marceloleite.mercado.commons.json.serializer.OrderStatusSerializer;
+import org.marceloleite.mercado.commons.utils.BigDecimalUtils;
 import org.marceloleite.mercado.model.attributeconverter.ZonedDateTimeAttributeConverter;
 import org.marceloleite.mercado.model.xmladapter.CurrencyPairXmlAdapter;
 import org.marceloleite.mercado.model.xmladapter.OrderStatusXmlAdapter;
@@ -280,7 +281,12 @@ public class Order {
 
 	@Override
 	public String toString() {
-		return "Order [currencyPair=" + currencyPair + ", quantity=" + quantity + ", limitPrice=" + limitPrice + "]";
+		BigDecimal scaledQuantity = quantity.setScale(currencyPair.getSecondCurrency()
+				.getScale(), BigDecimalUtils.DEFAULT_ROUNDING);
+		BigDecimal scaledLimitPrice = limitPrice.setScale(currencyPair.getFirstCurrency()
+				.getScale(), BigDecimalUtils.DEFAULT_ROUNDING);
+		return "Order [currencyPair=" + currencyPair + ", quantity=" + scaledQuantity + ", limitPrice="
+				+ scaledLimitPrice + "]";
 	}
 
 	public static Builder builder() {

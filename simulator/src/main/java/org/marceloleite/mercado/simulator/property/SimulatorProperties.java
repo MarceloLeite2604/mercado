@@ -21,7 +21,7 @@ public class SimulatorProperties {
 	@NotBlank
 	private Long retrievingDuration;
 	
-	private Double tradePercentage;
+	private Double tradeComissionPercentage;
 	
 	@NotBlank
 	private Integer threadPoolSize;
@@ -66,12 +66,12 @@ public class SimulatorProperties {
 		this.retrievingDuration = retrievingDuration;
 	}
 
-	public Double getTradePercentage() {
-		return tradePercentage;
+	public Double getTradeComissionPercentage() {
+		return tradeComissionPercentage;
 	}
 
-	public void setTradePercentage(Double tradePercentage) {
-		this.tradePercentage = tradePercentage;
+	public void setTradeComissionPercentage(Double tradeComissionPercentage) {
+		this.tradeComissionPercentage = tradeComissionPercentage;
 	}
 
 	public Integer getThreadPoolSize() {

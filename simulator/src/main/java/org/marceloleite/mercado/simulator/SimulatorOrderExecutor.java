@@ -9,6 +9,7 @@ import org.marceloleite.mercado.House;
 import org.marceloleite.mercado.OrderExecutor;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.OrderStatus;
+import org.marceloleite.mercado.commons.utils.BigDecimalUtils;
 import org.marceloleite.mercado.model.Account;
 import org.marceloleite.mercado.model.Order;
 import org.marceloleite.mercado.model.Wallet;
@@ -54,8 +55,8 @@ public class SimulatorOrderExecutor implements OrderExecutor {
 	}
 
 	private CurrencyAmount calculateCurrencyAmountToPay(Order order) {
-		BigDecimal amountToPay = order.getLimitPrice()
-				.multiply(order.getQuantity());
+		BigDecimal amountToPay = BigDecimalUtils.setDefaultScale(order.getLimitPrice())
+				.multiply(BigDecimalUtils.setDefaultScale(order.getQuantity()));
 		Currency currencyToPay = order.getCurrencyPair().getFirstCurrency();
 		return new CurrencyAmount(currencyToPay, amountToPay);
 	}
@@ -96,9 +97,13 @@ public class SimulatorOrderExecutor implements OrderExecutor {
 
 	private CurrencyAmount calculateBuyOrderComission(Order order, House house) {
 		CurrencyAmount currencyAmountToBuy = elaborateCurrencyAmountToBuy(order);
-		BigDecimal comissionAmount = currencyAmountToBuy.getAmount()
-				.multiply(new BigDecimal(house.getComissionPercentage()));
+		BigDecimal comissionAmount = BigDecimalUtils.setDefaultScale(currencyAmountToBuy.getAmount())
+				.multiply(elaborateComissionPercentage(house));
 		return new CurrencyAmount(currencyAmountToBuy.getCurrency(), comissionAmount);
+	}
+
+	private BigDecimal elaborateComissionPercentage(House house) {
+		return BigDecimalUtils.setDefaultScale(new BigDecimal(house.getComissionPercentage()));
 	}
 
 	private CurrencyAmount elaborateCurrencyAmountToBuy(Order order) {
@@ -109,13 +114,13 @@ public class SimulatorOrderExecutor implements OrderExecutor {
 
 	private CurrencyAmount calculateSellOrderCommission(Order order, House house) {
 		CurrencyAmount currencyAmountToReceive = elaborateCurrencyAmountToReceive(order);
-		BigDecimal comissionAmount = currencyAmountToReceive.getAmount()
-				.multiply(new BigDecimal(house.getComissionPercentage()));
+		BigDecimal comissionAmount = BigDecimalUtils.setDefaultScale(currencyAmountToReceive.getAmount())
+				.multiply(elaborateComissionPercentage(house));
 		return new CurrencyAmount(currencyAmountToReceive.getCurrency(), comissionAmount);
 	}
 
 	private CurrencyAmount elaborateCurrencyAmountToReceive(Order order) {
-		BigDecimal amount = order.getQuantity()
+		BigDecimal amount = BigDecimalUtils.setDefaultScale(order.getQuantity())
 				.multiply(order.getLimitPrice());
 		Currency currency = order.getCurrencyPair().getFirstCurrency();
 		return new CurrencyAmount(currency, amount);

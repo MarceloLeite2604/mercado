@@ -45,6 +45,10 @@ public class SixthStrategyParametersReader {
 		return getParameterValue(SixthStrategyParameter.CREATE_DAILY_GRAPHIC);
 	}
 
+	public Boolean getCreateGraphicAtEndOfExecution() {
+		return getParameterValue(SixthStrategyParameter.CREATE_GRAPHIC_AT_END_OF_EXECUTION);
+	}
+
 	public SixthStrategyGraphic getSixthStrategyGraphic() {
 		return sixthStrategyGraphic;
 	}
@@ -63,7 +67,7 @@ public class SixthStrategyParametersReader {
 			sixthStrategyThresholds = createThresholds();
 		}
 
-		if (parameters.get(SixthStrategyParameter.DAILY_GRAPHIC_TIME) != null) {
+		if (sixthStrategyGraphic == null) {
 			sixthStrategyGraphic = createGraphic();
 		}
 	}
@@ -102,15 +106,24 @@ public class SixthStrategyParametersReader {
 
 	private SixthStrategyGraphic createGraphic() {
 		SixthStrategyGraphic sixStrategyGraphic = null;
-		Boolean createDailyGraphic = getParameterValue(SixthStrategyParameter.CREATE_DAILY_GRAPHIC);
-		if (createDailyGraphic != null && createDailyGraphic && sixthStrategyStatistics != null
-				&& sixthStrategyStatistics != null) {
+		if (willCreateGraphic() && sixthStrategyStatistics != null && sixthStrategyStatistics != null) {
 			sixStrategyGraphic = new SixthStrategyGraphic(sixthStrategyStatistics, sixthStrategyThresholds);
 		}
 		return sixStrategyGraphic;
 	}
 
-	public boolean doneReading() {
-		return (parameters.size() == SixthStrategyParameter.values().length);
+	private Boolean willCreateGraphic() {
+		return (willCreateDailyGraphic() || willCreateGraphicAtEndOfExecution());
+	}
+
+	private boolean willCreateDailyGraphic() {
+		Boolean createDailyGraphic = getParameterValue(SixthStrategyParameter.CREATE_DAILY_GRAPHIC);
+		return createDailyGraphic != null && createDailyGraphic;
+	}
+
+	private boolean willCreateGraphicAtEndOfExecution() {
+		Boolean createGraphicAtEndOfExecution = getParameterValue(
+				SixthStrategyParameter.CREATE_GRAPHIC_AT_END_OF_EXECUTION);
+		return createGraphicAtEndOfExecution != null && createGraphicAtEndOfExecution;
 	}
 }

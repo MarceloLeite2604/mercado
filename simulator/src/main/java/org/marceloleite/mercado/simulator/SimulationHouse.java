@@ -101,7 +101,7 @@ public class SimulationHouse implements House {
 
 	public static class Builder {
 		private List<Account> accounts;
-		private double comissionPercentage;
+		private Double comissionPercentage;
 		private OrderExecutor orderExecutor;
 
 		private Builder() {
@@ -112,7 +112,7 @@ public class SimulationHouse implements House {
 			return this;
 		}
 
-		public Builder comissionPercentage(double comissionPercentage) {
+		public Builder comissionPercentage(Double comissionPercentage) {
 			this.comissionPercentage = comissionPercentage;
 			return this;
 		}

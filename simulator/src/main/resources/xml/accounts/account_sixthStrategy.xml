@@ -47,7 +47,15 @@
 				</parameter>
 				<parameter>
 					<name>createDailyGraphic</name>
-					<value>true</value>
+					<value>false</value>
+				</parameter>
+				<parameter>
+					<name>createGraphicAtEndOfExecution</name>
+					<value>false</value>
+				</parameter>
+				<parameter>
+					<name>dailyGraphicTime</name>
+					<value>"08:00"</value>
 				</parameter>
 			</parameters>
 		</strategy>
