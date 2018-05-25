@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.BuyOrderBuilder;
 import org.marceloleite.mercado.CurrencyAmount;
 import org.marceloleite.mercado.House;
+import org.marceloleite.mercado.MinimalAmounts;
 import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.utils.BigDecimalUtils;
@@ -28,22 +29,21 @@ public class OriginalStrategy extends AbstractStrategyExecutor {
 
 	@Override
 	public void execute(TimeInterval timeInterval, Account account, House house) {
-		if (house.getTemporalTickerFor(getCurrency()) != null) {
-			if (account.getWallet()
-					.hasPositiveBalanceOf(getCurrency())) {
-				CurrencyAmount currencyAmountToPay = account.getWallet()
-						.getBalanceFor(Currency.REAL)
-						.asCurrencyAmount();
-				CurrencyAmount currencyAmountUnitPrice = calculateCurrencyAmountUnitPrice(house);
-				CurrencyAmount currencyAmountToBuy = calculateCurrencyAmountToBuy(currencyAmountToPay,
-						currencyAmountUnitPrice);
-				Order order = new BuyOrderBuilder().toExecuteOn(timeInterval.getStart())
-						.buying(currencyAmountToBuy)
-						.payingUnitPriceOf(currencyAmountUnitPrice)
-						.build();
-				LOGGER.debug("Order created is " + order);
-				executeOrder(order, account, house);
-			}
+		Double minimalAmount = MinimalAmounts.getInstance()
+				.retrieveMinimalAmountFor(Currency.REAL);
+		if (account.getWallet()
+				.hasBalanceFor(new CurrencyAmount(Currency.REAL, minimalAmount))) {
+			CurrencyAmount amountToPay = account.getWallet()
+					.getBalanceFor(Currency.REAL)
+					.asCurrencyAmount();
+			CurrencyAmount unitPrice = calculateCurrencyAmountUnitPrice(house);
+			CurrencyAmount amountToBuy = calculateCurrencyAmountToBuy(amountToPay, unitPrice);
+			Order order = new BuyOrderBuilder().toExecuteOn(timeInterval.getStart())
+					.buying(amountToBuy)
+					.payingUnitPriceOf(unitPrice)
+					.build();
+			LOGGER.debug("Order created is " + order);
+			executeOrder(order, account, house);
 		}
 	}
 

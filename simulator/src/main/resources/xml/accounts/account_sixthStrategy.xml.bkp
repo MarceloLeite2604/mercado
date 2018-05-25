@@ -21,17 +21,15 @@
 			<parameters>
 				<parameter>
 					<name>growthPercentageThreshold</name>
-					<!-- <value>0.09</value> -->
-					<value>0.01</value>
+					<value>0.09</value>
 				</parameter>
 				<parameter>
 					<name>shrinkPercentageThreshold</name>
-					<!-- <value>-0.15</value> -->
-					<value>-0.01</value>
+					<value>-0.15</value>
 				</parameter>
 				<parameter>
 					<name>workingAmountCurrency</name>
-					<value>200</value>
+					<value>1000</value>
 				</parameter>
 				<parameter>
 					<name>circularArraySize</name>
@@ -51,7 +49,7 @@
 				</parameter>
 				<parameter>
 					<name>createGraphicAtEndOfExecution</name>
-					<value>false</value>
+					<value>true</value>
 				</parameter>
 				<parameter>
 					<name>dailyGraphicTime</name>

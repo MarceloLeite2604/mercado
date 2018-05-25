@@ -31,19 +31,29 @@ public class AppliedStatusAnalyser extends StatusAnalyserTemplate {
 		TemporalTicker temporalTicker = house.getTemporalTickerFor(getStrategy().getCurrency());
 		Statistics lastPriceStatistics = getStrategy().getStatistics()
 				.getLastPriceStatistics();
+		Statistics averagePriceStatistics = getStrategy().getStatistics()
+				.getAveragePriceStatistics();
 		Order result = null;
-		if (lastPriceStatistics.getRatio() > 0) {
+
+		StringBuilder stringBuilder = new StringBuilder();
+		stringBuilder.append(temporalTicker.getStart() + ": ");
+		stringBuilder.append(" last ratio: " + lastPriceStatistics.getRatio() + " ");
+		stringBuilder.append(" average variation: " + averagePriceStatistics.getVariation() + " ");
+		stringBuilder.append(" threshold: " + (1 + getStrategy().getThresholds()
+				.getShrinkPercentage()) + " ");
+		LOGGER.debug(stringBuilder.toString());
+
+		if (lastPriceStatistics.getRatio() > 1.0) {
 			if (temporalTicker.getCurrentOrPreviousLast()
 					.doubleValue() > lastPriceStatistics.getBase()) {
 				updateGraphicAndBase(temporalTicker);
 			}
-		} else if (lastPriceStatistics.getRatio() <= getStrategy().getThresholds()
-				.getShrinkPercentage()
-				&& getStrategy().getStatistics()
-						.getAveragePriceStatistics()
-						.getVariation() < 0) {
-			updateGraphicAndBase(temporalTicker);
-			result = createSellOrder(timeInterval, account, house);
+		} else {
+			if (lastPriceStatistics.getRatio() <= (1.0 + getStrategy().getThresholds()
+					.getShrinkPercentage()) && averagePriceStatistics.getVariation() < 0) {
+				updateGraphicAndBase(temporalTicker);
+				result = createSellOrder(timeInterval, account, house);
+			}
 		}
 		return result;
 	}

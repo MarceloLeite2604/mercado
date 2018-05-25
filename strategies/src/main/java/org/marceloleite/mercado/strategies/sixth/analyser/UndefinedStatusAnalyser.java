@@ -7,6 +7,7 @@ import org.marceloleite.mercado.model.Account;
 import org.marceloleite.mercado.model.Order;
 import org.marceloleite.mercado.model.TemporalTicker;
 import org.marceloleite.mercado.strategies.sixth.SixthStrategyStatus;
+import org.marceloleite.mercado.strategies.sixth.graphic.SixthStrategyGraphic;
 
 public class UndefinedStatusAnalyser extends StatusAnalyserTemplate {
 
@@ -34,8 +35,10 @@ public class UndefinedStatusAnalyser extends StatusAnalyserTemplate {
 		Order result = null;
 		if (lastPriceStatistics.getRatio() > 0) {
 			getStrategy().updateBase(temporalTicker);
-			getStrategy().getGraphic()
-					.addLimitPointsOnGraphicData(temporalTicker.getStart());
+			SixthStrategyGraphic graphic = getStrategy().getGraphic();
+			if (graphic != null) {
+				graphic.addLimitPointsOnGraphicData(temporalTicker.getStart());
+			}
 			result = createBuyOrder(timeInterval, account, house);
 		}
 		return result;

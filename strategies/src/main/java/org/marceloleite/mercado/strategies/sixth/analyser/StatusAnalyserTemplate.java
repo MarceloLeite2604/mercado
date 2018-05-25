@@ -23,7 +23,7 @@ import org.marceloleite.mercado.strategies.sixth.SixthStrategy;
 
 public abstract class StatusAnalyserTemplate implements StatusAnalyser {
 
-	private static final Logger LOGGER = LogManager.getLogger(SixthStrategy.class);
+	protected static final Logger LOGGER = LogManager.getLogger(SixthStrategy.class);
 
 	private SixthStrategy strategy;
 

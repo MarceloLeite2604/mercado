@@ -7,6 +7,8 @@ public final class BigDecimalUtils {
 	public static final int DEFAULT_SCALE = 12;
 	
 	public static final int DEFAULT_ROUNDING = BigDecimal.ROUND_HALF_EVEN;
+
+	public static final BigDecimal CLOSE_TO_ZERO = new BigDecimal("1e-3");
 	
 	private BigDecimalUtils() {}
 	
