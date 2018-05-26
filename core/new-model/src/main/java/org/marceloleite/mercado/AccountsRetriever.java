@@ -1,4 +1,4 @@
-package org.marceloleite.mercado.simulator;
+package org.marceloleite.mercado;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +8,6 @@ import javax.inject.Named;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.marceloleite.mercado.StrategyExecutorClassLoader;
 import org.marceloleite.mercado.dao.interfaces.AccountDAO;
 import org.marceloleite.mercado.model.Account;
 import org.springframework.stereotype.Component;

@@ -20,10 +20,8 @@ import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.commons.utils.ZonedDateTimeUtils;
 import org.marceloleite.mercado.controller.converter.AccountInfoToBalanceWalletConverter;
-import org.marceloleite.mercado.controller.properties.ControllerPropertiesRetriever;
 import org.marceloleite.mercado.controller.utils.TimeIntervalUtils;
 import org.marceloleite.mercado.dao.interfaces.AccountDAO;
-import org.marceloleite.mercado.dao.site.siteretriever.trade.TradeSiteRetriever;
 import org.marceloleite.mercado.email.EmailMessage;
 import org.marceloleite.mercado.model.Account;
 import org.marceloleite.mercado.model.TemporalTicker;
@@ -42,26 +40,8 @@ public class Controller {
 	@Named("ControllerHouse")
 	private House house;
 
-	private ControllerPropertiesRetriever controllerPropertiesRetriever;
-
-	public Controller() {
-		this.controllerPropertiesRetriever = new ControllerPropertiesRetriever();
-		configureTradesSiteRetriever();
-	}
-
-	private void configureTradesSiteRetriever() {
-		Duration tradesSiteRetrieverDurationStep = controllerPropertiesRetriever
-				.retrieveTradesSiteRetrieverDurationStep();
-		if (tradesSiteRetrieverDurationStep != null) {
-			TradeSiteRetriever.setConfiguredStepDuration(tradesSiteRetrieverDurationStep);
-		}
-
-		Integer tradesSiteRetrieverThreadPoolSize = controllerPropertiesRetriever
-				.retrieveTradesSiteRetrieverThreadPoolSize();
-		if (tradesSiteRetrieverThreadPoolSize != null) {
-			TradeSiteRetriever.setConfiguredThreadPoolSize(tradesSiteRetrieverThreadPoolSize);
-		}
-	}
+//	@Inject
+//	private ControllerPropertiesRetriever controllerPropertiesRetriever;
 
 	public void start() {
 		List<Account> accounts = retrieveAccounts();

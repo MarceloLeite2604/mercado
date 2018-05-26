@@ -1,4 +1,4 @@
-package org.marceloleite.mercado.simulator.config;
+package org.marceloleite.mercado.controller.config;
 
 import java.util.Properties;
 
@@ -9,8 +9,8 @@ import javax.sql.DataSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.commons.utils.PropertiesUtils;
-import org.marceloleite.mercado.simulator.property.PersistenceProperty;
-import org.marceloleite.mercado.simulator.property.SimulatorProperties;
+import org.marceloleite.mercado.controller.properties.ControllerProperties;
+import org.marceloleite.mercado.controller.properties.PersistenceProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
@@ -33,7 +33,7 @@ public class PersistenceConfig {
 	private static final String[] PACKAGES_TO_SCAN = { "org.marceloleite.mercado.model" };
 
 	@Inject
-	private SimulatorProperties simulatorProperties;
+	private ControllerProperties controllerProperties;
 
 	private Properties properties;
 
@@ -83,9 +83,9 @@ public class PersistenceConfig {
 	}
 
 	private Properties getProperties() {
-		LOGGER.debug("Persistence properties file: \"" + simulatorProperties.getPersistencePropertiesFile() + "\".");
+		LOGGER.debug("Persistence properties file: \"" + controllerProperties.getPersistencePropertiesFile() + "\".");
 		if (properties == null) {
-			properties = PropertiesUtils.retrieveProperties(simulatorProperties.getPersistencePropertiesFile());
+			properties = PropertiesUtils.retrieveProperties(controllerProperties.getPersistencePropertiesFile());
 		}
 		return properties;
 	}

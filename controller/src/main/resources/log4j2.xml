@@ -1,55 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="info">
 	<Appenders>
-		<File name="LogFile" fileName="output/logs/mercado-controller.log"
+		<File name="LogFile"
+			fileName="output/logs/mercado-controller.log" append="true">
+			<PatternLayout>
+				<Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
+			</PatternLayout>
+		</File>
+		<File name="OriginalStrategyLogFile"
+			fileName="output/logs/mercado-controller-original-strategy.log"
 			append="true">
 			<PatternLayout>
 				<Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
 			</PatternLayout>
 		</File>
-		<File name="OriginalStrategyLogFile" fileName="output/logs/mercado-controller-original-strategy.log"
+		<File name="FirstStrategyLogFile"
+			fileName="output/logs/mercado-controller-first-strategy.log"
 			append="true">
 			<PatternLayout>
 				<Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
 			</PatternLayout>
 		</File>
-		<File name="FirstStrategyLogFile" fileName="output/logs/mercado-controller-first-strategy.log"
+		<File name="SecondStrategyLogFile"
+			fileName="output/logs/mercado-controller-second-strategy.log"
 			append="true">
 			<PatternLayout>
 				<Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
 			</PatternLayout>
 		</File>
-		<File name="SecondStrategyLogFile" fileName="output/logs/mercado-controller-second-strategy.log"
+		<File name="ThirdStrategyLogFile"
+			fileName="output/logs/mercado-controller-third-strategy.log"
 			append="true">
 			<PatternLayout>
 				<Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
 			</PatternLayout>
 		</File>
-		<File name="ThirdStrategyLogFile" fileName="output/logs/mercado-controller-third-strategy.log"
+		<File name="FourthStrategyLogFile"
+			fileName="output/logs/mercado-controller-fourth-strategy.log"
 			append="true">
 			<PatternLayout>
 				<Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
 			</PatternLayout>
 		</File>
-		<File name="FourthStrategyLogFile" fileName="output/logs/mercado-controller-fourth-strategy.log"
+		<File name="FifthStrategyLogFile"
+			fileName="output/logs/mercado-controller-fifth-strategy.log"
 			append="true">
 			<PatternLayout>
 				<Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
 			</PatternLayout>
 		</File>
-		<File name="FifthStrategyLogFile" fileName="output/logs/mercado-controller-fifth-strategy.log"
+		<File name="SixthStrategyLogFile"
+			fileName="output/logs/mercado-controller-sixth-strategy.log"
 			append="true">
 			<PatternLayout>
 				<Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
 			</PatternLayout>
 		</File>
-		<File name="SixthStrategyLogFile" fileName="output/logs/mercado-controller-sixth-strategy.log"
-			append="true">
-			<PatternLayout>
-				<Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
-			</PatternLayout>
-		</File>
-		<File name="HibernateLogFile" fileName="output/logs/mercado-controller-hibernate.log">
+		<File name="HibernateLogFile"
+			fileName="output/logs/mercado-controller-hibernate.log">
 			<PatternLayout>
 				<Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
 			</PatternLayout>
@@ -62,7 +70,8 @@
 		<Logger name="org.hibernate" level="info" additivity="false">
 			<AppenderRef ref="HibernateLogFile" />
 		</Logger>
-		<Logger name="org.marceloleite.mercado.controller" level="debug"/>
+		<Logger name="org.marceloleite.mercado.controller"
+			level="debug" />
 		<Logger
 			name="org.marceloleite.mercado.strategies.OriginalStrategy"
 			level="debug" additivity="false">

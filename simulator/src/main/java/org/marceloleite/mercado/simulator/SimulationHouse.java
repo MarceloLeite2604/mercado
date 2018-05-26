@@ -46,7 +46,7 @@ public class SimulationHouse implements House {
 		this.temporalTickers = new EnumMap<>(Currency.class);
 	}
 
-	public List<Account> getAccounts() {
+	List<Account> getAccounts() {
 		return new ArrayList<>(accounts);
 	}
 

@@ -1,14 +1,12 @@
-package org.marceloleite.mercado.simulator.config;
+package org.marceloleite.mercado.controller.config;
 
 import javax.inject.Inject;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.AccountsRetriever;
-import org.marceloleite.mercado.simulator.SimulationHouse;
-import org.marceloleite.mercado.simulator.Simulator;
-import org.marceloleite.mercado.simulator.SimulatorHouseThread;
-import org.marceloleite.mercado.simulator.property.SimulatorPropertiesRetriever;
+import org.marceloleite.mercado.controller.ControllerHouse;
+import org.marceloleite.mercado.controller.properties.ControllerPropertiesRetriever;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.TaskExecutor;
@@ -24,32 +22,20 @@ public class ObjectConfig {
 	private static final int THREAD_POOL_SIZE = 4; 
 	
 	@Inject
-	private SimulatorPropertiesRetriever simulatorPropertiesRetriever;
+	private ControllerPropertiesRetriever controllerPropertiesRetriever;
 
 	@Inject
 	private AccountsRetriever accountsRetriever;
 
 	@Bean
-	public SimulationHouse createSimulatorHouse() {
-		LOGGER.debug("Creating simulator house.");
+	public ControllerHouse createControllerHouse() {
+		LOGGER.debug("Creating controller house.");
 		
-		return SimulationHouse.builder()
+		return ControllerHouse.builder()
 				.accounts(accountsRetriever.retrieve())
-				.comissionPercentage(simulatorPropertiesRetriever.retrieveTradeComission())
+				.comissionPercentage(controllerPropertiesRetriever.retrieveTradeComission())
 				.build();
 	}
-	
-	@Bean
-	public SimulatorHouseThread createSimulationHouseThread(SimulationHouse simulationHouse) {
-		LOGGER.debug("Creating simulator house thread.");
-		return new SimulatorHouseThread(simulationHouse);
-	}
-	
-//	@Bean
-//	public ExecutorService createExecutorSerivice() {
-//		LOGGER.debug("Creating executor service.");
-//	    return Executors.newFixedThreadPool(simulatorPropertiesRetriever.retrieveThreadPoolSize());
-//	}
 	
 	@Bean
 	public TaskExecutor createThreadPoolTaskExecutor() {

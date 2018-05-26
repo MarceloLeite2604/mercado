@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="debug">
+
+<property name="defaultPatternLayout"
+		value="[%-5p] %d{HH:mm:ss.SSS} [%-8t] %c{5}: %m%n" />
+	<property name="outputFolder" value="output/logs/" />
+	<property name="encoder"
+		value="ch.qos.logback.classic.encoder.PatternLayoutEncoder" />
+	<property name="controllerLogLevel" value="debug" />
+	<property name="controllerLogLevel" value="info" />
+	
+	<appender name="stdout"
+		class="ch.qos.logback.core.ConsoleAppender">
+		<encoder class="${encoder}">
+			<Pattern>${defaultPatternLayout}</Pattern>
+		</encoder>
+	</appender>
+	
+	<appender name="spring"
+		class="ch.qos.logback.core.FileAppender">
+		<file>${outputFolder}/spring.log</file>
+		<encoder class="${encoder}">
+			<Pattern>${defaultPatternLayout}</Pattern>
+		</encoder>
+	</appender>
+	
+	<appender name="controller"
+		class="ch.qos.logback.core.FileAppender">
+		<file>${outputFolder}/controller.log</file>
+		<append>false</append>
+		<encoder class="${encoder}">
+			<Pattern>${defaultPatternLayout}</Pattern>
+		</encoder>
+	</appender>
+	
+	<appender name="sixthStrategy"
+		class="ch.qos.logback.core.FileAppender">
+		<file>${outputFolder}/sixth-strategy.log</file>
+		<append>false</append>
+		<encoder class="${encoder}">
+			<Pattern>${defaultPatternLayout}</Pattern>
+		</encoder>
+	</appender>
+	<appender name="hibernate"
+		class="ch.qos.logback.core.FileAppender">
+		<file>${outputFolder}/hibernate.log</file>
+		<append>false</append>
+		<encoder class="${encoder}">
+			<Pattern>${defaultPatternLayout}</Pattern>
+		</encoder>
+	</appender>
+	
+	<root level="info">
+		<appender-ref ref="stdout" />
+	</root>
+	
+	<logger name="org.marceloleite" level="${simulatorLogLevel}">
+		<!-- <appender-ref ref="stdout" /> -->
+	</logger>
+	
+	<logger name="org.marceloleite.mercado.strategies.sixth"
+		level="debug" additivity="false">
+		<appender-ref ref="sixthStrategy" />
+	</logger>
+</configuration>

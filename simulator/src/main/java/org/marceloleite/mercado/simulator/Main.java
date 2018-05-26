@@ -54,10 +54,10 @@ public class Main {
 		return (args) -> {
 			simulator();
 			// testTradeSiteRetriever();
-			System.out.println("Done.");
 		};
 	}
 
+	@SuppressWarnings("unused")
 	private void testTradeSiteRetriever() {
 		TradeSiteRetriever.setConfiguredStepDuration(Duration.ofDays(1));
 		ZonedDateTime start = ZonedDateTime.of(2017, 1, 1, 0, 0, 0, 0, ZonedDateTimeUtils.DEFAULT_ZONE_ID);
