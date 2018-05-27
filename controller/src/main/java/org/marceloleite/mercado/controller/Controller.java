@@ -2,8 +2,6 @@ package org.marceloleite.mercado.controller;
 
 import java.time.Duration;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -26,8 +24,9 @@ import org.marceloleite.mercado.email.EmailMessage;
 import org.marceloleite.mercado.model.Account;
 import org.marceloleite.mercado.model.TemporalTicker;
 import org.marceloleite.mercado.model.Wallet;
-import org.springframework.util.CollectionUtils;
+import org.springframework.stereotype.Component;
 
+@Component
 public class Controller {
 
 	private static final Logger LOGGER = LogManager.getLogger(Controller.class);
@@ -40,21 +39,21 @@ public class Controller {
 	@Named("ControllerHouse")
 	private House house;
 
-//	@Inject
-//	private ControllerPropertiesRetriever controllerPropertiesRetriever;
+	@Inject
+	private TemporalTickerRetriever temporalTickerRetriever;
 
 	public void start() {
-		List<Account> accounts = retrieveAccounts();
-		sendStartEmails(accounts);
+		sendStartEmails();
 		while (!finished()) {
 			waitNextMinute();
 			LOGGER.debug("Checking.");
-			check(accounts);
+			check();
 		}
 	}
 
-	private void sendStartEmails(List<Account> accounts) {
-		accounts.forEach(this::sendEmailFor);
+	private void sendStartEmails() {
+		house.getAccounts()
+				.forEach(this::sendEmailFor);
 	}
 
 	private void sendEmailFor(Account account) {
@@ -69,24 +68,23 @@ public class Controller {
 		}
 	}
 
-	private void check(List<Account> accounts) {
+	private void check() {
 		house.process(retrieveTemporalTickers());
-		retrieveBalances(accounts);
-		save(accounts);
+		retrieveBalances();
+		save();
 	}
 
 	private TreeMap<TimeInterval, Map<Currency, TemporalTicker>> retrieveTemporalTickers() {
 		TimeInterval timeInterval = TimeIntervalUtils.getInstance()
 				.retrievePreviousMinuteInterval();
-		Map<Currency, TemporalTicker> temporalickers = TemporalTickerRetriever.getInstance()
-				.retrieveFor(timeInterval);
+		Map<Currency, TemporalTicker> temporalickers = temporalTickerRetriever.retrieveFor(timeInterval);
 		TreeMap<TimeInterval, Map<Currency, TemporalTicker>> temporalTickersByTimeInterval = new TreeMap<>();
 		temporalTickersByTimeInterval.put(timeInterval, temporalickers);
 		return temporalTickersByTimeInterval;
 	}
 
-	private void save(List<Account> accounts) {
-		accountDAO.saveAll(accounts);
+	private void save() {
+		accountDAO.saveAll(house.getAccounts());
 	}
 
 	private void waitNextMinute() {
@@ -109,21 +107,10 @@ public class Controller {
 		return false;
 	}
 
-	private List<Account> retrieveAccounts() {
-		List<Account> accounts = new ArrayList<>();
-		accountDAO.findAll()
-				.forEach(accounts::add);
-		if (CollectionUtils.isEmpty(accounts)) {
-			throw new RuntimeException("Could not find accounts to work with.");
-		}
-		return accounts;
-	}
-	
-	private List<Account> retrieveBalances(List<Account> accounts) {
-		for (Account account : accounts) {
+	private void retrieveBalances() {
+		for (Account account : house.getAccounts()) {
 			account.setWallet(retrieveBalanceFor(account));
 		}
-		return accounts;
 	}
 
 	private Wallet retrieveBalanceFor(Account account) {

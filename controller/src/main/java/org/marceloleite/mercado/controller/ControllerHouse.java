@@ -32,7 +32,7 @@ public class ControllerHouse implements House {
 	private List<Account> accounts;
 
 	@Inject
-	@Named("TradeDatabaseSiteDAO")
+	@Named("TemporalTickerDatabaseDAO")
 	private TemporalTickerDAO temporalTickerDAO;
 	
 	@Inject
@@ -56,7 +56,8 @@ public class ControllerHouse implements House {
 		this.temporalTickers = new EnumMap<>(Currency.class);
 	}
 	
-	List<Account> getAccounts() {
+	@Override
+	public List<Account> getAccounts() {
 		return new ArrayList<>(accounts);
 	}
 	

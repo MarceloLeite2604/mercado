@@ -10,17 +10,14 @@ import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.dao.interfaces.TemporalTickerDAO;
 import org.marceloleite.mercado.model.TemporalTicker;
+import org.springframework.stereotype.Component;
 
+@Component
 public class TemporalTickerRetriever {
 
-	private static TemporalTickerRetriever instance;
-
 	@Inject
-	@Named("TemporalTickerDatabsaseDAO")
+	@Named("TemporalTickerDatabaseDAO")
 	private TemporalTickerDAO temporalTickerDAO;
-
-	private TemporalTickerRetriever() {
-	}
 
 	public Map<Currency, TemporalTicker> retrieveFor(TimeInterval timeInterval) {
 		Map<Currency, TemporalTicker> temporalTickers = new EnumMap<>(Currency.class);
@@ -33,12 +30,5 @@ public class TemporalTickerRetriever {
 			}
 		}
 		return temporalTickers;
-	}
-
-	public static TemporalTickerRetriever getInstance() {
-		if (instance == null) {
-			instance = new TemporalTickerRetriever();
-		}
-		return instance;
 	}
 }

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<account>
+	<owner>Marcelo Leite</owner>
+	<email>marceloleite2604@gmail.com</email>
+	<tapiInformation>
+		<id>z8IetMpskqZLuNipdAuAp4jb16axbxeIrKy5gI33c6tNJwilFUzwDw==</id>
+		<secret>avR+lJKCyZSQaScxSll9dM7T1TnYzI9gTUfqEWXfgCdnrrhowyJTmveDygS3kcG6iVGgg9Hd0Ar/JHp+p2HiJKjmYhGJZbdW
+		</secret>
+	</tapiInformation>
+	<strategies>
+		<strategy>
+			<currency>LTC</currency>
+			<className>org.marceloleite.mercado.strategies.sixth.SixthStrategy
+			</className>
+			<parameters>
+				<parameter>
+					<name>growthPercentageThreshold</name>
+					<value>0.10</value>
+				</parameter>
+				<parameter>
+					<name>shrinkPercentageThreshold</name>
+					<value>-0.15</value>
+				</parameter>
+				<parameter>
+					<name>workingAmountCurrency</name>
+					<value>200.0</value>
+				</parameter>
+				<parameter>
+					<name>circularArraySize</name>
+					<value>720</value>
+				</parameter>
+				<parameter>
+					<name>initialStatus</name>
+					<value>"applied"</value>
+				</parameter>
+				<parameter>
+					<name>createDailyGraphic</name>
+					<value>true</value>
+				</parameter>
+				<parameter>
+					<name>dailyGraphicTime</name>
+					<value>"08:30"</value>
+				</parameter>
+			</parameters>
+		</strategy>
+	</strategies>
+</account>

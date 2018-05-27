@@ -1,6 +1,7 @@
 package org.marceloleite.mercado.controller.config;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -28,6 +29,7 @@ public class ObjectConfig {
 	private AccountsRetriever accountsRetriever;
 
 	@Bean
+	@Named("ControllerHouse")
 	public ControllerHouse createControllerHouse() {
 		LOGGER.debug("Creating controller house.");
 		

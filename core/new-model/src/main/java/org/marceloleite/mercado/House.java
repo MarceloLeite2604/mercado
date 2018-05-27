@@ -1,5 +1,6 @@
 package org.marceloleite.mercado;
 
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -24,4 +25,6 @@ public interface House {
 	public double getComissionPercentage();
 
 	Wallet getCommissionWalletFor(Account account);
+
+	public List<Account> getAccounts();
 }

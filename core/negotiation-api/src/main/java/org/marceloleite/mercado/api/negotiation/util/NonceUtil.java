@@ -1,22 +1,21 @@
 package org.marceloleite.mercado.api.negotiation.util;
 
-import javax.inject.Inject;
-
+import org.marceloleite.mercado.cdi.MercadoApplicationContextAware;
 import org.marceloleite.mercado.commons.properties.SystemProperty;
 import org.marceloleite.mercado.dao.interfaces.PropertyDAO;
 import org.marceloleite.mercado.model.Property;
+import org.springframework.stereotype.Component;
 
-public class NonceUtil {
+@Component
+public final class NonceUtil {
 
-	private static NonceUtil instance;
-
-	@Inject
-	private PropertyDAO propertyDAO;
+	private static PropertyDAO propertyDAO = MercadoApplicationContextAware.getBean(PropertyDAO.class,
+			"PropertyDatabaseDAO");
 
 	private NonceUtil() {
 	}
 
-	public long next() {
+	public static long next() {
 		Property nonceProperty = propertyDAO.findByName(SystemProperty.NONCE.getName());
 
 		if (nonceProperty == null) {
@@ -26,12 +25,5 @@ public class NonceUtil {
 		nonceProperty.setValue(Long.toString(++nonce));
 		propertyDAO.save(nonceProperty);
 		return nonce;
-	}
-
-	public static NonceUtil getInstance() {
-		if (instance == null) {
-			instance = new NonceUtil();
-		}
-		return instance;
 	}
 }

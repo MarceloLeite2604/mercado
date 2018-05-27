@@ -94,8 +94,7 @@ public abstract class TapiMethodTemplate<T> {
 	private TapiParameters generateTapiParameters(Object... objectParameters) {
 		TapiParameters napiMethodParameters = new TapiParameters();
 		napiMethodParameters.put(PARAMETER_TAPI_METHOD, tapiMethod);
-		napiMethodParameters.put(PARAMETER_TAPI_NONCE, NonceUtil.getInstance()
-				.next());
+		napiMethodParameters.put(PARAMETER_TAPI_NONCE, NonceUtil.next());
 
 		if (parameterNames != null && parameterNames.length > 0) {
 			if (objectParameters.length != parameterNames.length) {
@@ -146,6 +145,8 @@ public abstract class TapiMethodTemplate<T> {
 
 	@SuppressWarnings("unchecked")
 	private Class<T> retrieveResponseClass() {
-		return (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
+		ParameterizedType superClassType = (ParameterizedType) getClass().getGenericSuperclass();
+		ParameterizedType responseType = (ParameterizedType) superClassType.getActualTypeArguments()[0];
+		return (Class<T>) responseType.getRawType();
 	}
 }
