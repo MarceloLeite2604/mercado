@@ -8,6 +8,7 @@ import org.marceloleite.mercado.commons.OrderStatus;
 import org.marceloleite.mercado.commons.OrderType;
 import org.marceloleite.mercado.model.Order;
 import org.marceloleite.mercado.model.TapiInformation;
+import org.springframework.core.ParameterizedTypeReference;
 
 public class ListOrders extends TapiMethodTemplate<TapiResponse<List<Order>>> {
 	
@@ -15,7 +16,7 @@ public class ListOrders extends TapiMethodTemplate<TapiResponse<List<Order>>> {
 			"from_id", "to_id", "from_timestamp", "to_timestamp"};
 
 	public ListOrders(TapiInformation tapiInformation) {
-		super(tapiInformation, TapiMethod.LIST_ORDERS, PARAMETER_NAMES);
+		super(tapiInformation, TapiMethod.LIST_ORDERS, PARAMETER_NAMES, new ParameterizedTypeReference<TapiResponse<List<Order>>>(){});
 	}
 
 	public TapiResponse<List<Order>> execute(CurrencyPair coinPair, OrderType orderType,

@@ -3,6 +3,7 @@ package org.marceloleite.mercado.strategies.sixth;
 import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -30,7 +31,7 @@ public class SixthStrategyStatistics {
 	private Statistics averagePriceStatistics;
 
 	private TemporalTickerDAO temporalTickerDAO;
-	
+
 	public static Builder builder() {
 		return new Builder();
 	}
@@ -63,8 +64,7 @@ public class SixthStrategyStatistics {
 		return averagePriceStatistics;
 	}
 
-	public void addInformation(TemporalTicker temporalTicker, TimeInterval timeInterval,
-			Currency currency) {
+	public void addInformation(TemporalTicker temporalTicker, TimeInterval timeInterval, Currency currency) {
 		addValueOnLastPriceStatistics(temporalTicker);
 		addValueOnAveragePriceStatistics();
 		if (lastPriceStatisticsIsNotFilled()) {
@@ -96,6 +96,20 @@ public class SixthStrategyStatistics {
 
 		List<TemporalTicker> temporalTickersRetrieved = temporalTickerDAO
 				.findByCurrencyAndDurationAndStartBetween(currency, timeInterval.getDuration(), timeIntervalToRetrieve);
+		if (temporalTickersRetrieved.size() != circularArray.getVacantPositions()) {
+			TimeDivisionController timeDivisionController = new TimeDivisionController(timeIntervalToRetrieve,
+					stepTime);
+			temporalTickersRetrieved = new LinkedList<>();
+			for (TimeInterval timeIntervalDivision : timeDivisionController.getTimeIntervals()) {
+				TemporalTicker temporalTickers = temporalTickerDAO.findByCurrencyAndStartAndEnd(currency,
+						timeIntervalDivision.getStart(), timeIntervalDivision.getEnd());
+				temporalTickersRetrieved.add(temporalTickers);
+			}
+
+			if (temporalTickersRetrieved.size() != circularArray.getVacantPositions()) {
+				throw new RuntimeException("Error while filling last price statistics circular array.");
+			}
+		}
 		if (CollectionUtils.isEmpty(temporalTickersRetrieved)) {
 			TimeDivisionController timeDivisionController = new TimeDivisionController(timeIntervalToRetrieve,
 					stepTime);
@@ -111,25 +125,26 @@ public class SixthStrategyStatistics {
 						.doubleValue()));
 		LOGGER.debug("Filling concluded.");
 	}
-	
+
 	public static class Builder {
-		
+
 		private int circularArraySize;
 
 		private int nextValueSteps;
-		
-		private Builder() {};
+
+		private Builder() {
+		};
 
 		public Builder circularArraySize(int circularArraySize) {
 			this.circularArraySize = circularArraySize;
 			return this;
 		}
-		
+
 		public Builder nextValueSteps(int nextValueSteps) {
 			this.nextValueSteps = nextValueSteps;
 			return this;
 		}
-		
+
 		public SixthStrategyStatistics build() {
 			return new SixthStrategyStatistics(this);
 		}

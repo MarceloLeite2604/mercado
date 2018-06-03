@@ -41,28 +41,11 @@ public class Main {
 	public CommandLineRunner commandLineRunner() {
 		return (args) -> {
 			controller();
-			// testTradeSiteRetriever();
 		};
 	}
 	
 	@SuppressWarnings("unused")
 	private void controller() {
 		controller.start();
-	}
-
-//	@SuppressWarnings("unused")
-//	private static void mailOrderExecutor() {
-//		Account account = new Account();
-//		account.setOwner("Marcelo Leite");
-//		account.setEmail("marceloleite2604@gmail.com");
-//		Order buyOrder = Order.builder()
-//				.setCreated(ZonedDateTimeUtils.now())
-//				.setCurrencyPair(CurrencyPair.retrieveByPair(Currency.REAL, Currency.BITCOIN))
-//				.setQuantity(new BigDecimal("0.0567"))
-//				.setLimitPrice(new BigDecimal("700.00"))
-//				.build();
-//		MailOrderExecutor.getInstance()
-//				.placeOrder(buyOrder, null, account);
-//
-//	}	
+	}	
 }

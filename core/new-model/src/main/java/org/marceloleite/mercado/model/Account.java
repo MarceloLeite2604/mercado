@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -23,7 +24,9 @@ import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
+import org.marceloleite.mercado.model.converter.BalanceSetToWalletConverter;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -31,9 +34,9 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 @Entity
 @Table(name = "ACCOUNTS")
 @JsonIgnoreProperties({ "id" })
-@JsonPropertyOrder({ "owner", "email", "tapiInformation", "wallet", "withdrawals", "strategies", "orders" })
+@JsonPropertyOrder({ "owner", "email", "tapiInformation", "balances", "withdrawals", "strategies", "orders" })
 @XmlRootElement(name = "account")
-@XmlType(propOrder = { "owner", "email", "tapiInformation", "wallet", "withdrawals", "strategies", "orders" })
+@XmlType(propOrder = { "owner", "email", "tapiInformation", "balances", "withdrawals", "strategies", "orders" })
 public class Account {
 
 	@Id
@@ -52,8 +55,8 @@ public class Account {
 
 	@OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@Fetch(FetchMode.SUBSELECT)
-	@JsonProperty("wallet")
-	private Set<Balance> wallet;
+	@JsonProperty("balances")
+	private Set<Balance> balances;
 
 	@OneToMany(mappedBy = "account", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@Fetch(FetchMode.SUBSELECT)
@@ -68,6 +71,9 @@ public class Account {
 	@NotFound(action = NotFoundAction.IGNORE)
 	@Fetch(FetchMode.SUBSELECT)
 	private List<Order> orders;
+
+	@Transient
+	private transient Wallet wallet;
 
 	@XmlTransient
 	public Long getId() {
@@ -105,22 +111,20 @@ public class Account {
 		this.tapiInformation = tapiInformation;
 	}
 
-	@XmlElementWrapper(name = "wallet")
+	@XmlElementWrapper(name = "balances")
 	@XmlElement(name = "balance")
-	public Wallet getWallet() {
-		if (wallet == null) {
-			wallet = new Wallet(this);
-		}
-		return (Wallet) wallet;
+	public Set<Balance> getBalances() {
+		return balances;
 	}
 
-	public void setWallet(Wallet wallet) {
-		wallet.forEach(balance -> balance.setAccount(this));
-		this.wallet = wallet;
+	public void setBalances(Set<Balance> balances) {
+		balances.forEach(balance -> balance.setAccount(this));
+		wallet = BalanceSetToWalletConverter.convertTo(balances);
+		this.balances = balances;
 	}
 
 	@XmlElementWrapper(name = "withdrawals")
-	@XmlElement(name="withdrawal", required = false)
+	@XmlElement(name = "withdrawal", required = false)
 	public List<Withdrawal> getWithdrawals() {
 		return withdrawals;
 	}
@@ -156,7 +160,7 @@ public class Account {
 
 	public void addBalance(Balance balance) {
 		balance.setAccount(this);
-		wallet.add(balance);
+		balances.add(balance);
 	}
 
 	public void addWithdrawal(Withdrawal withdrawal) {
@@ -169,12 +173,26 @@ public class Account {
 		orders.add(order);
 	}
 
+	@XmlTransient
+	@JsonIgnore
+	public Wallet getWallet() {
+		if (wallet == null) {
+			wallet = BalanceSetToWalletConverter.convertTo(balances);
+		}
+		return wallet;
+	}
+
+	public void setWallet(Wallet wallet) {
+		this.wallet = wallet;
+		BalanceSetToWalletConverter.convertFrom(wallet);
+	}
+
 	public void adjustReferences() {
 
 		if (tapiInformation != null) {
 			tapiInformation.setAccount(this);
 		}
-		
+
 		if (wallet != null) {
 			getWallet().adjustReferences(this);
 		}
@@ -199,9 +217,10 @@ public class Account {
 			}
 		}
 	}
-	
+
 	@Override
 	public String toString() {
-		return Optional.ofNullable(owner).orElse("<Undefined owner>");
+		return Optional.ofNullable(owner)
+				.orElse("<Undefined owner>");
 	}
 }

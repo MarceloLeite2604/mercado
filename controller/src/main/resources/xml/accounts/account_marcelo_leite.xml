@@ -3,9 +3,8 @@
 	<owner>Marcelo Leite</owner>
 	<email>marceloleite2604@gmail.com</email>
 	<tapiInformation>
-		<id>z8IetMpskqZLuNipdAuAp4jb16axbxeIrKy5gI33c6tNJwilFUzwDw==</id>
-		<secret>avR+lJKCyZSQaScxSll9dM7T1TnYzI9gTUfqEWXfgCdnrrhowyJTmveDygS3kcG6iVGgg9Hd0Ar/JHp+p2HiJKjmYhGJZbdW
-		</secret>
+		<identification>z8IetMpskqZLuNipdAuAp4jb16axbxeIrKy5gI33c6tNJwilFUzwDw==</identification>
+		<secret>avR+lJKCyZSQaScxSll9dM7T1TnYzI9gTUfqEWXfgCdnrrhowyJTmveDygS3kcG6iVGgg9Hd0Ar/JHp+p2HiJKjmYhGJZbdW</secret>
 	</tapiInformation>
 	<strategies>
 		<strategy>
@@ -39,7 +38,7 @@
 				</parameter>
 				<parameter>
 					<name>dailyGraphicTime</name>
-					<value>"08:30"</value>
+					<value>"18:40"</value>
 				</parameter>
 			</parameters>
 		</strategy>

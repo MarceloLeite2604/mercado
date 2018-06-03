@@ -64,6 +64,7 @@ public class DailyAlarm implements Alarm {
 	}
 
 	private boolean isOnPeriod(ZonedDateTime time) {
+		// TODO time should not be converted to local time.
 		return LocalTimeUtils.isBetween(time.toLocalTime(), alarmTime, ringingDuration);
 	}
 

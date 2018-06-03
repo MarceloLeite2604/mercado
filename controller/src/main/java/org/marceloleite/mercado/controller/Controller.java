@@ -43,7 +43,7 @@ public class Controller {
 	private TemporalTickerRetriever temporalTickerRetriever;
 
 	public void start() {
-		sendStartEmails();
+		// sendStartEmails();
 		while (!finished()) {
 			waitNextMinute();
 			LOGGER.debug("Checking.");

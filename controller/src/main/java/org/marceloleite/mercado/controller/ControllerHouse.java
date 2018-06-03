@@ -5,6 +5,7 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.TreeMap;
 
@@ -19,6 +20,7 @@ import org.marceloleite.mercado.commons.Currency;
 import org.marceloleite.mercado.commons.TimeInterval;
 import org.marceloleite.mercado.dao.interfaces.TemporalTickerDAO;
 import org.marceloleite.mercado.model.Account;
+import org.marceloleite.mercado.model.Strategy;
 import org.marceloleite.mercado.model.TemporalTicker;
 import org.marceloleite.mercado.model.Wallet;
 
@@ -35,9 +37,6 @@ public class ControllerHouse implements House {
 	@Named("TemporalTickerDatabaseDAO")
 	private TemporalTickerDAO temporalTickerDAO;
 	
-	@Inject
-	private MailOrderExecutor mailOrderExecutor;
-
 	private Map<Currency, TemporalTicker> temporalTickers;
 
 	private Map<String, Wallet> comissionWallets;
@@ -73,23 +72,38 @@ public class ControllerHouse implements House {
 
 	@Override
 	public void beforeStart() {
+		for(Account account : accounts) {
+			for(Strategy strategy : account.getStrategies()) {
+				strategy.getExecutor().beforeStart();
+			}
+		}
 	}
 
 	@Override
 	public void process(TreeMap<TimeInterval, Map<Currency, TemporalTicker>> temporalTickers) {
-//		this.temporalTickers = new EnumMap<>(Currency.class);
-		
-//				for (Currency currency : Currency.values()) {
-//					/* TODO: Watch out with BGOLD. */
-//					if (currency.isDigital() && currency != Currency.BGOLD) {
-//						TemporalTicker temporalTicker = temporalTickerRetriever.retrieve(currency, timeInterval);
-//						temporalTickersByCurrency.put(currency, temporalTicker);
-//					}
-//				}
+		for (Entry<TimeInterval, Map<Currency, TemporalTicker>> entry : temporalTickers.entrySet()) {
+			this.temporalTickers = entry.getValue();
+			executeAccountsStrategies(entry.getKey());
+		}
+	}
+	
+	private void executeAccountsStrategies(TimeInterval timeInterval) {
+		getAccounts().forEach(account -> executeStrategiesFor(account, timeInterval));
+	}
+	
+	private void executeStrategiesFor(Account account, TimeInterval timeInterval) {
+		account.getStrategies()
+				.forEach(strategy -> strategy.getExecutor()
+						.execute(timeInterval, account, this));
 	}
 
 	@Override
 	public void afterFinish() {
+		for(Account account : accounts) {
+			for(Strategy strategy : account.getStrategies()) {
+				strategy.getExecutor().afterFinish();
+			}
+		}
 	}
 
 	@Override

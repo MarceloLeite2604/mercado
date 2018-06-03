@@ -5,8 +5,6 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 
-import org.marceloleite.mercado.commons.converter.ObjectToJsonConverter;
-
 public class TapiParameters extends HashMap<String, Object> {
 
 	private static final long serialVersionUID = 1L;

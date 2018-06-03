@@ -1,9 +1,12 @@
 package org.marceloleite.mercado.api.negotiation.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class AccountInfo {
 
 	private Currencies balance;
 	
+	@JsonProperty("withdrawal_limits")
 	private Currencies withdrawalLimits;
 
 	public Currencies getBalance() {

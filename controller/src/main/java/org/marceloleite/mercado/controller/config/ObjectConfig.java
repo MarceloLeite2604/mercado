@@ -6,6 +6,7 @@ import javax.inject.Named;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.marceloleite.mercado.AccountsRetriever;
+import org.marceloleite.mercado.OrderExecutor;
 import org.marceloleite.mercado.controller.ControllerHouse;
 import org.marceloleite.mercado.controller.properties.ControllerPropertiesRetriever;
 import org.springframework.context.annotation.Bean;
@@ -27,6 +28,10 @@ public class ObjectConfig {
 
 	@Inject
 	private AccountsRetriever accountsRetriever;
+	
+	@Inject
+	@Named("MailOrderExecutor")
+	private OrderExecutor orderExecutor;
 
 	@Bean
 	@Named("ControllerHouse")
@@ -36,6 +41,7 @@ public class ObjectConfig {
 		return ControllerHouse.builder()
 				.accounts(accountsRetriever.retrieve())
 				.comissionPercentage(controllerPropertiesRetriever.retrieveTradeComission())
+				.orderExecutor(orderExecutor)
 				.build();
 	}
 	

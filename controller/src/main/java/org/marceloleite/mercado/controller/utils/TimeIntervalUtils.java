@@ -13,6 +13,7 @@ public class TimeIntervalUtils {
 		ZonedDateTime now = ZonedDateTimeUtils.now();
 		ZonedDateTime endTime = now.minusSeconds(now.getSecond())
 				.minusMinutes(1);
+		endTime = endTime.minusNanos(endTime.getNano());
 		ZonedDateTime startTime = endTime.minusMinutes(1);
 		return new TimeInterval(startTime, endTime);
 	}

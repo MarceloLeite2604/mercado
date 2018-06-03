@@ -6,13 +6,14 @@ import org.marceloleite.mercado.commons.utils.formatter.DigitalCurrencyFormatter
 import org.marceloleite.mercado.commons.utils.formatter.NonDigitalCurrencyFormatter;
 import org.marceloleite.mercado.model.Order;
 import org.marceloleite.mercado.model.TapiInformation;
+import org.springframework.core.ParameterizedTypeReference;
 
 public class PlaceBuyOrder extends TapiMethodTemplate<TapiResponse<Order>> {
 
 	private static final String[] PARAMETER_NAMES = { "coin_pair", "quantity", "limit_price" };
 
 	public PlaceBuyOrder(TapiInformation tapiInformation) {
-		super(tapiInformation, TapiMethod.PLACE_BUY_ORDER, PARAMETER_NAMES);
+		super(tapiInformation, TapiMethod.PLACE_BUY_ORDER, PARAMETER_NAMES, new ParameterizedTypeReference<TapiResponse<Order>>(){});
 	}
 
 	public TapiResponse<Order> execute(CurrencyPair currencyPair, Double quantity, Double limitPrice) {

@@ -1,5 +1,7 @@
 package org.marceloleite.mercado.controller;
 
+import javax.inject.Named;
+
 import org.marceloleite.mercado.House;
 import org.marceloleite.mercado.OrderExecutor;
 import org.marceloleite.mercado.commons.OrderStatus;
@@ -10,6 +12,7 @@ import org.marceloleite.mercado.model.Order;
 import org.springframework.stereotype.Component;
 
 @Component
+@Named("MailOrderExecutor")
 public class MailOrderExecutor implements OrderExecutor {
 
 	@Override

@@ -3,9 +3,11 @@ package org.marceloleite.mercado.api.negotiation.method;
 import java.time.ZonedDateTime;
 
 import org.marceloleite.mercado.commons.json.deserializer.ZonedDateTimeFromEpochDeserializer;
+import org.marceloleite.mercado.commons.json.serializer.ZonedDateTimeToEpochSerializer;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 public class TapiResponse<T> {
 	
@@ -17,6 +19,7 @@ public class TapiResponse<T> {
 	
 	@JsonProperty("server_unix_timestamp")
 	@JsonDeserialize(using = ZonedDateTimeFromEpochDeserializer.class)
+	@JsonSerialize(using = ZonedDateTimeToEpochSerializer.class)
 	private ZonedDateTime timestamp;
 	
 	@JsonProperty("response_data")

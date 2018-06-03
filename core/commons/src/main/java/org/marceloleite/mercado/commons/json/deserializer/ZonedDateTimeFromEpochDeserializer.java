@@ -19,7 +19,7 @@ public class ZonedDateTimeFromEpochDeserializer extends StdDeserializer<ZonedDat
 
 	@Override
 	public ZonedDateTime deserialize(JsonParser jsonParser, DeserializationContext context) throws IOException {
-		return ZonedDateTimeUtils.convertFromEpochTime(jsonParser.getLongValue());
+		return ZonedDateTimeUtils.convertFromEpochTime(jsonParser.getValueAsLong());
 	}
 
 }

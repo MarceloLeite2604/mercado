@@ -2,12 +2,15 @@ package org.marceloleite.mercado.api.negotiation.model;
 
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class CurrencyInfo {
 
 	private BigDecimal available;
 
 	private BigDecimal total;
 
+	@JsonProperty("amount_open_orders")
 	private Long amountOpenOrders;
 
 	public BigDecimal getAvailable() {

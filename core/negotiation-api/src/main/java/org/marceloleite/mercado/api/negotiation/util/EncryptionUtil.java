@@ -9,22 +9,20 @@ import java.security.NoSuchAlgorithmException;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
-public class EncryptionUtil {
-
-	private static EncryptionUtil instance;
+public final class EncryptionUtil {
 
 	private static final String ENCRYPTION_ALGORITHM = "HmacSHA512";
 
 	private EncryptionUtil() {
 	}
 
-	public String generateTapiMac(URI uri, byte[] key) {
+	public static String generateTapiMac(URI uri, String requestBody, byte[] key) {
 		try {
 			Mac mac = Mac.getInstance(ENCRYPTION_ALGORITHM);
 			SecretKeySpec secretKeySpec = new SecretKeySpec(key, ENCRYPTION_ALGORITHM);
 			mac.init(secretKeySpec);
-			// String contentToEncrypt = uri.getPath() + "?" + uri.getQuery();
-			String contentToEncrypt = uri.toString();
+			String contentToEncrypt = uri.getPath() + "?" + requestBody;
+			// String contentToEncrypt = uri.toString();
 
 			byte[] macData = mac.doFinal(contentToEncrypt.getBytes(StandardCharsets.UTF_8.name()));
 			return byteToStringHex(macData);
@@ -33,19 +31,12 @@ public class EncryptionUtil {
 		}
 	}
 
-	private String byteToStringHex(byte[] bytes) {
+	private static String byteToStringHex(byte[] bytes) {
 		StringBuffer stringBuffer = new StringBuffer();
 		for (byte bByte : bytes) {
 			stringBuffer.append(String.format("%02X", bByte));
 		}
 		return stringBuffer.toString()
 				.toLowerCase();
-	}
-
-	public static EncryptionUtil getInstance() {
-		if (instance == null) {
-			instance = new EncryptionUtil();
-		}
-		return instance;
 	}
 }
